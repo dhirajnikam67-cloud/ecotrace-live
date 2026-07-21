@@ -1,4 +1,4 @@
-use client';
+'use client';
 
 import React, { useState } from 'react';
 
@@ -7,20 +7,14 @@ export default function EcoTraceDashboard() {
   const [filter, setFilter] = useState('All');
   const [uploading, setUploading] = useState(false);
 
-  // Factory State with OCR parsing status & MPCB limits
+  // Factory State
   const [factory, setFactory] = useState({
     name: 'Chakan Machining Works Unit 2',
     ocrStatus: 'SUCCESS',
-    consentLimits: {
-      waterLitersDay: 85000,
-      so2Ppm: 60,
-      hazardousWasteKgMonth: 250,
-    },
-    currentLog: {
-      waterDischargeLiters: 74800,
-      electricityKwh: 1420,
-      so2Ppm: 45,
-    },
+    waterLimit: 85000,
+    currentDischarge: 74800,
+    electricityKwh: 1420,
+    so2Ppm: 45,
   });
 
   const factories = [
@@ -31,10 +25,8 @@ export default function EcoTraceDashboard() {
   ];
 
   // Calculations
-  const waterLimit = factory.consentLimits.waterLitersDay;
-  const currentDischarge = factory.currentLog.waterDischargeLiters;
-  const dischargeRatio = waterLimit > 0 ? Number(((currentDischarge / waterLimit) * 100).toFixed(1)) : 0;
-  const scope2Carbon = ((factory.currentLog.electricityKwh * 0.82) / 1000).toFixed(2);
+  const dischargeRatio = ((factory.currentDischarge / factory.waterLimit) * 100).toFixed(1);
+  const scope2Carbon = ((factory.electricityKwh * 0.82) / 1000).toFixed(2);
 
   const filteredFactories = filter === 'All' 
     ? factories 
@@ -43,25 +35,16 @@ export default function EcoTraceDashboard() {
   const handleConsentUpload = (e) => {
     e.preventDefault();
     setUploading(true);
-    setFactory((prev) => ({ ...prev, ocrStatus: 'PARSING' }));
 
     setTimeout(() => {
       setFactory((prev) => ({
         ...prev,
         ocrStatus: 'SUCCESS',
-        consentLimits: {
-          waterLitersDay: 100000,
-          so2Ppm: 80,
-          hazardousWasteKgMonth: 500,
-        },
+        waterLimit: 100000,
       }));
       setUploading(false);
       alert('AI OCR Engine Parsed MPCB CTO Document Successfully!\nDynamic Consent Limits Updated.');
     }, 2000);
-  };
-
-  const generatePassport = () => {
-    alert(Generating Certified QR Compliance Passport for ${factory.name}...\nStatus: 100% MPCB Audit Ready.);
   };
 
   return (
@@ -84,11 +67,6 @@ export default function EcoTraceDashboard() {
             style={{ textAlign: 'left', padding: '10px 14px', borderRadius: '8px', border: 'none', cursor: 'pointer', backgroundColor: activeTab === 'factories' ? '#22c55e' : 'transparent', color: activeTab === 'factories' ? '#0f172a' : '#94a3b8', fontWeight: '600' }}>
             🏭 Factories
           </button>
-          <button 
-            onClick={() => setActiveTab('ocr')} 
-            style={{ textAlign: 'left', padding: '10px 14px', borderRadius: '8px', border: 'none', cursor: 'pointer', backgroundColor: activeTab === 'ocr' ? '#22c55e' : 'transparent', color: activeTab === 'ocr' ? '#0f172a' : '#94a3b8', fontWeight: '600' }}>
-            📄 AI OCR Consent
-          </button>
         </nav>
 
         <div style={{ marginTop: 'auto', backgroundColor: '#0f172a', padding: '12px', borderRadius: '8px', border: '1px solid #334155', fontSize: '12px', color: '#94a3b8' }}>
@@ -100,7 +78,7 @@ export default function EcoTraceDashboard() {
       <main style={{ flex: 1, padding: '30px', overflowY: 'auto' }}>
         
         {/* Header */}
-        <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '30px', borderBottom: '1px solid #334155', paddingBottom: '20px' }}>
+        <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '25px', borderBottom: '1px solid #334155', paddingBottom: '20px' }}>
           <div>
             <h1 style={{ fontSize: '24px', margin: 0, fontWeight: '700' }}>MPCB Environmental Compliance Radar</h1>
             <p style={{ color: '#94a3b8', margin: '4px 0 0 0', fontSize: '14px' }}>Real-time Monitoring, OCR & Carbon Engine</p>
@@ -113,16 +91,32 @@ export default function EcoTraceDashboard() {
           </button>
         </header>
 
-        {/* Module 1: Pre-Emptive Red-Flag Alert Banner */}
-        {dischargeRatio >= 85 ? (
+        {/* AI OCR Section */}
+        <section style={{ backgroundColor: '#1e293b', border: '1px solid #334155', padding: '20px', borderRadius: '12px', marginBottom: '25px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '15px' }}>
+          <div>
+            <h3 style={{ margin: '0 0 6px 0', color: '#38bdf8', fontSize: '16px' }}>📄 AI OCR MPCB Consent Auto-Parser</h3>
+            <p style={{ margin: 0, color: '#94a3b8', fontSize: '13px' }}>
+              Upload CTO PDF. Auto-extracts water limit: <strong>{factory.waterLimit.toLocaleString()} L/day</strong>
+            </p>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <span style={{ backgroundColor: '#064e3b', color: '#10b981', padding: '6px 12px', borderRadius: '6px', fontSize: '12px', fontWeight: 'bold' }}>
+              {factory.ocrStatus}
+            </span>
+            <label style={{ backgroundColor: '#0284c7', color: '#fff', padding: '8px 16px', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold', fontSize: '13px' }}>
+              {uploading ? 'Parsing PDF...' : 'Upload MPCB CTO PDF'}
+              <input type="file" accept=".pdf" onChange={handleConsentUpload} style={{ display: 'none' }} disabled={uploading} />
+            </label>
+          </div>
+        </section>
+
+        {/* Pre-Emptive Red-Flag Alert Banner */}
+        {Number(dischargeRatio) >= 85 ? (
           <div style={{ backgroundColor: '#7f1d1d', border: '1px solid #ef4444', padding: '20px', borderRadius: '12px', marginBottom: '25px' }}>
             <h3 style={{ margin: '0 0 8px 0', color: '#fff' }}>⚠️ Pre-Emptive Red-Flag Alert</h3>
             <p style={{ margin: 0, color: '#fca5a5' }}>
-              Water discharge reached <strong>{dischargeRatio}%</strong> of factory MPCB limit ({currentDischarge.toLocaleString()} / {waterLimit.toLocaleString()} L). Penalty threshold imminent in 36 hrs!
+              Water discharge reached <strong>{dischargeRatio}%</strong> of factory MPCB limit ({factory.currentDischarge.toLocaleString()} / {factory.waterLimit.toLocaleString()} L). Penalty threshold imminent in 36 hrs!
             </p>
-            <button style={{ backgroundColor: '#ef4444', color: '#fff', border: 'none', padding: '8px 16px', borderRadius: '6px', cursor: 'pointer', marginTop: '12px', fontWeight: 'bold' }}>
-              Trigger Auto-Dosing Protocol
-            </button>
           </div>
         ) : (
           <div style={{ backgroundColor: '#064e3b', border: '1px solid #10b981', padding: '15px 20px', borderRadius: '12px', marginBottom: '25px' }}>
@@ -136,7 +130,7 @@ export default function EcoTraceDashboard() {
           <div style={{ backgroundColor: '#1e293b', padding: '20px', borderRadius: '12px', borderLeft: '4px solid #22c55e' }}>
             <span style={{ color: '#94a3b8', fontSize: '12px' }}>DYNAMIC RISK RADAR</span>
             <p style={{ fontSize: '24px', fontWeight: 'bold', color: '#22c55e', margin: '8px 0 0 0' }}>{dischargeRatio}%</p>
-            <span style={{ fontSize: '11px', color: '#94a3b8' }}>Max: {waterLimit.toLocaleString()} L/Day</span>
+            <span style={{ fontSize: '11px', color: '#94a3b8' }}>Max: {factory.waterLimit.toLocaleString()} L/Day</span>
           </div>
           <div style={{ backgroundColor: '#1e293b', padding: '20px', borderRadius: '12px', borderLeft: '4px solid #38bdf8' }}>
             <span style={{ color: '#94a3b8', fontSize: '12px' }}>SCOPE 2 CARBON LEDGER</span>
@@ -145,30 +139,11 @@ export default function EcoTraceDashboard() {
           </div>
           <div style={{ backgroundColor: '#1e293b', padding: '20px', borderRadius: '12px', borderLeft: '4px solid #eab308' }}>
             <span style={{ color: '#94a3b8', fontSize: '12px' }}>COMPLIANCE VAULT</span>
-            <button onClick={generatePassport} style={{ backgroundColor: '#10b981', color: '#fff', border: 'none', padding: '6px 12px', borderRadius: '6px', fontSize: '12px', fontWeight: 'bold', cursor: 'pointer', marginTop: '10px' }}>
+            <button onClick={() => alert(Generating Certified QR Compliance Passport for ${factory.name}...)} style={{ backgroundColor: '#10b981', color: '#fff', border: 'none', padding: '6px 12px', borderRadius: '6px', fontSize: '12px', fontWeight: 'bold', cursor: 'pointer', marginTop: '10px', display: 'block' }}>
               📄 Instant Passport
             </button>
           </div>
         </div>
-
-        {/* AI OCR Section */}
-        <section style={{ backgroundColor: '#1e293b', border: '1px solid #334155', padding: '20px', borderRadius: '12px', marginBottom: '30px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '15px' }}>
-          <div>
-            <h3 style={{ margin: '0 0 6px 0', color: '#38bdf8', fontSize: '16px' }}>📄 AI OCR MPCB Consent Auto-Parser</h3>
-            <p style={{ margin: 0, color: '#94a3b8', fontSize: '13px' }}>
-              Upload CTO PDF. Auto-extracts water limits ({waterLimit.toLocaleString()} L) & SO2 ({factory.consentLimits.so2Ppm} PPM).
-            </p>
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <span style={{ backgroundColor: factory.ocrStatus === 'SUCCESS' ? '#064e3b' : '#78350f', color: factory.ocrStatus === 'SUCCESS' ? '#10b981' : '#f59e0b', padding: '6px 12px', borderRadius: '6px', fontSize: '12px', fontWeight: 'bold' }}>
-              {factory.ocrStatus}
-            </span>
-            <label style={{ backgroundColor: '#0284c7', color: '#fff', padding: '8px 16px', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold', fontSize: '13px' }}>
-              {uploading ? 'Parsing PDF...' : 'Upload MPCB CTO PDF'}
-              <input type="file" accept=".pdf" onChange={handleConsentUpload} style={{ display: 'none' }} disabled={uploading} />
-            </label>
-          </div>
-        </section>
 
         {/* Factory Table Section */}
         <div style={{ backgroundColor: '#1e293b', padding: '20px', borderRadius: '12px', border: '1px solid #334155' }}>
