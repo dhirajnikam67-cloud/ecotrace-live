@@ -1,7 +1,13 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { supabase } from '../supabaseClient';
+import { createClient } from '@supabase/supabase-js';
+
+// Direct Supabase Client Initialization inside Page
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
+const supabase = createClient(supabaseUrl, supabaseAnonKey);
+
 export default function EcoTraceEnterpriseDashboard() {
   const [activeTab, setActiveTab] = useState('dashboard');
   const [uploading, setUploading] = useState(false);
@@ -15,7 +21,7 @@ export default function EcoTraceEnterpriseDashboard() {
   // Supabase Data State
   const [factoryList, setFactoryList] = useState([]);
 
-  // Operations
+  // Operations Metrics
   const currentDischarge = 74800;
   const currentHazardousWaste = 215;
   const electricityKwh = 1420;
@@ -25,16 +31,16 @@ export default function EcoTraceEnterpriseDashboard() {
   const [factoryLocation, setFactoryLocation] = useState('');
   const [factoryWaterLimit, setFactoryWaterLimit] = useState('');
 
-  // Ratios
+  // Calculations
   const dischargeRatio = Number((currentDischarge / waterLimit) * 100).toFixed(1);
   const hazWasteRatio = Number((currentHazardousWaste / hazardousWasteLimit) * 100).toFixed(1);
   const scope2Carbon = Number((electricityKwh * 0.82) / 1000).toFixed(2);
 
-  // Fetch Factories from Supabase Cloud
+  // Fetch Factories from Supabase Cloud Database
   const fetchFactories = async () => {
     setLoadingDb(true);
     try {
-      if (supabase) {
+      if (supabaseUrl && supabaseAnonKey) {
         const { data, error } = await supabase.from('factories').select('*');
         if (error) {
           console.error('Supabase fetch error:', error);
@@ -81,25 +87,23 @@ export default function EcoTraceEnterpriseDashboard() {
   const handleAddFactory = async (e) => {
     e.preventDefault();
     try {
-      if (supabase) {
-        const { error } = await supabase.from('factories').insert([
-          {
-            name: factoryName,
-            plant_location: factoryLocation,
-            mpcb_water_consent_limit_liters: Number(factoryWaterLimit) || 85000,
-          },
-        ]);
+      const { error } = await supabase.from('factories').insert([
+        {
+          name: factoryName,
+          plant_location: factoryLocation,
+          mpcb_water_consent_limit_liters: Number(factoryWaterLimit) || 85000,
+        },
+      ]);
 
-        if (error) {
-          alert('Database Error: ' + error.message);
-        } else {
-          alert('Factory "' + factoryName + '" successfully saved to Supabase Cloud Registry!');
-          setFactoryName('');
-          setFactoryLocation('');
-          setFactoryWaterLimit('');
-          fetchFactories();
-          setActiveTab('dashboard');
-        }
+      if (error) {
+        alert('Database Error: ' + error.message);
+      } else {
+        alert('Factory "' + factoryName + '" successfully saved to Supabase Cloud Registry!');
+        setFactoryName('');
+        setFactoryLocation('');
+        setFactoryWaterLimit('');
+        fetchFactories();
+        setActiveTab('dashboard');
       }
     } catch (err) {
       alert('Failed to insert factory record.');
