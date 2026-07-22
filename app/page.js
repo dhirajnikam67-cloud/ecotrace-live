@@ -40,8 +40,8 @@ export default function EcoTraceEnterpriseDashboard() {
 
       if (url && key) {
         const supabase = createClient(url, key);
-        const { data, error } = await supabase.from('factories').select('*');
-        if (!error && data && data.length > 0) {
+        const { data, error } = await supabase.from('factories').select('*').order('id', { ascending: false });
+        if (!error && data) {
           setFactoryList(data);
         }
       }
@@ -80,7 +80,7 @@ export default function EcoTraceEnterpriseDashboard() {
     alert('IoT MQTT SIGNAL SENT:\nETP Controller Active.\nChemical Auto-Dosing Valve Opened.');
   };
 
-  // Add Factory directly to Supabase Database
+  // Add Factory directly to Supabase Database with Auto-Sync Delay
   const handleAddFactory = async (e) => {
     e.preventDefault();
     try {
@@ -98,24 +98,24 @@ export default function EcoTraceEnterpriseDashboard() {
         ]);
 
         if (error) {
-          alert('Database Notice: ' + error.message);
+          alert('Database Error: ' + error.message);
         } else {
-          alert('Factory onboarded successfully!');
+          alert('Factory "' + factoryName + '" successfully saved to Supabase Cloud Registry!');
           setFactoryName('');
           setFactoryLocation('');
           setFactoryWaterLimit('');
-          fetchFactories();
+          
+          // Switch tab immediately
           setActiveTab('dashboard');
+
+          // Refresh table data after a brief cloud sync delay
+          setTimeout(() => {
+            fetchFactories();
+          }, 1000);
         }
-      } else {
-        alert('Factory onboarded locally!');
-        setFactoryName('');
-        setFactoryLocation('');
-        setFactoryWaterLimit('');
-        setActiveTab('dashboard');
       }
     } catch (err) {
-      alert('Action completed.');
+      alert('Failed to insert factory record.');
     }
   };
 
@@ -237,7 +237,12 @@ export default function EcoTraceEnterpriseDashboard() {
 
             {/* Live Supabase Cloud Database Table */}
             <div style={{ backgroundColor: '#1e293b', padding: '20px', borderRadius: '12px', border: '1px solid #334155' }}>
-              <h3 style={{ margin: '0 0 15px 0', color: '#22c55e', fontSize: '16px' }}>🏭 Live Industrial Compliance Records (Supabase Direct Fetch)</h3>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
+                <h3 style={{ margin: 0, color: '#22c55e', fontSize: '16px' }}>🏭 Live Industrial Compliance Records (Supabase Direct Fetch)</h3>
+                <button type="button" onClick={fetchFactories} style={{ backgroundColor: '#334155', color: '#fff', border: 'none', padding: '6px 12px', borderRadius: '6px', cursor: 'pointer', fontSize: '12px', fontWeight: 'bold' }}>
+                  🔄 Refresh Table
+                </button>
+              </div>
               {loadingDb ? (
                 <p style={{ color: '#94a3b8', fontSize: '13px' }}>Fetching live data from Supabase Cloud...</p>
               ) : (
@@ -264,7 +269,7 @@ export default function EcoTraceEnterpriseDashboard() {
                       ))
                     ) : (
                       <tr>
-                        <td colSpan="5" style={{ padding: '15px', color: '#94a3b8', textAlign: 'center' }}>Chakan Industrial Machining Unit 2 (Active - Compliant)</td>
+                        <td colSpan="5" style={{ padding: '15px', color: '#94a3b8', textAlign: 'center' }}>No factories found in Supabase. Add one via Client Onboarding tab!</td>
                       </tr>
                     )}
                   </tbody>
