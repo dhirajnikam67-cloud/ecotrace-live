@@ -36,9 +36,9 @@ export default function EcoTraceEnterpriseDashboard() {
   const [transporterName, setTransporterName] = useState('');
 
   // Calculations
-  const dischargeRatio = Number((currentDischarge / waterLimit) * 100).toFixed(1);
-  const hazWasteRatio = Number((currentHazardousWaste / hazardousWasteLimit) * 100).toFixed(1);
-  const scope2Carbon = Number((electricityKwh * 0.82) / 1000).toFixed(2);
+  const dischargeRatio = ((currentDischarge / waterLimit) * 100).toFixed(1);
+  const hazWasteRatio = ((currentHazardousWaste / hazardousWasteLimit) * 100).toFixed(1);
+  const scope2Carbon = ((electricityKwh * 0.82) / 1000).toFixed(2);
 
   // MPCB Penalty Risk Logic
   const estimatedPenalty = Number(dischargeRatio) > 85 ? 75000 : 0;
@@ -220,7 +220,7 @@ export default function EcoTraceEnterpriseDashboard() {
                 <div>
                   <h3 style={{ margin: '0 0 4px 0', color: '#38bdf8', fontSize: '15px' }}>AI OCR CTO Reader</h3>
                   <p style={{ margin: 0, color: '#94a3b8', fontSize: '12px' }}>
-                    Water: <strong>{waterLimit.toLocaleString()} L</strong> | Haz: <strong>{hazardousWasteLimit} KG</strong>
+                    Water: <strong>{waterLimit} L</strong> | Haz: <strong>{hazardousWasteLimit} KG</strong>
                   </p>
                 </div>
                 <label style={{ backgroundColor: '#0284c7', color: '#fff', padding: '8px 12px', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold', fontSize: '12px' }}>
@@ -240,7 +240,7 @@ export default function EcoTraceEnterpriseDashboard() {
                   {Number(dischargeRatio) >= 85 ? 'Water Discharge Alert (85%+ Limit)' : 'Water Status: Safe'}
                 </h3>
                 <p style={{ margin: 0, color: '#fca5a5', fontSize: '13px' }}>
-                  Discharge at <strong>{dischargeRatio}%</strong> ({currentDischarge.toLocaleString()} / {waterLimit.toLocaleString()} L).
+                  Discharge at <strong>{dischargeRatio}%</strong> ({currentDischarge} / {waterLimit} L).
                 </p>
                 {Number(dischargeRatio) >= 85 && (
                   <button type="button" onClick={handleIoTTrigger} style={{ backgroundColor: dosingTriggered ? '#16a34a' : '#ef4444', color: '#fff', border: 'none', padding: '8px 14px', borderRadius: '6px', cursor: 'pointer', marginTop: '10px', fontWeight: 'bold', fontSize: '12px' }}>
@@ -255,7 +255,7 @@ export default function EcoTraceEnterpriseDashboard() {
                   Prosecution Penalty Shield
                 </h3>
                 <p style={{ margin: '0 0 8px 0', color: '#fca5a5', fontSize: '13px' }}>
-                  Estimated Penalty Risk: <strong style={{ fontSize: '18px', color: '#fff' }}>INR {estimatedPenalty.toLocaleString()}</strong>
+                  Estimated Penalty Risk: <strong style={{ fontSize: '18px', color: '#fff' }}>INR {estimatedPenalty}</strong>
                 </p>
                 <span style={{ fontSize: '11px', color: '#94a3b8' }}>Calculated via MPCB Matrix</span>
               </div>
@@ -310,7 +310,7 @@ export default function EcoTraceEnterpriseDashboard() {
                         <tr key={item.id || idx} style={{ borderBottom: '1px solid #334155' }}>
                           <td style={{ padding: '12px 10px', fontWeight: 'bold' }}>{item.name}</td>
                           <td style={{ padding: '12px 10px', color: '#94a3b8' }}>{item.plant_location}</td>
-                          <td style={{ padding: '12px 10px' }}>{item.mpcb_water_consent_limit_liters ? Number(item.mpcb_water_consent_limit_liters).toLocaleString() : '85,000'} L</td>
+                          <td style={{ padding: '12px 10px' }}>{item.mpcb_water_consent_limit_liters || '85000'} L</td>
                           <td style={{ padding: '12px 10px', color: '#38bdf8' }}>{item.ocr_parsing_status || 'PARSED'}</td>
                           <td style={{ padding: '12px 10px', color: '#22c55e', fontWeight: 'bold' }}>Compliant</td>
                         </tr>
@@ -356,4 +356,7 @@ export default function EcoTraceEnterpriseDashboard() {
             <form onSubmit={handleAddFactory} style={{ display: 'flex', flexDirection: 'column', gap: '15px', maxWidth: '500px', marginTop: '20px' }}>
               <div>
                 <label style={{ display: 'block', fontSize: '13px', color: '#94a3b8', marginBottom: '5px' }}>Factory Name</label>
-                <input required type="text" value={factoryName} onChange={(e) => setFactoryName(e.target.value)} placeholder="WESTERN CHEMICALS" style={{ width: '100%', padding: '10px', borderRadius: '6px',
+                <input required type="text" value={factoryName} onChange={(e) => setFactoryName(e.target.value)} placeholder="WESTERN CHEMICALS" style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #334155', backgroundColor: '#0f172a', color: '#fff' }} />
+              </div>
+              <div>
+                <label style={{
