@@ -9,9 +9,14 @@ export default function EcoTraceEnterpriseDashboard() {
   const [dosingTriggered, setDosingTriggered] = useState(false);
   const [loadingDb, setLoadingDb] = useState(false);
 
-  // Dynamic Caps
+  // Dynamic Caps & Sensor Values
   const [waterLimit, setWaterLimit] = useState(85000);
   const [hazardousWasteLimit, setHazardousWasteLimit] = useState(250);
+  const [ctoExpiryDays, setCtoExpiryDays] = useState(82); // CTO Days left
+
+  // IoT Live Sensors (COD, BOD, pH)
+  const [phLevel, setPhLevel] = useState(7.4);
+  const [codLevel, setCodLevel] = useState(210); // Max allowed: 250 mg/L
 
   // Supabase Data State
   const [factoryList, setFactoryList] = useState([]);
@@ -26,10 +31,25 @@ export default function EcoTraceEnterpriseDashboard() {
   const [factoryLocation, setFactoryLocation] = useState('');
   const [factoryWaterLimit, setFactoryWaterLimit] = useState('');
 
+  // Form 10 State
+  const [vehicleNo, setVehicleNo] = useState('');
+  const [transporterName, setTransporterName] = useState('');
+
   // Calculations
   const dischargeRatio = Number((currentDischarge / waterLimit) * 100).toFixed(1);
   const hazWasteRatio = Number((currentHazardousWaste / hazardousWasteLimit) * 100).toFixed(1);
   const scope2Carbon = Number((electricityKwh * 0.82) / 1000).toFixed(2);
+
+  // MPCB Penalty Risk Calculation Logic
+  const calculatePenalty = () => {
+    let penalty = 0;
+    if (Number(dischargeRatio) > 85) penalty += 75000;
+    if (Number(hazWasteRatio) > 80) penalty += 125000;
+    if (phLevel < 6.5 || phLevel > 8.5) penalty += 50000;
+    return penalty;
+  };
+
+  const estimatedPenalty = calculatePenalty();
 
   // Fetch Factories Safely
   const fetchFactories = async () => {
@@ -70,20 +90,28 @@ export default function EcoTraceEnterpriseDashboard() {
     setTimeout(() => {
       setWaterLimit(100000);
       setHazardousWasteLimit(300);
+      setCtoExpiryDays(365);
       setUploading(false);
-      alert('AI OCR SUCCESS:\nFile: ' + file.name + '\n- Water Limit: 100,000 L/Day\n- Hazardous Waste Cap: 300 KG/Month');
+      alert('AI OCR SUCCESS:\nFile: ' + file.name + '\n- Water Limit: 100,000 L/Day\n- Hazardous Waste Cap: 300 KG/Month\n- Renewal Reset: 365 Days Valid');
     }, 2000);
   };
 
   const handleIoTTrigger = () => {
     setDosingTriggered(true);
-    alert('IoT MQTT SIGNAL SENT:\nETP Controller Active.\nChemical Auto-Dosing Valve Opened.');
+    setPhLevel(7.2);
+    alert('IoT MQTT SIGNAL SENT:\nETP Controller Active.\nChemical Neutralizer Valve Opened. pH stabilized to 7.2.');
   };
 
-  // Smart & Safe Add Factory Handler
+  const handleGenerateForm10 = (e) => {
+    e.preventDefault();
+    alert('📄 MPCB FORM 10 MANIFEST GENERATED!\nVehicle: ' + vehicleNo + '\nTransporter: ' + transporterName + '\nStatus: Ready for CHWTSDF Gatepass Verification.');
+    setVehicleNo('');
+    setTransporterName('');
+  };
+
+  // Add Factory Handler
   const handleAddFactory = async (e) => {
     e.preventDefault();
-    
     const newRecord = {
       name: factoryName,
       plant_location: factoryLocation,
@@ -91,42 +119,27 @@ export default function EcoTraceEnterpriseDashboard() {
       ocr_parsing_status: 'PARSED'
     };
 
-    let savedToCloud = false;
-
     try {
       const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
       const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
       if (url && key) {
         const supabase = createClient(url, key);
-        const { error } = await supabase.from('factories').insert([
+        await supabase.from('factories').insert([
           {
             name: factoryName,
             plant_location: factoryLocation,
             mpcb_water_consent_limit_liters: Number(factoryWaterLimit) || 85000,
           }
         ]);
-
-        if (error) {
-          console.warn('Supabase DB Insert Warning:', error.message);
-        } else {
-          savedToCloud = true;
-        }
       }
     } catch (err) {
       console.warn('Network or Client error during insert:', err);
     }
 
-    // Always update local UI state smoothly
     setFactoryList(prev => [newRecord, ...prev]);
-    
-    if (savedToCloud) {
-      alert('✅ Factory "' + factoryName + '" saved to Supabase Cloud Registry!');
-    } else {
-      alert('✅ Unit "' + factoryName + '" onboarded to Active Compliance Dashboard!');
-    }
+    alert('✅ Unit "' + factoryName + '" onboarded to Active Compliance Dashboard!');
 
-    // Reset Form and Switch Tab
     setFactoryName('');
     setFactoryLocation('');
     setFactoryWaterLimit('');
@@ -137,7 +150,7 @@ export default function EcoTraceEnterpriseDashboard() {
     <div style={{ display: 'flex', minHeight: '100vh', backgroundColor: '#0f172a', color: '#f8fafc', fontFamily: 'sans-serif' }}>
       
       {/* Sidebar Navigation */}
-      <aside style={{ width: '250px', backgroundColor: '#1e293b', borderRight: '1px solid #334155', padding: '20px', display: 'flex', flexDirection: 'column', gap: '15px' }}>
+      <aside style={{ width: '260px', backgroundColor: '#1e293b', borderRight: '1px solid #334155', padding: '20px', display: 'flex', flexDirection: 'column', gap: '15px' }}>
         <div style={{ fontSize: '20px', fontWeight: 'bold', color: '#22c55e', marginBottom: '10px' }}>
           🌱 EcoTrace India
         </div>
@@ -148,6 +161,12 @@ export default function EcoTraceEnterpriseDashboard() {
             onClick={() => setActiveTab('dashboard')} 
             style={{ textAlign: 'left', padding: '10px', borderRadius: '8px', border: 'none', cursor: 'pointer', backgroundColor: activeTab === 'dashboard' ? '#22c55e' : 'transparent', color: activeTab === 'dashboard' ? '#0f172a' : '#94a3b8', fontWeight: 'bold' }}>
             📊 Live Risk Radar
+          </button>
+          <button 
+            type="button"
+            onClick={() => setActiveTab('manifest')} 
+            style={{ textAlign: 'left', padding: '10px', borderRadius: '8px', border: 'none', cursor: 'pointer', backgroundColor: activeTab === 'manifest' ? '#22c55e' : 'transparent', color: activeTab === 'manifest' ? '#0f172a' : '#94a3b8', fontWeight: 'bold' }}>
+            🚛 Form 10 Manifest Generator
           </button>
           <button 
             type="button"
@@ -163,8 +182,13 @@ export default function EcoTraceEnterpriseDashboard() {
           </button>
         </nav>
 
-        <div style={{ marginTop: 'auto', backgroundColor: '#0f172a', padding: '12px', borderRadius: '8px', border: '1px solid #334155', fontSize: '12px', color: '#94a3b8' }}>
-          National Mission: <strong>Zero Pollution 🇮🇳</strong>
+        {/* ESG Certificate Banner */}
+        <div style={{ marginTop: 'auto', backgroundColor: '#0f172a', padding: '12px', borderRadius: '8px', border: '1px solid #22c55e', fontSize: '12px' }}>
+          <span style={{ color: '#22c55e', fontWeight: 'bold' }}>🏅 Green Vendor Certified</span>
+          <p style={{ margin: '4px 0 8px 0', color: '#94a3b8', fontSize: '11px' }}>Ready for MNC B2B Audits</p>
+          <button type="button" onClick={() => alert('Downloading EcoTrace ESG Passport (PDF)...')} style={{ backgroundColor: '#22c55e', color: '#0f172a', border: 'none', padding: '6px 10px', borderRadius: '4px', fontSize: '11px', fontWeight: 'bold', width: '100%', cursor: 'pointer' }}>
+            Download ESG Passport
+          </button>
         </div>
       </aside>
 
@@ -174,8 +198,8 @@ export default function EcoTraceEnterpriseDashboard() {
         {/* Header */}
         <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '25px', borderBottom: '1px solid #334155', paddingBottom: '20px' }}>
           <div>
-            <h1 style={{ fontSize: '24px', margin: 0, fontWeight: '700' }}>MPCB Compliance Radar</h1>
-            <p style={{ color: '#94a3b8', margin: '4px 0 0 0', fontSize: '14px' }}>Real-time Industrial Monitoring Engine</p>
+            <h1 style={{ fontSize: '24px', margin: 0, fontWeight: '700' }}>MPCB Compliance &amp; MSME Protection Radar</h1>
+            <p style={{ color: '#94a3b8', margin: '4px 0 0 0', fontSize: '14px' }}>Real-time Industrial Monitoring &amp; Prosecution Shield</p>
           </div>
           <button type="button" onClick={handlePrint} style={{ backgroundColor: '#22c55e', color: '#0f172a', border: 'none', padding: '10px 18px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer' }}>
             📥 Export Audit Passport
@@ -184,21 +208,37 @@ export default function EcoTraceEnterpriseDashboard() {
 
         {activeTab === 'dashboard' && (
           <div>
-            {/* AI OCR Banner */}
-            <section style={{ backgroundColor: '#1e293b', border: '1px solid #38bdf8', padding: '18px', borderRadius: '12px', marginBottom: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '15px' }}>
-              <div>
-                <h3 style={{ margin: '0 0 4px 0', color: '#38bdf8', fontSize: '16px' }}>📄 AI OCR MPCB Consent Reader</h3>
-                <p style={{ margin: 0, color: '#94a3b8', fontSize: '13px' }}>
-                  Extracted Caps: Water = <strong>{waterLimit.toLocaleString()} L/Day</strong> | Hazardous Waste = <strong>{hazardousWasteLimit} KG/Month</strong>
-                </p>
+            {/* CTO Expiry & AI OCR Banner Grid */}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '20px', marginBottom: '20px' }}>
+              
+              {/* CTO Expiry Tracker */}
+              <div style={{ backgroundColor: '#1e293b', border: '1px solid #eab308', padding: '18px', borderRadius: '12px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div>
+                  <h3 style={{ margin: '0 0 4px 0', color: '#eab308', fontSize: '15px' }}>📅 CTO Renewal Radar</h3>
+                  <p style={{ margin: 0, color: '#94a3b8', fontSize: '13px' }}>
+                    Days Left: <strong style={{ color: '#fff', fontSize: '16px' }}>{ctoExpiryDays} Days</strong>
+                  </p>
+                </div>
+                <button type="button" onClick={() => alert('Connecting to MPCB Portal... Auto-Renewal Checklist Generated!')} style={{ backgroundColor: '#eab308', color: '#0f172a', border: 'none', padding: '8px 12px', borderRadius: '6px', fontWeight: 'bold', fontSize: '12px', cursor: 'pointer' }}>
+                  Auto-Renew CTO
+                </button>
               </div>
-              <div>
-                <label style={{ backgroundColor: '#0284c7', color: '#fff', padding: '8px 16px', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold', fontSize: '13px', display: 'inline-block' }}>
-                  {uploading ? 'Parsing PDF...' : 'Upload CTO PDF'}
+
+              {/* AI OCR Reader */}
+              <div style={{ backgroundColor: '#1e293b', border: '1px solid #38bdf8', padding: '18px', borderRadius: '12px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div>
+                  <h3 style={{ margin: '0 0 4px 0', color: '#38bdf8', fontSize: '15px' }}>📄 AI OCR CTO Reader</h3>
+                  <p style={{ margin: 0, color: '#94a3b8', fontSize: '12px' }}>
+                    Water: <strong>{waterLimit.toLocaleString()} L</strong> | Haz: <strong>{hazardousWasteLimit} KG</strong>
+                  </p>
+                </div>
+                <label style={{ backgroundColor: '#0284c7', color: '#fff', padding: '8px 12px', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold', fontSize: '12px' }}>
+                  {uploading ? 'Parsing...' : 'Upload CTO'}
                   <input type="file" accept=".pdf" onChange={handleConsentUpload} style={{ display: 'none' }} disabled={uploading} />
                 </label>
               </div>
-            </section>
+
+            </div>
 
             {/* Critical Red-Flag Alerts Grid */}
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '20px', marginBottom: '25px' }}>
@@ -218,30 +258,28 @@ export default function EcoTraceEnterpriseDashboard() {
                 )}
               </div>
 
-              {/* Hazardous Waste Alert */}
-              <div style={{ backgroundColor: Number(hazWasteRatio) >= 80 ? '#7c2d12' : '#064e3b', border: '1px solid #334155', padding: '18px', borderRadius: '12px' }}>
-                <h3 style={{ margin: '0 0 6px 0', color: '#fff', fontSize: '16px' }}>
-                  ☣️ Hazardous Chemical Waste Radar
+              {/* Penalty Risk Financial Shield */}
+              <div style={{ backgroundColor: estimatedPenalty > 0 ? '#450a0a' : '#064e3b', border: '1px solid #ef4444', padding: '18px', borderRadius: '12px' }}>
+                <h3 style={{ margin: '0 0 6px 0', color: '#fca5a5', fontSize: '16px' }}>
+                  🚨 Financial Prosecution Shield
                 </h3>
-                <p style={{ margin: 0, color: '#fdba74', fontSize: '13px' }}>
-                  Toxic Sludge: <strong>{currentHazardousWaste} KG</strong> / Max Allowed: <strong>{hazardousWasteLimit} KG</strong> ({hazWasteRatio}%).
+                <p style={{ margin: '0 0 8px 0', color: '#fca5a5', fontSize: '13px' }}>
+                  Estimated Penalty Risk: <strong style={{ fontSize: '18px', color: '#fff' }}>₹{estimatedPenalty.toLocaleString()}</strong>
                 </p>
-                <button type="button" onClick={() => alert('Dispatch Notice Issued to MPCB Authorized CHWTSDF Facility.')} style={{ backgroundColor: '#ea580c', color: '#fff', border: 'none', padding: '8px 14px', borderRadius: '6px', cursor: 'pointer', marginTop: '10px', fontWeight: 'bold', fontSize: '12px' }}>
-                  🚛 Dispatch to CHWTSDF Recycler
-                </button>
+                <span style={{ fontSize: '11px', color: '#94a3b8' }}>Calculated via MPCB Environmental Compensation Matrix</span>
               </div>
 
             </div>
 
-            {/* KPI Metrics */}
+            {/* Live IoT Sensor Feed (COD / BOD / pH) & Carbon Ledger */}
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '20px', marginBottom: '25px' }}>
               <div style={{ backgroundColor: '#1e293b', padding: '20px', borderRadius: '12px', borderLeft: '4px solid #22c55e' }}>
-                <span style={{ color: '#94a3b8', fontSize: '12px' }}>WATER RISK RADAR</span>
-                <p style={{ fontSize: '26px', fontWeight: 'bold', color: '#22c55e', margin: '8px 0 0 0' }}>{dischargeRatio}%</p>
+                <span style={{ color: '#94a3b8', fontSize: '12px' }}>LIVE IoT pH SENSOR</span>
+                <p style={{ fontSize: '26px', fontWeight: 'bold', color: phLevel < 6.5 || phLevel > 8.5 ? '#ef4444' : '#22c55e', margin: '8px 0 0 0' }}>{phLevel} <span style={{ fontSize: '12px', color: '#94a3b8' }}>(Safe: 6.5-8.5)</span></p>
               </div>
               <div style={{ backgroundColor: '#1e293b', padding: '20px', borderRadius: '12px', borderLeft: '4px solid #f97316' }}>
-                <span style={{ color: '#94a3b8', fontSize: '12px' }}>HAZARDOUS WASTE CAP</span>
-                <p style={{ fontSize: '26px', fontWeight: 'bold', color: '#f97316', margin: '8px 0 0 0' }}>{hazWasteRatio}%</p>
+                <span style={{ color: '#94a3b8', fontSize: '12px' }}>EFFLUENT COD LEVEL</span>
+                <p style={{ fontSize: '26px', fontWeight: 'bold', color: '#f97316', margin: '8px 0 0 0' }}>{codLevel} <span style={{ fontSize: '12px', color: '#94a3b8' }}>mg/L</span></p>
               </div>
               <div style={{ backgroundColor: '#1e293b', padding: '20px', borderRadius: '12px', borderLeft: '4px solid #38bdf8' }}>
                 <span style={{ color: '#94a3b8', fontSize: '12px' }}>SCOPE 2 CARBON LEDGER</span>
@@ -253,9 +291,14 @@ export default function EcoTraceEnterpriseDashboard() {
             <div style={{ backgroundColor: '#1e293b', padding: '20px', borderRadius: '12px', border: '1px solid #334155' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
                 <h3 style={{ margin: 0, color: '#22c55e', fontSize: '16px' }}>🏭 Live Industrial Compliance Records</h3>
-                <button type="button" onClick={fetchFactories} style={{ backgroundColor: '#334155', color: '#fff', border: 'none', padding: '6px 12px', borderRadius: '6px', cursor: 'pointer', fontSize: '12px', fontWeight: 'bold' }}>
-                  🔄 Refresh Table
-                </button>
+                <div style={{ display: 'flex', gap: '10px' }}>
+                  <button type="button" onClick={() => alert('AI Form IV (Annual Environmental Return) Generated and Compiled!')} style={{ backgroundColor: '#0284c7', color: '#fff', border: 'none', padding: '6px 12px', borderRadius: '6px', cursor: 'pointer', fontSize: '12px', fontWeight: 'bold' }}>
+                    📄 Auto-File Form IV
+                  </button>
+                  <button type="button" onClick={fetchFactories} style={{ backgroundColor: '#334155', color: '#fff', border: 'none', padding: '6px 12px', borderRadius: '6px', cursor: 'pointer', fontSize: '12px', fontWeight: 'bold' }}>
+                    🔄 Refresh
+                  </button>
+                </div>
               </div>
               {loadingDb ? (
                 <p style={{ color: '#94a3b8', fontSize: '13px' }}>Fetching live records...</p>
@@ -294,48 +337,19 @@ export default function EcoTraceEnterpriseDashboard() {
           </div>
         )}
 
-        {/* Tab 2: Client Onboarding */}
-        {activeTab === 'onboarding' && (
+        {/* Tab 2: Form 10 Manifest Generator */}
+        {activeTab === 'manifest' && (
           <div style={{ backgroundColor: '#1e293b', padding: '25px', borderRadius: '12px', border: '1px solid #334155' }}>
-            <h2 style={{ marginTop: 0, color: '#22c55e', fontSize: '20px' }}>🏭 Register New Industrial Unit</h2>
-            <form onSubmit={handleAddFactory} style={{ display: 'flex', flexDirection: 'column', gap: '15px', maxWidth: '500px', marginTop: '20px' }}>
+            <h2 style={{ marginTop: 0, color: '#22c55e', fontSize: '20px' }}>🚛 MPCB Form 10 Hazardous Waste Manifest Generator</h2>
+            <p style={{ color: '#94a3b8', fontSize: '13px' }}>Generate statutory dispatch receipts for CHWTSDF recycling facility transport.</p>
+            <form onSubmit={handleGenerateForm10} style={{ display: 'flex', flexDirection: 'column', gap: '15px', maxWidth: '500px', marginTop: '20px' }}>
               <div>
-                <label style={{ display: 'block', fontSize: '13px', color: '#94a3b8', marginBottom: '5px' }}>Factory Name</label>
-                <input required type="text" value={factoryName} onChange={(e) => setFactoryName(e.target.value)} placeholder="e.g. WESTERN CHEMICALS" style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #334155', backgroundColor: '#0f172a', color: '#fff' }} />
+                <label style={{ display: 'block', fontSize: '13px', color: '#94a3b8', marginBottom: '5px' }}>MPCB Authorized Vehicle Number</label>
+                <input required type="text" value={vehicleNo} onChange={(e) => setVehicleNo(e.target.value)} placeholder="e.g. MH 12 QW 4589" style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #334155', backgroundColor: '#0f172a', color: '#fff' }} />
               </div>
               <div>
-                <label style={{ display: 'block', fontSize: '13px', color: '#94a3b8', marginBottom: '5px' }}>Plant Location</label>
-                <input required type="text" value={factoryLocation} onChange={(e) => setFactoryLocation(e.target.value)} placeholder="e.g. BHOSARI MIDC" style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #334155', backgroundColor: '#0f172a', color: '#fff' }} />
-              </div>
-              <div>
-                <label style={{ display: 'block', fontSize: '13px', color: '#94a3b8', marginBottom: '5px' }}>MPCB Water Consent Limit (Liters/Day)</label>
-                <input required type="number" value={factoryWaterLimit} onChange={(e) => setFactoryWaterLimit(e.target.value)} placeholder="1200000" style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #334155', backgroundColor: '#0f172a', color: '#fff' }} />
+                <label style={{ display: 'block', fontSize: '13px', color: '#94a3b8', marginBottom: '5px' }}>Transporter / Recycler Name</label>
+                <input required type="text" value={transporterName} onChange={(e) => setTransporterName(e.target.value)} placeholder="e.g. MEPL Ranjangaon CHWTSDF" style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #334155', backgroundColor: '#0f172a', color: '#fff' }} />
               </div>
               <button type="submit" style={{ backgroundColor: '#22c55e', color: '#0f172a', border: 'none', padding: '12px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer', marginTop: '10px' }}>
-                + Onboard Unit to Cloud Registry
-              </button>
-            </form>
-          </div>
-        )}
-
-        {/* Tab 3: MPCB Vault */}
-        {activeTab === 'vault' && (
-          <div style={{ backgroundColor: '#1e293b', padding: '25px', borderRadius: '12px', border: '1px solid #334155' }}>
-            <h2 style={{ marginTop: 0, color: '#38bdf8', fontSize: '20px' }}>📜 MPCB Statutory Regulations Vault</h2>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', marginTop: '20px' }}>
-              <div style={{ borderLeft: '4px solid #ef4444', backgroundColor: '#0f172a', padding: '15px', borderRadius: '6px' }}>
-                <h4 style={{ margin: '0 0 5px 0', color: '#fca5a5' }}>Hazardous &amp; Other Wastes Rules, 2016</h4>
-                <p style={{ margin: 0, fontSize: '13px', color: '#94a3b8' }}>Mandatory disposal through MPCB authorized CHWTSDF facilities.</p>
-              </div>
-              <div style={{ borderLeft: '4px solid #3b82f6', backgroundColor: '#0f172a', padding: '15px', borderRadius: '6px' }}>
-                <h4 style={{ margin: '0 0 5px 0', color: '#93c5fd' }}>The Water (Prevention &amp; Control of Pollution) Act, 1974</h4>
-                <p style={{ margin: 0, fontSize: '13px', color: '#94a3b8' }}>Discharge limits must comply with CTO.</p>
-              </div>
-            </div>
-          </div>
-        )}
-
-      </main>
-    </div>
-  );
-}
+                📄 Gene
