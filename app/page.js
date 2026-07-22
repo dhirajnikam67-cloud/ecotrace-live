@@ -9,12 +9,12 @@ export default function EcoTraceEnterpriseDashboard() {
   const [dosingTriggered, setDosingTriggered] = useState(false);
   const [loadingDb, setLoadingDb] = useState(false);
 
-  // Dynamic Caps & Sensor Values
+  // Dynamic Caps and Sensor Values
   const [waterLimit, setWaterLimit] = useState(85000);
   const [hazardousWasteLimit, setHazardousWasteLimit] = useState(250);
   const [ctoExpiryDays, setCtoExpiryDays] = useState(82);
 
-  // IoT Live Sensors (COD, BOD, pH)
+  // IoT Sensors
   const [phLevel, setPhLevel] = useState(7.4);
   const [codLevel, setCodLevel] = useState(210);
 
@@ -40,16 +40,8 @@ export default function EcoTraceEnterpriseDashboard() {
   const hazWasteRatio = Number((currentHazardousWaste / hazardousWasteLimit) * 100).toFixed(1);
   const scope2Carbon = Number((electricityKwh * 0.82) / 1000).toFixed(2);
 
-  // MPCB Penalty Risk Calculation Logic
-  const calculatePenalty = () => {
-    let penalty = 0;
-    if (Number(dischargeRatio) > 85) penalty += 75000;
-    if (Number(hazWasteRatio) > 80) penalty += 125000;
-    if (phLevel < 6.5 || phLevel > 8.5) penalty += 50000;
-    return penalty;
-  };
-
-  const estimatedPenalty = calculatePenalty();
+  // MPCB Penalty Risk Logic
+  const estimatedPenalty = Number(dischargeRatio) > 85 ? 75000 : 0;
 
   // Fetch Factories Safely
   const fetchFactories = async () => {
@@ -84,7 +76,6 @@ export default function EcoTraceEnterpriseDashboard() {
 
   const handleConsentUpload = (e) => {
     if (!e || !e.target || !e.target.files || !e.target.files[0]) return;
-    const file = e.target.files[0];
     setUploading(true);
 
     setTimeout(() => {
@@ -92,19 +83,19 @@ export default function EcoTraceEnterpriseDashboard() {
       setHazardousWasteLimit(300);
       setCtoExpiryDays(365);
       setUploading(false);
-      alert('AI OCR SUCCESS:\nWater Limit: 100,000 L/Day\nHazardous Waste Cap: 300 KG/Month\nRenewal Reset: 365 Days Valid');
+      alert('AI OCR SUCCESS: CTO Parsed Successfully.');
     }, 2000);
   };
 
   const handleIoTTrigger = () => {
     setDosingTriggered(true);
     setPhLevel(7.2);
-    alert('IoT MQTT SIGNAL SENT:\nETP Controller Active.\nChemical Neutralizer Valve Opened. pH stabilized to 7.2.');
+    alert('IoT MQTT Signal Sent: ETP Neutralizer Pump Triggered.');
   };
 
   const handleGenerateForm10 = (e) => {
     e.preventDefault();
-    alert('MPCB FORM 10 MANIFEST GENERATED!\nVehicle: ' + vehicleNo + '\nTransporter: ' + transporterName);
+    alert('Form 10 Manifest Generated for Vehicle: ' + vehicleNo);
     setVehicleNo('');
     setTransporterName('');
   };
@@ -138,7 +129,7 @@ export default function EcoTraceEnterpriseDashboard() {
     }
 
     setFactoryList(prev => [newRecord, ...prev]);
-    alert('Unit onboarded to Active Compliance Dashboard!');
+    alert('Unit onboarded to Dashboard!');
 
     setFactoryName('');
     setFactoryLocation('');
@@ -166,7 +157,7 @@ export default function EcoTraceEnterpriseDashboard() {
             type="button"
             onClick={() => setActiveTab('manifest')} 
             style={{ textAlign: 'left', padding: '10px', borderRadius: '8px', border: 'none', cursor: 'pointer', backgroundColor: activeTab === 'manifest' ? '#22c55e' : 'transparent', color: activeTab === 'manifest' ? '#0f172a' : '#94a3b8', fontWeight: 'bold' }}>
-            Form 10 Manifest Generator
+            Form 10 Manifest
           </button>
           <button 
             type="button"
@@ -198,8 +189,8 @@ export default function EcoTraceEnterpriseDashboard() {
         {/* Header */}
         <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '25px', borderBottom: '1px solid #334155', paddingBottom: '20px' }}>
           <div>
-            <h1 style={{ fontSize: '24px', margin: 0, fontWeight: '700' }}>MPCB Compliance and MSME Protection Radar</h1>
-            <p style={{ color: '#94a3b8', margin: '4px 0 0 0', fontSize: '14px' }}>Real-time Industrial Monitoring Engine</p>
+            <h1 style={{ fontSize: '24px', margin: 0, fontWeight: '700' }}>MPCB Compliance Radar</h1>
+            <p style={{ color: '#94a3b8', margin: '4px 0 0 0', fontSize: '14px' }}>Real-time Industrial Protection Engine</p>
           </div>
           <button type="button" onClick={handlePrint} style={{ backgroundColor: '#22c55e', color: '#0f172a', border: 'none', padding: '10px 18px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer' }}>
             Export Audit Passport
@@ -253,25 +244,25 @@ export default function EcoTraceEnterpriseDashboard() {
                 </p>
                 {Number(dischargeRatio) >= 85 && (
                   <button type="button" onClick={handleIoTTrigger} style={{ backgroundColor: dosingTriggered ? '#16a34a' : '#ef4444', color: '#fff', border: 'none', padding: '8px 14px', borderRadius: '6px', cursor: 'pointer', marginTop: '10px', fontWeight: 'bold', fontSize: '12px' }}>
-                    {dosingTriggered ? 'Auto-Dosing Activated' : 'Trigger IoT Neutralizer Pump'}
+                    {dosingTriggered ? 'Auto-Dosing Activated' : 'Trigger Neutralizer Pump'}
                   </button>
                 )}
               </div>
 
-              {/* Penalty Risk Financial Shield */}
+              {/* Penalty Shield */}
               <div style={{ backgroundColor: estimatedPenalty > 0 ? '#450a0a' : '#064e3b', border: '1px solid #ef4444', padding: '18px', borderRadius: '12px' }}>
                 <h3 style={{ margin: '0 0 6px 0', color: '#fca5a5', fontSize: '16px' }}>
-                  Financial Prosecution Shield
+                  Prosecution Penalty Shield
                 </h3>
                 <p style={{ margin: '0 0 8px 0', color: '#fca5a5', fontSize: '13px' }}>
                   Estimated Penalty Risk: <strong style={{ fontSize: '18px', color: '#fff' }}>INR {estimatedPenalty.toLocaleString()}</strong>
                 </p>
-                <span style={{ fontSize: '11px', color: '#94a3b8' }}>Calculated via MPCB Penalty Matrix</span>
+                <span style={{ fontSize: '11px', color: '#94a3b8' }}>Calculated via MPCB Matrix</span>
               </div>
 
             </div>
 
-            {/* Live IoT Sensor Feed (COD / BOD / pH) & Carbon Ledger */}
+            {/* Live IoT Sensor Feed */}
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '20px', marginBottom: '25px' }}>
               <div style={{ backgroundColor: '#1e293b', padding: '20px', borderRadius: '12px', borderLeft: '4px solid #22c55e' }}>
                 <span style={{ color: '#94a3b8', fontSize: '12px' }}>LIVE IoT pH SENSOR</span>
@@ -287,12 +278,12 @@ export default function EcoTraceEnterpriseDashboard() {
               </div>
             </div>
 
-            {/* Live Industrial Compliance Table */}
+            {/* Compliance Records Table */}
             <div style={{ backgroundColor: '#1e293b', padding: '20px', borderRadius: '12px', border: '1px solid #334155' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
                 <h3 style={{ margin: 0, color: '#22c55e', fontSize: '16px' }}>Live Industrial Compliance Records</h3>
                 <div style={{ display: 'flex', gap: '10px' }}>
-                  <button type="button" onClick={() => alert('AI Form IV Annual Return Generated!')} style={{ backgroundColor: '#0284c7', color: '#fff', border: 'none', padding: '6px 12px', borderRadius: '6px', cursor: 'pointer', fontSize: '12px', fontWeight: 'bold' }}>
+                  <button type="button" onClick={() => alert('AI Form IV Annual Return Compiled!')} style={{ backgroundColor: '#0284c7', color: '#fff', border: 'none', padding: '6px 12px', borderRadius: '6px', cursor: 'pointer', fontSize: '12px', fontWeight: 'bold' }}>
                     Auto-File Form IV
                   </button>
                   <button type="button" onClick={fetchFactories} style={{ backgroundColor: '#334155', color: '#fff', border: 'none', padding: '6px 12px', borderRadius: '6px', cursor: 'pointer', fontSize: '12px', fontWeight: 'bold' }}>
@@ -341,15 +332,15 @@ export default function EcoTraceEnterpriseDashboard() {
         {activeTab === 'manifest' && (
           <div style={{ backgroundColor: '#1e293b', padding: '25px', borderRadius: '12px', border: '1px solid #334155' }}>
             <h2 style={{ marginTop: 0, color: '#22c55e', fontSize: '20px' }}>MPCB Form 10 Hazardous Waste Manifest Generator</h2>
-            <p style={{ color: '#94a3b8', fontSize: '13px' }}>Generate statutory dispatch receipts for CHWTSDF recycling facility transport.</p>
+            <p style={{ color: '#94a3b8', fontSize: '13px' }}>Generate statutory dispatch receipts for CHWTSDF transport.</p>
             <form onSubmit={handleGenerateForm10} style={{ display: 'flex', flexDirection: 'column', gap: '15px', maxWidth: '500px', marginTop: '20px' }}>
               <div>
                 <label style={{ display: 'block', fontSize: '13px', color: '#94a3b8', marginBottom: '5px' }}>MPCB Authorized Vehicle Number</label>
-                <input required type="text" value={vehicleNo} onChange={(e) => setVehicleNo(e.target.value)} placeholder="e.g. MH 12 QW 4589" style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #334155', backgroundColor: '#0f172a', color: '#fff' }} />
+                <input required type="text" value={vehicleNo} onChange={(e) => setVehicleNo(e.target.value)} placeholder="MH 12 QW 4589" style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #334155', backgroundColor: '#0f172a', color: '#fff' }} />
               </div>
               <div>
                 <label style={{ display: 'block', fontSize: '13px', color: '#94a3b8', marginBottom: '5px' }}>Transporter / Recycler Name</label>
-                <input required type="text" value={transporterName} onChange={(e) => setTransporterName(e.target.value)} placeholder="e.g. MEPL Ranjangaon CHWTSDF" style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #334155', backgroundColor: '#0f172a', color: '#fff' }} />
+                <input required type="text" value={transporterName} onChange={(e) => setTransporterName(e.target.value)} placeholder="MEPL Ranjangaon CHWTSDF" style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #334155', backgroundColor: '#0f172a', color: '#fff' }} />
               </div>
               <button type="submit" style={{ backgroundColor: '#22c55e', color: '#0f172a', border: 'none', padding: '12px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer', marginTop: '10px' }}>
                 Generate Form 10 PDF
@@ -361,4 +352,8 @@ export default function EcoTraceEnterpriseDashboard() {
         {/* Tab 3: Client Onboarding */}
         {activeTab === 'onboarding' && (
           <div style={{ backgroundColor: '#1e293b', padding: '25px', borderRadius: '12px', border: '1px solid #334155' }}>
-            <h2
+            <h2 style={{ marginTop: 0, color: '#22c55e', fontSize: '20px' }}>Register New Industrial Unit</h2>
+            <form onSubmit={handleAddFactory} style={{ display: 'flex', flexDirection: 'column', gap: '15px', maxWidth: '500px', marginTop: '20px' }}>
+              <div>
+                <label style={{ display: 'block', fontSize: '13px', color: '#94a3b8', marginBottom: '5px' }}>Factory Name</label>
+                <input required type="text" value={factoryName} onChange={(e) => setFactoryName(e.target.value)} placeholder="WESTERN CHEMICALS" style={{ width: '100%', padding: '10px', borderRadius: '6px',
