@@ -1,4 +1,4 @@
-'use client';
+use client';
 
 import React, { useState } from 'react';
 
@@ -7,28 +7,33 @@ export default function EcoTraceEnterpriseDashboard() {
   const [uploading, setUploading] = useState(false);
   const [dosingTriggered, setDosingTriggered] = useState(false);
 
-  // Dynamic Factory & Consent Limits State
+  // Dynamic Factory State
   const [waterLimit, setWaterLimit] = useState(85000);
   const [hazardousWasteLimit, setHazardousWasteLimit] = useState(250);
 
-  // Current Operations Metrics
+  // Operations Metrics
   const currentDischarge = 74800;
   const currentHazardousWaste = 215;
   const electricityKwh = 1420;
 
-  // Onboarding Form State
+  // Form State
   const [factoryName, setFactoryName] = useState('');
   const [factoryLocation, setFactoryLocation] = useState('');
   const [factoryWaterLimit, setFactoryWaterLimit] = useState('');
 
-  // Calculations
+  // Ratios
   const dischargeRatio = ((currentDischarge / waterLimit) * 100).toFixed(1);
   const hazWasteRatio = ((currentHazardousWaste / hazardousWasteLimit) * 100).toFixed(1);
   const scope2Carbon = ((electricityKwh * 0.82) / 1000).toFixed(2);
 
-  // AI OCR Engine Simulation
+  const handlePrint = () => {
+    if (typeof window !== 'undefined') {
+      window.print();
+    }
+  };
+
   const handleConsentUpload = (e) => {
-    if (!e.target.files || !e.target.files[0]) return;
+    if (!e.target || !e.target.files || !e.target.files[0]) return;
     const file = e.target.files[0];
     setUploading(true);
 
@@ -36,20 +41,18 @@ export default function EcoTraceEnterpriseDashboard() {
       setWaterLimit(100000);
       setHazardousWasteLimit(300);
       setUploading(false);
-      alert([AI OCR ENGINE PARSED SUCCESS]\n\nFile: ${file.name}\n- Water Discharge Cap: 100,000 L/Day\n- Hazardous Waste Cap: 300 KG/Month\n- Status: MPCB Consent Database Updated);
+      alert([AI OCR PARSED SUCCESS]\nFile: ${file.name}\n- Water Limit: 100,000 L/Day\n- Hazardous Waste Cap: 300 KG/Month);
     }, 2000);
   };
 
-  // Trigger Hardware / IoT ETP Auto-Dosing Protocol
   const handleIoTTrigger = () => {
     setDosingTriggered(true);
-    alert('⚡ [IoT MQTT PROTOCOL TRIGGERED]\n\nSignal sent to ETP Plant Pump Controller #04.\nChemical Auto-Dosing Neutralizer Valve Opened.\nEffluent PPM Normalizing...');
+    alert('⚡ [IoT MQTT SIGNAL SENT]\nETP Controller #04 Active.\nChemical Auto-Dosing Valve Opened.');
   };
 
-  // Onboarding Submit
   const handleAddFactory = (e) => {
     e.preventDefault();
-    alert(Factory "${factoryName}" onboarded successfully to Supabase Cloud Registry!);
+    alert(Factory "${factoryName}" onboarded to Cloud Registry!);
     setFactoryName('');
     setFactoryLocation('');
     setFactoryWaterLimit('');
@@ -66,16 +69,19 @@ export default function EcoTraceEnterpriseDashboard() {
 
         <nav style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
           <button 
+            type="button"
             onClick={() => setActiveTab('dashboard')} 
             style={{ textAlign: 'left', padding: '10px', borderRadius: '8px', border: 'none', cursor: 'pointer', backgroundColor: activeTab === 'dashboard' ? '#22c55e' : 'transparent', color: activeTab === 'dashboard' ? '#0f172a' : '#94a3b8', fontWeight: 'bold' }}>
             📊 Live Risk Radar
           </button>
           <button 
+            type="button"
             onClick={() => setActiveTab('onboarding')} 
             style={{ textAlign: 'left', padding: '10px', borderRadius: '8px', border: 'none', cursor: 'pointer', backgroundColor: activeTab === 'onboarding' ? '#22c55e' : 'transparent', color: activeTab === 'onboarding' ? '#0f172a' : '#94a3b8', fontWeight: 'bold' }}>
             🏭 Client Onboarding
           </button>
           <button 
+            type="button"
             onClick={() => setActiveTab('vault')} 
             style={{ textAlign: 'left', padding: '10px', borderRadius: '8px', border: 'none', cursor: 'pointer', backgroundColor: activeTab === 'vault' ? '#22c55e' : 'transparent', color: activeTab === 'vault' ? '#0f172a' : '#94a3b8', fontWeight: 'bold' }}>
             📜 MPCB Legal Vault
@@ -83,7 +89,7 @@ export default function EcoTraceEnterpriseDashboard() {
         </nav>
 
         <div style={{ marginTop: 'auto', backgroundColor: '#0f172a', padding: '12px', borderRadius: '8px', border: '1px solid #334155', fontSize: '12px', color: '#94a3b8' }}>
-          National Mission: <strong>Zero Hazardous Pollution 🇮🇳</strong>
+          National Mission: <strong>Zero Hazardous Discharge 🇮🇳</strong>
         </div>
       </aside>
 
@@ -93,10 +99,10 @@ export default function EcoTraceEnterpriseDashboard() {
         {/* Top Header */}
         <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '25px', borderBottom: '1px solid #334155', paddingBottom: '20px' }}>
           <div>
-            <h1 style={{ fontSize: '24px', margin: 0, fontWeight: '700' }}>MPCB Compliance & Hazardous Waste Radar</h1>
-            <p style={{ color: '#94a3b8', margin: '4px 0 0 0', fontSize: '14px' }}>Real-time Industrial Monitoring & ESG Carbon Engine</p>
+            <h1 style={{ fontSize: '24px', margin: 0, fontWeight: '700' }}>MPCB Compliance &amp; Hazardous Waste Radar</h1>
+            <p style={{ color: '#94a3b8', margin: '4px 0 0 0', fontSize: '14px' }}>Real-time Industrial Monitoring &amp; ESG Carbon Engine</p>
           </div>
-          <button onClick={() => window.print()} style={{ backgroundColor: '#22c55e', color: '#0f172a', border: 'none', padding: '10px 18px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer' }}>
+          <button type="button" onClick={handlePrint} style={{ backgroundColor: '#22c55e', color: '#0f172a', border: 'none', padding: '10px 18px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer' }}>
             📥 Export Audit Passport (PDF)
           </button>
         </header>
@@ -108,7 +114,7 @@ export default function EcoTraceEnterpriseDashboard() {
               <div>
                 <h3 style={{ margin: '0 0 4px 0', color: '#38bdf8', fontSize: '16px' }}>📄 AI OCR MPCB Consent (CTO) Reader</h3>
                 <p style={{ margin: 0, color: '#94a3b8', fontSize: '13px' }}>
-                  Auto-Extracted CTO Limits: Water Cap = <strong>{waterLimit.toLocaleString()} L/Day</strong> | Hazardous Waste = <strong>{hazardousWasteLimit} KG/Month</strong>
+                  Extracted Caps: Water = <strong>{waterLimit.toLocaleString()} L/Day</strong> | Hazardous Waste = <strong>{hazardousWasteLimit} KG/Month</strong>
                 </p>
               </div>
               <div>
@@ -131,7 +137,7 @@ export default function EcoTraceEnterpriseDashboard() {
                   Discharge at <strong>{dischargeRatio}%</strong> ({currentDischarge.toLocaleString()} / {waterLimit.toLocaleString()} L).
                 </p>
                 {Number(dischargeRatio) >= 85 && (
-                  <button onClick={handleIoTTrigger} style={{ backgroundColor: dosingTriggered ? '#16a34a' : '#ef4444', color: '#fff', border: 'none', padding: '8px 14px', borderRadius: '6px', cursor: 'pointer', marginTop: '10px', fontWeight: 'bold', fontSize: '12px' }}>
+                  <button type="button" onClick={handleIoTTrigger} style={{ backgroundColor: dosingTriggered ? '#16a34a' : '#ef4444', color: '#fff', border: 'none', padding: '8px 14px', borderRadius: '6px', cursor: 'pointer', marginTop: '10px', fontWeight: 'bold', fontSize: '12px' }}>
                     {dosingTriggered ? '✓ Auto-Dosing Activated' : 'Trigger IoT Neutralizer Pump'}
                   </button>
                 )}
@@ -145,7 +151,7 @@ export default function EcoTraceEnterpriseDashboard() {
                 <p style={{ margin: 0, color: '#fdba74', fontSize: '13px' }}>
                   Toxic Sludge: <strong>{currentHazardousWaste} KG</strong> / Max Allowed: <strong>{hazardousWasteLimit} KG</strong> ({hazWasteRatio}%).
                 </p>
-                <button onClick={() => alert('Dispatch Notice Issued to MPCB Authorized CHWTSDF Facility for Safe Chemical Disposal.')} style={{ backgroundColor: '#ea580c', color: '#fff', border: 'none', padding: '8px 14px', borderRadius: '6px', cursor: 'pointer', marginTop: '10px', fontWeight: 'bold', fontSize: '12px' }}>
+                <button type="button" onClick={() => alert('Dispatch Notice Issued to MPCB Authorized CHWTSDF Facility for Safe Chemical Disposal.')} style={{ backgroundColor: '#ea580c', color: '#fff', border: 'none', padding: '8px 14px', borderRadius: '6px', cursor: 'pointer', marginTop: '10px', fontWeight: 'bold', fontSize: '12px' }}>
                   🚛 Dispatch to CHWTSDF Recycler
                 </button>
               </div>
@@ -197,19 +203,19 @@ export default function EcoTraceEnterpriseDashboard() {
         {/* Tab 3: MPCB Legal & Regulations Vault */}
         {activeTab === 'vault' && (
           <div style={{ backgroundColor: '#1e293b', padding: '25px', borderRadius: '12px', border: '1px solid #334155' }}>
-            <h2 style={{ marginTop: 0, color: '#38bdf8', fontSize: '20px' }}>📜 MPCB Statutory Acts & Environmental Regulations Vault</h2>
+            <h2 style={{ marginTop: 0, color: '#38bdf8', fontSize: '20px' }}>📜 MPCB Statutory Acts &amp; Environmental Regulations Vault</h2>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', marginTop: '20px' }}>
               <div style={{ borderLeft: '4px solid #ef4444', backgroundColor: '#0f172a', padding: '15px', borderRadius: '6px' }}>
-                <h4 style={{ margin: '0 0 5px 0', color: '#fca5a5' }}>Hazardous & Other Wastes Rules, 2016</h4>
-                <p style={{ margin: 0, fontSize: '13px', color: '#94a3b8' }}>Mandatory disposal of chemical sludge only through MPCB authorized CHWTSDF facilities. Penalty for illegal dumping includes immediate factory sealing and closure orders under Section 5.</p>
+                <h4 style={{ margin: '0 0 5px 0', color: '#fca5a5' }}>Hazardous &amp; Other Wastes Rules, 2016</h4>
+                <p style={{ margin: 0, fontSize: '13px', color: '#94a3b8' }}>Mandatory disposal of chemical sludge only through MPCB authorized CHWTSDF facilities.</p>
               </div>
               <div style={{ borderLeft: '4px solid #3b82f6', backgroundColor: '#0f172a', padding: '15px', borderRadius: '6px' }}>
-                <h4 style={{ margin: '0 0 5px 0', color: '#93c5fd' }}>The Water (Prevention & Control of Pollution) Act, 1974</h4>
-                <p style={{ margin: 0, fontSize: '13px', color: '#94a3b8' }}>Daily discharge limits must strictly comply with Consent to Operate (CTO). ETP Online Continuous Effluent Monitoring System (OCEMS) must maintain 24/7 uptime.</p>
+                <h4 style={{ margin: '0 0 5px 0', color: '#93c5fd' }}>The Water (Prevention &amp; Control of Pollution) Act, 1974</h4>
+                <p style={{ margin: 0, fontSize: '13px', color: '#94a3b8' }}>Daily discharge limits must strictly comply with Consent to Operate (CTO).</p>
               </div>
               <div style={{ borderLeft: '4px solid #22c55e', backgroundColor: '#0f172a', padding: '15px', borderRadius: '6px' }}>
-                <h4 style={{ margin: '0 0 5px 0', color: '#86efac' }}>The Air (Prevention & Control of Pollution) Act, 1981</h4>
-                <p style={{ margin: 0, fontSize: '13px', color: '#94a3b8' }}>Stack emission levels for SO2, NOx, and Particulate Matter (PM) must remain below statutory thresholds. Ambient air quality monitoring required bi-weekly.</p>
+                <h4 style={{ margin: '0 0 5px 0', color: '#86efac' }}>The Air (Prevention &amp; Control of Pollution) Act, 1981</h4>
+                <p style={{ margin: 0, fontSize: '13px', color: '#94a3b8' }}>Stack emission levels for SO2, NOx, and Particulate Matter must remain below statutory thresholds.</p>
               </div>
             </div>
           </div>
