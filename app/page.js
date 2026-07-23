@@ -7,7 +7,7 @@ export default function EcoTraceEnterpriseDashboard() {
   const [uploading, setUploading] = useState(false);
   const [dosingTriggered, setDosingTriggered] = useState(false);
 
-  // Dynamic Caps & Sensor Values
+  // Dynamic Caps and Sensor Values
   const [waterLimit, setWaterLimit] = useState(85000);
   const [hazardousWasteLimit, setHazardousWasteLimit] = useState(250);
   const [ctoExpiryDays, setCtoExpiryDays] = useState(82);
@@ -16,14 +16,14 @@ export default function EcoTraceEnterpriseDashboard() {
   const [phLevel, setPhLevel] = useState(7.4);
   const [codLevel, setCodLevel] = useState(210);
 
-  // ESG & Carbon Accounting Engine
+  // Carbon Accounting Engine
   const electricityKwh = 1420;
-  const dieselLiters = 85; // Genset / Boiler Fuel
-  const supplyChainKm = 420; // Transport & Vendors
+  const dieselLiters = 85;
+  const supplyChainKm = 420;
 
-  const scope1Carbon = ((dieselLiters * 2.68) / 1000).toFixed(2); // Direct Emissions
-  const scope2Carbon = ((electricityKwh * 0.82) / 1000).toFixed(2); // Indirect Electricity
-  const scope3Carbon = ((supplyChainKm * 0.15) / 1000).toFixed(2); // Supply Chain & Logistics
+  const scope1Carbon = ((dieselLiters * 2.68) / 1000).toFixed(2);
+  const scope2Carbon = ((electricityKwh * 0.82) / 1000).toFixed(2);
+  const scope3Carbon = ((supplyChainKm * 0.15) / 1000).toFixed(2);
   const totalCarbon = (Number(scope1Carbon) + Number(scope2Carbon) + Number(scope3Carbon)).toFixed(2);
 
   // Data State
@@ -58,7 +58,7 @@ export default function EcoTraceEnterpriseDashboard() {
       setHazardousWasteLimit(300);
       setCtoExpiryDays(365);
       setUploading(false);
-      alert('AI OCR SUCCESS: CTO Parsed Successfully. Water: 100,000 L | Haz: 300 KG');
+      alert('AI OCR SUCCESS: CTO Parsed Successfully.');
     }, 2000);
   };
 
@@ -102,28 +102,28 @@ export default function EcoTraceEnterpriseDashboard() {
 
         <nav style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
           <button type="button" onClick={() => setActiveTab('dashboard')} style={{ textAlign: 'left', padding: '10px', borderRadius: '8px', border: 'none', cursor: 'pointer', backgroundColor: activeTab === 'dashboard' ? '#22c55e' : 'transparent', color: activeTab === 'dashboard' ? '#0f172a' : '#94a3b8', fontWeight: 'bold' }}>
-            📊 Live Risk Radar
+            Live Risk Radar
           </button>
           <button type="button" onClick={() => setActiveTab('esg')} style={{ textAlign: 'left', padding: '10px', borderRadius: '8px', border: 'none', cursor: 'pointer', backgroundColor: activeTab === 'esg' ? '#22c55e' : 'transparent', color: activeTab === 'esg' ? '#0f172a' : '#94a3b8', fontWeight: 'bold' }}>
-            🌍 Scope 1, 2, 3 ESG Accounting
+            Scope 1, 2, 3 ESG Accounting
           </button>
           <button type="button" onClick={() => setActiveTab('manifest')} style={{ textAlign: 'left', padding: '10px', borderRadius: '8px', border: 'none', cursor: 'pointer', backgroundColor: activeTab === 'manifest' ? '#22c55e' : 'transparent', color: activeTab === 'manifest' ? '#0f172a' : '#94a3b8', fontWeight: 'bold' }}>
-            🚛 Form 10 Manifest Generator
+            Form 10 Manifest Generator
           </button>
           <button type="button" onClick={() => setActiveTab('cluster')} style={{ textAlign: 'left', padding: '10px', borderRadius: '8px', border: 'none', cursor: 'pointer', backgroundColor: activeTab === 'cluster' ? '#22c55e' : 'transparent', color: activeTab === 'cluster' ? '#0f172a' : '#94a3b8', fontWeight: 'bold' }}>
-            🏢 MCCI MIDC Cluster Center
+            MCCI MIDC Cluster Center
           </button>
           <button type="button" onClick={() => setActiveTab('onboarding')} style={{ textAlign: 'left', padding: '10px', borderRadius: '8px', border: 'none', cursor: 'pointer', backgroundColor: activeTab === 'onboarding' ? '#22c55e' : 'transparent', color: activeTab === 'onboarding' ? '#0f172a' : '#94a3b8', fontWeight: 'bold' }}>
-            🏭 Client Onboarding
+            Client Onboarding
           </button>
           <button type="button" onClick={() => setActiveTab('vault')} style={{ textAlign: 'left', padding: '10px', borderRadius: '8px', border: 'none', cursor: 'pointer', backgroundColor: activeTab === 'vault' ? '#22c55e' : 'transparent', color: activeTab === 'vault' ? '#0f172a' : '#94a3b8', fontWeight: 'bold' }}>
-            📜 MPCB Legal Vault
+            MPCB Legal Vault
           </button>
         </nav>
 
         {/* ESG Certificate Banner */}
         <div style={{ marginTop: 'auto', backgroundColor: '#0f172a', padding: '12px', borderRadius: '8px', border: '1px solid #22c55e', fontSize: '12px' }}>
-          <span style={{ color: '#22c55e', fontWeight: 'bold' }}>🏅 Green Vendor Passport</span>
+          <span style={{ color: '#22c55e', fontWeight: 'bold' }}>Green Vendor Passport</span>
           <p style={{ margin: '4px 0 8px 0', color: '#94a3b8', fontSize: '11px' }}>0.75% Bank Interest Subvention Eligible</p>
           <button type="button" onClick={() => alert('Downloading Bank Loan Green Credit Certificate...')} style={{ backgroundColor: '#22c55e', color: '#0f172a', border: 'none', padding: '6px 10px', borderRadius: '4px', fontSize: '11px', fontWeight: 'bold', width: '100%', cursor: 'pointer' }}>
             Download Loan Certificate
@@ -137,12 +137,12 @@ export default function EcoTraceEnterpriseDashboard() {
         {/* Header */}
         <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '25px', borderBottom: '1px solid #334155', paddingBottom: '20px' }}>
           <div>
-            <h1 style={{ fontSize: '24px', margin: 0, fontWeight: '700' }}>MPCB &amp; Enterprise Compliance Gateway</h1>
-            <p style={{ color: '#94a3b8', margin: '4px 0 0 0', fontSize: '14px' }}>AI-Powered Zero Non-Compliance Ecosystem for MSMEs and MNCs</p>
+            <h1 style={{ fontSize: '24px', margin: 0, fontWeight: '700' }}>MPCB and Enterprise Compliance Gateway</h1>
+            <p style={{ color: '#94a3b8', margin: '4px 0 0 0', fontSize: '14px' }}>AI-Powered Zero Non-Compliance Ecosystem</p>
           </div>
           <div style={{ display: 'flex', gap: '10px' }}>
-            <button type="button" onClick={() => alert('Syncing Live Data with MPCB OCMMS Single Window Portal...')} style={{ backgroundColor: '#0284c7', color: '#fff', border: 'none', padding: '10px 16px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer' }}>
-              🌐 Sync MPCB Portal
+            <button type="button" onClick={() => alert('Syncing Live Data with MPCB OCMMS Portal...')} style={{ backgroundColor: '#0284c7', color: '#fff', border: 'none', padding: '10px 16px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer' }}>
+              Sync MPCB Portal
             </button>
             <button type="button" onClick={handlePrint} style={{ backgroundColor: '#22c55e', color: '#0f172a', border: 'none', padding: '10px 16px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer' }}>
               Export Audit Passport
@@ -157,7 +157,7 @@ export default function EcoTraceEnterpriseDashboard() {
               
               <div style={{ backgroundColor: '#1e293b', border: '1px solid #eab308', padding: '18px', borderRadius: '12px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <div>
-                  <h3 style={{ margin: '0 0 4px 0', color: '#eab308', fontSize: '15px' }}>📅 CTO Renewal Radar</h3>
+                  <h3 style={{ margin: '0 0 4px 0', color: '#eab308', fontSize: '15px' }}>CTO Renewal Radar</h3>
                   <p style={{ margin: 0, color: '#94a3b8', fontSize: '13px' }}>
                     Days Left: <strong style={{ color: '#fff', fontSize: '16px' }}>{ctoExpiryDays} Days</strong>
                   </p>
@@ -169,7 +169,7 @@ export default function EcoTraceEnterpriseDashboard() {
 
               <div style={{ backgroundColor: '#1e293b', border: '1px solid #38bdf8', padding: '18px', borderRadius: '12px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <div>
-                  <h3 style={{ margin: '0 0 4px 0', color: '#38bdf8', fontSize: '15px' }}>📄 AI OCR CTO Reader</h3>
+                  <h3 style={{ margin: '0 0 4px 0', color: '#38bdf8', fontSize: '15px' }}>AI OCR CTO Reader</h3>
                   <p style={{ margin: 0, color: '#94a3b8', fontSize: '12px' }}>
                     Water: <strong>{waterLimit} L</strong> | Haz: <strong>{hazardousWasteLimit} KG</strong>
                   </p>
@@ -187,7 +187,7 @@ export default function EcoTraceEnterpriseDashboard() {
               
               <div style={{ backgroundColor: Number(dischargeRatio) >= 85 ? '#7f1d1d' : '#064e3b', border: '1px solid #334155', padding: '18px', borderRadius: '12px' }}>
                 <h3 style={{ margin: '0 0 6px 0', color: '#fff', fontSize: '16px' }}>
-                  {Number(dischargeRatio) >= 85 ? '⚠️ Water Discharge Alert (85%+ Limit)' : '🟢 Water Status: Safe'}
+                  {Number(dischargeRatio) >= 85 ? 'Water Discharge Alert (85%+ Limit)' : 'Water Status: Safe'}
                 </h3>
                 <p style={{ margin: 0, color: '#fca5a5', fontSize: '13px' }}>
                   Discharge at <strong>{dischargeRatio}%</strong> ({currentDischarge} / {waterLimit} L).
@@ -201,12 +201,12 @@ export default function EcoTraceEnterpriseDashboard() {
 
               <div style={{ backgroundColor: estimatedPenalty > 0 ? '#450a0a' : '#064e3b', border: '1px solid #ef4444', padding: '18px', borderRadius: '12px' }}>
                 <h3 style={{ margin: '0 0 6px 0', color: '#fca5a5', fontSize: '16px' }}>
-                  🚨 Prosecution Penalty Shield
+                  Prosecution Penalty Shield
                 </h3>
                 <p style={{ margin: '0 0 8px 0', color: '#fca5a5', fontSize: '13px' }}>
                   Estimated Penalty Risk: <strong style={{ fontSize: '18px', color: '#fff' }}>INR {estimatedPenalty}</strong>
                 </p>
-                <span style={{ fontSize: '11px', color: '#94a3b8' }}>Calculated via MPCB Environmental Compensation Matrix</span>
+                <span style={{ fontSize: '11px', color: '#94a3b8' }}>Calculated via MPCB Matrix</span>
               </div>
 
             </div>
@@ -230,7 +230,7 @@ export default function EcoTraceEnterpriseDashboard() {
             {/* Compliance Table */}
             <div style={{ backgroundColor: '#1e293b', padding: '20px', borderRadius: '12px', border: '1px solid #334155' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
-                <h3 style={{ margin: 0, color: '#22c55e', fontSize: '16px' }}>🏭 Live Industrial Compliance Records</h3>
+                <h3 style={{ margin: 0, color: '#22c55e', fontSize: '16px' }}>Live Industrial Compliance Records</h3>
                 <button type="button" onClick={() => alert('AI Form IV Annual Return Compiled!')} style={{ backgroundColor: '#0284c7', color: '#fff', border: 'none', padding: '6px 12px', borderRadius: '6px', cursor: 'pointer', fontSize: '12px', fontWeight: 'bold' }}>
                   Auto-File Form IV
                 </button>
@@ -262,13 +262,13 @@ export default function EcoTraceEnterpriseDashboard() {
         {/* Tab 2: Scope 1, 2, 3 ESG Ledger */}
         {activeTab === 'esg' && (
           <div style={{ backgroundColor: '#1e293b', padding: '25px', borderRadius: '12px', border: '1px solid #334155' }}>
-            <h2 style={{ marginTop: 0, color: '#22c55e', fontSize: '20px' }}>🌍 Scope 1, 2, 3 Carbon Emissions Engine (MNC Audit Ready)</h2>
-            <p style={{ color: '#94a3b8', fontSize: '13px' }}>MNC vendors like Tata, Mahindra, &amp; Bajaj require complete GHG protocol carbon data.</p>
+            <h2 style={{ marginTop: 0, color: '#22c55e', fontSize: '20px' }}>Scope 1, 2, 3 Carbon Emissions Engine (MNC Audit Ready)</h2>
+            <p style={{ color: '#94a3b8', fontSize: '13px' }}>MNC vendors like Tata, Mahindra, and Bajaj require complete carbon data.</p>
             
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '20px', marginTop: '20px' }}>
               <div style={{ backgroundColor: '#0f172a', padding: '18px', borderRadius: '8px', borderLeft: '4px solid #ef4444' }}>
                 <h4 style={{ margin: '0 0 5px 0', color: '#fca5a5' }}>Scope 1 (Direct Emissions)</h4>
-                <p style={{ fontSize: '12px', color: '#94a3b8', margin: '0 0 8px 0' }}>Boiler Fuel &amp; Diesel Gensets</p>
+                <p style={{ fontSize: '12px', color: '#94a3b8', margin: '0 0 8px 0' }}>Boiler Fuel and Diesel Gensets</p>
                 <span style={{ fontSize: '22px', fontWeight: 'bold', color: '#fff' }}>{scope1Carbon} tCO2e</span>
               </div>
 
@@ -280,15 +280,15 @@ export default function EcoTraceEnterpriseDashboard() {
 
               <div style={{ backgroundColor: '#0f172a', padding: '18px', borderRadius: '8px', borderLeft: '4px solid #eab308' }}>
                 <h4 style={{ margin: '0 0 5px 0', color: '#fef08a' }}>Scope 3 (Supply Chain)</h4>
-                <p style={{ fontSize: '12px', color: '#94a3b8', margin: '0 0 8px 0' }}>Raw Material Transport &amp; Logistics</p>
+                <p style={{ fontSize: '12px', color: '#94a3b8', margin: '0 0 8px 0' }}>Raw Material Transport and Logistics</p>
                 <span style={{ fontSize: '22px', fontWeight: 'bold', color: '#fff' }}>{scope3Carbon} tCO2e</span>
               </div>
             </div>
 
             <div style={{ marginTop: '25px', backgroundColor: '#0f172a', padding: '15px', borderRadius: '8px', border: '1px solid #22c55e' }}>
-              <h4 style={{ margin: '0 0 8px 0', color: '#22c55e' }}>💰 Bank Loan Green Credit Eligibility Score: 94 / 100</h4>
+              <h4 style={{ margin: '0 0 8px 0', color: '#22c55e' }}>Bank Loan Green Credit Eligibility Score: 94 / 100</h4>
               <p style={{ margin: 0, fontSize: '13px', color: '#94a3b8' }}>
-                Eligible for <strong>0.75% Interest Subvention</strong> under RBI ESG &amp; SIDBI Green MSME Finance Scheme.
+                Eligible for <strong>0.75% Interest Subvention</strong> under RBI ESG and SIDBI Green Scheme.
               </p>
             </div>
           </div>
@@ -297,7 +297,7 @@ export default function EcoTraceEnterpriseDashboard() {
         {/* Tab 3: Manifest */}
         {activeTab === 'manifest' && (
           <div style={{ backgroundColor: '#1e293b', padding: '25px', borderRadius: '12px', border: '1px solid #334155' }}>
-            <h2 style={{ marginTop: 0, color: '#22c55e', fontSize: '20px' }}>🚛 MPCB Form 10 Hazardous Waste Manifest Generator</h2>
+            <h2 style={{ marginTop: 0, color: '#22c55e', fontSize: '20px' }}>MPCB Form 10 Hazardous Waste Manifest Generator</h2>
             <form onSubmit={handleGenerateForm10} style={{ display: 'flex', flexDirection: 'column', gap: '15px', maxWidth: '500px', marginTop: '20px' }}>
               <div>
                 <label style={{ display: 'block', fontSize: '13px', color: '#94a3b8', marginBottom: '5px' }}>Vehicle Number</label>
@@ -307,4 +307,11 @@ export default function EcoTraceEnterpriseDashboard() {
                 <label style={{ display: 'block', fontSize: '13px', color: '#94a3b8', marginBottom: '5px' }}>Transporter Name</label>
                 <input required type="text" value={transporterName} onChange={(e) => setTransporterName(e.target.value)} placeholder="MEPL CHWTSDF" style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #334155', backgroundColor: '#0f172a', color: '#fff' }} />
               </div>
-              <button type="submit" style={{ backgroundColor: '#22c55e', col
+              <button type="submit" style={{ backgroundColor: '#22c55e', color: '#0f172a', border: 'none', padding: '12px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer' }}>Generate Form 10 PDF</button>
+            </form>
+          </div>
+        )}
+
+        {/* Tab 4: MCCI Cluster Command Center */}
+        {activeTab === 'cluster' && (
+          <div style={{
