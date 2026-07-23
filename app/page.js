@@ -4,6 +4,8 @@ import React, { useState } from 'react';
 
 export default function EcoTraceEnterpriseDashboard() {
   const [activeTab, setActiveTab] = useState('dashboard');
+  
+  // Dynamic Factory Registry
   const [factoryList, setFactoryList] = useState([
     { id: 1, name: 'WESTERN CHEMICALS', location: 'BHOSARI MIDC', limit: 85000, discharge: 74800, ph: 7.4, cod: 210, status: 'COMPLIANT' }
   ]);
@@ -20,6 +22,10 @@ export default function EcoTraceEnterpriseDashboard() {
 
   const handlePrint = () => {
     if (typeof window !== 'undefined') window.print();
+  };
+
+  const handleSyncMPCB = () => {
+    alert('🌐 Syncing Live Data with MPCB OCMMS Portal...');
   };
 
   const handleGenerateForm10 = (e) => {
@@ -55,7 +61,7 @@ export default function EcoTraceEnterpriseDashboard() {
   return (
     <div style={{ display: 'flex', minHeight: '100vh', backgroundColor: '#0f172a', color: '#f8fafc', fontFamily: 'sans-serif' }}>
       
-      {/* Sidebar */}
+      {/* Sidebar Navigation */}
       <aside style={{ width: '270px', backgroundColor: '#1e293b', borderRight: '1px solid #334155', padding: '20px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
         <div style={{ fontSize: '20px', fontWeight: 'bold', color: '#22c55e', marginBottom: '10px' }}>EcoTrace India</div>
         <button type="button" onClick={() => setActiveTab('dashboard')} style={{ textAlign: 'left', padding: '10px', borderRadius: '6px', border: 'none', cursor: 'pointer', backgroundColor: activeTab === 'dashboard' ? '#22c55e' : 'transparent', color: activeTab === 'dashboard' ? '#0f172a' : '#fff', fontWeight: 'bold' }}>📊 Live Risk Radar</button>
@@ -63,6 +69,7 @@ export default function EcoTraceEnterpriseDashboard() {
         <button type="button" onClick={() => setActiveTab('manifest')} style={{ textAlign: 'left', padding: '10px', borderRadius: '6px', border: 'none', cursor: 'pointer', backgroundColor: activeTab === 'manifest' ? '#22c55e' : 'transparent', color: activeTab === 'manifest' ? '#fff' : '#94a3b8' }}>🚛 Form 10 Manifest</button>
         <button type="button" onClick={() => setActiveTab('cluster')} style={{ textAlign: 'left', padding: '10px', borderRadius: '6px', border: 'none', cursor: 'pointer', backgroundColor: activeTab === 'cluster' ? '#22c55e' : 'transparent', color: activeTab === 'cluster' ? '#fff' : '#94a3b8' }}>🏢 MCCI Cluster Center</button>
         <button type="button" onClick={() => setActiveTab('onboarding')} style={{ textAlign: 'left', padding: '10px', borderRadius: '6px', border: 'none', cursor: 'pointer', backgroundColor: activeTab === 'onboarding' ? '#22c55e' : 'transparent', color: activeTab === 'onboarding' ? '#fff' : '#94a3b8' }}>🏭 Client Onboarding</button>
+        <button type="button" onClick={() => setActiveTab('vault')} style={{ textAlign: 'left', padding: '10px', borderRadius: '6px', border: 'none', cursor: 'pointer', backgroundColor: activeTab === 'vault' ? '#22c55e' : 'transparent', color: activeTab === 'vault' ? '#fff' : '#94a3b8' }}>📜 MPCB Legal Vault</button>
         
         <div style={{ marginTop: 'auto', backgroundColor: '#0f172a', padding: '10px', borderRadius: '6px', border: '1px solid #22c55e', fontSize: '11px' }}>
           <span style={{ color: '#22c55e', fontWeight: 'bold' }}>Green Vendor Passport</span>
@@ -85,6 +92,7 @@ export default function EcoTraceEnterpriseDashboard() {
               ))}
             </select>
             <button type="button" onClick={handlePrint} style={{ backgroundColor: '#22c55e', color: '#0f172a', border: 'none', padding: '8px 14px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer' }}>Export Audit Passport PDF</button>
+            <button type="button" onClick={handleSyncMPCB} style={{ backgroundColor: '#0284c7', color: '#fff', border: 'none', padding: '8px 14px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer' }}>🌐 Sync MPCB Portal</button>
           </div>
         </header>
 
@@ -162,6 +170,20 @@ export default function EcoTraceEnterpriseDashboard() {
               <input required type="number" value={factoryLimit} onChange={e => setFactoryLimit(e.target.value)} placeholder="Water Discharge Limit (L/Day)" style={{ padding: '8px', borderRadius: '4px', backgroundColor: '#0f172a', color: '#fff', border: '1px solid #334155' }} />
               <button type="submit" style={{ backgroundColor: '#22c55e', color: '#0f172a', padding: '10px', border: 'none', borderRadius: '4px', fontWeight: 'bold', cursor: 'pointer' }}>+ Onboard Unit Live</button>
             </form>
+          </div>
+        )}
+
+        {activeTab === 'vault' && (
+          <div style={{ backgroundColor: '#1e293b', padding: '20px', borderRadius: '8px' }}>
+            <h3 style={{ color: '#38bdf8', marginTop: 0 }}>📜 MPCB Statutory Regulations Vault</h3>
+            <div style={{ borderLeft: '4px solid #ef4444', backgroundColor: '#0f172a', padding: '12px', borderRadius: '6px', marginBottom: '10px' }}>
+              <h4 style={{ margin: '0 0 4px 0', color: '#fca5a5' }}>Hazardous Rules 2016</h4>
+              <p style={{ margin: 0, fontSize: '13px', color: '#94a3b8' }}>Mandatory Form 10 disposal through CHWTSDF facilities.</p>
+            </div>
+            <div style={{ borderLeft: '4px solid #3b82f6', backgroundColor: '#0f172a', padding: '12px', borderRadius: '6px' }}>
+              <h4 style={{ margin: '0 0 4px 0', color: '#93c5fd' }}>Water Act 1974</h4>
+              <p style={{ margin: 0, fontSize: '13px', color: '#94a3b8' }}>Discharge limits must strictly comply with CTO consent standards.</p>
+            </div>
           </div>
         )}
       </main>
