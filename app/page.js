@@ -16,16 +16,18 @@ export default function EcoTraceEnterpriseDashboard() {
   const scope1 = 0.23, scope2 = 1.16, scope3 = 0.06;
   const totalCarbon = (scope1 + scope2 + scope3).toFixed(2);
 
-  // PDF Generator Handlers
-  const handleGenerateForm10PDF = (e) => {
-    e.preventDefault();
-    alert('📄 MPCB Form 10 Hazardous Waste Manifest PDF Generated & Downloaded for Vehicle: ' + vehicleNo);
-    setVehicleNo('');
-    setTransporterName('');
+  // Print/Download Full Factory Audit Passport PDF
+  const handlePrintFullReport = () => {
+    if (typeof window !== 'undefined') {
+      window.print();
+    }
   };
 
-  const handleGenerateFormIVPDF = () => {
-    alert('📄 AI MPCB Form IV Annual Return Report PDF Generated & Downloaded!');
+  const handleGenerateForm10PDF = (e) => {
+    e.preventDefault();
+    alert('📄 MPCB Form 10 Hazardous Waste Manifest PDF Generated for Vehicle: ' + vehicleNo);
+    setVehicleNo('');
+    setTransporterName('');
   };
 
   const handleGenerateESGPassportPDF = () => {
@@ -83,15 +85,15 @@ export default function EcoTraceEnterpriseDashboard() {
       {/* Main Content */}
       <main style={{ flex: 1, padding: '30px', overflowY: 'auto' }}>
         
-        {/* Top Header */}
+        {/* Top Header with Full Factory Audit PDF Export */}
         <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '25px', borderBottom: '1px solid #334155', paddingBottom: '20px' }}>
           <div>
             <h1 style={{ fontSize: '24px', margin: 0, fontWeight: '700' }}>MPCB &amp; Enterprise Compliance Gateway</h1>
             <p style={{ color: '#94a3b8', margin: '4px 0 0 0', fontSize: '14px' }}>AI-Powered Zero Non-Compliance Ecosystem</p>
           </div>
           <div style={{ display: 'flex', gap: '10px' }}>
-            <button type="button" onClick={handleGenerateFormIVPDF} style={{ backgroundColor: '#22c55e', color: '#0f172a', border: 'none', padding: '10px 16px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer' }}>
-              📄 Download Form IV PDF Report
+            <button type="button" onClick={handlePrintFullReport} style={{ backgroundColor: '#22c55e', color: '#0f172a', border: 'none', padding: '10px 18px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer' }}>
+              📄 Export Full Audit Passport PDF
             </button>
             <button type="button" onClick={() => alert('Syncing Anonymized Data with MPCB Portal...')} style={{ backgroundColor: '#0284c7', color: '#fff', border: 'none', padding: '10px 18px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer' }}>
               🌐 Sync MPCB Portal
@@ -136,6 +138,34 @@ export default function EcoTraceEnterpriseDashboard() {
                 <span style={{ color: '#94a3b8', fontSize: '12px' }}>WATER DISCHARGE</span>
                 <p style={{ fontSize: '28px', fontWeight: 'bold', color: '#06b6d4', margin: '8px 0 0 0' }}>74,800 <span style={{ fontSize: '12px', color: '#94a3b8' }}>/ {waterLimit} L</span></p>
               </div>
+            </div>
+
+            {/* Compliance Table */}
+            <div style={{ backgroundColor: '#1e293b', padding: '20px', borderRadius: '12px', border: '1px solid #334155' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
+                <h3 style={{ margin: 0, color: '#22c55e', fontSize: '16px' }}>🏭 Live Industrial Compliance Records</h3>
+                <button type="button" onClick={() => alert('Form IV Annual Return Generated!')} style={{ backgroundColor: '#0284c7', color: '#fff', border: 'none', padding: '6px 12px', borderRadius: '6px', cursor: 'pointer', fontSize: '12px', fontWeight: 'bold' }}>
+                  Auto-File Form IV
+                </button>
+              </div>
+              <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '13px' }}>
+                <thead>
+                  <tr style={{ borderBottom: '1px solid #334155', color: '#94a3b8' }}>
+                    <th style={{ padding: '10px' }}>Factory Name</th>
+                    <th style={{ padding: '10px' }}>Location</th>
+                    <th style={{ padding: '10px' }}>Water Limit</th>
+                    <th style={{ padding: '10px' }}>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr style={{ borderBottom: '1px solid #334155' }}>
+                    <td style={{ padding: '12px 10px', fontWeight: 'bold' }}>WESTERN CHEMICALS</td>
+                    <td style={{ padding: '12px 10px', color: '#94a3b8' }}>BHOSARI MIDC</td>
+                    <td style={{ padding: '12px 10px' }}>85,000 L</td>
+                    <td style={{ padding: '12px 10px', color: '#22c55e', fontWeight: 'bold' }}>COMPLIANT</td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
           </div>
         )}
