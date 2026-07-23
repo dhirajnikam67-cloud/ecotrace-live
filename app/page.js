@@ -9,7 +9,7 @@ export default function EcoTraceEnterpriseDashboard() {
   const [dosingTriggered, setDosingTriggered] = useState(false);
   const [loadingDb, setLoadingDb] = useState(false);
 
-  // Dynamic Caps and Sensor Values
+  // Dynamic Caps & Sensor Values
   const [waterLimit, setWaterLimit] = useState(85000);
   const [hazardousWasteLimit, setHazardousWasteLimit] = useState(250);
   const [ctoExpiryDays, setCtoExpiryDays] = useState(82);
@@ -26,12 +26,10 @@ export default function EcoTraceEnterpriseDashboard() {
   const currentHazardousWaste = 215;
   const electricityKwh = 1420;
 
-  // Onboarding Form State
+  // Form States
   const [factoryName, setFactoryName] = useState('');
   const [factoryLocation, setFactoryLocation] = useState('');
   const [factoryWaterLimit, setFactoryWaterLimit] = useState('');
-
-  // Form 10 State
   const [vehicleNo, setVehicleNo] = useState('');
   const [transporterName, setTransporterName] = useState('');
 
@@ -41,28 +39,31 @@ export default function EcoTraceEnterpriseDashboard() {
   const scope2Carbon = ((electricityKwh * 0.82) / 1000).toFixed(2);
   const estimatedPenalty = Number(dischargeRatio) > 85 ? 75000 : 0;
 
-  const fetchFactories = async () => {
-    setLoadingDb(true);
-    try {
-      const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-      const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-
-      if (url && key) {
-        const supabase = createClient(url, key);
-        const { data, error } = await supabase.from('factories').select('*').order('id', { ascending: false });
-        if (!error && data && data.length > 0) {
-          setFactoryList(data);
-        }
-      }
-    } catch (err) {
-      console.log('Fetch skipped.');
-    } finally {
-      setLoadingDb(false);
-    }
-  };
-
   useEffect(() => {
+    let isMounted = true;
+    const fetchFactories = async () => {
+      setLoadingDb(true);
+      try {
+        const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+        const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+        if (url && key) {
+          const supabase = createClient(url, key);
+          const { data, error } = await supabase.from('factories').select('*').order('id', { ascending: false });
+          if (!error && data && data.length > 0 && isMounted) {
+            setFactoryList(data);
+          }
+        }
+      } catch (err) {
+        console.log('Static pre-render safely skipped.');
+      } finally {
+        if (isMounted) setLoadingDb(false);
+      }
+    };
+
     fetchFactories();
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   const handlePrint = () => {
@@ -109,7 +110,6 @@ export default function EcoTraceEnterpriseDashboard() {
     try {
       const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
       const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-
       if (url && key) {
         const supabase = createClient(url, key);
         await supabase.from('factories').insert([
@@ -121,7 +121,7 @@ export default function EcoTraceEnterpriseDashboard() {
         ]);
       }
     } catch (err) {
-      console.log('Saved to local state.');
+      console.log('Saved locally.');
     }
 
     setFactoryList(prev => [newRecord, ...prev]);
@@ -282,9 +282,6 @@ export default function EcoTraceEnterpriseDashboard() {
                   <button type="button" onClick={() => alert('AI Form IV Annual Return Compiled!')} style={{ backgroundColor: '#0284c7', color: '#fff', border: 'none', padding: '6px 12px', borderRadius: '6px', cursor: 'pointer', fontSize: '12px', fontWeight: 'bold' }}>
                     Auto-File Form IV
                   </button>
-                  <button type="button" onClick={fetchFactories} style={{ backgroundColor: '#334155', color: '#fff', border: 'none', padding: '6px 12px', borderRadius: '6px', cursor: 'pointer', fontSize: '12px', fontWeight: 'bold' }}>
-                    Refresh
-                  </button>
                 </div>
               </div>
               {loadingDb ? (
@@ -355,4 +352,5 @@ export default function EcoTraceEnterpriseDashboard() {
                 <input required type="text" value={factoryName} onChange={(e) => setFactoryName(e.target.value)} placeholder="WESTERN CHEMICALS" style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #334155', backgroundColor: '#0f172a', color: '#fff' }} />
               </div>
               <div>
-                <label style={{ display: 'block', fontSize: '13px', color: '#94a3b8', marginBottom: '5px' }}>Plant
+                <label style={{ display: 'block', fontSize: '13px', color: '#94a3b8', marginBottom: '5px' }}>Plant Location</label>
+                <input required type="text" value={factoryLocation} onChange={(e) => setFactoryLocation(e.target.value)} placeholder="BHOSARI MIDC" style={
