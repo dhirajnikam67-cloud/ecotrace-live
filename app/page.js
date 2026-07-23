@@ -141,7 +141,7 @@ export default function EcoTraceEnterpriseDashboard() {
             <p style={{ color: '#94a3b8', margin: '4px 0 0 0', fontSize: '14px' }}>AI-Powered Zero Non-Compliance Ecosystem</p>
           </div>
           <div style={{ display: 'flex', gap: '10px' }}>
-            <button type="button" onClick={() => alert('Syncing Live Data with MPCB OCMMS Portal...')} style={{ backgroundColor: '#0284c7', color: '#fff', border: 'none', padding: '10px 16px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer' }}>
+            <button type="button" onClick={() => alert('Syncing Live Data with MPCB Portal...')} style={{ backgroundColor: '#0284c7', color: '#fff', border: 'none', padding: '10px 16px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer' }}>
               Sync MPCB Portal
             </button>
             <button type="button" onClick={handlePrint} style={{ backgroundColor: '#22c55e', color: '#0f172a', border: 'none', padding: '10px 16px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer' }}>
@@ -152,7 +152,7 @@ export default function EcoTraceEnterpriseDashboard() {
 
         {activeTab === 'dashboard' && (
           <div>
-            {/* CTO Expiry & AI OCR Banner Grid */}
+            {/* CTO Expiry and AI OCR Banner Grid */}
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '20px', marginBottom: '20px' }}>
               
               <div style={{ backgroundColor: '#1e293b', border: '1px solid #eab308', padding: '18px', borderRadius: '12px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -263,7 +263,7 @@ export default function EcoTraceEnterpriseDashboard() {
         {activeTab === 'esg' && (
           <div style={{ backgroundColor: '#1e293b', padding: '25px', borderRadius: '12px', border: '1px solid #334155' }}>
             <h2 style={{ marginTop: 0, color: '#22c55e', fontSize: '20px' }}>Scope 1, 2, 3 Carbon Emissions Engine (MNC Audit Ready)</h2>
-            <p style={{ color: '#94a3b8', fontSize: '13px' }}>MNC vendors like Tata, Mahindra, and Bajaj require complete carbon data.</p>
+            <p style={{ color: '#94a3b8', fontSize: '13px' }}>MNC vendors require complete carbon data.</p>
             
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '20px', marginTop: '20px' }}>
               <div style={{ backgroundColor: '#0f172a', padding: '18px', borderRadius: '8px', borderLeft: '4px solid #ef4444' }}>
@@ -314,4 +314,4 @@ export default function EcoTraceEnterpriseDashboard() {
 
         {/* Tab 4: MCCI Cluster Command Center */}
         {activeTab === 'cluster' && (
-          <div style={{
+          <div style={{ backgroundColor: '#1e293b', paddin
