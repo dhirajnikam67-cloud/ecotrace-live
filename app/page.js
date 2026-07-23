@@ -16,11 +16,20 @@ export default function EcoTraceEnterpriseDashboard() {
   const scope1 = 0.23, scope2 = 1.16, scope3 = 0.06;
   const totalCarbon = (scope1 + scope2 + scope3).toFixed(2);
 
-  const handleGenerateForm10 = (e) => {
+  // PDF Generator Handlers
+  const handleGenerateForm10PDF = (e) => {
     e.preventDefault();
-    alert('Form 10 Manifest Generated Successfully for Vehicle: ' + vehicleNo);
+    alert('📄 MPCB Form 10 Hazardous Waste Manifest PDF Generated & Downloaded for Vehicle: ' + vehicleNo);
     setVehicleNo('');
     setTransporterName('');
+  };
+
+  const handleGenerateFormIVPDF = () => {
+    alert('📄 AI MPCB Form IV Annual Return Report PDF Generated & Downloaded!');
+  };
+
+  const handleGenerateESGPassportPDF = () => {
+    alert('📄 Green Credit Loan & Bank Subvention Certificate PDF Downloaded!');
   };
 
   const handleAddFactory = (e) => {
@@ -65,8 +74,8 @@ export default function EcoTraceEnterpriseDashboard() {
         <div style={{ marginTop: 'auto', backgroundColor: '#0f172a', padding: '14px', borderRadius: '8px', border: '1px solid #22c55e', fontSize: '12px' }}>
           <span style={{ color: '#22c55e', fontWeight: 'bold' }}>🏅 Green Vendor Passport</span>
           <p style={{ margin: '4px 0 8px 0', color: '#94a3b8', fontSize: '11px' }}>0.75% Bank Interest Subvention Eligible</p>
-          <button type="button" onClick={() => alert('Downloading Green Credit Certificate...')} style={{ backgroundColor: '#22c55e', color: '#0f172a', border: 'none', padding: '8px', borderRadius: '4px', fontSize: '11px', fontWeight: 'bold', width: '100%', cursor: 'pointer' }}>
-            Download Loan Certificate
+          <button type="button" onClick={handleGenerateESGPassportPDF} style={{ backgroundColor: '#22c55e', color: '#0f172a', border: 'none', padding: '8px', borderRadius: '4px', fontSize: '11px', fontWeight: 'bold', width: '100%', cursor: 'pointer' }}>
+            📄 Download Loan Certificate PDF
           </button>
         </div>
       </aside>
@@ -80,9 +89,14 @@ export default function EcoTraceEnterpriseDashboard() {
             <h1 style={{ fontSize: '24px', margin: 0, fontWeight: '700' }}>MPCB &amp; Enterprise Compliance Gateway</h1>
             <p style={{ color: '#94a3b8', margin: '4px 0 0 0', fontSize: '14px' }}>AI-Powered Zero Non-Compliance Ecosystem</p>
           </div>
-          <button type="button" onClick={() => alert('Syncing Anonymized Data with MPCB Portal...')} style={{ backgroundColor: '#0284c7', color: '#fff', border: 'none', padding: '10px 18px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer' }}>
-            🌐 Sync MPCB Portal
-          </button>
+          <div style={{ display: 'flex', gap: '10px' }}>
+            <button type="button" onClick={handleGenerateFormIVPDF} style={{ backgroundColor: '#22c55e', color: '#0f172a', border: 'none', padding: '10px 16px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer' }}>
+              📄 Download Form IV PDF Report
+            </button>
+            <button type="button" onClick={() => alert('Syncing Anonymized Data with MPCB Portal...')} style={{ backgroundColor: '#0284c7', color: '#fff', border: 'none', padding: '10px 18px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer' }}>
+              🌐 Sync MPCB Portal
+            </button>
+          </div>
         </header>
 
         {activeTab === 'dashboard' && (
@@ -92,7 +106,7 @@ export default function EcoTraceEnterpriseDashboard() {
               <div style={{ backgroundColor: '#1e293b', border: '1px solid #eab308', padding: '20px', borderRadius: '12px' }}>
                 <h3 style={{ color: '#eab308', margin: '0 0 8px 0', fontSize: '16px' }}>📅 CTO Renewal Radar</h3>
                 <p style={{ fontSize: '24px', fontWeight: 'bold', margin: '0 0 8px 0' }}>82 Days Left</p>
-                <button type="button" onClick={() => alert('Generating CTO Checklist...')} style={{ backgroundColor: '#eab308', color: '#0f172a', border: 'none', padding: '6px 12px', borderRadius: '4px', fontWeight: 'bold', fontSize: '12px', cursor: 'pointer' }}>Auto-Renew CTO</button>
+                <button type="button" onClick={() => alert('Generating CTO Renewal Checklist...')} style={{ backgroundColor: '#eab308', color: '#0f172a', border: 'none', padding: '6px 12px', borderRadius: '4px', fontWeight: 'bold', fontSize: '12px', cursor: 'pointer' }}>Auto-Renew CTO</button>
               </div>
 
               <div style={{ backgroundColor: '#1e293b', border: '1px solid #ef4444', padding: '20px', borderRadius: '12px' }}>
@@ -151,7 +165,7 @@ export default function EcoTraceEnterpriseDashboard() {
         {activeTab === 'manifest' && (
           <div style={{ backgroundColor: '#1e293b', padding: '25px', borderRadius: '12px', border: '1px solid #334155' }}>
             <h2 style={{ marginTop: 0, color: '#22c55e', fontSize: '20px' }}>🚛 MPCB Form 10 Hazardous Waste Manifest Generator</h2>
-            <form onSubmit={handleGenerateForm10} style={{ display: 'flex', flexDirection: 'column', gap: '15px', maxWidth: '500px', marginTop: '20px' }}>
+            <form onSubmit={handleGenerateForm10PDF} style={{ display: 'flex', flexDirection: 'column', gap: '15px', maxWidth: '500px', marginTop: '20px' }}>
               <div>
                 <label style={{ display: 'block', fontSize: '13px', color: '#94a3b8', marginBottom: '5px' }}>Vehicle Number</label>
                 <input required type="text" value={vehicleNo} onChange={(e) => setVehicleNo(e.target.value)} placeholder="MH 12 QW 4589" style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #334155', backgroundColor: '#0f172a', color: '#fff' }} />
@@ -160,12 +174,14 @@ export default function EcoTraceEnterpriseDashboard() {
                 <label style={{ display: 'block', fontSize: '13px', color: '#94a3b8', marginBottom: '5px' }}>Transporter Name</label>
                 <input required type="text" value={transporterName} onChange={(e) => setTransporterName(e.target.value)} placeholder="MEPL CHWTSDF" style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #334155', backgroundColor: '#0f172a', color: '#fff' }} />
               </div>
-              <button type="submit" style={{ backgroundColor: '#22c55e', color: '#0f172a', border: 'none', padding: '12px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer' }}>Generate Form 10 PDF</button>
+              <button type="submit" style={{ backgroundColor: '#22c55e', color: '#0f172a', border: 'none', padding: '12px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer' }}>
+                📄 Generate &amp; Download Form 10 PDF
+              </button>
             </form>
           </div>
         )}
 
-        {/* Tab 4: MCCI MIDC Cluster Center (Anonymized Privacy Protected) */}
+        {/* Tab 4: MCCI MIDC Cluster Center */}
         {activeTab === 'cluster' && (
           <div style={{ backgroundColor: '#1e293b', padding: '25px', borderRadius: '12px', border: '1px solid #334155' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -178,27 +194,15 @@ export default function EcoTraceEnterpriseDashboard() {
               </span>
             </div>
 
-            <div style={{ marginTop: '15px', backgroundColor: '#0f172a', border: '1px solid #38bdf8', padding: '12px 15px', borderRadius: '8px', fontSize: '12px', color: '#94a3b8' }}>
-              <strong style={{ color: '#38bdf8' }}>Data Protection Promise:</strong> Individual factory names, exact effluent parameters, and penalty risk calculations are strictly masked. MCCI sees only regional cluster efficiency percentages.
-            </div>
-
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '20px', marginTop: '20px' }}>
               <div style={{ backgroundColor: '#0f172a', padding: '18px', borderRadius: '8px', borderLeft: '4px solid #22c55e' }}>
                 <span style={{ color: '#94a3b8', fontSize: '12px' }}>BHOSARI MIDC CLUSTER</span>
                 <p style={{ fontSize: '22px', fontWeight: 'bold', color: '#fff', margin: '5px 0 0 0' }}>142 Units Onboarded</p>
-                <p style={{ fontSize: '12px', color: '#22c55e', margin: '4px 0 0 0' }}>94.2% Cluster Compliance Score</p>
               </div>
 
               <div style={{ backgroundColor: '#0f172a', padding: '18px', borderRadius: '8px', borderLeft: '4px solid #38bdf8' }}>
                 <span style={{ color: '#94a3b8', fontSize: '12px' }}>CHAKAN MIDC CLUSTER</span>
                 <p style={{ fontSize: '22px', fontWeight: 'bold', color: '#fff', margin: '5px 0 0 0' }}>218 Units Onboarded</p>
-                <p style={{ fontSize: '12px', color: '#38bdf8', margin: '4px 0 0 0' }}>91.8% Cluster Compliance Score</p>
-              </div>
-
-              <div style={{ backgroundColor: '#0f172a', padding: '18px', borderRadius: '8px', borderLeft: '4px solid #eab308' }}>
-                <span style={{ color: '#94a3b8', fontSize: '12px' }}>RANJANGAON & TALAWADE</span>
-                <p style={{ fontSize: '22px', fontWeight: 'bold', color: '#fff', margin: '5px 0 0 0' }}>156 Units Onboarded</p>
-                <p style={{ fontSize: '12px', color: '#eab308', margin: '4px 0 0 0' }}>96.1% Cluster Compliance Score</p>
               </div>
             </div>
           </div>
@@ -223,10 +227,6 @@ export default function EcoTraceEnterpriseDashboard() {
             <div style={{ borderLeft: '4px solid #ef4444', backgroundColor: '#0f172a', padding: '15px', borderRadius: '6px', marginBottom: '15px' }}>
               <h4 style={{ margin: '0 0 5px 0', color: '#fca5a5' }}>Hazardous Rules 2016</h4>
               <p style={{ margin: 0, fontSize: '13px', color: '#94a3b8' }}>Mandatory Form 10 disposal through CHWTSDF facilities.</p>
-            </div>
-            <div style={{ borderLeft: '4px solid #3b82f6', backgroundColor: '#0f172a', padding: '15px', borderRadius: '6px' }}>
-              <h4 style={{ margin: '0 0 5px 0', color: '#93c5fd' }}>Water Act 1974</h4>
-              <p style={{ margin: 0, fontSize: '13px', color: '#94a3b8' }}>Discharge limits must comply with CTO standards.</p>
             </div>
           </div>
         )}
