@@ -243,7 +243,7 @@ export default function EcoTraceEnterpriseShield() {
                 <span style={{ fontSize: '11px', color: '#94a3b8' }}>Diesel Generators, Boilers and Fleet</span>
               </div>
               <div style={{ backgroundColor: '#0f172a', padding: '18px', borderRadius: '8px', borderLeft: '4px solid #3b82f6' }}>
-                <h4 style={{ margin: '0 0 5px 0', color: '#93c5fd' }}>Scope 2 (Electricity)</h4>
+                <h4 style={{ margin: '0 0 5px 0', color: '#fca5a5' }}>Scope 2 (Electricity)</h4>
                 <p style={{ fontSize: '24px', fontWeight: 'bold', color: '#fff', margin: 0 }}>{activeFactory.scope2} tCO2e</p>
                 <span style={{ fontSize: '11px', color: '#94a3b8' }}>MSEDCL Grid Electricity Usage</span>
               </div>
@@ -292,8 +292,8 @@ export default function EcoTraceEnterpriseShield() {
             </div>
 
             <div style={{ marginTop: '15px', backgroundColor: '#0f172a', border: '1px solid #38bdf8', padding: '12px 15px', borderRadius: '8px', fontSize: '12px', color: '#94a3b8' }}>
-              <strong style={{ color: '#38bdf8' }}>Privacy Guarantee:</strong> MCCI sees only regional cluster efficiency percentages. Individual factory names, exact effluent parameters, and penalty risk calculations are strictly masked.
+              <span style={{ color: '#38bdf8', fontWeight: 'bold' }}>Privacy Guarantee:</span> MCCI sees only regional cluster efficiency percentages. Individual factory names, exact effluent parameters, and penalty risk calculations are strictly masked.
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '20px', marginTop: '20px' }}>
-              <div style={{ backgroundColor: '#0f172a', padding: '18px', borderRadius: '8px
+              <div style={{ backgroundColor: '#0f172a', padding: '18px', bo
