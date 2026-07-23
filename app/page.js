@@ -4,8 +4,8 @@ import React, { useState } from 'react';
 
 export default function EcoTraceEnterpriseDashboard() {
   const [activeTab, setActiveTab] = useState('dashboard');
-  const [waterLimit, setWaterLimit] = useState(85000);
-  const [phLevel, setPhLevel] = useState(7.4);
+  const [waterLimit] = useState(85000);
+  const [phLevel] = useState(7.4);
 
   // Form States
   const [vehicleNo, setVehicleNo] = useState('');
@@ -50,6 +50,9 @@ export default function EcoTraceEnterpriseDashboard() {
           <button type="button" onClick={() => setActiveTab('manifest')} style={{ textAlign: 'left', padding: '12px', borderRadius: '8px', border: 'none', cursor: 'pointer', backgroundColor: activeTab === 'manifest' ? '#22c55e' : 'transparent', color: activeTab === 'manifest' ? '#0f172a' : '#94a3b8', fontWeight: 'bold' }}>
             🚛 Form 10 Manifest Generator
           </button>
+          <button type="button" onClick={() => setActiveTab('cluster')} style={{ textAlign: 'left', padding: '12px', borderRadius: '8px', border: 'none', cursor: 'pointer', backgroundColor: activeTab === 'cluster' ? '#22c55e' : 'transparent', color: activeTab === 'cluster' ? '#0f172a' : '#94a3b8', fontWeight: 'bold' }}>
+            🏢 MCCI MIDC Cluster Center
+          </button>
           <button type="button" onClick={() => setActiveTab('onboarding')} style={{ textAlign: 'left', padding: '12px', borderRadius: '8px', border: 'none', cursor: 'pointer', backgroundColor: activeTab === 'onboarding' ? '#22c55e' : 'transparent', color: activeTab === 'onboarding' ? '#0f172a' : '#94a3b8', fontWeight: 'bold' }}>
             🏭 Client Onboarding
           </button>
@@ -77,7 +80,7 @@ export default function EcoTraceEnterpriseDashboard() {
             <h1 style={{ fontSize: '24px', margin: 0, fontWeight: '700' }}>MPCB &amp; Enterprise Compliance Gateway</h1>
             <p style={{ color: '#94a3b8', margin: '4px 0 0 0', fontSize: '14px' }}>AI-Powered Zero Non-Compliance Ecosystem</p>
           </div>
-          <button type="button" onClick={() => alert('Syncing Live Data with MPCB OCMMS Portal...')} style={{ backgroundColor: '#0284c7', color: '#fff', border: 'none', padding: '10px 18px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer' }}>
+          <button type="button" onClick={() => alert('Syncing Anonymized Data with MPCB Portal...')} style={{ backgroundColor: '#0284c7', color: '#fff', border: 'none', padding: '10px 18px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer' }}>
             🌐 Sync MPCB Portal
           </button>
         </header>
@@ -95,7 +98,7 @@ export default function EcoTraceEnterpriseDashboard() {
               <div style={{ backgroundColor: '#1e293b', border: '1px solid #ef4444', padding: '20px', borderRadius: '12px' }}>
                 <h3 style={{ color: '#ef4444', margin: '0 0 8px 0', fontSize: '16px' }}>🚨 Prosecution Penalty Shield</h3>
                 <p style={{ fontSize: '24px', fontWeight: 'bold', margin: '0 0 4px 0', color: '#fca5a5' }}>INR 75,000</p>
-                <span style={{ fontSize: '11px', color: '#94a3b8' }}>Estimated Penalty Risk via MPCB Matrix</span>
+                <span style={{ fontSize: '11px', color: '#94a3b8' }}>Private Internal Calculation</span>
               </div>
 
               <div style={{ backgroundColor: '#1e293b', border: '1px solid #38bdf8', padding: '20px', borderRadius: '12px' }}>
@@ -162,7 +165,46 @@ export default function EcoTraceEnterpriseDashboard() {
           </div>
         )}
 
-        {/* Tab 4: Onboarding */}
+        {/* Tab 4: MCCI MIDC Cluster Center (Anonymized Privacy Protected) */}
+        {activeTab === 'cluster' && (
+          <div style={{ backgroundColor: '#1e293b', padding: '25px', borderRadius: '12px', border: '1px solid #334155' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div>
+                <h2 style={{ marginTop: 0, color: '#38bdf8', fontSize: '20px' }}>🏢 MCCI MIDC Cluster Monitoring Command Center</h2>
+                <p style={{ color: '#94a3b8', fontSize: '13px', margin: '4px 0 0 0' }}>Anonymized Macro Data Aggregator for Industry Associations</p>
+              </div>
+              <span style={{ backgroundColor: '#064e3b', color: '#22c55e', border: '1px solid #22c55e', padding: '6px 12px', borderRadius: '20px', fontSize: '12px', fontWeight: 'bold' }}>
+                🔒 MSME Privacy Shield Active
+              </span>
+            </div>
+
+            <div style={{ marginTop: '15px', backgroundColor: '#0f172a', border: '1px solid #38bdf8', padding: '12px 15px', borderRadius: '8px', fontSize: '12px', color: '#94a3b8' }}>
+              <strong style={{ color: '#38bdf8' }}>Data Protection Promise:</strong> Individual factory names, exact effluent parameters, and penalty risk calculations are strictly masked. MCCI sees only regional cluster efficiency percentages.
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '20px', marginTop: '20px' }}>
+              <div style={{ backgroundColor: '#0f172a', padding: '18px', borderRadius: '8px', borderLeft: '4px solid #22c55e' }}>
+                <span style={{ color: '#94a3b8', fontSize: '12px' }}>BHOSARI MIDC CLUSTER</span>
+                <p style={{ fontSize: '22px', fontWeight: 'bold', color: '#fff', margin: '5px 0 0 0' }}>142 Units Onboarded</p>
+                <p style={{ fontSize: '12px', color: '#22c55e', margin: '4px 0 0 0' }}>94.2% Cluster Compliance Score</p>
+              </div>
+
+              <div style={{ backgroundColor: '#0f172a', padding: '18px', borderRadius: '8px', borderLeft: '4px solid #38bdf8' }}>
+                <span style={{ color: '#94a3b8', fontSize: '12px' }}>CHAKAN MIDC CLUSTER</span>
+                <p style={{ fontSize: '22px', fontWeight: 'bold', color: '#fff', margin: '5px 0 0 0' }}>218 Units Onboarded</p>
+                <p style={{ fontSize: '12px', color: '#38bdf8', margin: '4px 0 0 0' }}>91.8% Cluster Compliance Score</p>
+              </div>
+
+              <div style={{ backgroundColor: '#0f172a', padding: '18px', borderRadius: '8px', borderLeft: '4px solid #eab308' }}>
+                <span style={{ color: '#94a3b8', fontSize: '12px' }}>RANJANGAON & TALAWADE</span>
+                <p style={{ fontSize: '22px', fontWeight: 'bold', color: '#fff', margin: '5px 0 0 0' }}>156 Units Onboarded</p>
+                <p style={{ fontSize: '12px', color: '#eab308', margin: '4px 0 0 0' }}>96.1% Cluster Compliance Score</p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Tab 5: Onboarding */}
         {activeTab === 'onboarding' && (
           <div style={{ backgroundColor: '#1e293b', padding: '25px', borderRadius: '12px', border: '1px solid #334155' }}>
             <h2 style={{ marginTop: 0, color: '#22c55e', fontSize: '20px' }}>🏭 Register New Industrial Unit</h2>
@@ -174,7 +216,7 @@ export default function EcoTraceEnterpriseDashboard() {
           </div>
         )}
 
-        {/* Tab 5: Vault */}
+        {/* Tab 6: Vault */}
         {activeTab === 'vault' && (
           <div style={{ backgroundColor: '#1e293b', padding: '25px', borderRadius: '12px', border: '1px solid #334155' }}>
             <h2 style={{ marginTop: 0, color: '#38bdf8', fontSize: '20px' }}>📜 MPCB Statutory Regulations Vault</h2>
