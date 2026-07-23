@@ -243,7 +243,7 @@ export default function EcoTraceEnterpriseShield() {
                 <span style={{ fontSize: '11px', color: '#94a3b8' }}>Diesel Generators, Boilers and Fleet</span>
               </div>
               <div style={{ backgroundColor: '#0f172a', padding: '18px', borderRadius: '8px', borderLeft: '4px solid #3b82f6' }}>
-                <h4 style={{ margin: '0 0 5px 0', color: '#fca5a5' }}>Scope 2 (Electricity)</h4>
+                <h4 style={{ margin: '0 0 5px 0', color: '#93c5fd' }}>Scope 2 (Electricity)</h4>
                 <p style={{ fontSize: '24px', fontWeight: 'bold', color: '#fff', margin: 0 }}>{activeFactory.scope2} tCO2e</p>
                 <span style={{ fontSize: '11px', color: '#94a3b8' }}>MSEDCL Grid Electricity Usage</span>
               </div>
