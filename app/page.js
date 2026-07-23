@@ -1,4 +1,4 @@
-'use client';
+use client';
 
 import React, { useState } from 'react';
 
@@ -25,7 +25,9 @@ export default function EcoTraceEnterpriseDashboard() {
   const totalCarbon = (scope1 + scope2 + scope3).toFixed(2);
 
   const handlePrintFullReport = () => {
-    if (typeof window !== 'undefined') window.print();
+    if (typeof window !== 'undefined') {
+      window.print();
+    }
   };
 
   const handleGenerateForm10PDF = (e) => {
@@ -103,7 +105,7 @@ export default function EcoTraceEnterpriseDashboard() {
       {/* Main Content */}
       <main style={{ flex: 1, padding: '30px', overflowY: 'auto' }}>
         
-        {/* Top Header & Interactive Switcher */}
+        {/* Top Header */}
         <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '25px', borderBottom: '1px solid #334155', paddingBottom: '20px' }}>
           <div>
             <h1 style={{ fontSize: '24px', margin: 0, fontWeight: '700' }}>MPCB and Enterprise Compliance Gateway</h1>
@@ -162,7 +164,7 @@ export default function EcoTraceEnterpriseDashboard() {
               </div>
             </div>
 
-            {/* Live Sensors Grid */}
+            {/* Sensors Grid */}
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '20px', marginBottom: '25px' }}>
               <div style={{ backgroundColor: '#1e293b', padding: '20px', borderRadius: '12px', borderLeft: '4px solid #22c55e' }}>
                 <span style={{ color: '#94a3b8', fontSize: '12px' }}>LIVE IoT pH SENSOR</span>
@@ -205,7 +207,7 @@ export default function EcoTraceEnterpriseDashboard() {
           </div>
         )}
 
-        {/* Tab 5: Onboarding Form */}
+        {/* Onboarding Form */}
         {activeTab === 'onboarding' && (
           <div style={{ backgroundColor: '#1e293b', padding: '25px', borderRadius: '12px', border: '1px solid #334155' }}>
             <h2 style={{ marginTop: 0, color: '#22c55e', fontSize: '20px' }}>Register and Onboard New Industrial Unit</h2>
@@ -283,4 +285,4 @@ export default function EcoTraceEnterpriseDashboard() {
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '20px', marginTop: '20px' }}>
-              <div style={{ backgroundColor: '#0f172a', padding: '18px', borderRadius: '
+              <div style={{ backgroundColor: '#0f172a', padding: '18px', borderRadius: '8px', borderLeft: '4p
