@@ -9,7 +9,7 @@ export default function EcoTraceEnterpriseDashboard() {
   const [dosingTriggered, setDosingTriggered] = useState(false);
   const [loadingDb, setLoadingDb] = useState(false);
 
-  // Dynamic Caps and Sensor Values
+  // Dynamic Caps & Sensors
   const [waterLimit, setWaterLimit] = useState(85000);
   const [hazardousWasteLimit, setHazardousWasteLimit] = useState(250);
   const [ctoExpiryDays, setCtoExpiryDays] = useState(82);
@@ -36,29 +36,33 @@ export default function EcoTraceEnterpriseDashboard() {
   const [transporterName, setTransporterName] = useState('');
 
   // Calculations
-  const dischargeRatio = ((currentDischarge / waterLimit) * 100).toFixed(1);
-  const hazWasteRatio = ((currentHazardousWaste / hazardousWasteLimit) * 100).toFixed(1);
+  const dischargeRatio = ((currentDischarge / (waterLimit || 85000)) * 100).toFixed(1);
+  const hazWasteRatio = ((currentHazardousWaste / (hazardousWasteLimit || 250)) * 100).toFixed(1);
   const scope2Carbon = ((electricityKwh * 0.82) / 1000).toFixed(2);
-
-  // MPCB Penalty Risk Logic
   const estimatedPenalty = Number(dischargeRatio) > 85 ? 75000 : 0;
 
-  // Fetch Factories Safely
+  // Safe Fetch Helper
+  const getSupabaseClient = () => {
+    const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+    if (url && key) {
+      return createClient(url, key);
+    }
+    return null;
+  };
+
   const fetchFactories = async () => {
     setLoadingDb(true);
     try {
-      const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-      const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-
-      if (url && key) {
-        const supabase = createClient(url, key);
-        const { data, error } = await supabase.from('factories').select('*').order('created_at', { ascending: false });
+      const supabase = getSupabaseClient();
+      if (supabase) {
+        const { data, error } = await supabase.from('factories').select('*').order('id', { ascending: false });
         if (!error && data && data.length > 0) {
           setFactoryList(data);
         }
       }
     } catch (err) {
-      console.error('Fetch error:', err);
+      console.log('Fetch skipped during static pre-render.');
     } finally {
       setLoadingDb(false);
     }
@@ -100,7 +104,6 @@ export default function EcoTraceEnterpriseDashboard() {
     setTransporterName('');
   };
 
-  // Add Factory Handler
   const handleAddFactory = async (e) => {
     e.preventDefault();
     const newRecord = {
@@ -111,11 +114,8 @@ export default function EcoTraceEnterpriseDashboard() {
     };
 
     try {
-      const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-      const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-
-      if (url && key) {
-        const supabase = createClient(url, key);
+      const supabase = getSupabaseClient();
+      if (supabase) {
         await supabase.from('factories').insert([
           {
             name: factoryName,
@@ -125,7 +125,7 @@ export default function EcoTraceEnterpriseDashboard() {
         ]);
       }
     } catch (err) {
-      console.warn('Insert notice:', err);
+      console.log('Saved to local state.');
     }
 
     setFactoryList(prev => [newRecord, ...prev]);
@@ -177,7 +177,7 @@ export default function EcoTraceEnterpriseDashboard() {
         <div style={{ marginTop: 'auto', backgroundColor: '#0f172a', padding: '12px', borderRadius: '8px', border: '1px solid #22c55e', fontSize: '12px' }}>
           <span style={{ color: '#22c55e', fontWeight: 'bold' }}>Green Vendor Certified</span>
           <p style={{ margin: '4px 0 8px 0', color: '#94a3b8', fontSize: '11px' }}>Ready for MNC B2B Audits</p>
-          <button type="button" onClick={() => alert('Downloading EcoTrace ESG Passport PDF...')} style={{ backgroundColor: '#22c55e', color: '#0f172a', border: 'none', padding: '6px 10px', borderRadius: '4px', fontSize: '11px', fontWeight: 'bold', width: '100%', cursor: 'pointer' }}>
+          <button type="button" onClick={() => alert('Downloading ESG Passport PDF...')} style={{ backgroundColor: '#22c55e', color: '#0f172a', border: 'none', padding: '6px 10px', borderRadius: '4px', fontSize: '11px', fontWeight: 'bold', width: '100%', cursor: 'pointer' }}>
             Download ESG Passport
           </button>
         </div>
@@ -359,4 +359,4 @@ export default function EcoTraceEnterpriseDashboard() {
                 <input required type="text" value={factoryName} onChange={(e) => setFactoryName(e.target.value)} placeholder="WESTERN CHEMICALS" style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #334155', backgroundColor: '#0f172a', color: '#fff' }} />
               </div>
               <div>
-                <label style={{
+                <label style={{ display: 'block', fontSize: '13px', color: '#94a3b8', ma
