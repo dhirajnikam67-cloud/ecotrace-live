@@ -1,13 +1,11 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { createClient } from '@supabase/supabase-js';
+import React, { useState } from 'react';
 
 export default function EcoTraceEnterpriseDashboard() {
   const [activeTab, setActiveTab] = useState('dashboard');
   const [uploading, setUploading] = useState(false);
   const [dosingTriggered, setDosingTriggered] = useState(false);
-  const [loadingDb, setLoadingDb] = useState(false);
 
   // Dynamic Caps & Sensor Values
   const [waterLimit, setWaterLimit] = useState(85000);
@@ -18,8 +16,10 @@ export default function EcoTraceEnterpriseDashboard() {
   const [phLevel, setPhLevel] = useState(7.4);
   const [codLevel, setCodLevel] = useState(210);
 
-  // Supabase Data State
-  const [factoryList, setFactoryList] = useState([]);
+  // Data State
+  const [factoryList, setFactoryList] = useState([
+    { name: 'DEMO FACTORY', plant_location: 'PUNE MIDC', limit: 85000, status: 'PARSED' }
+  ]);
 
   // Operations Metrics
   const currentDischarge = 74800;
@@ -34,48 +34,18 @@ export default function EcoTraceEnterpriseDashboard() {
   const [transporterName, setTransporterName] = useState('');
 
   // Calculations
-  const dischargeRatio = ((currentDischarge / (waterLimit || 85000)) * 100).toFixed(1);
-  const hazWasteRatio = ((currentHazardousWaste / (hazardousWasteLimit || 250)) * 100).toFixed(1);
+  const dischargeRatio = ((currentDischarge / waterLimit) * 100).toFixed(1);
+  const hazWasteRatio = ((currentHazardousWaste / hazardousWasteLimit) * 100).toFixed(1);
   const scope2Carbon = ((electricityKwh * 0.82) / 1000).toFixed(2);
   const estimatedPenalty = Number(dischargeRatio) > 85 ? 75000 : 0;
 
-  useEffect(() => {
-    let isMounted = true;
-    const fetchFactories = async () => {
-      setLoadingDb(true);
-      try {
-        const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-        const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-        if (url && key) {
-          const supabase = createClient(url, key);
-          const { data, error } = await supabase.from('factories').select('*').order('id', { ascending: false });
-          if (!error && data && data.length > 0 && isMounted) {
-            setFactoryList(data);
-          }
-        }
-      } catch (err) {
-        console.log('Static pre-render safely skipped.');
-      } finally {
-        if (isMounted) setLoadingDb(false);
-      }
-    };
-
-    fetchFactories();
-    return () => {
-      isMounted = false;
-    };
-  }, []);
-
   const handlePrint = () => {
-    if (typeof window !== 'undefined') {
-      window.print();
-    }
+    if (typeof window !== 'undefined') window.print();
   };
 
   const handleConsentUpload = (e) => {
     if (!e || !e.target || !e.target.files || !e.target.files[0]) return;
     setUploading(true);
-
     setTimeout(() => {
       setWaterLimit(100000);
       setHazardousWasteLimit(300);
@@ -98,35 +68,16 @@ export default function EcoTraceEnterpriseDashboard() {
     setTransporterName('');
   };
 
-  const handleAddFactory = async (e) => {
+  const handleAddFactory = (e) => {
     e.preventDefault();
     const newRecord = {
       name: factoryName,
       plant_location: factoryLocation,
-      mpcb_water_consent_limit_liters: Number(factoryWaterLimit) || 85000,
-      ocr_parsing_status: 'PARSED'
+      limit: Number(factoryWaterLimit) || 85000,
+      status: 'PARSED'
     };
-
-    try {
-      const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-      const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-      if (url && key) {
-        const supabase = createClient(url, key);
-        await supabase.from('factories').insert([
-          {
-            name: factoryName,
-            plant_location: factoryLocation,
-            mpcb_water_consent_limit_liters: Number(factoryWaterLimit) || 85000,
-          }
-        ]);
-      }
-    } catch (err) {
-      console.log('Saved locally.');
-    }
-
     setFactoryList(prev => [newRecord, ...prev]);
     alert('Unit onboarded to Dashboard!');
-
     setFactoryName('');
     setFactoryLocation('');
     setFactoryWaterLimit('');
@@ -143,28 +94,16 @@ export default function EcoTraceEnterpriseDashboard() {
         </div>
 
         <nav style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-          <button 
-            type="button"
-            onClick={() => setActiveTab('dashboard')} 
-            style={{ textAlign: 'left', padding: '10px', borderRadius: '8px', border: 'none', cursor: 'pointer', backgroundColor: activeTab === 'dashboard' ? '#22c55e' : 'transparent', color: activeTab === 'dashboard' ? '#0f172a' : '#94a3b8', fontWeight: 'bold' }}>
+          <button type="button" onClick={() => setActiveTab('dashboard')} style={{ textAlign: 'left', padding: '10px', borderRadius: '8px', border: 'none', cursor: 'pointer', backgroundColor: activeTab === 'dashboard' ? '#22c55e' : 'transparent', color: activeTab === 'dashboard' ? '#0f172a' : '#94a3b8', fontWeight: 'bold' }}>
             Live Risk Radar
           </button>
-          <button 
-            type="button"
-            onClick={() => setActiveTab('manifest')} 
-            style={{ textAlign: 'left', padding: '10px', borderRadius: '8px', border: 'none', cursor: 'pointer', backgroundColor: activeTab === 'manifest' ? '#22c55e' : 'transparent', color: activeTab === 'manifest' ? '#0f172a' : '#94a3b8', fontWeight: 'bold' }}>
+          <button type="button" onClick={() => setActiveTab('manifest')} style={{ textAlign: 'left', padding: '10px', borderRadius: '8px', border: 'none', cursor: 'pointer', backgroundColor: activeTab === 'manifest' ? '#22c55e' : 'transparent', color: activeTab === 'manifest' ? '#0f172a' : '#94a3b8', fontWeight: 'bold' }}>
             Form 10 Manifest
           </button>
-          <button 
-            type="button"
-            onClick={() => setActiveTab('onboarding')} 
-            style={{ textAlign: 'left', padding: '10px', borderRadius: '8px', border: 'none', cursor: 'pointer', backgroundColor: activeTab === 'onboarding' ? '#22c55e' : 'transparent', color: activeTab === 'onboarding' ? '#0f172a' : '#94a3b8', fontWeight: 'bold' }}>
+          <button type="button" onClick={() => setActiveTab('onboarding')} style={{ textAlign: 'left', padding: '10px', borderRadius: '8px', border: 'none', cursor: 'pointer', backgroundColor: activeTab === 'onboarding' ? '#22c55e' : 'transparent', color: activeTab === 'onboarding' ? '#0f172a' : '#94a3b8', fontWeight: 'bold' }}>
             Client Onboarding
           </button>
-          <button 
-            type="button"
-            onClick={() => setActiveTab('vault')} 
-            style={{ textAlign: 'left', padding: '10px', borderRadius: '8px', border: 'none', cursor: 'pointer', backgroundColor: activeTab === 'vault' ? '#22c55e' : 'transparent', color: activeTab === 'vault' ? '#0f172a' : '#94a3b8', fontWeight: 'bold' }}>
+          <button type="button" onClick={() => setActiveTab('vault')} style={{ textAlign: 'left', padding: '10px', borderRadius: '8px', border: 'none', cursor: 'pointer', backgroundColor: activeTab === 'vault' ? '#22c55e' : 'transparent', color: activeTab === 'vault' ? '#0f172a' : '#94a3b8', fontWeight: 'bold' }}>
             MPCB Legal Vault
           </button>
         </nav>
@@ -198,7 +137,6 @@ export default function EcoTraceEnterpriseDashboard() {
             {/* CTO Expiry & AI OCR Banner Grid */}
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '20px', marginBottom: '20px' }}>
               
-              {/* CTO Expiry Tracker */}
               <div style={{ backgroundColor: '#1e293b', border: '1px solid #eab308', padding: '18px', borderRadius: '12px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <div>
                   <h3 style={{ margin: '0 0 4px 0', color: '#eab308', fontSize: '15px' }}>CTO Renewal Radar</h3>
@@ -211,7 +149,6 @@ export default function EcoTraceEnterpriseDashboard() {
                 </button>
               </div>
 
-              {/* AI OCR Reader */}
               <div style={{ backgroundColor: '#1e293b', border: '1px solid #38bdf8', padding: '18px', borderRadius: '12px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <div>
                   <h3 style={{ margin: '0 0 4px 0', color: '#38bdf8', fontSize: '15px' }}>AI OCR CTO Reader</h3>
@@ -227,10 +164,9 @@ export default function EcoTraceEnterpriseDashboard() {
 
             </div>
 
-            {/* Critical Red-Flag Alerts Grid */}
+            {/* Critical Alerts Grid */}
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '20px', marginBottom: '25px' }}>
               
-              {/* Water Alert */}
               <div style={{ backgroundColor: Number(dischargeRatio) >= 85 ? '#7f1d1d' : '#064e3b', border: '1px solid #334155', padding: '18px', borderRadius: '12px' }}>
                 <h3 style={{ margin: '0 0 6px 0', color: '#fff', fontSize: '16px' }}>
                   {Number(dischargeRatio) >= 85 ? 'Water Discharge Alert (85%+ Limit)' : 'Water Status: Safe'}
@@ -245,7 +181,6 @@ export default function EcoTraceEnterpriseDashboard() {
                 )}
               </div>
 
-              {/* Penalty Shield */}
               <div style={{ backgroundColor: estimatedPenalty > 0 ? '#450a0a' : '#064e3b', border: '1px solid #ef4444', padding: '18px', borderRadius: '12px' }}>
                 <h3 style={{ margin: '0 0 6px 0', color: '#fca5a5', fontSize: '16px' }}>
                   Prosecution Penalty Shield
@@ -258,15 +193,15 @@ export default function EcoTraceEnterpriseDashboard() {
 
             </div>
 
-            {/* Live IoT Sensor Feed */}
+            {/* Live Sensors Feed */}
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '20px', marginBottom: '25px' }}>
               <div style={{ backgroundColor: '#1e293b', padding: '20px', borderRadius: '12px', borderLeft: '4px solid #22c55e' }}>
                 <span style={{ color: '#94a3b8', fontSize: '12px' }}>LIVE IoT pH SENSOR</span>
-                <p style={{ fontSize: '26px', fontWeight: 'bold', color: phLevel < 6.5 || phLevel > 8.5 ? '#ef4444' : '#22c55e', margin: '8px 0 0 0' }}>{phLevel} <span style={{ fontSize: '12px', color: '#94a3b8' }}>(6.5-8.5)</span></p>
+                <p style={{ fontSize: '26px', fontWeight: 'bold', color: phLevel < 6.5 || phLevel > 8.5 ? '#ef4444' : '#22c55e', margin: '8px 0 0 0' }}>{phLevel}</p>
               </div>
               <div style={{ backgroundColor: '#1e293b', padding: '20px', borderRadius: '12px', borderLeft: '4px solid #f97316' }}>
                 <span style={{ color: '#94a3b8', fontSize: '12px' }}>EFFLUENT COD LEVEL</span>
-                <p style={{ fontSize: '26px', fontWeight: 'bold', color: '#f97316', margin: '8px 0 0 0' }}>{codLevel} <span style={{ fontSize: '12px', color: '#94a3b8' }}>mg/L</span></p>
+                <p style={{ fontSize: '26px', fontWeight: 'bold', color: '#f97316', margin: '8px 0 0 0' }}>{codLevel} <span style={{ fontSize: '12px' }}>mg/L</span></p>
               </div>
               <div style={{ backgroundColor: '#1e293b', padding: '20px', borderRadius: '12px', borderLeft: '4px solid #38bdf8' }}>
                 <span style={{ color: '#94a3b8', fontSize: '12px' }}>SCOPE 2 CARBON LEDGER</span>
@@ -274,83 +209,85 @@ export default function EcoTraceEnterpriseDashboard() {
               </div>
             </div>
 
-            {/* Compliance Records Table */}
+            {/* Compliance Table */}
             <div style={{ backgroundColor: '#1e293b', padding: '20px', borderRadius: '12px', border: '1px solid #334155' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
                 <h3 style={{ margin: 0, color: '#22c55e', fontSize: '16px' }}>Live Industrial Compliance Records</h3>
-                <div style={{ display: 'flex', gap: '10px' }}>
-                  <button type="button" onClick={() => alert('AI Form IV Annual Return Compiled!')} style={{ backgroundColor: '#0284c7', color: '#fff', border: 'none', padding: '6px 12px', borderRadius: '6px', cursor: 'pointer', fontSize: '12px', fontWeight: 'bold' }}>
-                    Auto-File Form IV
-                  </button>
-                </div>
+                <button type="button" onClick={() => alert('AI Form IV Annual Return Compiled!')} style={{ backgroundColor: '#0284c7', color: '#fff', border: 'none', padding: '6px 12px', borderRadius: '6px', cursor: 'pointer', fontSize: '12px', fontWeight: 'bold' }}>
+                  Auto-File Form IV
+                </button>
               </div>
-              {loadingDb ? (
-                <p style={{ color: '#94a3b8', fontSize: '13px' }}>Fetching records...</p>
-              ) : (
-                <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '13px' }}>
-                  <thead>
-                    <tr style={{ borderBottom: '1px solid #334155', color: '#94a3b8' }}>
-                      <th style={{ padding: '10px' }}>Factory Name</th>
-                      <th style={{ padding: '10px' }}>Location</th>
-                      <th style={{ padding: '10px' }}>Water Limit (L/Day)</th>
-                      <th style={{ padding: '10px' }}>OCR Status</th>
-                      <th style={{ padding: '10px' }}>Compliance</th>
+              <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '13px' }}>
+                <thead>
+                  <tr style={{ borderBottom: '1px solid #334155', color: '#94a3b8' }}>
+                    <th style={{ padding: '10px' }}>Factory Name</th>
+                    <th style={{ padding: '10px' }}>Location</th>
+                    <th style={{ padding: '10px' }}>Water Limit</th>
+                    <th style={{ padding: '10px' }}>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {factoryList.map((item, idx) => (
+                    <tr key={idx} style={{ borderBottom: '1px solid #334155' }}>
+                      <td style={{ padding: '12px 10px', fontWeight: 'bold' }}>{item.name}</td>
+                      <td style={{ padding: '12px 10px', color: '#94a3b8' }}>{item.plant_location}</td>
+                      <td style={{ padding: '12px 10px' }}>{item.limit} L</td>
+                      <td style={{ padding: '12px 10px', color: '#38bdf8' }}>{item.status}</td>
                     </tr>
-                  </thead>
-                  <tbody>
-                    {factoryList.length > 0 ? (
-                      factoryList.map((item, idx) => (
-                        <tr key={item.id || idx} style={{ borderBottom: '1px solid #334155' }}>
-                          <td style={{ padding: '12px 10px', fontWeight: 'bold' }}>{item.name}</td>
-                          <td style={{ padding: '12px 10px', color: '#94a3b8' }}>{item.plant_location}</td>
-                          <td style={{ padding: '12px 10px' }}>{item.mpcb_water_consent_limit_liters || '85000'} L</td>
-                          <td style={{ padding: '12px 10px', color: '#38bdf8' }}>{item.ocr_parsing_status || 'PARSED'}</td>
-                          <td style={{ padding: '12px 10px', color: '#22c55e', fontWeight: 'bold' }}>Compliant</td>
-                        </tr>
-                      ))
-                    ) : (
-                      <tr>
-                        <td colSpan="5" style={{ padding: '15px', color: '#94a3b8', textAlign: 'center' }}>No factories registered yet. Onboard one using the Client Onboarding tab!</td>
-                      </tr>
-                    )}
-                  </tbody>
-                </table>
-              )}
+                  ))}
+                </tbody>
+              </table>
             </div>
-
           </div>
         )}
 
-        {/* Tab 2: Form 10 Manifest Generator */}
+        {/* Tab 2: Manifest */}
         {activeTab === 'manifest' && (
           <div style={{ backgroundColor: '#1e293b', padding: '25px', borderRadius: '12px', border: '1px solid #334155' }}>
             <h2 style={{ marginTop: 0, color: '#22c55e', fontSize: '20px' }}>MPCB Form 10 Hazardous Waste Manifest Generator</h2>
-            <p style={{ color: '#94a3b8', fontSize: '13px' }}>Generate statutory dispatch receipts for CHWTSDF transport.</p>
             <form onSubmit={handleGenerateForm10} style={{ display: 'flex', flexDirection: 'column', gap: '15px', maxWidth: '500px', marginTop: '20px' }}>
               <div>
-                <label style={{ display: 'block', fontSize: '13px', color: '#94a3b8', marginBottom: '5px' }}>MPCB Authorized Vehicle Number</label>
+                <label style={{ display: 'block', fontSize: '13px', color: '#94a3b8', marginBottom: '5px' }}>Vehicle Number</label>
                 <input required type="text" value={vehicleNo} onChange={(e) => setVehicleNo(e.target.value)} placeholder="MH 12 QW 4589" style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #334155', backgroundColor: '#0f172a', color: '#fff' }} />
               </div>
               <div>
-                <label style={{ display: 'block', fontSize: '13px', color: '#94a3b8', marginBottom: '5px' }}>Transporter / Recycler Name</label>
-                <input required type="text" value={transporterName} onChange={(e) => setTransporterName(e.target.value)} placeholder="MEPL Ranjangaon CHWTSDF" style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #334155', backgroundColor: '#0f172a', color: '#fff' }} />
+                <label style={{ display: 'block', fontSize: '13px', color: '#94a3b8', marginBottom: '5px' }}>Transporter Name</label>
+                <input required type="text" value={transporterName} onChange={(e) => setTransporterName(e.target.value)} placeholder="MEPL CHWTSDF" style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #334155', backgroundColor: '#0f172a', color: '#fff' }} />
               </div>
-              <button type="submit" style={{ backgroundColor: '#22c55e', color: '#0f172a', border: 'none', padding: '12px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer', marginTop: '10px' }}>
-                Generate Form 10 PDF
-              </button>
+              <button type="submit" style={{ backgroundColor: '#22c55e', color: '#0f172a', border: 'none', padding: '12px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer' }}>Generate Form 10 PDF</button>
             </form>
           </div>
         )}
 
-        {/* Tab 3: Client Onboarding */}
+        {/* Tab 3: Onboarding */}
         {activeTab === 'onboarding' && (
           <div style={{ backgroundColor: '#1e293b', padding: '25px', borderRadius: '12px', border: '1px solid #334155' }}>
-            <h2 style={{ marginTop: 0, color: '#22c55e', fontSize: '20px' }}>Register New Industrial Unit</h2>
+            <h2 style={{ marginTop: 0, color: '#22c55e', fontSize: '20px' }}>Register New Unit</h2>
             <form onSubmit={handleAddFactory} style={{ display: 'flex', flexDirection: 'column', gap: '15px', maxWidth: '500px', marginTop: '20px' }}>
-              <div>
-                <label style={{ display: 'block', fontSize: '13px', color: '#94a3b8', marginBottom: '5px' }}>Factory Name</label>
-                <input required type="text" value={factoryName} onChange={(e) => setFactoryName(e.target.value)} placeholder="WESTERN CHEMICALS" style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #334155', backgroundColor: '#0f172a', color: '#fff' }} />
-              </div>
-              <div>
-                <label style={{ display: 'block', fontSize: '13px', color: '#94a3b8', marginBottom: '5px' }}>Plant Location</label>
-                <input required type="text" value={factoryLocation} onChange={(e) => setFactoryLocation(e.target.value)} placeholder="BHOSARI MIDC" style={
+              <input required type="text" value={factoryName} onChange={(e) => setFactoryName(e.target.value)} placeholder="Factory Name" style={{ padding: '10px', borderRadius: '6px', backgroundColor: '#0f172a', color: '#fff', border: '1px solid #334155' }} />
+              <input required type="text" value={factoryLocation} onChange={(e) => setFactoryLocation(e.target.value)} placeholder="Location" style={{ padding: '10px', borderRadius: '6px', backgroundColor: '#0f172a', color: '#fff', border: '1px solid #334155' }} />
+              <input required type="number" value={factoryWaterLimit} onChange={(e) => setFactoryWaterLimit(e.target.value)} placeholder="Water Limit (L/Day)" style={{ padding: '10px', borderRadius: '6px', backgroundColor: '#0f172a', color: '#fff', border: '1px solid #334155' }} />
+              <button type="submit" style={{ backgroundColor: '#22c55e', color: '#0f172a', padding: '12px', borderRadius: '6px', fontWeight: 'bold', border: 'none', cursor: 'pointer' }}>+ Onboard Unit</button>
+            </form>
+          </div>
+        )}
+
+        {/* Tab 4: Vault */}
+        {activeTab === 'vault' && (
+          <div style={{ backgroundColor: '#1e293b', padding: '25px', borderRadius: '12px', border: '1px solid #334155' }}>
+            <h2 style={{ marginTop: 0, color: '#38bdf8', fontSize: '20px' }}>MPCB Legal Vault</h2>
+            <div style={{ borderLeft: '4px solid #ef4444', backgroundColor: '#0f172a', padding: '15px', borderRadius: '6px', marginBottom: '15px' }}>
+              <h4 style={{ margin: '0 0 5px 0', color: '#fca5a5' }}>Hazardous Rules 2016</h4>
+              <p style={{ margin: 0, fontSize: '13px', color: '#94a3b8' }}>Mandatory Form 10 disposal through CHWTSDF facilities.</p>
+            </div>
+            <div style={{ borderLeft: '4px solid #3b82f6', backgroundColor: '#0f172a', padding: '15px', borderRadius: '6px' }}>
+              <h4 style={{ margin: '0 0 5px 0', color: '#93c5fd' }}>Water Act 1974</h4>
+              <p style={{ margin: 0, fontSize: '13px', color: '#94a3b8' }}>Discharge limits must comply with CTO standards.</p>
+            </div>
+          </div>
+        )}
+
+      </main>
+    </div>
+  );
+}
