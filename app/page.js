@@ -1,11 +1,11 @@
-'use client';
+use client';
 
 import React, { useState } from 'react';
 
 export default function EcoTraceEnterpriseDashboard() {
   const [activeTab, setActiveTab] = useState('dashboard');
   
-  // Dynamic Factory Registry (Interactive Live State)
+  // Dynamic Factory Registry
   const [factoryList, setFactoryList] = useState([
     { id: 1, name: 'WESTERN CHEMICALS', location: 'BHOSARI MIDC', limit: 85000, discharge: 74800, ph: 7.4, cod: 210, status: 'COMPLIANT' }
   ]);
@@ -18,13 +18,12 @@ export default function EcoTraceEnterpriseDashboard() {
   const [factoryLocation, setFactoryLocation] = useState('');
   const [factoryLimit, setFactoryLimit] = useState('');
 
-  // Selected Factory Live Context
+  // Selected Factory Context
   const activeFactory = factoryList.find(f => f.id === selectedFactoryId) || factoryList[0];
 
   const scope1 = 0.23, scope2 = 1.16, scope3 = 0.06;
   const totalCarbon = (scope1 + scope2 + scope3).toFixed(2);
 
-  // Full Audit Export
   const handlePrintFullReport = () => {
     if (typeof window !== 'undefined') window.print();
   };
@@ -36,16 +35,16 @@ export default function EcoTraceEnterpriseDashboard() {
     setTransporterName('');
   };
 
-  // Onboard New Unit and Update State Dynamically
   const handleAddFactory = (e) => {
     e.preventDefault();
     const newId = factoryList.length + 1;
+    const limitNum = Number(factoryLimit) || 50000;
     const newUnit = {
       id: newId,
       name: factoryName.toUpperCase(),
       location: factoryLocation.toUpperCase() + ' MIDC',
-      limit: Number(factoryLimit) || 50000,
-      discharge: Math.floor((Number(factoryLimit) || 50000) * 0.8),
+      limit: limitNum,
+      discharge: Math.floor(limitNum * 0.8),
       ph: 7.2,
       cod: 180,
       status: 'COMPLIANT'
@@ -58,7 +57,7 @@ export default function EcoTraceEnterpriseDashboard() {
     setFactoryName('');
     setFactoryLocation('');
     setFactoryLimit('');
-    setActiveTab('dashboard'); // Redirect immediately to view new live unit
+    setActiveTab('dashboard');
   };
 
   return (
@@ -112,7 +111,6 @@ export default function EcoTraceEnterpriseDashboard() {
           </div>
           
           <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-            {/* Live Factory Switcher for Online Demo */}
             <div style={{ backgroundColor: '#1e293b', border: '1px solid #38bdf8', padding: '6px 12px', borderRadius: '8px' }}>
               <span style={{ fontSize: '11px', color: '#38bdf8', display: 'block', fontWeight: 'bold' }}>LIVE DEMO SELECTOR:</span>
               <select value={selectedFactoryId} onChange={(e) => setSelectedFactoryId(Number(e.target.value))} style={{ backgroundColor: 'transparent', color: '#fff', border: 'none', fontWeight: 'bold', cursor: 'pointer', outline: 'none' }}>
@@ -143,7 +141,7 @@ export default function EcoTraceEnterpriseDashboard() {
               </span>
             </div>
 
-            {/* Dynamic Cards Grid */}
+            {/* Cards Grid */}
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px', marginBottom: '25px' }}>
               <div style={{ backgroundColor: '#1e293b', border: '1px solid #eab308', padding: '20px', borderRadius: '12px' }}>
                 <h3 style={{ color: '#eab308', margin: '0 0 8px 0', fontSize: '16px' }}>📅 CTO Renewal Radar</h3>
@@ -176,11 +174,11 @@ export default function EcoTraceEnterpriseDashboard() {
               </div>
               <div style={{ backgroundColor: '#1e293b', padding: '20px', borderRadius: '12px', borderLeft: '4px solid #06b6d4' }}>
                 <span style={{ color: '#94a3b8', fontSize: '12px' }}>WATER DISCHARGE</span>
-                <p style={{ fontSize: '28px', fontWeight: 'bold', color: '#06b6d4', margin: '8px 0 0 0' }}>{activeFactory.discharge.toLocaleString()} <span style={{ fontSize: '12px', color: '#94a3b8' }}>/ {activeFactory.limit.toLocaleString()} L</span></p>
+                <p style={{ fontSize: '28px', fontWeight: 'bold', color: '#06b6d4', margin: '8px 0 0 0' }}>{activeFactory.discharge} <span style={{ fontSize: '12px', color: '#94a3b8' }}>/ {activeFactory.limit} L</span></p>
               </div>
             </div>
 
-            {/* Dynamic Registered Units Table */}
+            {/* Registered Units Table */}
             <div style={{ backgroundColor: '#1e293b', padding: '20px', borderRadius: '12px', border: '1px solid #334155' }}>
               <h3 style={{ margin: '0 0 15px 0', color: '#22c55e', fontSize: '16px' }}>🏭 Registered Units Live Registry ({factoryList.length})</h3>
               <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '13px' }}>
@@ -197,7 +195,7 @@ export default function EcoTraceEnterpriseDashboard() {
                     <tr key={item.id} style={{ borderBottom: '1px solid #334155', backgroundColor: item.id === selectedFactoryId ? '#0f172a' : 'transparent' }}>
                       <td style={{ padding: '12px 10px', fontWeight: 'bold' }}>{item.name}</td>
                       <td style={{ padding: '12px 10px', color: '#94a3b8' }}>{item.location}</td>
-                      <td style={{ padding: '12px 10px' }}>{item.limit.toLocaleString()} L</td>
+                      <td style={{ padding: '12px 10px' }}>{item.limit} L</td>
                       <td style={{ padding: '12px 10px', color: '#22c55e', fontWeight: 'bold' }}>{item.status}</td>
                     </tr>
                   ))}
@@ -270,3 +268,18 @@ export default function EcoTraceEnterpriseDashboard() {
             </form>
           </div>
         )}
+
+        {/* Tab 4: MCCI Cluster */}
+        {activeTab === 'cluster' && (
+          <div style={{ backgroundColor: '#1e293b', padding: '25px', borderRadius: '12px', border: '1px solid #334155' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div>
+                <h2 style={{ marginTop: 0, color: '#38bdf8', fontSize: '20px' }}>🏢 MCCI MIDC Cluster Monitoring Command Center</h2>
+                <p style={{ color: '#94a3b8', fontSize: '13px', margin: '4px 0 0 0' }}>Anonymized Macro Data Aggregator for Industry Associations</p>
+              </div>
+              <span style={{ backgroundColor: '#064e3b', color: '#22c55e', border: '1px solid #22c55e', padding: '6px 12px', borderRadius: '20px', fontSize: '12px', fontWeight: 'bold' }}>
+                🔒 MSME Privacy Shield Active
+              </span>
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
