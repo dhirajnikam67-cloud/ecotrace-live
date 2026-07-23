@@ -296,4 +296,75 @@ export default function EcoTraceEnterpriseShield() {
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '20px', marginTop: '20px' }}>
-              <div style={{ backgroundColor: '#0f172a', padding: '18px', bo
+              <div style={{ backgroundColor: '#0f172a', padding: '18px', borderRadius: '8px', borderLeft: '4px solid #22c55e' }}>
+                <span style={{ color: '#94a3b8', fontSize: '12px' }}>BHOSARI MIDC CLUSTER</span>
+                <p style={{ fontSize: '22px', fontWeight: 'bold', color: '#fff', margin: '5px 0 0 0' }}>142 Units Onboarded</p>
+                <p style={{ fontSize: '12px', color: '#22c55e', margin: '4px 0 0 0' }}>94.2% Cluster Compliance Index</p>
+              </div>
+
+              <div style={{ backgroundColor: '#0f172a', padding: '18px', borderRadius: '8px', borderLeft: '4px solid #38bdf8' }}>
+                <span style={{ color: '#94a3b8', fontSize: '12px' }}>CHAKAN MIDC CLUSTER</span>
+                <p style={{ fontSize: '22px', fontWeight: 'bold', color: '#fff', margin: '5px 0 0 0' }}>218 Units Onboarded</p>
+                <p style={{ fontSize: '12px', color: '#38bdf8', margin: '4px 0 0 0' }}>91.8% Cluster Compliance Index</p>
+              </div>
+
+              <div style={{ backgroundColor: '#0f172a', padding: '18px', borderRadius: '8px', borderLeft: '4px solid #eab308' }}>
+                <span style={{ color: '#94a3b8', fontSize: '12px' }}>RANJANGAON AND TALAWADE</span>
+                <p style={{ fontSize: '22px', fontWeight: 'bold', color: '#fff', margin: '5px 0 0 0' }}>156 Units Onboarded</p>
+                <p style={{ fontSize: '12px', color: '#eab308', margin: '4px 0 0 0' }}>96.1% Cluster Compliance Index</p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* TAB 5: CLIENT ONBOARDING */}
+        {activeTab === 'onboarding' && (
+          <div style={{ backgroundColor: '#1e293b', padding: '25px', borderRadius: '12px', border: '1px solid #334155' }}>
+            <h2 style={{ marginTop: 0, color: '#22c55e', fontSize: '20px' }}>Onboard and Protect New Industrial Unit</h2>
+            <p style={{ color: '#94a3b8', fontSize: '13px' }}>Instantly establish a cloud-monitored compliance shield for new MSME clients.</p>
+            
+            <form onSubmit={handleOnboardNewFactory} style={{ display: 'flex', flexDirection: 'column', gap: '15px', maxWidth: '500px', marginTop: '20px' }}>
+              <div>
+                <label style={{ display: 'block', fontSize: '13px', color: '#94a3b8', marginBottom: '5px' }}>Factory Legal Name</label>
+                <input required type="text" value={factoryName} onChange={(e) => setFactoryName(e.target.value)} placeholder="e.g. SAGAR CHEMICALS" style={{ width: '100%', padding: '10px', borderRadius: '6px', backgroundColor: '#0f172a', color: '#fff', border: '1px solid #334155' }} />
+              </div>
+              <div>
+                <label style={{ display: 'block', fontSize: '13px', color: '#94a3b8', marginBottom: '5px' }}>MIDC Zone Location</label>
+                <input required type="text" value={factoryLocation} onChange={(e) => setFactoryLocation(e.target.value)} placeholder="e.g. BHOSARI / CHAKAN" style={{ width: '100%', padding: '10px', borderRadius: '6px', backgroundColor: '#0f172a', color: '#fff', border: '1px solid #334155' }} />
+              </div>
+              <div>
+                <label style={{ display: 'block', fontSize: '13px', color: '#94a3b8', marginBottom: '5px' }}>Consent Water Discharge Limit (Liters/Day)</label>
+                <input required type="number" value={factoryLimit} onChange={(e) => setFactoryLimit(e.target.value)} placeholder="e.g. 50000" style={{ width: '100%', padding: '10px', borderRadius: '6px', backgroundColor: '#0f172a', color: '#fff', border: '1px solid #334155' }} />
+              </div>
+              <button type="submit" style={{ backgroundColor: '#22c55e', color: '#0f172a', padding: '12px', borderRadius: '6px', fontWeight: 'bold', border: 'none', cursor: 'pointer' }}>+ Onboard Unit to Cloud Registry</button>
+            </form>
+          </div>
+        )}
+
+        {/* TAB 6: LEGAL VAULT */}
+        {activeTab === 'vault' && (
+          <div style={{ backgroundColor: '#1e293b', padding: '25px', borderRadius: '12px', border: '1px solid #334155' }}>
+            <h2 style={{ marginTop: 0, color: '#38bdf8', fontSize: '20px' }}>MPCB Statutory Regulations and Protection Vault</h2>
+            <p style={{ color: '#94a3b8', fontSize: '13px', marginBottom: '20px' }}>Legal defense matrix and penalty shield rules formulated under Indian Environmental Laws.</p>
+            
+            <div style={{ borderLeft: '4px solid #ef4444', backgroundColor: '#0f172a', padding: '15px', borderRadius: '6px', marginBottom: '15px' }}>
+              <h4 style={{ margin: '0 0 5px 0', color: '#fca5a5' }}>Hazardous and Other Wastes Rules 2016</h4>
+              <p style={{ margin: 0, fontSize: '13px', color: '#94a3b8' }}>Mandatory Form 10 electronic manifest tracking for all hazardous waste movements to CHWTSDF facilities.</p>
+            </div>
+            
+            <div style={{ borderLeft: '4px solid #3b82f6', backgroundColor: '#0f172a', padding: '15px', borderRadius: '6px', marginBottom: '15px' }}>
+              <h4 style={{ margin: '0 0 5px 0', color: '#93c5fd' }}>Water (Prevention and Control of Pollution) Act 1974</h4>
+              <p style={{ margin: 0, fontSize: '13px', color: '#94a3b8' }}>Strict effluent discharge tracking (pH, COD, Volume) to prevent CTO cancellation or prosecution under Section 33A.</p>
+            </div>
+
+            <div style={{ borderLeft: '4px solid #22c55e', backgroundColor: '#0f172a', padding: '15px', borderRadius: '6px' }}>
+              <h4 style={{ margin: '0 0 5px 0', color: '#86efac' }}>Air (Prevention and Control of Pollution) Act 1981</h4>
+              <p style={{ margin: 0, fontSize: '13px', color: '#94a3b8' }}>Boiler and DG set stack emission tracking for Zero Notice compliance.</p>
+            </div>
+          </div>
+        )}
+
+      </main>
+    </div>
+  );
+}
