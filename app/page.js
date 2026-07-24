@@ -123,17 +123,17 @@ export default function EcoTraceEnterpriseShield() {
             ☰ {mobileMenuOpen ? 'Close Menu' : 'Modules'}
           </button>
           <div>
-            <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#22c55e' }}>EcoTrace OS</div>
+            <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#22c55e' }}>EcoTrace India Pvt. Ltd.</div>
           </div>
         </div>
         <div style={{ fontSize: '11px', color: '#38bdf8', backgroundColor: '#0f172a', padding: '4px 8px', borderRadius: '4px', border: '1px solid #334155' }}>
-          Mobile &amp; Web Ready
+          Project by Dhiraj Nikam
         </div>
       </div>
 
       <div style={{ display: 'flex', flex: 1, position: 'relative' }}>
         
-        {/* Sidebar (Collapsible on Mobile, Fixed on Desktop) */}
+        {/* Sidebar */}
         <aside style={{ 
           width: '280px', 
           backgroundColor: '#1e293b', 
@@ -149,8 +149,8 @@ export default function EcoTraceEnterpriseShield() {
         }}>
           <div style={{ marginBottom: '6px', borderBottom: '1px solid #334155', paddingBottom: '8px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <div>
-              <div style={{ fontSize: '16px', fontWeight: 'bold', color: '#22c55e' }}>EcoTrace India</div>
-              <span style={{ fontSize: '10px', color: '#94a3b8' }}>Enterprise Compliance Shield</span>
+              <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#22c55e' }}>EcoTrace India Pvt. Ltd.</div>
+              <span style={{ fontSize: '10px', color: '#38bdf8' }}>Project by Dhiraj Nikam</span>
             </div>
             <button type="button" onClick={() => setMobileMenuOpen(false)} style={{ background: 'none', border: 'none', color: '#ef4444', fontSize: '16px', fontWeight: 'bold', cursor: 'pointer' }}>✕</button>
           </div>
@@ -256,8 +256,12 @@ export default function EcoTraceEnterpriseShield() {
           
           <header style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', borderBottom: '1px solid #334155', paddingBottom: '15px', gap: '10px' }}>
             <div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '4px' }}>
+                <span style={{ backgroundColor: '#22c55e', color: '#0f172a', padding: '2px 8px', borderRadius: '4px', fontSize: '11px', fontWeight: 'bold' }}>EcoTrace India Pvt. Ltd.</span>
+                <span style={{ fontSize: '12px', color: '#38bdf8' }}>Project by Dhiraj Nikam</span>
+              </div>
               <h2 style={{ margin: 0, fontSize: '18px' }}>MPCB Direct Gateway &amp; Enterprise Ecosystem</h2>
-              <p style={{ color: '#94a3b8', margin: '2px 0 0 0', fontSize: '12px' }}>AI-Powered Industrial Safety &amp; Zero Non-Compliance Platform</p>
+              <p style={{ color: '#94a3b8', margin: '2px 0 0 0', fontSize: '12px' }}>Contact: 7378780745 | dhiraj@ecotraceindia.com</p>
             </div>
             
             <div style={{ display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap' }}>
