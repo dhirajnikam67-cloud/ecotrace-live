@@ -44,15 +44,19 @@ export default function EcoTraceEnterpriseShield() {
   ]);
   const [selectedFactoryId, setSelectedFactoryId] = useState(1);
 
-  // New Feature 1: Emergency Audit Mode State
+  // CTO Renewal State
+  const [ctoCategory, setCtoCategory] = useState('RED Heavy Chemical Category');
+  const [ctoValidityYears, setCtoValidityYears] = useState('5 Years Renewal');
+
+  // Emergency Audit Mode State
   const [officerName, setOfficerName] = useState('RO PUNE REGION');
 
-  // New Feature 2: CAPEX & ROI Calculator State
+  // CAPEX & ROI Calculator State
   const [currentCapex, setCurrentCapex] = useState('1500000');
   const [monthlyChemCost, setMonthlyChemCost] = useState('45000');
   const [roiMonths, setRoiMonths] = useState('18');
 
-  // New Feature 3: E-Waste & Battery Register State
+  // E-Waste & Battery Register State
   const [ewasteWeight, setEwasteWeight] = useState('450');
   const [batteryQty, setBatteryQty] = useState('24');
 
@@ -76,7 +80,6 @@ export default function EcoTraceEnterpriseShield() {
   const [transporterName, setTransporterName] = useState('MEHA HAZARD FREIGHT LOGISTICS');
   const [wasteCategory, setWasteCategory] = useState('5.1 Used / Spent Oil');
   const [wasteQuantity, setWasteQuantity] = useState('2.5');
-  const [destinationChwtsdf, setDestinationChwtsdf] = useState('MEPL Ranjangaon CHWTSDF');
   
   // Client Onboarding Form States
   const [factoryName, setFactoryName] = useState('');
@@ -86,7 +89,6 @@ export default function EcoTraceEnterpriseShield() {
   // Legal Defense Notice State
   const [noticeType, setNoticeType] = useState('Show Cause Notice');
   const [noticeReference, setNoticeReference] = useState('');
-  const [allegedIssue, setAllegedIssue] = useState('pH Parameter Exceedance');
 
   // IoT Threshold Alert State
   const [alertPhone, setAlertPhone] = useState('+91 9876543210');
@@ -104,7 +106,6 @@ export default function EcoTraceEnterpriseShield() {
 
   // Active Factory Context
   const activeFactory = factoryList.find(f => f.id === selectedFactoryId) || factoryList[0];
-  const totalCarbon = (activeFactory.scope1 + activeFactory.scope2 + activeFactory.scope3).toFixed(2);
 
   // Handlers
   const handlePrint = () => {
@@ -168,6 +169,7 @@ export default function EcoTraceEnterpriseShield() {
         <nav style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
           <button type="button" onClick={() => setActiveTab('auditmode')} style={{ textAlign: 'left', padding: '9px', borderRadius: '6px', border: 'none', cursor: 'pointer', backgroundColor: activeTab === 'auditmode' ? '#ef4444' : 'transparent', color: activeTab === 'auditmode' ? '#fff' : '#fca5a5', fontWeight: 'bold' }}>🚨 Emergency Audit Mode (Fly Squad)</button>
           <button type="button" onClick={() => setActiveTab('dashboard')} style={{ textAlign: 'left', padding: '9px', borderRadius: '6px', border: 'none', cursor: 'pointer', backgroundColor: activeTab === 'dashboard' ? '#22c55e' : 'transparent', color: activeTab === 'dashboard' ? '#0f172a' : '#fff', fontWeight: 'bold' }}>Live Risk Radar &amp; ETP Meter</button>
+          <button type="button" onClick={() => setActiveTab('ctorenewal')} style={{ textAlign: 'left', padding: '9px', borderRadius: '6px', border: 'none', cursor: 'pointer', backgroundColor: activeTab === 'ctorenewal' ? '#10b981' : 'transparent', color: activeTab === 'ctorenewal' ? '#0f172a' : '#6ee7b7', fontWeight: 'bold' }}>📜 CTO Renewal Auto-Dossier</button>
           <button type="button" onClick={() => setActiveTab('capex')} style={{ textAlign: 'left', padding: '9px', borderRadius: '6px', border: 'none', cursor: 'pointer', backgroundColor: activeTab === 'capex' ? '#eab308' : 'transparent', color: activeTab === 'capex' ? '#0f172a' : '#fef08a', fontWeight: 'bold' }}>💰 ETP CAPEX &amp; ROI Calculator</button>
           <button type="button" onClick={() => setActiveTab('returns')} style={{ textAlign: 'left', padding: '9px', borderRadius: '6px', border: 'none', cursor: 'pointer', backgroundColor: activeTab === 'returns' ? '#14b8a6' : 'transparent', color: activeTab === 'returns' ? '#0f172a' : '#99f6e4', fontWeight: 'bold' }}>📜 Form 3, 4 &amp; 5 Annual Returns</button>
           <button type="button" onClick={() => setActiveTab('ewaste')} style={{ textAlign: 'left', padding: '9px', borderRadius: '6px', border: 'none', cursor: 'pointer', backgroundColor: activeTab === 'ewaste' ? '#06b6d4' : 'transparent', color: activeTab === 'ewaste' ? '#0f172a' : '#a5f3fc', fontWeight: 'bold' }}>💻 E-Waste &amp; Battery EPR Vault</button>
@@ -207,7 +209,46 @@ export default function EcoTraceEnterpriseShield() {
           </div>
         </header>
 
-        {/* NEW FEATURE 1: EMERGENCY AUDIT MODE */}
+        {/* CTO RENEWAL AUTO-DOSSIER */}
+        {activeTab === 'ctorenewal' && (
+          <div style={{ backgroundColor: '#1e293b', padding: '20px', borderRadius: '8px', border: '1px solid #10b981' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div>
+                <h3 style={{ color: '#6ee7b7', marginTop: 0 }}>📜 MPCB CTO Renewal Auto-Dossier Generator</h3>
+                <p style={{ fontSize: '13px', color: '#94a3b8' }}>Auto-compiles complete application package for MPCB OCMMS CTO Renewal.</p>
+              </div>
+              <button type="button" onClick={handlePrint} style={{ backgroundColor: '#10b981', color: '#0f172a', padding: '10px 15px', border: 'none', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer' }}>📄 Export CTO Application PDF</button>
+            </div>
+
+            <form onSubmit={e => { e.preventDefault(); handlePrint(); }} style={{ display: 'flex', flexDirection: 'column', gap: '12px', maxWidth: '480px', marginTop: '15px' }}>
+              <div>
+                <label style={{ display: 'block', fontSize: '12px', color: '#94a3b8', marginBottom: '4px' }}>Industry Classification Category</label>
+                <select value={ctoCategory} onChange={e => setCtoCategory(e.target.value)} style={{ width: '100%', padding: '8px', borderRadius: '4px', backgroundColor: '#0f172a', color: '#fff', border: '1px solid #334155' }}>
+                  <option value="RED Heavy Chemical Category">RED Heavy Chemical Category</option>
+                  <option value="ORANGE Engineering / Coating">ORANGE Engineering / Coating</option>
+                  <option value="GREEN Light Manufacturing">GREEN Light Manufacturing</option>
+                </select>
+              </div>
+
+              <div>
+                <label style={{ display: 'block', fontSize: '12px', color: '#94a3b8', marginBottom: '4px' }}>Requested Consent Duration</label>
+                <select value={ctoValidityYears} onChange={e => setCtoValidityYears(e.target.value)} style={{ width: '100%', padding: '8px', borderRadius: '4px', backgroundColor: '#0f172a', color: '#fff', border: '1px solid #334155' }}>
+                  <option value="5 Years Renewal">5 Years Renewal (Standard MSME)</option>
+                  <option value="1 Year Renewal">1 Year Renewal (Heavy Industrial)</option>
+                </select>
+              </div>
+
+              <div style={{ backgroundColor: '#0f172a', padding: '12px', borderRadius: '4px', borderLeft: '4px solid #10b981' }}>
+                <span style={{ fontSize: '11px', color: '#94a3b8' }}>RENEWAL RADAR STATUS</span>
+                <p style={{ fontSize: '18px', fontWeight: 'bold', color: '#6ee7b7', margin: '4px 0 0 0' }}>{activeFactory.ctoDaysLeft} Days Left (Renewal Window Open)</p>
+              </div>
+
+              <button type="submit" style={{ backgroundColor: '#10b981', color: '#0f172a', padding: '10px', border: 'none', borderRadius: '4px', fontWeight: 'bold', cursor: 'pointer' }}>📄 Print Complete CTO Renewal Dossier</button>
+            </form>
+          </div>
+        )}
+
+        {/* EMERGENCY AUDIT MODE */}
         {activeTab === 'auditmode' && (
           <div style={{ backgroundColor: '#1e293b', padding: '20px', borderRadius: '8px', border: '2px solid #ef4444' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -221,11 +262,11 @@ export default function EcoTraceEnterpriseShield() {
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '12px', marginTop: '15px' }}>
               <div style={{ backgroundColor: '#0f172a', padding: '12px', borderRadius: '6px', borderLeft: '4px solid #22c55e' }}>
                 <span style={{ fontSize: '10px', color: '#94a3b8' }}>CTO STATUS</span>
-                <p style={{ margin: '4px 0 0 0', fontWeight: 'bold', color: '#22c55e' }}>VALID (82 Days Remaining)</p>
+                <p style={{ margin: '4px 0 0 0', fontWeight: 'bold', color: '#22c55e' }}>VALID ({activeFactory.ctoDaysLeft} Days Remaining)</p>
               </div>
               <div style={{ backgroundColor: '#0f172a', padding: '12px', borderRadius: '6px', borderLeft: '4px solid #38bdf8' }}>
                 <span style={{ fontSize: '10px', color: '#94a3b8' }}>ETP/STP HEALTH</span>
-                <p style={{ margin: '4px 0 0 0', fontWeight: 'bold', color: '#38bdf8' }}>98% Operational Efficiency</p>
+                <p style={{ margin: '4px 0 0 0', fontWeight: 'bold', color: '#38bdf8' }}>{activeFactory.etpHealth}% Operational Efficiency</p>
               </div>
               <div style={{ backgroundColor: '#0f172a', padding: '12px', borderRadius: '6px', borderLeft: '4px solid #eab308' }}>
                 <span style={{ fontSize: '10px', color: '#94a3b8' }}>BLOCKCHAIN VERIFICATION</span>
@@ -246,7 +287,7 @@ export default function EcoTraceEnterpriseShield() {
           </div>
         )}
 
-        {/* NEW FEATURE 2: CAPEX & ROI CALCULATOR */}
+        {/* CAPEX & ROI CALCULATOR */}
         {activeTab === 'capex' && (
           <div style={{ backgroundColor: '#1e293b', padding: '20px', borderRadius: '8px', border: '1px solid #eab308' }}>
             <h3 style={{ color: '#fef08a', marginTop: 0 }}>💰 ETP &amp; Green Tech CAPEX / ROI Calculator</h3>
@@ -273,7 +314,7 @@ export default function EcoTraceEnterpriseShield() {
           </div>
         )}
 
-        {/* NEW FEATURE 3: E-WASTE & BATTERY EPR VAULT */}
+        {/* E-WASTE & BATTERY EPR VAULT */}
         {activeTab === 'ewaste' && (
           <div style={{ backgroundColor: '#1e293b', padding: '20px', borderRadius: '8px', border: '1px solid #06b6d4' }}>
             <h3 style={{ color: '#67e8f9', marginTop: 0 }}>💻 E-Waste &amp; Battery EPR Statutory Vault</h3>
@@ -295,7 +336,7 @@ export default function EcoTraceEnterpriseShield() {
           </div>
         )}
 
-        {/* NEW FEATURE 4: MCCI & GOVT GRANTS FINDER */}
+        {/* MCCI & GOVT GRANTS FINDER */}
         {activeTab === 'cluster' && (
           <div style={{ backgroundColor: '#1e293b', padding: '20px', borderRadius: '8px', border: '1px solid #6366f1' }}>
             <h3 style={{ color: '#818cf8', marginTop: 0 }}>🛡️ MCCI Privacy Shield &amp; Govt Subsidy Finder</h3>
