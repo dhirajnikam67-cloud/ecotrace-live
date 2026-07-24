@@ -53,7 +53,7 @@ export default function EcoTraceEnterpriseShield() {
   };
 
   const handleSyncMPCB = () => {
-    alert('Establishing Secure Handshake with MPCB OCMMS Server...\n\nStatus: Data Transferred Successfully.');
+    alert('Handshake with MPCB OCMMS Server Successful.');
   };
 
   const handleGenerateForm10 = (e) => {
@@ -65,13 +65,13 @@ export default function EcoTraceEnterpriseShield() {
 
   const handleGenerateDefense = (e) => {
     e.preventDefault();
-    alert('LEGAL DEFENSE DRAFT GENERATED!\nNotice: ' + noticeType + ' (Ref: ' + noticeReference + ')\nUnit: ' + activeFactory.name + '\nStatutory Defense under Water Act Sec 33A ready.');
+    alert('LEGAL DEFENSE DRAFT GENERATED!\nNotice: ' + noticeType + ' (Ref: ' + noticeReference + ')\nUnit: ' + activeFactory.name);
     setNoticeReference('');
   };
 
   const handleTestWhatsAppAlert = (e) => {
     e.preventDefault();
-    alert('REAL-TIME THRESHOLD ALERT SENT!\nTarget Phone: ' + alertPhone + '\nUnit: ' + activeFactory.name + '\nMessage: Warning! Sensor parameter threshold breach detected.');
+    alert('REAL-TIME THRESHOLD ALERT SENT!\nTarget Phone: ' + alertPhone + '\nUnit: ' + activeFactory.name);
   };
 
   const handleAddFactory = (e) => {
@@ -132,7 +132,7 @@ export default function EcoTraceEnterpriseShield() {
         </div>
       </aside>
 
-      {/* Main Content Workspace */}
+      {/* Main Workspace */}
       <main style={{ flex: 1, padding: '25px', overflowY: 'auto' }}>
         
         <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', borderBottom: '1px solid #334155', paddingBottom: '15px' }}>
@@ -195,8 +195,8 @@ export default function EcoTraceEnterpriseShield() {
         {/* STEP 1: DEFENSE MATRIX */}
         {activeTab === 'defense' && (
           <div style={{ backgroundColor: '#1e293b', padding: '20px', borderRadius: '8px', border: '1px solid #ef4444' }}>
-            <h3 style={{ color: '#fca5a5', marginTop: 0 }}>MPCB Show Cause &amp; Proposed Direction Defense Matrix</h3>
-            <p style={{ fontSize: '13px', color: '#94a3b8' }}>Auto-generates legal reply drafts under Water and Air Acts for MPCB notices.</p>
+            <h3 style={{ color: '#fca5a5', marginTop: 0 }}>MPCB Show Cause Defense Matrix</h3>
+            <p style={{ fontSize: '13px', color: '#94a3b8' }}>Auto-generates legal reply drafts under Water and Air Acts.</p>
 
             <form onSubmit={handleGenerateDefense} style={{ display: 'flex', flexDirection: 'column', gap: '12px', maxWidth: '450px', marginTop: '15px' }}>
               <div>
@@ -204,22 +204,22 @@ export default function EcoTraceEnterpriseShield() {
                 <select value={noticeType} onChange={e => setNoticeType(e.target.value)} style={{ width: '100%', padding: '8px', borderRadius: '4px', backgroundColor: '#0f172a', color: '#fff', border: '1px solid #334155' }}>
                   <option value="Show Cause Notice">Show Cause Notice (SCN - Sec 33A)</option>
                   <option value="Proposed Direction Notice">Proposed Direction Notice (PDN)</option>
-                  <option value="Warning Letter / Explanation Demand">Warning Letter / Explanation Demand</option>
+                  <option value="Warning Letter">Warning Letter / Explanation Demand</option>
                 </select>
               </div>
 
               <div>
-                <label style={{ display: 'block', fontSize: '12px', color: '#94a3b8', marginBottom: '4px' }}>MPCB Notice Reference Number</label>
+                <label style={{ display: 'block', fontSize: '12px', color: '#94a3b8', marginBottom: '4px' }}>Notice Reference Number</label>
                 <input required type="text" value={noticeReference} onChange={e => setNoticeReference(e.target.value)} placeholder="e.g. MPCB/RO-PUNE/SCN/2026/894" style={{ width: '100%', padding: '8px', borderRadius: '4px', backgroundColor: '#0f172a', color: '#fff', border: '1px solid #334155' }} />
               </div>
 
               <div>
                 <label style={{ display: 'block', fontSize: '12px', color: '#94a3b8', marginBottom: '4px' }}>Alleged Non-Compliance Parameter</label>
                 <select value={allegedIssue} onChange={e => setAllegedIssue(e.target.value)} style={{ width: '100%', padding: '8px', borderRadius: '4px', backgroundColor: '#0f172a', color: '#fff', border: '1px solid #334155' }}>
-                  <option value="pH Parameter Exceedance">pH Parameter Deviation (Water Act 1974)</option>
-                  <option value="COD / BOD Limit Deviation">COD / BOD Effluent Exceedance</option>
-                  <option value="Hazardous Waste Form 10 Delay">Form 10 Manifest Delay (HWM Rules 2016)</option>
-                  <option value="CTO Renewal Delays">Consent to Operate Expiry Notice</option>
+                  <option value="pH Parameter Exceedance">pH Parameter Deviation</option>
+                  <option value="COD Limit Deviation">COD Effluent Exceedance</option>
+                  <option value="Form 10 Delay">Form 10 Manifest Delay</option>
+                  <option value="CTO Renewal Delays">Consent Expiry Notice</option>
                 </select>
               </div>
 
@@ -228,15 +228,15 @@ export default function EcoTraceEnterpriseShield() {
           </div>
         )}
 
-        {/* STEP 2: REAL-TIME IOT THRESHOLD ALERT SYSTEM */}
+        {/* STEP 2: IOT THRESHOLD ALERT */}
         {activeTab === 'alerts' && (
           <div style={{ backgroundColor: '#1e293b', padding: '20px', borderRadius: '8px', border: '1px solid #eab308' }}>
-            <h3 style={{ color: '#fef08a', marginTop: 0 }}>Real-Time IoT Threshold Alert System</h3>
-            <p style={{ fontSize: '13px', color: '#94a3b8' }}>Sends instant WhatsApp and SMS alerts to factory managers before MPCB flying squad detects non-compliance.</p>
+            <h3 style={{ color: '#fef08a', marginTop: 0 }}>Real-Time IoT Threshold Alerts</h3>
+            <p style={{ fontSize: '13px', color: '#94a3b8' }}>Sends instant alerts before MPCB detects non-compliance.</p>
 
             <form onSubmit={handleTestWhatsAppAlert} style={{ display: 'flex', flexDirection: 'column', gap: '12px', maxWidth: '450px', marginTop: '15px' }}>
               <div>
-                <label style={{ display: 'block', fontSize: '12px', color: '#94a3b8', marginBottom: '4px' }}>Factory Manager Alert Phone (WhatsApp)</label>
+                <label style={{ display: 'block', fontSize: '12px', color: '#94a3b8', marginBottom: '4px' }}>Manager Phone Number</label>
                 <input required type="text" value={alertPhone} onChange={e => setAlertPhone(e.target.value)} placeholder="+91 9876543210" style={{ width: '100%', padding: '8px', borderRadius: '4px', backgroundColor: '#0f172a', color: '#fff', border: '1px solid #334155' }} />
               </div>
 
@@ -284,6 +284,14 @@ export default function EcoTraceEnterpriseShield() {
         {/* TAB CLUSTER */}
         {activeTab === 'cluster' && (
           <div style={{ backgroundColor: '#1e293b', padding: '20px', borderRadius: '8px' }}>
-            <h3 style={{ color: '#38bdf8', marginTop: 0 }}>MCCI MIDC Cluster Monitoring Center</h3>
+            <h3 style={{ color: '#38bdf8', marginTop: 0 }}>MCCI MIDC Cluster Center</h3>
             <p style={{ color: '#22c55e', fontWeight: 'bold' }}>MSME Privacy Shield Active</p>
-            <p style={{ color: '#94a3b8' }}>Bhosari MIDC Cluster: 142 Units | Chakan MI
+          </div>
+        )}
+
+        {/* TAB ONBOARDING */}
+        {activeTab === 'onboarding' && (
+          <div style={{ backgroundColor: '#1e293b', padding: '20px', borderRadius: '8px' }}>
+            <h3 style={{ color: '#22c55e', marginTop: 0 }}>Onboard New Industrial Unit</h3>
+            <form onSubmit={handleAddFactory} style={{ display: 'flex', flexDirection: 'column', gap: '10px', maxWidth: '400px' }}>
+              <input required type="text" value={factoryName} onChange={e => setFactoryName(e.ta
