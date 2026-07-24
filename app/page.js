@@ -5,7 +5,7 @@ import React, { useState } from 'react';
 export default function EcoTraceEnterpriseShield() {
   const [activeTab, setActiveTab] = useState('dashboard');
   
-  // Dynamic Enterprise Registry with Full Sensor Metrics
+  // Dynamic Enterprise Registry
   const [factoryList, setFactoryList] = useState([
     { 
       id: 1, 
@@ -32,7 +32,7 @@ export default function EcoTraceEnterpriseShield() {
   const [factoryLocation, setFactoryLocation] = useState('');
   const [factoryLimit, setFactoryLimit] = useState('');
 
-  // Module 1: Legal Defense Notice Generator State
+  // Step 1: MPCB Show Cause & Proposed Direction Notice Defense State
   const [noticeType, setNoticeType] = useState('Show Cause Notice');
   const [noticeReference, setNoticeReference] = useState('');
   const [allegedIssue, setAllegedIssue] = useState('pH Parameter Exceedance');
@@ -59,7 +59,7 @@ export default function EcoTraceEnterpriseShield() {
 
   const handleGenerateLegalDefense = (e) => {
     e.preventDefault();
-    alert('🛡️ LEGAL DEFENSE DRAFT GENERATED!\n\nRe: ' + noticeType + ' (Ref: ' + noticeReference + ')\nUnit: ' + activeFactory.name + '\nStatutory Defense under Water Act Sec 33A prepared successfully for MPCB submission.');
+    alert('LEGAL DEFENSE DRAFT GENERATED!\n\nRe: ' + noticeType + ' (Ref: ' + noticeReference + ')\nUnit: ' + activeFactory.name + '\nStatutory Defense under Water Act Sec 33A prepared successfully for MPCB submission.');
     setNoticeReference('');
   };
 
@@ -109,7 +109,7 @@ export default function EcoTraceEnterpriseShield() {
             Live Risk Radar
           </button>
           <button type="button" onClick={() => setActiveTab('defense')} style={{ textAlign: 'left', padding: '12px', borderRadius: '8px', border: 'none', cursor: 'pointer', backgroundColor: activeTab === 'defense' ? '#ef4444' : 'transparent', color: activeTab === 'defense' ? '#fff' : '#fca5a5', fontWeight: 'bold' }}>
-            🛡️ Notice Defense Matrix
+            Notice Defense Matrix
           </button>
           <button type="button" onClick={() => setActiveTab('esg')} style={{ textAlign: 'left', padding: '12px', borderRadius: '8px', border: 'none', cursor: 'pointer', backgroundColor: activeTab === 'esg' ? '#22c55e' : 'transparent', color: activeTab === 'esg' ? '#0f172a' : '#94a3b8', fontWeight: 'bold' }}>
             Scope 1,2,3 ESG Engine
@@ -244,11 +244,11 @@ export default function EcoTraceEnterpriseShield() {
           </div>
         )}
 
-        {/* NEW MODULE 1: MPCB NOTICE & PENALTY DEFENSE MATRIX */}
+        {/* STEP 1 MODULE: MPCB NOTICE & PENALTY DEFENSE MATRIX */}
         {activeTab === 'defense' && (
           <div style={{ backgroundColor: '#1e293b', padding: '25px', borderRadius: '12px', border: '1px solid #ef4444' }}>
-            <h2 style={{ marginTop: 0, color: '#fca5a5', fontSize: '20px' }}>🛡️ MPCB Notice &amp; Legal Penalty Defense Matrix</h2>
-            <p style={{ color: '#94a3b8', fontSize: '13px' }}>Auto-generates statutory defense reply drafts under Water/Air Acts when an MPCB notice is received.</p>
+            <h2 style={{ marginTop: 0, color: '#fca5a5', fontSize: '20px' }}>MPCB Notice and Legal Penalty Defense Matrix</h2>
+            <p style={{ color: '#94a3b8', fontSize: '13px' }}>Auto-generates statutory defense reply drafts under Water and Air Acts when an MPCB notice is received.</p>
 
             <form onSubmit={handleGenerateLegalDefense} style={{ display: 'flex', flexDirection: 'column', gap: '15px', maxWidth: '550px', marginTop: '20px' }}>
               <div>
@@ -280,7 +280,7 @@ export default function EcoTraceEnterpriseShield() {
               </div>
 
               <button type="submit" style={{ backgroundColor: '#ef4444', color: '#fff', padding: '12px', borderRadius: '6px', fontWeight: 'bold', border: 'none', cursor: 'pointer' }}>
-                📄 Generate Statutory Legal Defense Reply
+                Generate Statutory Legal Defense Reply
               </button>
             </form>
           </div>
@@ -298,4 +298,4 @@ export default function EcoTraceEnterpriseShield() {
                 <p style={{ fontSize: '24px', fontWeight: 'bold', color: '#fff', margin: 0 }}>{activeFactory.scope1} tCO2e</p>
                 <span style={{ fontSize: '11px', color: '#94a3b8' }}>Diesel Generators, Boilers and Fleet</span>
               </div>
-              <div style={{ backgroundColor: '#0f172a', padding:
+              <div style={{ backgroundColor: '#0f172a', padding: '18px', borderRad
