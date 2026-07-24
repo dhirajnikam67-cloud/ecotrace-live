@@ -71,7 +71,7 @@ export default function EcoTraceEnterpriseShield() {
 
   const handleTestWhatsAppAlert = (e) => {
     e.preventDefault();
-    alert('REAL-TIME THRESHOLD ALERT SENT!\n\nTarget Mobile: ' + alertPhone + '\nUnit: ' + activeFactory.name + '\nMessage: WARNING! Sensor threshold breach detected.');
+    alert('REAL-TIME THRESHOLD ALERT SENT!\nTarget Phone: ' + alertPhone + '\nUnit: ' + activeFactory.name + '\nMessage: Warning! Sensor parameter threshold breach detected.');
   };
 
   const handleAddFactory = (e) => {
@@ -196,7 +196,7 @@ export default function EcoTraceEnterpriseShield() {
         {activeTab === 'defense' && (
           <div style={{ backgroundColor: '#1e293b', padding: '20px', borderRadius: '8px', border: '1px solid #ef4444' }}>
             <h3 style={{ color: '#fca5a5', marginTop: 0 }}>🛡️ MPCB Show Cause &amp; Proposed Direction Defense Matrix</h3>
-            <p style={{ fontSize: '13px', color: '#94a3b8' }}>Auto-generates legal reply drafts under Water/Air Acts for MPCB notices.</p>
+            <p style={{ fontSize: '13px', color: '#94a3b8' }}>Auto-generates legal reply drafts under Water and Air Acts for MPCB notices.</p>
 
             <form onSubmit={handleGenerateDefense} style={{ display: 'flex', flexDirection: 'column', gap: '12px', maxWidth: '450px', marginTop: '15px' }}>
               <div>
@@ -232,7 +232,7 @@ export default function EcoTraceEnterpriseShield() {
         {activeTab === 'alerts' && (
           <div style={{ backgroundColor: '#1e293b', padding: '20px', borderRadius: '8px', border: '1px solid #eab308' }}>
             <h3 style={{ color: '#fef08a', marginTop: 0 }}>⚡ Real-Time IoT Threshold Alert System</h3>
-            <p style={{ fontSize: '13px', color: '#94a3b8' }}>Sends instant WhatsApp &amp; SMS alerts to factory managers before MPCB flying squad detects non-compliance.</p>
+            <p style={{ fontSize: '13px', color: '#94a3b8' }}>Sends instant WhatsApp and SMS alerts to factory managers before MPCB flying squad detects non-compliance.</p>
 
             <form onSubmit={handleTestWhatsAppAlert} style={{ display: 'flex', flexDirection: 'column', gap: '12px', maxWidth: '450px', marginTop: '15px' }}>
               <div>
@@ -256,7 +256,7 @@ export default function EcoTraceEnterpriseShield() {
                 <input required type="text" value={codMaxLimit} onChange={e => setCodMaxLimit(e.target.value)} style={{ width: '100%', padding: '8px', borderRadius: '4px', backgroundColor: '#0f172a', color: '#fff', border: '1px solid #334155' }} />
               </div>
 
-              <button type="submit" style={{ backgroundColor: '#eab308', color: '#0f172a', padding: '10px', border: 'none', borderRadius: '4px', fontWeight: 'bold', cursor: 'pointer' }}>Trigger Test WhatsApp/SMS Alert</button>
+              <button type="submit" style={{ backgroundColor: '#eab308', color: '#0f172a', padding: '10px', border: 'none', borderRadius: '4px', fontWeight: 'bold', cursor: 'pointer' }}>Trigger Test WhatsApp Alert</button>
             </form>
           </div>
         )}
@@ -285,5 +285,5 @@ export default function EcoTraceEnterpriseShield() {
         {activeTab === 'cluster' && (
           <div style={{ backgroundColor: '#1e293b', padding: '20px', borderRadius: '8px' }}>
             <h3 style={{ color: '#38bdf8', marginTop: 0 }}>MCCI MIDC Cluster Monitoring Center</h3>
-            <p style={{ color: '#22c55e', fontWeight: 'bold' }}>🔒 MSME Privacy Shield Active</p>
-            <p>Bhosari MIDC Cluster: 142 Units | Chakan MIDC Cluster: 218 Units<
+            <p style={{ color: '#22c55e', fontWeight: 'bold' }}>MSME Privacy Shield Active</p>
+            <p>Bhosari MIDC Cluster: 142 Units -- Chakan MIDC Cluster: 218 Uni
