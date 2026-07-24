@@ -37,6 +37,12 @@ export default function EcoTraceEnterpriseShield() {
   const [noticeReference, setNoticeReference] = useState('');
   const [allegedIssue, setAllegedIssue] = useState('pH Parameter Exceedance');
 
+  // Step 2: Real-Time IoT Threshold Alert State
+  const [alertPhone, setAlertPhone] = useState('+91 9876543210');
+  const [phMaxLimit, setPhMaxLimit] = useState('8.5');
+  const [phMinLimit, setPhMinLimit] = useState('6.5');
+  const [codMaxLimit, setCodMaxLimit] = useState('250');
+
   // Currently Monitored Context
   const activeFactory = factoryList.find(f => f.id === selectedFactoryId) || factoryList[0];
   const totalCarbon = (activeFactory.scope1 + activeFactory.scope2 + activeFactory.scope3).toFixed(2);
@@ -61,6 +67,11 @@ export default function EcoTraceEnterpriseShield() {
     e.preventDefault();
     alert('LEGAL DEFENSE DRAFT GENERATED!\nNotice: ' + noticeType + ' (Ref: ' + noticeReference + ')\nUnit: ' + activeFactory.name + '\nStatutory Defense under Water Act Sec 33A ready.');
     setNoticeReference('');
+  };
+
+  const handleTestWhatsAppAlert = (e) => {
+    e.preventDefault();
+    alert('⚡ REAL-TIME THRESHOLD ALERT SENT!\n\nTarget Mobile: ' + alertPhone + '\nUnit: ' + activeFactory.name + '\nMessage: WARNING! IoT Sensor detected parameter threshold breach. Immediate ETP inspection required before MPCB auto-sync.');
   };
 
   const handleAddFactory = (e) => {
@@ -106,6 +117,7 @@ export default function EcoTraceEnterpriseShield() {
         <nav style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
           <button type="button" onClick={() => setActiveTab('dashboard')} style={{ textAlign: 'left', padding: '10px', borderRadius: '6px', border: 'none', cursor: 'pointer', backgroundColor: activeTab === 'dashboard' ? '#22c55e' : 'transparent', color: activeTab === 'dashboard' ? '#0f172a' : '#fff', fontWeight: 'bold' }}>📊 Live Risk Radar</button>
           <button type="button" onClick={() => setActiveTab('defense')} style={{ textAlign: 'left', padding: '10px', borderRadius: '6px', border: 'none', cursor: 'pointer', backgroundColor: activeTab === 'defense' ? '#ef4444' : 'transparent', color: activeTab === 'defense' ? '#fff' : '#fca5a5', fontWeight: 'bold' }}>🛡️ Notice Defense Matrix</button>
+          <button type="button" onClick={() => setActiveTab('alerts')} style={{ textAlign: 'left', padding: '10px', borderRadius: '6px', border: 'none', cursor: 'pointer', backgroundColor: activeTab === 'alerts' ? '#eab308' : 'transparent', color: activeTab === 'alerts' ? '#0f172a' : '#fef08a', fontWeight: 'bold' }}>⚡ IoT Threshold Alerts</button>
           <button type="button" onClick={() => setActiveTab('esg')} style={{ textAlign: 'left', padding: '10px', borderRadius: '6px', border: 'none', cursor: 'pointer', backgroundColor: activeTab === 'esg' ? '#22c55e' : 'transparent', color: activeTab === 'esg' ? '#fff' : '#94a3b8' }}>🌍 Scope 1,2,3 ESG Engine</button>
           <button type="button" onClick={() => setActiveTab('manifest')} style={{ textAlign: 'left', padding: '10px', borderRadius: '6px', border: 'none', cursor: 'pointer', backgroundColor: activeTab === 'manifest' ? '#22c55e' : 'transparent', color: activeTab === 'manifest' ? '#fff' : '#94a3b8' }}>🚛 Form 10 Manifest</button>
           <button type="button" onClick={() => setActiveTab('cluster')} style={{ textAlign: 'left', padding: '10px', borderRadius: '6px', border: 'none', cursor: 'pointer', backgroundColor: activeTab === 'cluster' ? '#22c55e' : 'transparent', color: activeTab === 'cluster' ? '#fff' : '#94a3b8' }}>🏢 MCCI Cluster Center</button>
@@ -180,7 +192,7 @@ export default function EcoTraceEnterpriseShield() {
           </div>
         )}
 
-        {/* STEP 1: MPCB NOTICE & PENALTY DEFENSE MATRIX */}
+        {/* STEP 1: DEFENSE MATRIX */}
         {activeTab === 'defense' && (
           <div style={{ backgroundColor: '#1e293b', padding: '20px', borderRadius: '8px', border: '1px solid #ef4444' }}>
             <h3 style={{ color: '#fca5a5', marginTop: 0 }}>🛡️ MPCB Show Cause &amp; Proposed Direction Defense Matrix</h3>
@@ -216,6 +228,43 @@ export default function EcoTraceEnterpriseShield() {
           </div>
         )}
 
+        {/* STEP 2: REAL-TIME IOT THRESHOLD ALERT SYSTEM */}
+        {activeTab === 'alerts' && (
+          <div style={{ backgroundColor: '#1e293b', padding: '20px', borderRadius: '8px', border: '1px solid #eab308' }}>
+            <h3 style={{ color: '#fef08a', marginTop: 0 }}>⚡ Real-Time IoT Threshold Alert System</h3>
+            <p style={{ fontSize: '13px', color: '#94a3b8' }}>Sends instant WhatsApp &amp; SMS alerts to factory managers before MPCB flying squad detects non-compliance.</p>
+
+            <form onSubmit={handleTestWhatsAppAlert} style={{ display: 'flex', flexDirection: 'column', gap: '12px', maxWidth: '450px', marginTop: '15px' }}>
+              <div>
+                <label style={{ display: 'block', fontSize: '12px', color: '#94a3b8', marginBottom: '4px' }}>Factory Manager Alert Phone (WhatsApp)</label>
+                <input required type="text" value={alertPhone} onChange={e => setAlertPhone(e.target.value)} placeholder="+91 9876543210" style={{ width: '100%', padding: '8px', borderRadius: '4px', backgroundColor: '#0f172a', color: '#fff', border: '1px solid #334155' }} />
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+                <div>
+                  <label style={{ display: 'block', fontSize: '12px', color: '#94a3b8', marginBottom: '4px' }}>Min pH Threshold</label>
+                  <input required type="text" value={phMinLimit} onChange={e => setPhMinLimit(e.target.value)} style={{ width: '100%', padding: '8px', borderRadius: '4px', backgroundColor: '#0f172a', color: '#fff', border: '1px solid #334155' }} />
+                </div>
+                <div>
+                  <label style={{ display: 'block', fontSize: '12px', color: '#94a3b8', marginBottom: '4px' }}>Max pH Threshold</label>
+                  <input required type="text" value={phMaxLimit} onChange={e => setPhMaxLimit(e.target.value)} style={{ width: '100%', padding: '8px', borderRadius: '4px', backgroundColor: '#0f172a', color: '#fff', border: '1px solid #334155' }} />
+                </div>
+              </div>
+
+              <div>
+                <label style={{ display: 'block', fontSize: '12px', color: '#94a3b8', marginBottom: '4px' }}>Max COD Threshold (mg/L)</label>
+                <input required type="text" value={codMaxLimit} onChange={e => setCodMaxLimit(e.target.value)} style={{ width: '100%', padding: '8px', borderRadius: '4px', backgroundColor: '#0f172a', color: '#fff', border: '1px solid #334155' }} />
+              </div>
+
+              <div style={{ backgroundColor: '#0f172a', padding: '10px', borderRadius: '4px', borderLeft: '3px solid #eab308', fontSize: '11px', color: '#fef08a' }}>
+                🟢 Live Status: IoT Gateway listening on sensor channels for {activeFactory.name}.
+              </div>
+
+              <button type="submit" style={{ backgroundColor: '#eab308', color: '#0f172a', padding: '10px', border: 'none', borderRadius: '4px', fontWeight: 'bold', cursor: 'pointer' }}>⚡ Trigger Test WhatsApp/SMS Alert</button>
+            </form>
+          </div>
+        )}
+
         {/* TAB ESG */}
         {activeTab === 'esg' && (
           <div style={{ backgroundColor: '#1e293b', padding: '20px', borderRadius: '8px' }}>
@@ -237,36 +286,4 @@ export default function EcoTraceEnterpriseShield() {
         )}
 
         {/* TAB CLUSTER */}
-        {activeTab === 'cluster' && (
-          <div style={{ backgroundColor: '#1e293b', padding: '20px', borderRadius: '8px' }}>
-            <h3 style={{ color: '#38bdf8', marginTop: 0 }}>MCCI MIDC Cluster Monitoring Center</h3>
-            <p style={{ color: '#22c55e', fontWeight: 'bold' }}>🔒 MSME Privacy Shield Active</p>
-            <p>Bhosari MIDC Cluster: 142 Units | Chakan MIDC Cluster: 218 Units</p>
-          </div>
-        )}
-
-        {/* TAB ONBOARDING */}
-        {activeTab === 'onboarding' && (
-          <div style={{ backgroundColor: '#1e293b', padding: '20px', borderRadius: '8px' }}>
-            <h3 style={{ color: '#22c55e', marginTop: 0 }}>Onboard New Industrial Unit</h3>
-            <form onSubmit={handleAddFactory} style={{ display: 'flex', flexDirection: 'column', gap: '10px', maxWidth: '400px' }}>
-              <input required type="text" value={factoryName} onChange={e => setFactoryName(e.target.value)} placeholder="Factory Name (e.g. SAGAR CHEMICALS)" style={{ padding: '8px', borderRadius: '4px', backgroundColor: '#0f172a', color: '#fff', border: '1px solid #334155' }} />
-              <input required type="text" value={factoryLocation} onChange={e => setFactoryLocation(e.target.value)} placeholder="MIDC Zone (e.g. BHOSARI)" style={{ padding: '8px', borderRadius: '4px', backgroundColor: '#0f172a', color: '#fff', border: '1px solid #334155' }} />
-              <input required type="number" value={factoryLimit} onChange={e => setFactoryLimit(e.target.value)} placeholder="Water Discharge Limit (L/Day)" style={{ padding: '8px', borderRadius: '4px', backgroundColor: '#0f172a', color: '#fff', border: '1px solid #334155' }} />
-              <button type="submit" style={{ backgroundColor: '#22c55e', color: '#0f172a', padding: '10px', border: 'none', borderRadius: '4px', fontWeight: 'bold', cursor: 'pointer' }}>+ Onboard Unit Live</button>
-            </form>
-          </div>
-        )}
-
-        {/* TAB VAULT */}
-        {activeTab === 'vault' && (
-          <div style={{ backgroundColor: '#1e293b', padding: '20px', borderRadius: '8px' }}>
-            <h3 style={{ color: '#38bdf8', marginTop: 0 }}>📜 MPCB Statutory Regulations Vault</h3>
-            <p style={{ fontSize: '13px', color: '#94a3b8' }}>Hazardous Rules 2016 | Water Act 1974 | Air Act 1981</p>
-          </div>
-        )}
-
-      </main>
-    </div>
-  );
-}
+        {activeTab === 'cluster' &&
