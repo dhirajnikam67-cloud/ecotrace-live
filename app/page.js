@@ -71,7 +71,7 @@ export default function EcoTraceEnterpriseShield() {
 
   const handleTestWhatsAppAlert = (e) => {
     e.preventDefault();
-    alert('⚡ REAL-TIME THRESHOLD ALERT SENT!\n\nTarget Mobile: ' + alertPhone + '\nUnit: ' + activeFactory.name + '\nMessage: WARNING! IoT Sensor detected parameter threshold breach. Immediate ETP inspection required before MPCB auto-sync.');
+    alert('REAL-TIME THRESHOLD ALERT SENT!\n\nTarget Mobile: ' + alertPhone + '\nUnit: ' + activeFactory.name + '\nMessage: WARNING! Sensor threshold breach detected.');
   };
 
   const handleAddFactory = (e) => {
@@ -242,25 +242,21 @@ export default function EcoTraceEnterpriseShield() {
 
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
                 <div>
-                  <label style={{ display: 'block', fontSize: '12px', color: '#94a3b8', marginBottom: '4px' }}>Min pH Threshold</label>
+                  <label style={{ display: 'block', fontSize: '12px', color: '#94a3b8', marginBottom: '4px' }}>Min pH Limit</label>
                   <input required type="text" value={phMinLimit} onChange={e => setPhMinLimit(e.target.value)} style={{ width: '100%', padding: '8px', borderRadius: '4px', backgroundColor: '#0f172a', color: '#fff', border: '1px solid #334155' }} />
                 </div>
                 <div>
-                  <label style={{ display: 'block', fontSize: '12px', color: '#94a3b8', marginBottom: '4px' }}>Max pH Threshold</label>
+                  <label style={{ display: 'block', fontSize: '12px', color: '#94a3b8', marginBottom: '4px' }}>Max pH Limit</label>
                   <input required type="text" value={phMaxLimit} onChange={e => setPhMaxLimit(e.target.value)} style={{ width: '100%', padding: '8px', borderRadius: '4px', backgroundColor: '#0f172a', color: '#fff', border: '1px solid #334155' }} />
                 </div>
               </div>
 
               <div>
-                <label style={{ display: 'block', fontSize: '12px', color: '#94a3b8', marginBottom: '4px' }}>Max COD Threshold (mg/L)</label>
+                <label style={{ display: 'block', fontSize: '12px', color: '#94a3b8', marginBottom: '4px' }}>Max COD Limit (mg/L)</label>
                 <input required type="text" value={codMaxLimit} onChange={e => setCodMaxLimit(e.target.value)} style={{ width: '100%', padding: '8px', borderRadius: '4px', backgroundColor: '#0f172a', color: '#fff', border: '1px solid #334155' }} />
               </div>
 
-              <div style={{ backgroundColor: '#0f172a', padding: '10px', borderRadius: '4px', borderLeft: '3px solid #eab308', fontSize: '11px', color: '#fef08a' }}>
-                🟢 Live Status: IoT Gateway listening on sensor channels for {activeFactory.name}.
-              </div>
-
-              <button type="submit" style={{ backgroundColor: '#eab308', color: '#0f172a', padding: '10px', border: 'none', borderRadius: '4px', fontWeight: 'bold', cursor: 'pointer' }}>⚡ Trigger Test WhatsApp/SMS Alert</button>
+              <button type="submit" style={{ backgroundColor: '#eab308', color: '#0f172a', padding: '10px', border: 'none', borderRadius: '4px', fontWeight: 'bold', cursor: 'pointer' }}>Trigger Test WhatsApp/SMS Alert</button>
             </form>
           </div>
         )}
@@ -286,4 +282,8 @@ export default function EcoTraceEnterpriseShield() {
         )}
 
         {/* TAB CLUSTER */}
-        {activeTab === 'cluster' &&
+        {activeTab === 'cluster' && (
+          <div style={{ backgroundColor: '#1e293b', padding: '20px', borderRadius: '8px' }}>
+            <h3 style={{ color: '#38bdf8', marginTop: 0 }}>MCCI MIDC Cluster Monitoring Center</h3>
+            <p style={{ color: '#22c55e', fontWeight: 'bold' }}>🔒 MSME Privacy Shield Active</p>
+            <p>Bhosari MIDC Cluster: 142 Units | Chakan MIDC Cluster: 218 Units<
