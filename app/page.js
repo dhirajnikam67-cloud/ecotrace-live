@@ -143,19 +143,22 @@ export default function EcoTraceEnterpriseShield() {
   return (
     <div style={{ display: 'flex', minHeight: '100vh', backgroundColor: '#0f172a', color: '#f8fafc', fontFamily: 'sans-serif' }}>
       
-      {/* Sleek Accordion Sidebar */}
-      <aside style={{ width: '290px', backgroundColor: '#1e293b', borderRight: '1px solid #334155', padding: '16px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+      {/* Sleek Accordion Sidebar with High-Tech Alphabet Badges */}
+      <aside style={{ width: '300px', backgroundColor: '#1e293b', borderRight: '1px solid #334155', padding: '16px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
         <div style={{ marginBottom: '8px', borderBottom: '1px solid #334155', paddingBottom: '10px' }}>
           <div style={{ fontSize: '18px', fontWeight: 'bold', color: '#22c55e' }}>EcoTrace India</div>
           <span style={{ fontSize: '11px', color: '#94a3b8' }}>Enterprise Compliance Shield</span>
         </div>
 
-        <nav style={{ display: 'flex', flexDirection: 'column', gap: '6px', overflowY: 'auto' }}>
+        <nav style={{ display: 'flex', flexDirection: 'column', gap: '8px', overflowY: 'auto' }}>
           
-          {/* 1. RISK & EMERGENCY */}
+          {/* A. RISK & EMERGENCY */}
           <div style={{ borderRadius: '6px', overflow: 'hidden', backgroundColor: '#0f172a', border: '1px solid #ef4444' }}>
-            <button type="button" onClick={() => toggleSection('emergency')} style={{ width: '100%', textAlign: 'left', padding: '9px 10px', backgroundColor: '#1e293b', color: '#fca5a5', border: 'none', fontWeight: 'bold', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', fontSize: '12px' }}>
-              <span>🚨 Risk &amp; Emergency Shield</span>
+            <button type="button" onClick={() => toggleSection('emergency')} style={{ width: '100%', textAlign: 'left', padding: '9px 10px', backgroundColor: '#1e293b', color: '#fca5a5', border: 'none', fontWeight: 'bold', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '12px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <span style={{ backgroundColor: '#dc2626', color: '#fff', padding: '2px 6px', borderRadius: '4px', fontSize: '10px', fontWeight: '800' }}>[A]</span>
+                <span>Risk &amp; Emergency Shield</span>
+              </div>
               <span>{openSection === 'emergency' ? '▲' : '▼'}</span>
             </button>
             {openSection === 'emergency' && (
@@ -167,10 +170,13 @@ export default function EcoTraceEnterpriseShield() {
             )}
           </div>
 
-          {/* 2. UTILITY & SAVINGS */}
+          {/* B. UTILITY & SAVINGS */}
           <div style={{ borderRadius: '6px', overflow: 'hidden', backgroundColor: '#0f172a', border: '1px solid #eab308' }}>
-            <button type="button" onClick={() => toggleSection('savings')} style={{ width: '100%', textAlign: 'left', padding: '9px 10px', backgroundColor: '#1e293b', color: '#fef08a', border: 'none', fontWeight: 'bold', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', fontSize: '12px' }}>
-              <span>⚡ Utility &amp; Cost Savings</span>
+            <button type="button" onClick={() => toggleSection('savings')} style={{ width: '100%', textAlign: 'left', padding: '9px 10px', backgroundColor: '#1e293b', color: '#fef08a', border: 'none', fontWeight: 'bold', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '12px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <span style={{ backgroundColor: '#ca8a04', color: '#fff', padding: '2px 6px', borderRadius: '4px', fontSize: '10px', fontWeight: '800' }}>[B]</span>
+                <span>Utility &amp; Cost Savings</span>
+              </div>
               <span>{openSection === 'savings' ? '▲' : '▼'}</span>
             </button>
             {openSection === 'savings' && (
@@ -182,10 +188,13 @@ export default function EcoTraceEnterpriseShield() {
             )}
           </div>
 
-          {/* 3. STATUTORY COMPLIANCE */}
+          {/* C. STATUTORY COMPLIANCE */}
           <div style={{ borderRadius: '6px', overflow: 'hidden', backgroundColor: '#0f172a', border: '1px solid #10b981' }}>
-            <button type="button" onClick={() => toggleSection('compliance')} style={{ width: '100%', textAlign: 'left', padding: '9px 10px', backgroundColor: '#1e293b', color: '#6ee7b7', border: 'none', fontWeight: 'bold', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', fontSize: '12px' }}>
-              <span>📜 Statutory Compliance</span>
+            <button type="button" onClick={() => toggleSection('compliance')} style={{ width: '100%', textAlign: 'left', padding: '9px 10px', backgroundColor: '#1e293b', color: '#6ee7b7', border: 'none', fontWeight: 'bold', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '12px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <span style={{ backgroundColor: '#059669', color: '#fff', padding: '2px 6px', borderRadius: '4px', fontSize: '10px', fontWeight: '800' }}>[C]</span>
+                <span>Statutory Compliance</span>
+              </div>
               <span>{openSection === 'compliance' ? '▲' : '▼'}</span>
             </button>
             {openSection === 'compliance' && (
@@ -197,10 +206,13 @@ export default function EcoTraceEnterpriseShield() {
             )}
           </div>
 
-          {/* 4. SUPPLY CHAIN & ESG */}
+          {/* D. SUPPLY CHAIN & ESG */}
           <div style={{ borderRadius: '6px', overflow: 'hidden', backgroundColor: '#0f172a', border: '1px solid #06b6d4' }}>
-            <button type="button" onClick={() => toggleSection('supply')} style={{ width: '100%', textAlign: 'left', padding: '9px 10px', backgroundColor: '#1e293b', color: '#a5f3fc', border: 'none', fontWeight: 'bold', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', fontSize: '12px' }}>
-              <span>🚛 Supply Chain &amp; ESG</span>
+            <button type="button" onClick={() => toggleSection('supply')} style={{ width: '100%', textAlign: 'left', padding: '9px 10px', backgroundColor: '#1e293b', color: '#a5f3fc', border: 'none', fontWeight: 'bold', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '12px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <span style={{ backgroundColor: '#0891b2', color: '#fff', padding: '2px 6px', borderRadius: '4px', fontSize: '10px', fontWeight: '800' }}>[D]</span>
+                <span>Supply Chain &amp; ESG</span>
+              </div>
               <span>{openSection === 'supply' ? '▲' : '▼'}</span>
             </button>
             {openSection === 'supply' && (
@@ -212,10 +224,13 @@ export default function EcoTraceEnterpriseShield() {
             )}
           </div>
 
-          {/* 5. COMMAND CENTER & GRANTS */}
+          {/* E. COMMAND CENTER & GRANTS */}
           <div style={{ borderRadius: '6px', overflow: 'hidden', backgroundColor: '#0f172a', border: '1px solid #6366f1' }}>
-            <button type="button" onClick={() => toggleSection('enterprise')} style={{ width: '100%', textAlign: 'left', padding: '9px 10px', backgroundColor: '#1e293b', color: '#c7d2fe', border: 'none', fontWeight: 'bold', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', fontSize: '12px' }}>
-              <span>🏢 Command Center &amp; Grants</span>
+            <button type="button" onClick={() => toggleSection('enterprise')} style={{ width: '100%', textAlign: 'left', padding: '9px 10px', backgroundColor: '#1e293b', color: '#c7d2fe', border: 'none', fontWeight: 'bold', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '12px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <span style={{ backgroundColor: '#4f46e5', color: '#fff', padding: '2px 6px', borderRadius: '4px', fontSize: '10px', fontWeight: '800' }}>[E]</span>
+                <span>Command Center &amp; Grants</span>
+              </div>
               <span>{openSection === 'enterprise' ? '▲' : '▼'}</span>
             </button>
             {openSection === 'enterprise' && (
