@@ -25,7 +25,7 @@ export default function EcoTraceEnterpriseShield() {
   ]);
   const [selectedFactoryId, setSelectedFactoryId] = useState(1);
 
-  // Dynamic Form 10 Manifest State
+  // Form 10 Manifest State
   const [vehicleNo, setVehicleNo] = useState('MH 12 AB 1234');
   const [transporterName, setTransporterName] = useState('MEHA HAZARD FREIGHT LOGISTICS');
   const [wasteCategory, setWasteCategory] = useState('5.1 Used / Spent Oil');
@@ -60,7 +60,7 @@ export default function EcoTraceEnterpriseShield() {
   const activeFactory = factoryList.find(f => f.id === selectedFactoryId) || factoryList[0];
   const totalCarbon = (activeFactory.scope1 + activeFactory.scope2 + activeFactory.scope3).toFixed(2);
 
-  // Handlers
+  // PDF / Print Handler
   const handlePrint = () => {
     if (typeof window !== 'undefined') window.print();
   };
@@ -69,15 +69,17 @@ export default function EcoTraceEnterpriseShield() {
     alert('Handshake with MPCB OCMMS Server Successful.');
   };
 
+  // Direct PDF Trigger for Form 10
   const handleGenerateForm10 = (e) => {
     e.preventDefault();
-    alert('MPCB FORM 10 HAZARDOUS MANIFEST GENERATED!\n\nGenerator: ' + activeFactory.name + '\nVehicle No: ' + vehicleNo + '\nTransporter: ' + transporterName + '\nWaste Cat: ' + wasteCategory + '\nQuantity: ' + wasteQuantity + ' MT\nDestination: ' + destinationChwtsdf + '\n\nStatus: Registered for MPCB Audit Track.');
+    if (typeof window !== 'undefined') {
+      window.print(); // Triggers PDF Save Dialog Immediately
+    }
   };
 
   const handleGenerateDefense = (e) => {
     e.preventDefault();
-    alert('LEGAL DEFENSE DRAFT GENERATED!\nNotice: ' + noticeType + ' (Ref: ' + noticeReference + ')\nUnit: ' + activeFactory.name);
-    setNoticeReference('');
+    if (typeof window !== 'undefined') window.print();
   };
 
   const handleTestWhatsAppAlert = (e) => {
@@ -94,8 +96,6 @@ export default function EcoTraceEnterpriseShield() {
     setCalcScope1(s1);
     setCalcScope2(s2);
     setCalcScope3(s3);
-    
-    alert('ESG CARBON CALCULATION COMPLETE!\nScope 1: ' + s1 + ' tCO2e | Scope 2: ' + s2 + ' tCO2e | Scope 3: ' + s3 + ' tCO2e');
   };
 
   const handleAddFactory = (e) => {
@@ -121,7 +121,6 @@ export default function EcoTraceEnterpriseShield() {
 
     setFactoryList(prev => [newUnit, ...prev]);
     setSelectedFactoryId(newId);
-    alert('Factory ' + newUnit.name + ' Onboarded!');
     setFactoryName('');
     setFactoryLocation('');
     setFactoryLimit('');
@@ -171,7 +170,7 @@ export default function EcoTraceEnterpriseShield() {
                 <option key={f.id} value={f.id}>{f.name} ({f.location})</option>
               ))}
             </select>
-            <button type="button" onClick={handlePrint} style={{ backgroundColor: '#22c55e', color: '#0f172a', border: 'none', padding: '8px 12px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer' }}>Export Manifest PDF</button>
+            <button type="button" onClick={handlePrint} style={{ backgroundColor: '#22c55e', color: '#0f172a', border: 'none', padding: '8px 12px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer' }}>Export PDF</button>
             <button type="button" onClick={handleSyncMPCB} style={{ backgroundColor: '#0284c7', color: '#fff', border: 'none', padding: '8px 12px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer' }}>Sync MPCB Portal</button>
           </div>
         </header>
@@ -247,7 +246,7 @@ export default function EcoTraceEnterpriseShield() {
                 </select>
               </div>
 
-              <button type="submit" style={{ backgroundColor: '#ef4444', color: '#fff', padding: '10px', border: 'none', borderRadius: '4px', fontWeight: 'bold', cursor: 'pointer' }}>Generate Statutory Defense Reply</button>
+              <button type="submit" style={{ backgroundColor: '#ef4444', color: '#fff', padding: '10px', border: 'none', borderRadius: '4px', fontWeight: 'bold', cursor: 'pointer' }}>🖨️ Export Legal Reply PDF</button>
             </form>
           </div>
         )}
@@ -293,7 +292,7 @@ export default function EcoTraceEnterpriseShield() {
                 <h3 style={{ color: '#38bdf8', marginTop: 0 }}>🌍 Scope 1, 2, 3 ESG Carbon Engine</h3>
                 <p style={{ fontSize: '13px', color: '#94a3b8' }}>Calculates GHG carbon footprint for MPCB Form V &amp; Bank Green Loan Subvention.</p>
               </div>
-              <button type="button" onClick={handlePrint} style={{ backgroundColor: '#22c55e', color: '#0f172a', padding: '10px 15px', border: 'none', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer' }}>📄 Export ESG PDF Report</button>
+              <button type="button" onClick={handlePrint} style={{ backgroundColor: '#22c55e', color: '#0f172a', padding: '10px 15px', border: 'none', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer' }}>📄 Save PDF Report</button>
             </div>
 
             <form onSubmit={handleCalculateEsg} style={{ display: 'flex', flexDirection: 'column', gap: '12px', maxWidth: '480px', marginTop: '15px' }}>
@@ -329,13 +328,13 @@ export default function EcoTraceEnterpriseShield() {
 
               <div style={{ display: 'flex', gap: '10px', marginTop: '5px' }}>
                 <button type="submit" style={{ flex: 1, backgroundColor: '#38bdf8', color: '#0f172a', padding: '10px', border: 'none', borderRadius: '4px', fontWeight: 'bold', cursor: 'pointer' }}>🌍 Recalculate GHG</button>
-                <button type="button" onClick={handlePrint} style={{ flex: 1, backgroundColor: '#22c55e', color: '#0f172a', padding: '10px', border: 'none', borderRadius: '4px', fontWeight: 'bold', cursor: 'pointer' }}>📄 Export PDF Report</button>
+                <button type="button" onClick={handlePrint} style={{ flex: 1, backgroundColor: '#22c55e', color: '#0f172a', padding: '10px', border: 'none', borderRadius: '4px', fontWeight: 'bold', cursor: 'pointer' }}>📄 Save PDF Report</button>
               </div>
             </form>
           </div>
         )}
 
-        {/* STEP 4: FORM 10 HAZARDOUS MANIFEST GENERATOR */}
+        {/* STEP 4: FORM 10 HAZARDOUS MANIFEST GENERATOR WITH REAL PRINT/PDF */}
         {activeTab === 'manifest' && (
           <div style={{ backgroundColor: '#1e293b', padding: '20px', borderRadius: '8px', border: '1px solid #22c55e' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -343,7 +342,7 @@ export default function EcoTraceEnterpriseShield() {
                 <h3 style={{ color: '#22c55e', marginTop: 0 }}>🚛 MPCB Form 10 Hazardous Waste Manifest</h3>
                 <p style={{ fontSize: '13px', color: '#94a3b8' }}>Statutory 7-Copy Manifest under Hazardous Wastes Rules 2016.</p>
               </div>
-              <button type="button" onClick={handlePrint} style={{ backgroundColor: '#22c55e', color: '#0f172a', padding: '10px 15px', border: 'none', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer' }}>🖨️ Print Form 10 Manifest</button>
+              <button type="button" onClick={handlePrint} style={{ backgroundColor: '#22c55e', color: '#0f172a', padding: '10px 15px', border: 'none', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer' }}>📄 Save as PDF / Print</button>
             </div>
 
             <form onSubmit={handleGenerateForm10} style={{ display: 'flex', flexDirection: 'column', gap: '12px', maxWidth: '480px', marginTop: '15px' }}>
@@ -382,7 +381,7 @@ export default function EcoTraceEnterpriseShield() {
                 </select>
               </div>
 
-              <button type="submit" style={{ backgroundColor: '#22c55e', color: '#0f172a', padding: '10px', border: 'none', borderRadius: '4px', fontWeight: 'bold', cursor: 'pointer', marginTop: '5px' }}>🚛 Issue Official Form 10 Manifest</button>
+              <button type="submit" style={{ backgroundColor: '#22c55e', color: '#0f172a', padding: '10px', border: 'none', borderRadius: '4px', fontWeight: 'bold', cursor: 'pointer', marginTop: '5px' }}>📄 Download PDF / Print Form 10</button>
             </form>
           </div>
         )}
