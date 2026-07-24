@@ -43,7 +43,7 @@ export default function EcoTraceEnterpriseShield() {
   const [phMinLimit, setPhMinLimit] = useState('6.5');
   const [codMaxLimit, setCodMaxLimit] = useState('250');
 
-  // Currently Monitored Context
+  // Monitored Unit Data
   const activeFactory = factoryList.find(f => f.id === selectedFactoryId) || factoryList[0];
   const totalCarbon = (activeFactory.scope1 + activeFactory.scope2 + activeFactory.scope3).toFixed(2);
 
@@ -115,14 +115,14 @@ export default function EcoTraceEnterpriseShield() {
         </div>
 
         <nav style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-          <button type="button" onClick={() => setActiveTab('dashboard')} style={{ textAlign: 'left', padding: '10px', borderRadius: '6px', border: 'none', cursor: 'pointer', backgroundColor: activeTab === 'dashboard' ? '#22c55e' : 'transparent', color: activeTab === 'dashboard' ? '#0f172a' : '#fff', fontWeight: 'bold' }}>📊 Live Risk Radar</button>
-          <button type="button" onClick={() => setActiveTab('defense')} style={{ textAlign: 'left', padding: '10px', borderRadius: '6px', border: 'none', cursor: 'pointer', backgroundColor: activeTab === 'defense' ? '#ef4444' : 'transparent', color: activeTab === 'defense' ? '#fff' : '#fca5a5', fontWeight: 'bold' }}>🛡️ Notice Defense Matrix</button>
-          <button type="button" onClick={() => setActiveTab('alerts')} style={{ textAlign: 'left', padding: '10px', borderRadius: '6px', border: 'none', cursor: 'pointer', backgroundColor: activeTab === 'alerts' ? '#eab308' : 'transparent', color: activeTab === 'alerts' ? '#0f172a' : '#fef08a', fontWeight: 'bold' }}>⚡ IoT Threshold Alerts</button>
-          <button type="button" onClick={() => setActiveTab('esg')} style={{ textAlign: 'left', padding: '10px', borderRadius: '6px', border: 'none', cursor: 'pointer', backgroundColor: activeTab === 'esg' ? '#22c55e' : 'transparent', color: activeTab === 'esg' ? '#fff' : '#94a3b8' }}>🌍 Scope 1,2,3 ESG Engine</button>
-          <button type="button" onClick={() => setActiveTab('manifest')} style={{ textAlign: 'left', padding: '10px', borderRadius: '6px', border: 'none', cursor: 'pointer', backgroundColor: activeTab === 'manifest' ? '#22c55e' : 'transparent', color: activeTab === 'manifest' ? '#fff' : '#94a3b8' }}>🚛 Form 10 Manifest</button>
-          <button type="button" onClick={() => setActiveTab('cluster')} style={{ textAlign: 'left', padding: '10px', borderRadius: '6px', border: 'none', cursor: 'pointer', backgroundColor: activeTab === 'cluster' ? '#22c55e' : 'transparent', color: activeTab === 'cluster' ? '#fff' : '#94a3b8' }}>🏢 MCCI Cluster Center</button>
-          <button type="button" onClick={() => setActiveTab('onboarding')} style={{ textAlign: 'left', padding: '10px', borderRadius: '6px', border: 'none', cursor: 'pointer', backgroundColor: activeTab === 'onboarding' ? '#22c55e' : 'transparent', color: activeTab === 'onboarding' ? '#fff' : '#94a3b8' }}>🏭 Client Onboarding</button>
-          <button type="button" onClick={() => setActiveTab('vault')} style={{ textAlign: 'left', padding: '10px', borderRadius: '6px', border: 'none', cursor: 'pointer', backgroundColor: activeTab === 'vault' ? '#22c55e' : 'transparent', color: activeTab === 'vault' ? '#fff' : '#94a3b8' }}>📜 MPCB Legal Vault</button>
+          <button type="button" onClick={() => setActiveTab('dashboard')} style={{ textAlign: 'left', padding: '10px', borderRadius: '6px', border: 'none', cursor: 'pointer', backgroundColor: activeTab === 'dashboard' ? '#22c55e' : 'transparent', color: activeTab === 'dashboard' ? '#0f172a' : '#fff', fontWeight: 'bold' }}>Live Risk Radar</button>
+          <button type="button" onClick={() => setActiveTab('defense')} style={{ textAlign: 'left', padding: '10px', borderRadius: '6px', border: 'none', cursor: 'pointer', backgroundColor: activeTab === 'defense' ? '#ef4444' : 'transparent', color: activeTab === 'defense' ? '#fff' : '#fca5a5', fontWeight: 'bold' }}>Notice Defense Matrix</button>
+          <button type="button" onClick={() => setActiveTab('alerts')} style={{ textAlign: 'left', padding: '10px', borderRadius: '6px', border: 'none', cursor: 'pointer', backgroundColor: activeTab === 'alerts' ? '#eab308' : 'transparent', color: activeTab === 'alerts' ? '#0f172a' : '#fef08a', fontWeight: 'bold' }}>IoT Threshold Alerts</button>
+          <button type="button" onClick={() => setActiveTab('esg')} style={{ textAlign: 'left', padding: '10px', borderRadius: '6px', border: 'none', cursor: 'pointer', backgroundColor: activeTab === 'esg' ? '#22c55e' : 'transparent', color: activeTab === 'esg' ? '#fff' : '#94a3b8' }}>Scope 1,2,3 ESG Engine</button>
+          <button type="button" onClick={() => setActiveTab('manifest')} style={{ textAlign: 'left', padding: '10px', borderRadius: '6px', border: 'none', cursor: 'pointer', backgroundColor: activeTab === 'manifest' ? '#22c55e' : 'transparent', color: activeTab === 'manifest' ? '#fff' : '#94a3b8' }}>Form 10 Manifest</button>
+          <button type="button" onClick={() => setActiveTab('cluster')} style={{ textAlign: 'left', padding: '10px', borderRadius: '6px', border: 'none', cursor: 'pointer', backgroundColor: activeTab === 'cluster' ? '#22c55e' : 'transparent', color: activeTab === 'cluster' ? '#fff' : '#94a3b8' }}>MCCI Cluster Center</button>
+          <button type="button" onClick={() => setActiveTab('onboarding')} style={{ textAlign: 'left', padding: '10px', borderRadius: '6px', border: 'none', cursor: 'pointer', backgroundColor: activeTab === 'onboarding' ? '#22c55e' : 'transparent', color: activeTab === 'onboarding' ? '#fff' : '#94a3b8' }}>Client Onboarding</button>
+          <button type="button" onClick={() => setActiveTab('vault')} style={{ textAlign: 'left', padding: '10px', borderRadius: '6px', border: 'none', cursor: 'pointer', backgroundColor: activeTab === 'vault' ? '#22c55e' : 'transparent', color: activeTab === 'vault' ? '#fff' : '#94a3b8' }}>MPCB Legal Vault</button>
         </nav>
 
         <div style={{ marginTop: 'auto', backgroundColor: '#0f172a', padding: '12px', borderRadius: '6px', border: '1px solid #22c55e', fontSize: '11px' }}>
@@ -195,7 +195,7 @@ export default function EcoTraceEnterpriseShield() {
         {/* STEP 1: DEFENSE MATRIX */}
         {activeTab === 'defense' && (
           <div style={{ backgroundColor: '#1e293b', padding: '20px', borderRadius: '8px', border: '1px solid #ef4444' }}>
-            <h3 style={{ color: '#fca5a5', marginTop: 0 }}>🛡️ MPCB Show Cause &amp; Proposed Direction Defense Matrix</h3>
+            <h3 style={{ color: '#fca5a5', marginTop: 0 }}>MPCB Show Cause &amp; Proposed Direction Defense Matrix</h3>
             <p style={{ fontSize: '13px', color: '#94a3b8' }}>Auto-generates legal reply drafts under Water and Air Acts for MPCB notices.</p>
 
             <form onSubmit={handleGenerateDefense} style={{ display: 'flex', flexDirection: 'column', gap: '12px', maxWidth: '450px', marginTop: '15px' }}>
@@ -231,7 +231,7 @@ export default function EcoTraceEnterpriseShield() {
         {/* STEP 2: REAL-TIME IOT THRESHOLD ALERT SYSTEM */}
         {activeTab === 'alerts' && (
           <div style={{ backgroundColor: '#1e293b', padding: '20px', borderRadius: '8px', border: '1px solid #eab308' }}>
-            <h3 style={{ color: '#fef08a', marginTop: 0 }}>⚡ Real-Time IoT Threshold Alert System</h3>
+            <h3 style={{ color: '#fef08a', marginTop: 0 }}>Real-Time IoT Threshold Alert System</h3>
             <p style={{ fontSize: '13px', color: '#94a3b8' }}>Sends instant WhatsApp and SMS alerts to factory managers before MPCB flying squad detects non-compliance.</p>
 
             <form onSubmit={handleTestWhatsAppAlert} style={{ display: 'flex', flexDirection: 'column', gap: '12px', maxWidth: '450px', marginTop: '15px' }}>
@@ -265,7 +265,7 @@ export default function EcoTraceEnterpriseShield() {
         {activeTab === 'esg' && (
           <div style={{ backgroundColor: '#1e293b', padding: '20px', borderRadius: '8px' }}>
             <h3 style={{ color: '#22c55e', marginTop: 0 }}>Scope 1, 2, 3 GHG Carbon Engine</h3>
-            <p>Scope 1: {activeFactory.scope1} tCO2e | Scope 2: {activeFactory.scope2} tCO2e | Scope 3: {activeFactory.scope3} tCO2e</p>
+            <p style={{ color: '#94a3b8' }}>Scope 1: {activeFactory.scope1} tCO2e | Scope 2: {activeFactory.scope2} tCO2e | Scope 3: {activeFactory.scope3} tCO2e</p>
           </div>
         )}
 
@@ -286,4 +286,4 @@ export default function EcoTraceEnterpriseShield() {
           <div style={{ backgroundColor: '#1e293b', padding: '20px', borderRadius: '8px' }}>
             <h3 style={{ color: '#38bdf8', marginTop: 0 }}>MCCI MIDC Cluster Monitoring Center</h3>
             <p style={{ color: '#22c55e', fontWeight: 'bold' }}>MSME Privacy Shield Active</p>
-            <p>Bhosari MIDC Cluster: 142 Units -- Chakan MIDC Cluster: 218 Uni
+            <p style={{ color: '#94a3b8' }}>Bhosari MIDC Cluster: 142 Units | Chakan MI
