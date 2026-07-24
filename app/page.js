@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 
 export default function EcoTraceEnterpriseShield() {
-  const [activeTab, setActiveTab] = useState('esg');
+  const [activeTab, setActiveTab] = useState('manifest');
   
   // Dynamic Enterprise Registry
   const [factoryList, setFactoryList] = useState([
@@ -25,9 +25,14 @@ export default function EcoTraceEnterpriseShield() {
   ]);
   const [selectedFactoryId, setSelectedFactoryId] = useState(1);
 
-  // Form States
-  const [vehicleNo, setVehicleNo] = useState('');
-  const [transporterName, setTransporterName] = useState('');
+  // Dynamic Form 10 Manifest State
+  const [vehicleNo, setVehicleNo] = useState('MH 12 AB 1234');
+  const [transporterName, setTransporterName] = useState('MEHA HAZARD FREIGHT LOGISTICS');
+  const [wasteCategory, setWasteCategory] = useState('5.1 Used / Spent Oil');
+  const [wasteQuantity, setWasteQuantity] = useState('2.5');
+  const [destinationChwtsdf, setDestinationChwtsdf] = useState('MEPL Ranjangaon CHWTSDF');
+  
+  // Client Onboarding Form States
   const [factoryName, setFactoryName] = useState('');
   const [factoryLocation, setFactoryLocation] = useState('');
   const [factoryLimit, setFactoryLimit] = useState('');
@@ -66,9 +71,7 @@ export default function EcoTraceEnterpriseShield() {
 
   const handleGenerateForm10 = (e) => {
     e.preventDefault();
-    alert('MPCB Form 10 PDF Generated for Vehicle: ' + vehicleNo);
-    setVehicleNo('');
-    setTransporterName('');
+    alert('MPCB FORM 10 HAZARDOUS MANIFEST GENERATED!\n\nGenerator: ' + activeFactory.name + '\nVehicle No: ' + vehicleNo + '\nTransporter: ' + transporterName + '\nWaste Cat: ' + wasteCategory + '\nQuantity: ' + wasteQuantity + ' MT\nDestination: ' + destinationChwtsdf + '\n\nStatus: Registered for MPCB Audit Track.');
   };
 
   const handleGenerateDefense = (e) => {
@@ -92,7 +95,7 @@ export default function EcoTraceEnterpriseShield() {
     setCalcScope2(s2);
     setCalcScope3(s3);
     
-    alert('ESG CARBON CALCULATION COMPLETE!\n\nScope 1: ' + s1 + ' tCO2e\nScope 2: ' + s2 + ' tCO2e\nScope 3: ' + s3 + ' tCO2e\n\nTotal: ' + (Number(s1)+Number(s2)+Number(s3)).toFixed(2) + ' tCO2e');
+    alert('ESG CARBON CALCULATION COMPLETE!\nScope 1: ' + s1 + ' tCO2e | Scope 2: ' + s2 + ' tCO2e | Scope 3: ' + s3 + ' tCO2e');
   };
 
   const handleAddFactory = (e) => {
@@ -140,7 +143,7 @@ export default function EcoTraceEnterpriseShield() {
           <button type="button" onClick={() => setActiveTab('defense')} style={{ textAlign: 'left', padding: '10px', borderRadius: '6px', border: 'none', cursor: 'pointer', backgroundColor: activeTab === 'defense' ? '#ef4444' : 'transparent', color: activeTab === 'defense' ? '#fff' : '#fca5a5', fontWeight: 'bold' }}>Notice Defense Matrix</button>
           <button type="button" onClick={() => setActiveTab('alerts')} style={{ textAlign: 'left', padding: '10px', borderRadius: '6px', border: 'none', cursor: 'pointer', backgroundColor: activeTab === 'alerts' ? '#eab308' : 'transparent', color: activeTab === 'alerts' ? '#0f172a' : '#fef08a', fontWeight: 'bold' }}>IoT Threshold Alerts</button>
           <button type="button" onClick={() => setActiveTab('esg')} style={{ textAlign: 'left', padding: '10px', borderRadius: '6px', border: 'none', cursor: 'pointer', backgroundColor: activeTab === 'esg' ? '#38bdf8' : 'transparent', color: activeTab === 'esg' ? '#0f172a' : '#93c5fd', fontWeight: 'bold' }}>Scope 1,2,3 ESG Engine</button>
-          <button type="button" onClick={() => setActiveTab('manifest')} style={{ textAlign: 'left', padding: '10px', borderRadius: '6px', border: 'none', cursor: 'pointer', backgroundColor: activeTab === 'manifest' ? '#22c55e' : 'transparent', color: activeTab === 'manifest' ? '#fff' : '#94a3b8' }}>Form 10 Manifest</button>
+          <button type="button" onClick={() => setActiveTab('manifest')} style={{ textAlign: 'left', padding: '10px', borderRadius: '6px', border: 'none', cursor: 'pointer', backgroundColor: activeTab === 'manifest' ? '#22c55e' : 'transparent', color: activeTab === 'manifest' ? '#0f172a' : '#bbf7d0', fontWeight: 'bold' }}>🚛 Form 10 Manifest</button>
           <button type="button" onClick={() => setActiveTab('cluster')} style={{ textAlign: 'left', padding: '10px', borderRadius: '6px', border: 'none', cursor: 'pointer', backgroundColor: activeTab === 'cluster' ? '#22c55e' : 'transparent', color: activeTab === 'cluster' ? '#fff' : '#94a3b8' }}>MCCI Cluster Center</button>
           <button type="button" onClick={() => setActiveTab('onboarding')} style={{ textAlign: 'left', padding: '10px', borderRadius: '6px', border: 'none', cursor: 'pointer', backgroundColor: activeTab === 'onboarding' ? '#22c55e' : 'transparent', color: activeTab === 'onboarding' ? '#fff' : '#94a3b8' }}>Client Onboarding</button>
           <button type="button" onClick={() => setActiveTab('vault')} style={{ textAlign: 'left', padding: '10px', borderRadius: '6px', border: 'none', cursor: 'pointer', backgroundColor: activeTab === 'vault' ? '#22c55e' : 'transparent', color: activeTab === 'vault' ? '#fff' : '#94a3b8' }}>MPCB Legal Vault</button>
@@ -168,7 +171,7 @@ export default function EcoTraceEnterpriseShield() {
                 <option key={f.id} value={f.id}>{f.name} ({f.location})</option>
               ))}
             </select>
-            <button type="button" onClick={handlePrint} style={{ backgroundColor: '#22c55e', color: '#0f172a', border: 'none', padding: '8px 12px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer' }}> Export ESG PDF Report</button>
+            <button type="button" onClick={handlePrint} style={{ backgroundColor: '#22c55e', color: '#0f172a', border: 'none', padding: '8px 12px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer' }}>Export Manifest PDF</button>
             <button type="button" onClick={handleSyncMPCB} style={{ backgroundColor: '#0284c7', color: '#fff', border: 'none', padding: '8px 12px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer' }}>Sync MPCB Portal</button>
           </div>
         </header>
@@ -282,7 +285,7 @@ export default function EcoTraceEnterpriseShield() {
           </div>
         )}
 
-        {/* STEP 3: SCOPE 1, 2, 3 ESG ENGINE & PDF REPORT */}
+        {/* STEP 3: SCOPE 1, 2, 3 ESG ENGINE */}
         {activeTab === 'esg' && (
           <div style={{ backgroundColor: '#1e293b', padding: '20px', borderRadius: '8px', border: '1px solid #38bdf8' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -290,7 +293,7 @@ export default function EcoTraceEnterpriseShield() {
                 <h3 style={{ color: '#38bdf8', marginTop: 0 }}>🌍 Scope 1, 2, 3 ESG Carbon Engine</h3>
                 <p style={{ fontSize: '13px', color: '#94a3b8' }}>Calculates GHG carbon footprint for MPCB Form V &amp; Bank Green Loan Subvention.</p>
               </div>
-              <button type="button" onClick={handlePrint} style={{ backgroundColor: '#22c55e', color: '#0f172a', padding: '10px 15px', border: 'none', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer' }}>📄 Export PDF Audit Report</button>
+              <button type="button" onClick={handlePrint} style={{ backgroundColor: '#22c55e', color: '#0f172a', padding: '10px 15px', border: 'none', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer' }}>📄 Export ESG PDF Report</button>
             </div>
 
             <form onSubmit={handleCalculateEsg} style={{ display: 'flex', flexDirection: 'column', gap: '12px', maxWidth: '480px', marginTop: '15px' }}>
@@ -332,14 +335,54 @@ export default function EcoTraceEnterpriseShield() {
           </div>
         )}
 
-        {/* TAB MANIFEST */}
+        {/* STEP 4: FORM 10 HAZARDOUS MANIFEST GENERATOR */}
         {activeTab === 'manifest' && (
-          <div style={{ backgroundColor: '#1e293b', padding: '20px', borderRadius: '8px' }}>
-            <h3 style={{ color: '#22c55e', marginTop: 0 }}>MPCB Form 10 Hazardous Waste Manifest</h3>
-            <form onSubmit={handleGenerateForm10} style={{ display: 'flex', flexDirection: 'column', gap: '10px', maxWidth: '400px' }}>
-              <input required type="text" value={vehicleNo} onChange={e => setVehicleNo(e.target.value)} placeholder="Vehicle No (e.g. MH 12 AB 1234)" style={{ padding: '8px', borderRadius: '4px', backgroundColor: '#0f172a', color: '#fff', border: '1px solid #334155' }} />
-              <input required type="text" value={transporterName} onChange={e => setTransporterName(e.target.value)} placeholder="Transporter Name" style={{ padding: '8px', borderRadius: '4px', backgroundColor: '#0f172a', color: '#fff', border: '1px solid #334155' }} />
-              <button type="submit" style={{ backgroundColor: '#22c55e', color: '#0f172a', padding: '10px', border: 'none', borderRadius: '4px', fontWeight: 'bold', cursor: 'pointer' }}>Generate Form 10 PDF</button>
+          <div style={{ backgroundColor: '#1e293b', padding: '20px', borderRadius: '8px', border: '1px solid #22c55e' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div>
+                <h3 style={{ color: '#22c55e', marginTop: 0 }}>🚛 MPCB Form 10 Hazardous Waste Manifest</h3>
+                <p style={{ fontSize: '13px', color: '#94a3b8' }}>Statutory 7-Copy Manifest under Hazardous Wastes Rules 2016.</p>
+              </div>
+              <button type="button" onClick={handlePrint} style={{ backgroundColor: '#22c55e', color: '#0f172a', padding: '10px 15px', border: 'none', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer' }}>🖨️ Print Form 10 Manifest</button>
+            </div>
+
+            <form onSubmit={handleGenerateForm10} style={{ display: 'flex', flexDirection: 'column', gap: '12px', maxWidth: '480px', marginTop: '15px' }}>
+              <div>
+                <label style={{ display: 'block', fontSize: '12px', color: '#94a3b8', marginBottom: '4px' }}>Transporter Vehicle Number</label>
+                <input required type="text" value={vehicleNo} onChange={e => setVehicleNo(e.target.value)} placeholder="e.g. MH 12 AB 1234" style={{ width: '100%', padding: '8px', borderRadius: '4px', backgroundColor: '#0f172a', color: '#fff', border: '1px solid #334155' }} />
+              </div>
+
+              <div>
+                <label style={{ display: 'block', fontSize: '12px', color: '#94a3b8', marginBottom: '4px' }}>Authorized Transporter Name</label>
+                <input required type="text" value={transporterName} onChange={e => setTransporterName(e.target.value)} placeholder="Transporter Name" style={{ width: '100%', padding: '8px', borderRadius: '4px', backgroundColor: '#0f172a', color: '#fff', border: '1px solid #334155' }} />
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+                <div>
+                  <label style={{ display: 'block', fontSize: '12px', color: '#94a3b8', marginBottom: '4px' }}>Waste Category Code</label>
+                  <select value={wasteCategory} onChange={e => setWasteCategory(e.target.value)} style={{ width: '100%', padding: '8px', borderRadius: '4px', backgroundColor: '#0f172a', color: '#fff', border: '1px solid #334155' }}>
+                    <option value="5.1 Used / Spent Oil">5.1 Used / Spent Oil</option>
+                    <option value="35.3 Chemical ETP Sludge">35.3 Chemical ETP Sludge</option>
+                    <option value="21.1 Process Waste Resins">21.1 Process Waste Resins</option>
+                    <option value="33.1 Empty Chemical Containers">33.1 Empty Containers</option>
+                  </select>
+                </div>
+                <div>
+                  <label style={{ display: 'block', fontSize: '12px', color: '#94a3b8', marginBottom: '4px' }}>Quantity (Metric Ton)</label>
+                  <input required type="text" value={wasteQuantity} onChange={e => setWasteQuantity(e.target.value)} style={{ width: '100%', padding: '8px', borderRadius: '4px', backgroundColor: '#0f172a', color: '#fff', border: '1px solid #334155' }} />
+                </div>
+              </div>
+
+              <div>
+                <label style={{ display: 'block', fontSize: '12px', color: '#94a3b8', marginBottom: '4px' }}>Authorized CHWTSDF Destination Facility</label>
+                <select value={destinationChwtsdf} onChange={e => setDestinationChwtsdf(e.target.value)} style={{ width: '100%', padding: '8px', borderRadius: '4px', backgroundColor: '#0f172a', color: '#fff', border: '1px solid #334155' }}>
+                  <option value="MEPL Ranjangaon CHWTSDF">MEPL Ranjangaon CHWTSDF (Pune)</option>
+                  <option value="MWML Taloja CHWTSDF">MWML Taloja CHWTSDF (Navi Mumbai)</option>
+                  <option value="MEPL Butibori CHWTSDF">MEPL Butibori CHWTSDF (Nagpur)</option>
+                </select>
+              </div>
+
+              <button type="submit" style={{ backgroundColor: '#22c55e', color: '#0f172a', padding: '10px', border: 'none', borderRadius: '4px', fontWeight: 'bold', cursor: 'pointer', marginTop: '5px' }}>🚛 Issue Official Form 10 Manifest</button>
             </form>
           </div>
         )}
