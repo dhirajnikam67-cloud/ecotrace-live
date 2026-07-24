@@ -44,12 +44,24 @@ export default function EcoTraceEnterpriseShield() {
   ]);
   const [selectedFactoryId, setSelectedFactoryId] = useState(1);
 
-  // Annual Returns Form State (Form 3, 4, 5)
-  const [selectedReturnForm, setSelectedReturnForm] = useState('Form 4');
-  const [hazardousWasteQty, setHazardousWasteQty] = useState('12.5');
-  const [wasteCategoryCode, setWasteCategoryCode] = useState('5.1 Spent Oil / Sludge');
-  const [rawMaterialCons, setRawMaterialCons] = useState('18.2 MT/Month');
-  const [processWaterCons, setProcessWaterCons] = useState('3200 L/Day');
+  // Dynamic Return Forms State
+  const [selectedReturnForm, setSelectedReturnForm] = useState('Form 3');
+  
+  // Form 3 Fields (Daily Maintenance Log)
+  const [form3Date, setForm3Date] = useState('2026-07-24');
+  const [form3WasteType, setForm3WasteType] = useState('5.1 Spent / Used Oil');
+  const [form3DailyQty, setForm3DailyQty] = useState('150 Liters');
+  const [form3StorageMethod, setForm3StorageMethod] = useState('Sealed HD Drums in Containment Bay');
+
+  // Form 4 Fields (Annual Return - Due June 30)
+  const [form4Category, setForm4Category] = useState('5.1 Spent Oil / Lubricant Sludge');
+  const [form4AnnualQty, setForm4AnnualQty] = useState('12.5 MT');
+  const [form4DisposalFacility, setForm4DisposalFacility] = useState('MEPL Ranjangaon CHWTSDF');
+
+  // Form 5 Fields (Environmental Statement - Due Sept 30)
+  const [form5RawMaterial, setForm5RawMaterial] = useState('18.2 MT/Month');
+  const [form5WaterProcess, setForm5WaterProcess] = useState('3200 L/Day');
+  const [form5PollutionControl, setForm5PollutionControl] = useState('Primary + Secondary Biological ETP Active');
 
   // Form 10 Manifest State
   const [vehicleNo, setVehicleNo] = useState('MH 12 AB 1234');
@@ -252,61 +264,107 @@ export default function EcoTraceEnterpriseShield() {
           </div>
         )}
 
-        {/* TAB 2: ANNUAL RETURNS GENERATOR (FORM 3, 4, 5) */}
+        {/* TAB 2: FULLY DYNAMIC ANNUAL RETURNS SUITE (FORM 3, 4, 5) */}
         {activeTab === 'returns' && (
           <div style={{ backgroundColor: '#1e293b', padding: '20px', borderRadius: '8px', border: '1px solid #14b8a6' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <div>
                 <h3 style={{ color: '#2dd4bf', marginTop: 0 }}>📜 MPCB Statutory Annual Returns Generator</h3>
-                <p style={{ fontSize: '13px', color: '#94a3b8' }}>Auto-generates official MPCB Form 3, Form 4, and Form 5 Statutory Returns.</p>
+                <p style={{ fontSize: '13px', color: '#94a3b8' }}>Select form below to generate official Form 3, Form 4, or Form 5.</p>
               </div>
-              <button type="button" onClick={handlePrint} style={{ backgroundColor: '#14b8a6', color: '#0f172a', padding: '10px 15px', border: 'none', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer' }}>📄 Export Selected Return PDF</button>
+              <button type="button" onClick={handlePrint} style={{ backgroundColor: '#14b8a6', color: '#0f172a', padding: '10px 15px', border: 'none', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer' }}>📄 Export {selectedReturnForm} PDF</button>
             </div>
 
-            <form onSubmit={handleGenerateReturn} style={{ display: 'flex', flexDirection: 'column', gap: '12px', maxWidth: '480px', marginTop: '15px' }}>
-              <div>
-                <label style={{ display: 'block', fontSize: '12px', color: '#94a3b8', marginBottom: '4px' }}>Select Statutory MPCB Form Return</label>
-                <select value={selectedReturnForm} onChange={e => setSelectedReturnForm(e.target.value)} style={{ width: '100%', padding: '8px', borderRadius: '4px', backgroundColor: '#0f172a', color: '#fff', border: '1px solid #334155', fontWeight: 'bold' }}>
-                  <option value="Form 3">Form 3: Hazardous Waste Maintenance Register (Daily Logbook)</option>
-                  <option value="Form 4">Form 4: Annual Hazardous Waste Return (Due 30th June)</option>
-                  <option value="Form 5">Form 5: Environmental Statement Return (Due 30th Sept)</option>
-                </select>
-              </div>
+            {/* Sub-navigation for Forms */}
+            <div style={{ display: 'flex', gap: '10px', margin: '15px 0' }}>
+              <button type="button" onClick={() => setSelectedReturnForm('Form 3')} style={{ flex: 1, padding: '10px', borderRadius: '4px', border: 'none', cursor: 'pointer', backgroundColor: selectedReturnForm === 'Form 3' ? '#14b8a6' : '#0f172a', color: selectedReturnForm === 'Form 3' ? '#0f172a' : '#fff', fontWeight: 'bold' }}>Form 3 (Daily Logbook)</button>
+              <button type="button" onClick={() => setSelectedReturnForm('Form 4')} style={{ flex: 1, padding: '10px', borderRadius: '4px', border: 'none', cursor: 'pointer', backgroundColor: selectedReturnForm === 'Form 4' ? '#14b8a6' : '#0f172a', color: selectedReturnForm === 'Form 4' ? '#0f172a' : '#fff', fontWeight: 'bold' }}>Form 4 (Annual Haz-Waste)</button>
+              <button type="button" onClick={() => setSelectedReturnForm('Form 5')} style={{ flex: 1, padding: '10px', borderRadius: '4px', border: 'none', cursor: 'pointer', backgroundColor: selectedReturnForm === 'Form 5' ? '#14b8a6' : '#0f172a', color: selectedReturnForm === 'Form 5' ? '#0f172a' : '#fff', fontWeight: 'bold' }}>Form 5 (Environmental Statement)</button>
+            </div>
 
+            <form onSubmit={handleGenerateReturn} style={{ display: 'flex', flexDirection: 'column', gap: '12px', maxWidth: '500px' }}>
+              
               <div>
-                <label style={{ display: 'block', fontSize: '12px', color: '#94a3b8', marginBottom: '4px' }}>Industrial Unit / Plant</label>
+                <label style={{ display: 'block', fontSize: '12px', color: '#94a3b8', marginBottom: '4px' }}>Industrial Unit Name</label>
                 <input readOnly type="text" value={activeFactory.name + ' (' + activeFactory.location + ')'} style={{ width: '100%', padding: '8px', borderRadius: '4px', backgroundColor: '#0f172a', color: '#fff', border: '1px solid #334155' }} />
               </div>
 
-              {selectedReturnForm !== 'Form 5' ? (
+              {/* FORM 3 SPECIFIC FIELDS */}
+              {selectedReturnForm === 'Form 3' && (
                 <>
+                  <div style={{ backgroundColor: '#0f172a', padding: '10px', borderRadius: '4px', borderLeft: '3px solid #14b8a6', fontSize: '11px', color: '#2dd4bf' }}>
+                    <strong>Form 3 Register:</strong> Mandatory Daily Hazardous Waste Maintenance Logbook under Hazardous Wastes Rules 2016.
+                  </div>
+                  <div>
+                    <label style={{ display: 'block', fontSize: '12px', color: '#94a3b8', marginBottom: '4px' }}>Entry Date</label>
+                    <input required type="date" value={form3Date} onChange={e => setForm3Date(e.target.value)} style={{ width: '100%', padding: '8px', borderRadius: '4px', backgroundColor: '#0f172a', color: '#fff', border: '1px solid #334155' }} />
+                  </div>
+                  <div>
+                    <label style={{ display: 'block', fontSize: '12px', color: '#94a3b8', marginBottom: '4px' }}>Hazardous Waste Description</label>
+                    <select value={form3WasteType} onChange={e => setForm3WasteType(e.target.value)} style={{ width: '100%', padding: '8px', borderRadius: '4px', backgroundColor: '#0f172a', color: '#fff', border: '1px solid #334155' }}>
+                      <option value="5.1 Spent / Used Oil">5.1 Spent / Used Lubricant Oil</option>
+                      <option value="35.3 Chemical ETP Sludge">35.3 ETP Sludge</option>
+                      <option value="33.1 Empty Drums">33.1 Empty Drums / Containers</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label style={{ display: 'block', fontSize: '12px', color: '#94a3b8', marginBottom: '4px' }}>Quantity Handled Today</label>
+                    <input required type="text" value={form3DailyQty} onChange={e => setForm3DailyQty(e.target.value)} style={{ width: '100%', padding: '8px', borderRadius: '4px', backgroundColor: '#0f172a', color: '#fff', border: '1px solid #334155' }} />
+                  </div>
+                  <div>
+                    <label style={{ display: 'block', fontSize: '12px', color: '#94a3b8', marginBottom: '4px' }}>Storage Bay Method</label>
+                    <input required type="text" value={form3StorageMethod} onChange={e => setForm3StorageMethod(e.target.value)} style={{ width: '100%', padding: '8px', borderRadius: '4px', backgroundColor: '#0f172a', color: '#fff', border: '1px solid #334155' }} />
+                  </div>
+                </>
+              )}
+
+              {/* FORM 4 SPECIFIC FIELDS */}
+              {selectedReturnForm === 'Form 4' && (
+                <>
+                  <div style={{ backgroundColor: '#0f172a', padding: '10px', borderRadius: '4px', borderLeft: '3px solid #14b8a6', fontSize: '11px', color: '#2dd4bf' }}>
+                    <strong>Form 4 Return:</strong> Annual Hazardous Waste Return to be submitted to MPCB before 30th June every year.
+                  </div>
                   <div>
                     <label style={{ display: 'block', fontSize: '12px', color: '#94a3b8', marginBottom: '4px' }}>Hazardous Waste Category Code</label>
-                    <select value={wasteCategoryCode} onChange={e => setWasteCategoryCode(e.target.value)} style={{ width: '100%', padding: '8px', borderRadius: '4px', backgroundColor: '#0f172a', color: '#fff', border: '1px solid #334155' }}>
-                      <option value="5.1 Spent Oil / Sludge">5.1 Spent Oil / Lubricant Sludge</option>
+                    <select value={form4Category} onChange={e => setForm4Category(e.target.value)} style={{ width: '100%', padding: '8px', borderRadius: '4px', backgroundColor: '#0f172a', color: '#fff', border: '1px solid #334155' }}>
+                      <option value="5.1 Spent Oil / Lubricant Sludge">5.1 Spent Oil / Lubricant Sludge</option>
                       <option value="35.3 Chemical ETP Sludge">35.3 Chemical ETP Sludge</option>
                       <option value="21.1 Process Residues">21.1 Process Residues / Resins</option>
                     </select>
                   </div>
                   <div>
                     <label style={{ display: 'block', fontSize: '12px', color: '#94a3b8', marginBottom: '4px' }}>Annual Generated Quantity (MT)</label>
-                    <input required type="text" value={hazardousWasteQty} onChange={e => setHazardousWasteQty(e.target.value)} style={{ width: '100%', padding: '8px', borderRadius: '4px', backgroundColor: '#0f172a', color: '#fff', border: '1px solid #334155' }} />
-                  </div>
-                </>
-              ) : (
-                <>
-                  <div>
-                    <label style={{ display: 'block', fontSize: '12px', color: '#94a3b8', marginBottom: '4px' }}>Average Raw Material Consumption</label>
-                    <input required type="text" value={rawMaterialCons} onChange={e => setRawMaterialCons(e.target.value)} style={{ width: '100%', padding: '8px', borderRadius: '4px', backgroundColor: '#0f172a', color: '#fff', border: '1px solid #334155' }} />
+                    <input required type="text" value={form4AnnualQty} onChange={e => setForm4AnnualQty(e.target.value)} style={{ width: '100%', padding: '8px', borderRadius: '4px', backgroundColor: '#0f172a', color: '#fff', border: '1px solid #334155' }} />
                   </div>
                   <div>
-                    <label style={{ display: 'block', fontSize: '12px', color: '#94a3b8', marginBottom: '4px' }}>Process Water Consumption Rate</label>
-                    <input required type="text" value={processWaterCons} onChange={e => setProcessWaterCons(e.target.value)} style={{ width: '100%', padding: '8px', borderRadius: '4px', backgroundColor: '#0f172a', color: '#fff', border: '1px solid #334155' }} />
+                    <label style={{ display: 'block', fontSize: '12px', color: '#94a3b8', marginBottom: '4px' }}>CHWTSDF Destination Facility</label>
+                    <input required type="text" value={form4DisposalFacility} onChange={e => setForm4DisposalFacility(e.target.value)} style={{ width: '100%', padding: '8px', borderRadius: '4px', backgroundColor: '#0f172a', color: '#fff', border: '1px solid #334155' }} />
                   </div>
                 </>
               )}
 
-              <button type="submit" style={{ backgroundColor: '#14b8a6', color: '#0f172a', padding: '10px', border: 'none', borderRadius: '4px', fontWeight: 'bold', cursor: 'pointer', marginTop: '5px' }}>📄 Print / Download Official {selectedReturnForm} Return</button>
+              {/* FORM 5 SPECIFIC FIELDS */}
+              {selectedReturnForm === 'Form 5' && (
+                <>
+                  <div style={{ backgroundColor: '#0f172a', padding: '10px', borderRadius: '4px', borderLeft: '3px solid #14b8a6', fontSize: '11px', color: '#2dd4bf' }}>
+                    <strong>Form 5 Return:</strong> Environmental Statement Return for financial year ending March, due 30th September.
+                  </div>
+                  <div>
+                    <label style={{ display: 'block', fontSize: '12px', color: '#94a3b8', marginBottom: '4px' }}>Raw Material Consumption Rate</label>
+                    <input required type="text" value={form5RawMaterial} onChange={e => setForm5RawMaterial(e.target.value)} style={{ width: '100%', padding: '8px', borderRadius: '4px', backgroundColor: '#0f172a', color: '#fff', border: '1px solid #334155' }} />
+                  </div>
+                  <div>
+                    <label style={{ display: 'block', fontSize: '12px', color: '#94a3b8', marginBottom: '4px' }}>Process Water Usage Rate</label>
+                    <input required type="text" value={form5WaterProcess} onChange={e => setForm5WaterProcess(e.target.value)} style={{ width: '100%', padding: '8px', borderRadius: '4px', backgroundColor: '#0f172a', color: '#fff', border: '1px solid #334155' }} />
+                  </div>
+                  <div>
+                    <label style={{ display: 'block', fontSize: '12px', color: '#94a3b8', marginBottom: '4px' }}>Pollution Control System Summary</label>
+                    <input required type="text" value={form5PollutionControl} onChange={e => setForm5PollutionControl(e.target.value)} style={{ width: '100%', padding: '8px', borderRadius: '4px', backgroundColor: '#0f172a', color: '#fff', border: '1px solid #334155' }} />
+                  </div>
+                </>
+              )}
+
+              <button type="submit" style={{ backgroundColor: '#14b8a6', color: '#0f172a', padding: '10px', border: 'none', borderRadius: '4px', fontWeight: 'bold', cursor: 'pointer', marginTop: '5px' }}>📄 Download / Print Official {selectedReturnForm} PDF</button>
             </form>
           </div>
         )}
