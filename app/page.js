@@ -294,4 +294,23 @@ export default function EcoTraceEnterpriseShield() {
           <div style={{ backgroundColor: '#1e293b', padding: '20px', borderRadius: '8px' }}>
             <h3 style={{ color: '#22c55e', marginTop: 0 }}>Onboard New Industrial Unit</h3>
             <form onSubmit={handleAddFactory} style={{ display: 'flex', flexDirection: 'column', gap: '10px', maxWidth: '400px' }}>
-              <input required type="text" value={factoryName} onChange={e => setFactoryName(e.ta
+              <input required type="text" value={factoryName} onChange={e => setFactoryName(e.target.value)} placeholder="Factory Name" style={{ padding: '8px', borderRadius: '4px', backgroundColor: '#0f172a', color: '#fff', border: '1px solid #334155' }} />
+              <input required type="text" value={factoryLocation} onChange={e => setFactoryLocation(e.target.value)} placeholder="MIDC Zone" style={{ padding: '8px', borderRadius: '4px', backgroundColor: '#0f172a', color: '#fff', border: '1px solid #334155' }} />
+              <input required type="number" value={factoryLimit} onChange={e => setFactoryLimit(e.target.value)} placeholder="Water Discharge Limit" style={{ padding: '8px', borderRadius: '4px', backgroundColor: '#0f172a', color: '#fff', border: '1px solid #334155' }} />
+              <button type="submit" style={{ backgroundColor: '#22c55e', color: '#0f172a', padding: '10px', border: 'none', borderRadius: '4px', fontWeight: 'bold', cursor: 'pointer' }}>+ Onboard Unit</button>
+            </form>
+          </div>
+        )}
+
+        {/* TAB VAULT */}
+        {activeTab === 'vault' && (
+          <div style={{ backgroundColor: '#1e293b', padding: '20px', borderRadius: '8px' }}>
+            <h3 style={{ color: '#38bdf8', marginTop: 0 }}>MPCB Regulations Vault</h3>
+            <p style={{ fontSize: '13px', color: '#94a3b8' }}>Hazardous Rules 2016 - Water Act 1974 - Air Act 1981</p>
+          </div>
+        )}
+
+      </main>
+    </div>
+  );
+}
