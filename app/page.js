@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 
 export default function EcoTraceEnterpriseShield() {
-  const [activeTab, setActiveTab] = useState('dashboard');
+  const [activeTab, setActiveTab] = useState('esg');
   
   // Dynamic Enterprise Registry
   const [factoryList, setFactoryList] = useState([
@@ -43,6 +43,14 @@ export default function EcoTraceEnterpriseShield() {
   const [phMinLimit, setPhMinLimit] = useState('6.5');
   const [codMaxLimit, setCodMaxLimit] = useState('250');
 
+  // Step 3: ESG GHG Emissions Calculator State
+  const [dieselLiters, setDieselLiters] = useState('150');
+  const [electricityKwh, setElectricityKwh] = useState('4200');
+  const [freightKm, setFreightKm] = useState('850');
+  const [calcScope1, setCalcScope1] = useState('0.40');
+  const [calcScope2, setCalcScope2] = useState('3.44');
+  const [calcScope3, setCalcScope3] = useState('0.18');
+
   // Monitored Unit Data
   const activeFactory = factoryList.find(f => f.id === selectedFactoryId) || factoryList[0];
   const totalCarbon = (activeFactory.scope1 + activeFactory.scope2 + activeFactory.scope3).toFixed(2);
@@ -72,6 +80,19 @@ export default function EcoTraceEnterpriseShield() {
   const handleTestWhatsAppAlert = (e) => {
     e.preventDefault();
     alert('REAL-TIME THRESHOLD ALERT SENT!\nTarget Phone: ' + alertPhone + '\nUnit: ' + activeFactory.name);
+  };
+
+  const handleCalculateEsg = (e) => {
+    e.preventDefault();
+    const s1 = ((Number(dieselLiters) || 0) * 2.68 / 1000).toFixed(2);
+    const s2 = ((Number(electricityKwh) || 0) * 0.82 / 1000).toFixed(2);
+    const s3 = ((Number(freightKm) || 0) * 0.21 / 1000).toFixed(2);
+    
+    setCalcScope1(s1);
+    setCalcScope2(s2);
+    setCalcScope3(s3);
+    
+    alert('ESG CARBON CALCULATION COMPLETE!\n\nScope 1: ' + s1 + ' tCO2e\nScope 2: ' + s2 + ' tCO2e\nScope 3: ' + s3 + ' tCO2e\n\nTotal: ' + (Number(s1)+Number(s2)+Number(s3)).toFixed(2) + ' tCO2e');
   };
 
   const handleAddFactory = (e) => {
@@ -118,7 +139,7 @@ export default function EcoTraceEnterpriseShield() {
           <button type="button" onClick={() => setActiveTab('dashboard')} style={{ textAlign: 'left', padding: '10px', borderRadius: '6px', border: 'none', cursor: 'pointer', backgroundColor: activeTab === 'dashboard' ? '#22c55e' : 'transparent', color: activeTab === 'dashboard' ? '#0f172a' : '#fff', fontWeight: 'bold' }}>Live Risk Radar</button>
           <button type="button" onClick={() => setActiveTab('defense')} style={{ textAlign: 'left', padding: '10px', borderRadius: '6px', border: 'none', cursor: 'pointer', backgroundColor: activeTab === 'defense' ? '#ef4444' : 'transparent', color: activeTab === 'defense' ? '#fff' : '#fca5a5', fontWeight: 'bold' }}>Notice Defense Matrix</button>
           <button type="button" onClick={() => setActiveTab('alerts')} style={{ textAlign: 'left', padding: '10px', borderRadius: '6px', border: 'none', cursor: 'pointer', backgroundColor: activeTab === 'alerts' ? '#eab308' : 'transparent', color: activeTab === 'alerts' ? '#0f172a' : '#fef08a', fontWeight: 'bold' }}>IoT Threshold Alerts</button>
-          <button type="button" onClick={() => setActiveTab('esg')} style={{ textAlign: 'left', padding: '10px', borderRadius: '6px', border: 'none', cursor: 'pointer', backgroundColor: activeTab === 'esg' ? '#22c55e' : 'transparent', color: activeTab === 'esg' ? '#fff' : '#94a3b8' }}>Scope 1,2,3 ESG Engine</button>
+          <button type="button" onClick={() => setActiveTab('esg')} style={{ textAlign: 'left', padding: '10px', borderRadius: '6px', border: 'none', cursor: 'pointer', backgroundColor: activeTab === 'esg' ? '#38bdf8' : 'transparent', color: activeTab === 'esg' ? '#0f172a' : '#93c5fd', fontWeight: 'bold' }}>Scope 1,2,3 ESG Engine</button>
           <button type="button" onClick={() => setActiveTab('manifest')} style={{ textAlign: 'left', padding: '10px', borderRadius: '6px', border: 'none', cursor: 'pointer', backgroundColor: activeTab === 'manifest' ? '#22c55e' : 'transparent', color: activeTab === 'manifest' ? '#fff' : '#94a3b8' }}>Form 10 Manifest</button>
           <button type="button" onClick={() => setActiveTab('cluster')} style={{ textAlign: 'left', padding: '10px', borderRadius: '6px', border: 'none', cursor: 'pointer', backgroundColor: activeTab === 'cluster' ? '#22c55e' : 'transparent', color: activeTab === 'cluster' ? '#fff' : '#94a3b8' }}>MCCI Cluster Center</button>
           <button type="button" onClick={() => setActiveTab('onboarding')} style={{ textAlign: 'left', padding: '10px', borderRadius: '6px', border: 'none', cursor: 'pointer', backgroundColor: activeTab === 'onboarding' ? '#22c55e' : 'transparent', color: activeTab === 'onboarding' ? '#fff' : '#94a3b8' }}>Client Onboarding</button>
@@ -128,7 +149,7 @@ export default function EcoTraceEnterpriseShield() {
         <div style={{ marginTop: 'auto', backgroundColor: '#0f172a', padding: '12px', borderRadius: '6px', border: '1px solid #22c55e', fontSize: '11px' }}>
           <span style={{ color: '#22c55e', fontWeight: 'bold' }}>Green Vendor Passport</span>
           <p style={{ margin: '4px 0', color: '#94a3b8' }}>0.75% Loan Subvention Eligible</p>
-          <button type="button" onClick={() => alert('Certificate Downloaded!')} style={{ backgroundColor: '#22c55e', color: '#0f172a', border: 'none', padding: '6px', borderRadius: '4px', width: '100%', fontWeight: 'bold', cursor: 'pointer' }}>Download Loan Certificate</button>
+          <button type="button" onClick={handlePrint} style={{ backgroundColor: '#22c55e', color: '#0f172a', border: 'none', padding: '6px', borderRadius: '4px', width: '100%', fontWeight: 'bold', cursor: 'pointer' }}>Download Loan Certificate</button>
         </div>
       </aside>
 
@@ -147,7 +168,7 @@ export default function EcoTraceEnterpriseShield() {
                 <option key={f.id} value={f.id}>{f.name} ({f.location})</option>
               ))}
             </select>
-            <button type="button" onClick={handlePrint} style={{ backgroundColor: '#22c55e', color: '#0f172a', border: 'none', padding: '8px 12px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer' }}>Export Audit PDF</button>
+            <button type="button" onClick={handlePrint} style={{ backgroundColor: '#22c55e', color: '#0f172a', border: 'none', padding: '8px 12px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer' }}> Export ESG PDF Report</button>
             <button type="button" onClick={handleSyncMPCB} style={{ backgroundColor: '#0284c7', color: '#fff', border: 'none', padding: '8px 12px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer' }}>Sync MPCB Portal</button>
           </div>
         </header>
@@ -261,11 +282,53 @@ export default function EcoTraceEnterpriseShield() {
           </div>
         )}
 
-        {/* TAB ESG */}
+        {/* STEP 3: SCOPE 1, 2, 3 ESG ENGINE & PDF REPORT */}
         {activeTab === 'esg' && (
-          <div style={{ backgroundColor: '#1e293b', padding: '20px', borderRadius: '8px' }}>
-            <h3 style={{ color: '#22c55e', marginTop: 0 }}>Scope 1, 2, 3 GHG Carbon Engine</h3>
-            <p style={{ color: '#94a3b8' }}>Scope 1: {activeFactory.scope1} tCO2e | Scope 2: {activeFactory.scope2} tCO2e | Scope 3: {activeFactory.scope3} tCO2e</p>
+          <div style={{ backgroundColor: '#1e293b', padding: '20px', borderRadius: '8px', border: '1px solid #38bdf8' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div>
+                <h3 style={{ color: '#38bdf8', marginTop: 0 }}>🌍 Scope 1, 2, 3 ESG Carbon Engine</h3>
+                <p style={{ fontSize: '13px', color: '#94a3b8' }}>Calculates GHG carbon footprint for MPCB Form V &amp; Bank Green Loan Subvention.</p>
+              </div>
+              <button type="button" onClick={handlePrint} style={{ backgroundColor: '#22c55e', color: '#0f172a', padding: '10px 15px', border: 'none', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer' }}>📄 Export PDF Audit Report</button>
+            </div>
+
+            <form onSubmit={handleCalculateEsg} style={{ display: 'flex', flexDirection: 'column', gap: '12px', maxWidth: '480px', marginTop: '15px' }}>
+              <div>
+                <label style={{ display: 'block', fontSize: '12px', color: '#94a3b8', marginBottom: '4px' }}>Scope 1: Boiler / DG Set Diesel Usage (Liters/Month)</label>
+                <input required type="number" value={dieselLiters} onChange={e => setDieselLiters(e.target.value)} style={{ width: '100%', padding: '8px', borderRadius: '4px', backgroundColor: '#0f172a', color: '#fff', border: '1px solid #334155' }} />
+              </div>
+
+              <div>
+                <label style={{ display: 'block', fontSize: '12px', color: '#94a3b8', marginBottom: '4px' }}>Scope 2: MSEDCL Grid Electricity (kWh/Units per Month)</label>
+                <input required type="number" value={electricityKwh} onChange={e => setElectricityKwh(e.target.value)} style={{ width: '100%', padding: '8px', borderRadius: '4px', backgroundColor: '#0f172a', color: '#fff', border: '1px solid #334155' }} />
+              </div>
+
+              <div>
+                <label style={{ display: 'block', fontSize: '12px', color: '#94a3b8', marginBottom: '4px' }}>Scope 3: Freight Transport (Ton-Km/Month)</label>
+                <input required type="number" value={freightKm} onChange={e => setFreightKm(e.target.value)} style={{ width: '100%', padding: '8px', borderRadius: '4px', backgroundColor: '#0f172a', color: '#fff', border: '1px solid #334155' }} />
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '10px', marginTop: '5px' }}>
+                <div style={{ backgroundColor: '#0f172a', padding: '10px', borderRadius: '4px', borderLeft: '3px solid #ef4444' }}>
+                  <span style={{ fontSize: '10px', color: '#94a3b8' }}>SCOPE 1</span>
+                  <p style={{ margin: '2px 0 0 0', fontWeight: 'bold', color: '#fca5a5' }}>{calcScope1} tCO2e</p>
+                </div>
+                <div style={{ backgroundColor: '#0f172a', padding: '10px', borderRadius: '4px', borderLeft: '3px solid #eab308' }}>
+                  <span style={{ fontSize: '10px', color: '#94a3b8' }}>SCOPE 2</span>
+                  <p style={{ margin: '2px 0 0 0', fontWeight: 'bold', color: '#fef08a' }}>{calcScope2} tCO2e</p>
+                </div>
+                <div style={{ backgroundColor: '#0f172a', padding: '10px', borderRadius: '4px', borderLeft: '3px solid #38bdf8' }}>
+                  <span style={{ fontSize: '10px', color: '#94a3b8' }}>SCOPE 3</span>
+                  <p style={{ margin: '2px 0 0 0', fontWeight: 'bold', color: '#38bdf8' }}>{calcScope3} tCO2e</p>
+                </div>
+              </div>
+
+              <div style={{ display: 'flex', gap: '10px', marginTop: '5px' }}>
+                <button type="submit" style={{ flex: 1, backgroundColor: '#38bdf8', color: '#0f172a', padding: '10px', border: 'none', borderRadius: '4px', fontWeight: 'bold', cursor: 'pointer' }}>🌍 Recalculate GHG</button>
+                <button type="button" onClick={handlePrint} style={{ flex: 1, backgroundColor: '#22c55e', color: '#0f172a', padding: '10px', border: 'none', borderRadius: '4px', fontWeight: 'bold', cursor: 'pointer' }}>📄 Export PDF Report</button>
+              </div>
+            </form>
           </div>
         )}
 
