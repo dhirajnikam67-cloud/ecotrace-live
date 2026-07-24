@@ -3,9 +3,9 @@
 import React, { useState } from 'react';
 
 export default function EcoTraceEnterpriseShield() {
-  const [activeTab, setActiveTab] = useState('manifest');
+  const [activeTab, setActiveTab] = useState('onboarding');
   
-  // Dynamic Enterprise Registry
+  // Dynamic Enterprise Registry with Pre-loaded Units
   const [factoryList, setFactoryList] = useState([
     { 
       id: 1, 
@@ -21,6 +21,21 @@ export default function EcoTraceEnterpriseShield() {
       scope1: 0.23,
       scope2: 1.16,
       scope3: 0.06
+    },
+    { 
+      id: 2, 
+      name: 'SAGAR AUTO COMPONENTS', 
+      location: 'CHAKAN MIDC', 
+      limit: 120000, 
+      discharge: 92000, 
+      ph: 7.1, 
+      cod: 160, 
+      status: 'COMPLIANT',
+      ctoDaysLeft: 145,
+      penaltyRisk: 0,
+      scope1: 0.45,
+      scope2: 2.30,
+      scope3: 0.12
     }
   ]);
   const [selectedFactoryId, setSelectedFactoryId] = useState(1);
@@ -60,7 +75,7 @@ export default function EcoTraceEnterpriseShield() {
   const activeFactory = factoryList.find(f => f.id === selectedFactoryId) || factoryList[0];
   const totalCarbon = (activeFactory.scope1 + activeFactory.scope2 + activeFactory.scope3).toFixed(2);
 
-  // PDF / Print Handler
+  // Handlers
   const handlePrint = () => {
     if (typeof window !== 'undefined') window.print();
   };
@@ -69,12 +84,9 @@ export default function EcoTraceEnterpriseShield() {
     alert('Handshake with MPCB OCMMS Server Successful.');
   };
 
-  // Direct PDF Trigger for Form 10
   const handleGenerateForm10 = (e) => {
     e.preventDefault();
-    if (typeof window !== 'undefined') {
-      window.print(); // Triggers PDF Save Dialog Immediately
-    }
+    if (typeof window !== 'undefined') window.print();
   };
 
   const handleGenerateDefense = (e) => {
@@ -98,6 +110,7 @@ export default function EcoTraceEnterpriseShield() {
     setCalcScope3(s3);
   };
 
+  // Step 5: Multi-Tenant Onboarding Handler
   const handleAddFactory = (e) => {
     e.preventDefault();
     const newId = factoryList.length + 1;
@@ -108,19 +121,20 @@ export default function EcoTraceEnterpriseShield() {
       name: factoryName.toUpperCase().trim(),
       location: factoryLocation.toUpperCase().trim() + ' MIDC',
       limit: limitNum,
-      discharge: Math.floor(limitNum * 0.78),
+      discharge: Math.floor(limitNum * 0.75),
       ph: 7.2,
-      cod: 185,
+      cod: 180,
       status: 'COMPLIANT',
-      ctoDaysLeft: 120,
+      ctoDaysLeft: 180,
       penaltyRisk: 0,
-      scope1: 0.18,
-      scope2: 0.95,
-      scope3: 0.04
+      scope1: 0.20,
+      scope2: 1.05,
+      scope3: 0.05
     };
 
     setFactoryList(prev => [newUnit, ...prev]);
     setSelectedFactoryId(newId);
+    alert('NEW INDUSTRIAL UNIT ONBOARDED!\n\nUnit Name: ' + newUnit.name + '\nZone: ' + newUnit.location + '\nStatutory Limit: ' + newUnit.limit + ' L/Day\n\nStatus: Integrated with EcoTrace Radar.');
     setFactoryName('');
     setFactoryLocation('');
     setFactoryLimit('');
@@ -144,7 +158,7 @@ export default function EcoTraceEnterpriseShield() {
           <button type="button" onClick={() => setActiveTab('esg')} style={{ textAlign: 'left', padding: '10px', borderRadius: '6px', border: 'none', cursor: 'pointer', backgroundColor: activeTab === 'esg' ? '#38bdf8' : 'transparent', color: activeTab === 'esg' ? '#0f172a' : '#93c5fd', fontWeight: 'bold' }}>Scope 1,2,3 ESG Engine</button>
           <button type="button" onClick={() => setActiveTab('manifest')} style={{ textAlign: 'left', padding: '10px', borderRadius: '6px', border: 'none', cursor: 'pointer', backgroundColor: activeTab === 'manifest' ? '#22c55e' : 'transparent', color: activeTab === 'manifest' ? '#0f172a' : '#bbf7d0', fontWeight: 'bold' }}>🚛 Form 10 Manifest</button>
           <button type="button" onClick={() => setActiveTab('cluster')} style={{ textAlign: 'left', padding: '10px', borderRadius: '6px', border: 'none', cursor: 'pointer', backgroundColor: activeTab === 'cluster' ? '#22c55e' : 'transparent', color: activeTab === 'cluster' ? '#fff' : '#94a3b8' }}>MCCI Cluster Center</button>
-          <button type="button" onClick={() => setActiveTab('onboarding')} style={{ textAlign: 'left', padding: '10px', borderRadius: '6px', border: 'none', cursor: 'pointer', backgroundColor: activeTab === 'onboarding' ? '#22c55e' : 'transparent', color: activeTab === 'onboarding' ? '#fff' : '#94a3b8' }}>Client Onboarding</button>
+          <button type="button" onClick={() => setActiveTab('onboarding')} style={{ textAlign: 'left', padding: '10px', borderRadius: '6px', border: 'none', cursor: 'pointer', backgroundColor: activeTab === 'onboarding' ? '#a855f7' : 'transparent', color: activeTab === 'onboarding' ? '#fff' : '#e9d5ff', fontWeight: 'bold' }}>🏭 Client Onboarding</button>
           <button type="button" onClick={() => setActiveTab('vault')} style={{ textAlign: 'left', padding: '10px', borderRadius: '6px', border: 'none', cursor: 'pointer', backgroundColor: activeTab === 'vault' ? '#22c55e' : 'transparent', color: activeTab === 'vault' ? '#fff' : '#94a3b8' }}>MPCB Legal Vault</button>
         </nav>
 
@@ -165,7 +179,7 @@ export default function EcoTraceEnterpriseShield() {
           </div>
           
           <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-            <select value={selectedFactoryId} onChange={(e) => setSelectedFactoryId(Number(e.target.value))} style={{ backgroundColor: '#1e293b', color: '#fff', border: '1px solid #38bdf8', padding: '8px', borderRadius: '6px' }}>
+            <select value={selectedFactoryId} onChange={(e) => setSelectedFactoryId(Number(e.target.value))} style={{ backgroundColor: '#1e293b', color: '#fff', border: '1px solid #a855f7', padding: '8px', borderRadius: '6px', fontWeight: 'bold' }}>
               {factoryList.map(f => (
                 <option key={f.id} value={f.id}>{f.name} ({f.location})</option>
               ))}
@@ -334,7 +348,7 @@ export default function EcoTraceEnterpriseShield() {
           </div>
         )}
 
-        {/* STEP 4: FORM 10 HAZARDOUS MANIFEST GENERATOR WITH REAL PRINT/PDF */}
+        {/* STEP 4: FORM 10 HAZARDOUS MANIFEST GENERATOR */}
         {activeTab === 'manifest' && (
           <div style={{ backgroundColor: '#1e293b', padding: '20px', borderRadius: '8px', border: '1px solid #22c55e' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -386,24 +400,38 @@ export default function EcoTraceEnterpriseShield() {
           </div>
         )}
 
+        {/* STEP 5: MULTI-TENANT CLIENT ONBOARDING */}
+        {activeTab === 'onboarding' && (
+          <div style={{ backgroundColor: '#1e293b', padding: '20px', borderRadius: '8px', border: '1px solid #a855f7' }}>
+            <h3 style={{ color: '#c084fc', marginTop: 0 }}>🏭 Multi-Tenant Client Onboarding Engine</h3>
+            <p style={{ fontSize: '13px', color: '#94a3b8' }}>Onboard new industrial manufacturing units across MIDC zones into the EcoTrace Ecosystem.</p>
+
+            <form onSubmit={handleAddFactory} style={{ display: 'flex', flexDirection: 'column', gap: '12px', maxWidth: '480px', marginTop: '15px' }}>
+              <div>
+                <label style={{ display: 'block', fontSize: '12px', color: '#94a3b8', marginBottom: '4px' }}>Industrial Unit / Company Name</label>
+                <input required type="text" value={factoryName} onChange={e => setFactoryName(e.target.value)} placeholder="e.g. MAHARASHTRA PAINTS & CHEMICALS" style={{ width: '100%', padding: '8px', borderRadius: '4px', backgroundColor: '#0f172a', color: '#fff', border: '1px solid #334155' }} />
+              </div>
+
+              <div>
+                <label style={{ display: 'block', fontSize: '12px', color: '#94a3b8', marginBottom: '4px' }}>MIDC Zone Location</label>
+                <input required type="text" value={factoryLocation} onChange={e => setFactoryLocation(e.target.value)} placeholder="e.g. RANJANGAON or KURKUMBH" style={{ width: '100%', padding: '8px', borderRadius: '4px', backgroundColor: '#0f172a', color: '#fff', border: '1px solid #334155' }} />
+              </div>
+
+              <div>
+                <label style={{ display: 'block', fontSize: '12px', color: '#94a3b8', marginBottom: '4px' }}>Consent Water Discharge Limit (Liters/Day)</label>
+                <input required type="number" value={factoryLimit} onChange={e => setFactoryLimit(e.target.value)} placeholder="e.g. 60000" style={{ width: '100%', padding: '8px', borderRadius: '4px', backgroundColor: '#0f172a', color: '#fff', border: '1px solid #334155' }} />
+              </div>
+
+              <button type="submit" style={{ backgroundColor: '#a855f7', color: '#fff', padding: '10px', border: 'none', borderRadius: '4px', fontWeight: 'bold', cursor: 'pointer', marginTop: '5px' }}>+ Onboard Industrial Unit Live</button>
+            </form>
+          </div>
+        )}
+
         {/* TAB CLUSTER */}
         {activeTab === 'cluster' && (
           <div style={{ backgroundColor: '#1e293b', padding: '20px', borderRadius: '8px' }}>
             <h3 style={{ color: '#38bdf8', marginTop: 0 }}>MCCI MIDC Cluster Center</h3>
             <p style={{ color: '#22c55e', fontWeight: 'bold' }}>MSME Privacy Shield Active</p>
-          </div>
-        )}
-
-        {/* TAB ONBOARDING */}
-        {activeTab === 'onboarding' && (
-          <div style={{ backgroundColor: '#1e293b', padding: '20px', borderRadius: '8px' }}>
-            <h3 style={{ color: '#22c55e', marginTop: 0 }}>Onboard New Industrial Unit</h3>
-            <form onSubmit={handleAddFactory} style={{ display: 'flex', flexDirection: 'column', gap: '10px', maxWidth: '400px' }}>
-              <input required type="text" value={factoryName} onChange={e => setFactoryName(e.target.value)} placeholder="Factory Name" style={{ padding: '8px', borderRadius: '4px', backgroundColor: '#0f172a', color: '#fff', border: '1px solid #334155' }} />
-              <input required type="text" value={factoryLocation} onChange={e => setFactoryLocation(e.target.value)} placeholder="MIDC Zone" style={{ padding: '8px', borderRadius: '4px', backgroundColor: '#0f172a', color: '#fff', border: '1px solid #334155' }} />
-              <input required type="number" value={factoryLimit} onChange={e => setFactoryLimit(e.target.value)} placeholder="Water Discharge Limit" style={{ padding: '8px', borderRadius: '4px', backgroundColor: '#0f172a', color: '#fff', border: '1px solid #334155' }} />
-              <button type="submit" style={{ backgroundColor: '#22c55e', color: '#0f172a', padding: '10px', border: 'none', borderRadius: '4px', fontWeight: 'bold', cursor: 'pointer' }}>+ Onboard Unit</button>
-            </form>
           </div>
         )}
 
