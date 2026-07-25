@@ -118,7 +118,7 @@ export default function EcoTraceUnifiedProductionOS() {
 
       <div style={{ display: 'flex', flex: 1, position: 'relative' }}>
         
-        {/* Sidebar Menu - All Modules Directly Visible without Collapsing */}
+        {/* Sidebar Menu - Complete List from Both Versions */}
         <aside style={{ 
           width: '310px', 
           backgroundColor: '#1e293b', 
@@ -142,44 +142,52 @@ export default function EcoTraceUnifiedProductionOS() {
 
           <nav style={{ display: 'flex', flexDirection: 'column', gap: '6px', overflowY: 'auto' }}>
             
-            {/* COMMAND DASHBOARD */}
             <button type="button" onClick={() => { setActiveTab('dashboard'); setMobileMenuOpen(false); }} style={{ textAlign: 'left', padding: '9px', borderRadius: '6px', border: 'none', cursor: 'pointer', backgroundColor: activeTab === 'dashboard' ? '#22c55e' : '#0f172a', color: activeTab === 'dashboard' ? '#0f172a' : '#f8fafc', fontWeight: 'bold', fontSize: '12px' }}>
               📊 Unified Command Dashboard
             </button>
 
-            {/* MOBILE AI OCR SCANNER */}
             <button type="button" onClick={() => { setActiveTab('ocrscanner'); setMobileMenuOpen(false); }} style={{ textAlign: 'left', padding: '9px', borderRadius: '6px', border: '1px solid #22c55e', cursor: 'pointer', backgroundColor: activeTab === 'ocrscanner' ? '#14532d' : '#0f172a', color: '#4ade80', fontWeight: 'bold', fontSize: '12px' }}>
               ⚡ Mobile AI OCR &amp; dMRV Scan
             </button>
 
-            {/* A. RISK & EMERGENCY */}
+            {/* Risk & Emergency */}
             <div style={{ padding: '6px', backgroundColor: '#0f172a', borderRadius: '6px', border: '1px solid #ef4444', display: 'flex', flexDirection: 'column', gap: '4px' }}>
               <span style={{ fontSize: '10px', fontWeight: 'bold', color: '#fca5a5' }}>[A] RISK &amp; EMERGENCY SHIELD</span>
               <button type="button" onClick={() => { setActiveTab('auditmode'); setMobileMenuOpen(false); }} style={{ textAlign: 'left', padding: '6px', borderRadius: '4px', border: 'none', cursor: 'pointer', backgroundColor: activeTab === 'auditmode' ? '#ef4444' : 'transparent', color: activeTab === 'auditmode' ? '#fff' : '#cbd5e1', fontSize: '11px' }}>• Flying Squad Audit Mode</button>
               <button type="button" onClick={() => { setActiveTab('gasleak'); setMobileMenuOpen(false); }} style={{ textAlign: 'left', padding: '6px', borderRadius: '4px', border: 'none', cursor: 'pointer', backgroundColor: activeTab === 'gasleak' ? '#ef4444' : 'transparent', color: activeTab === 'gasleak' ? '#fff' : '#cbd5e1', fontSize: '11px' }}>• Toxic Gas Leak Radar</button>
+              <button type="button" onClick={() => { setActiveTab('noticedefense'); setMobileMenuOpen(false); }} style={{ textAlign: 'left', padding: '6px', borderRadius: '4px', border: 'none', cursor: 'pointer', backgroundColor: activeTab === 'noticedefense' ? '#ef4444' : 'transparent', color: activeTab === 'noticedefense' ? '#fff' : '#cbd5e1', fontSize: '11px' }}>• Notice Defense Matrix</button>
             </div>
 
-            {/* B. UTILITY & SAVINGS */}
+            {/* Utility & Savings */}
             <div style={{ padding: '6px', backgroundColor: '#0f172a', borderRadius: '6px', border: '1px solid #eab308', display: 'flex', flexDirection: 'column', gap: '4px' }}>
               <span style={{ fontSize: '10px', fontWeight: 'bold', color: '#fef08a' }}>[B] UTILITY &amp; COST SAVINGS</span>
-              <button type="button" onClick={() => { setActiveTab('gridmon'); setMobileMenuOpen(false); }} style={{ textAlign: 'left', padding: '6px', borderRadius: '4px', border: 'none', cursor: 'pointer', backgroundColor: activeTab === 'gridmon' ? '#eab308' : 'transparent', color: activeTab === 'gridmon' ? '#0f172a' : '#cbd5e1', fontSize: '11px' }}>• MSEDCL Smart Grid</button>
-              <button type="button" onClick={() => { setActiveTab('capex'); setMobileMenuOpen(false); }} style={{ textAlign: 'left', padding: '6px', borderRadius: '4px', border: 'none', cursor: 'pointer', backgroundColor: activeTab === 'capex' ? '#eab308' : 'transparent', color: activeTab === 'capex' ? '#0f172a' : '#cbd5e1', fontSize: '11px' }}>• ETP CAPEX &amp; ROI</button>
+              <button type="button" onClick={() => { setActiveTab('gridmon'); setMobileMenuOpen(false); }} style={{ textAlign: 'left', padding: '6px', borderRadius: '4px', border: 'none', cursor: 'pointer', backgroundColor: activeTab === 'gridmon' ? '#eab308' : 'transparent', color: activeTab === 'gridmon' ? '#0f172a' : '#cbd5e1', fontSize: '11px' }}>• MSEDCL Smart Grid &amp; PF</button>
+              <button type="button" onClick={() => { setActiveTab('capex'); setMobileMenuOpen(false); }} style={{ textAlign: 'left', padding: '6px', borderRadius: '4px', border: 'none', cursor: 'pointer', backgroundColor: activeTab === 'capex' ? '#eab308' : 'transparent', color: activeTab === 'capex' ? '#0f172a' : '#cbd5e1', fontSize: '11px' }}>• ETP CAPEX &amp; ROI Calculator</button>
             </div>
 
-            {/* C. STATUTORY & FORM V */}
+            {/* Statutory Compliance (Form 3, 4, 5 & CTO) */}
             <div style={{ padding: '6px', backgroundColor: '#0f172a', borderRadius: '6px', border: '1px solid #10b981', display: 'flex', flexDirection: 'column', gap: '4px' }}>
-              <span style={{ fontSize: '10px', fontWeight: 'bold', color: '#6ee7b7' }}>[C] STATUTORY &amp; FORM V SHIELD</span>
-              <button type="button" onClick={() => { setActiveTab('legalshield'); setMobileMenuOpen(false); }} style={{ textAlign: 'left', padding: '6px', borderRadius: '4px', border: 'none', cursor: 'pointer', backgroundColor: activeTab === 'legalshield' ? '#14b8a6' : 'transparent', color: activeTab === 'legalshield' ? '#0f172a' : '#cbd5e1', fontSize: '11px' }}>• Form V &amp; Returns</button>
+              <span style={{ fontSize: '10px', fontWeight: 'bold', color: '#6ee7b7' }}>[C] STATUTORY COMPLIANCE</span>
+              <button type="button" onClick={() => { setActiveTab('formreturns'); setMobileMenuOpen(false); }} style={{ textAlign: 'left', padding: '6px', borderRadius: '4px', border: 'none', cursor: 'pointer', backgroundColor: activeTab === 'formreturns' ? '#14b8a6' : 'transparent', color: activeTab === 'formreturns' ? '#0f172a' : '#cbd5e1', fontSize: '11px' }}>• Form 3, 4 &amp; 5 Annual Returns</button>
+              <button type="button" onClick={() => { setActiveTab('ctorenewal'); setMobileMenuOpen(false); }} style={{ textAlign: 'left', padding: '6px', borderRadius: '4px', border: 'none', cursor: 'pointer', backgroundColor: activeTab === 'ctorenewal' ? '#14b8a6' : 'transparent', color: activeTab === 'ctorenewal' ? '#0f172a' : '#cbd5e1', fontSize: '11px' }}>• CTO Renewal Auto-Dossier</button>
             </div>
 
-            {/* D. GREEN PASSPORT & ESG */}
+            {/* Supply Chain & ESG (Tanker GPS, E-Waste, Green Passport) */}
             <div style={{ padding: '6px', backgroundColor: '#0f172a', borderRadius: '6px', border: '1px solid #06b6d4', display: 'flex', flexDirection: 'column', gap: '4px' }}>
-              <span style={{ fontSize: '10px', fontWeight: 'bold', color: '#a5f3fc' }}>[D] GREEN PASSPORT &amp; ESG</span>
+              <span style={{ fontSize: '10px', fontWeight: 'bold', color: '#a5f3fc' }}>[D] SUPPLY CHAIN &amp; ESG</span>
               <button type="button" onClick={() => { setActiveTab('greenpassport'); setMobileMenuOpen(false); }} style={{ textAlign: 'left', padding: '6px', borderRadius: '4px', border: 'none', cursor: 'pointer', backgroundColor: activeTab === 'greenpassport' ? '#06b6d4' : 'transparent', color: activeTab === 'greenpassport' ? '#0f172a' : '#cbd5e1', fontSize: '11px' }}>• B2B Green Passport</button>
+              <button type="button" onClick={() => { setActiveTab('tankergps'); setMobileMenuOpen(false); }} style={{ textAlign: 'left', padding: '6px', borderRadius: '4px', border: 'none', cursor: 'pointer', backgroundColor: activeTab === 'tankergps' ? '#06b6d4' : 'transparent', color: activeTab === 'tankergps' ? '#0f172a' : '#cbd5e1', fontSize: '11px' }}>• Tanker GPS &amp; Form 10</button>
+              <button type="button" onClick={() => { setActiveTab('ewaste'); setMobileMenuOpen(false); }} style={{ textAlign: 'left', padding: '6px', borderRadius: '4px', border: 'none', cursor: 'pointer', backgroundColor: activeTab === 'ewaste' ? '#06b6d4' : 'transparent', color: activeTab === 'ewaste' ? '#0f172a' : '#cbd5e1', fontSize: '11px' }}>• E-Waste &amp; Battery EPR Vault</button>
               <button type="button" onClick={() => { setActiveTab('financials'); setMobileMenuOpen(false); }} style={{ textAlign: 'left', padding: '6px', borderRadius: '4px', border: 'none', cursor: 'pointer', backgroundColor: activeTab === 'financials' ? '#06b6d4' : 'transparent', color: activeTab === 'financials' ? '#0f172a' : '#cbd5e1', fontSize: '11px' }}>• SBI / SIDBI Loan Rebate</button>
             </div>
 
-            {/* E. ONBOARDING */}
+            {/* Command & Grants */}
+            <div style={{ padding: '6px', backgroundColor: '#0f172a', borderRadius: '6px', border: '1px solid #6366f1', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+              <span style={{ fontSize: '10px', fontWeight: 'bold', color: '#c7d2fe' }}>[E] COMMAND &amp; GRANTS</span>
+              <button type="button" onClick={() => { setActiveTab('blockchain'); setMobileMenuOpen(false); }} style={{ textAlign: 'left', padding: '6px', borderRadius: '4px', border: 'none', cursor: 'pointer', backgroundColor: activeTab === 'blockchain' ? '#4f46e5' : 'transparent', color: activeTab === 'blockchain' ? '#fff' : '#cbd5e1', fontSize: '11px' }}>• Blockchain Immutable Ledger</button>
+              <button type="button" onClick={() => { setActiveTab('mccigrants'); setMobileMenuOpen(false); }} style={{ textAlign: 'left', padding: '6px', borderRadius: '4px', border: 'none', cursor: 'pointer', backgroundColor: activeTab === 'mccigrants' ? '#4f46e5' : 'transparent', color: activeTab === 'mccigrants' ? '#fff' : '#cbd5e1', fontSize: '11px' }}>• MCCI Privacy &amp; Grants</button>
+            </div>
+
             <button type="button" onClick={() => { setActiveTab('onboarding'); setMobileMenuOpen(false); }} style={{ textAlign: 'left', padding: '9px', borderRadius: '6px', border: '1px solid #a855f7', cursor: 'pointer', backgroundColor: activeTab === 'onboarding' ? '#a855f7' : '#0f172a', color: '#fff', fontWeight: 'bold', fontSize: '12px' }}>
               🏭 Multi-Tenant Factory Onboard
             </button>
@@ -303,18 +311,36 @@ export default function EcoTraceUnifiedProductionOS() {
             </div>
           )}
 
-          {/* 5. MSEDCL SMART GRID */}
-          {activeTab === 'gridmon' && (
-            <div style={{ backgroundColor: '#1e293b', padding: '20px', borderRadius: '8px', border: '2px solid #eab308' }}>
-              <h3 style={{ color: '#fef08a', marginTop: 0 }}>⚡ MSEDCL Smart Energy Grid &amp; PF Penalty Shield</h3>
-              <p style={{ fontSize: '12px', color: '#94a3b8' }}>Live monitoring dashboard tracking Power Factor (PF) and grid voltage harmonics.</p>
+          {/* 5. NOTICE DEFENSE MATRIX */}
+          {activeTab === 'noticedefense' && (
+            <div style={{ backgroundColor: '#1e293b', padding: '20px', borderRadius: '8px', border: '2px solid #ef4444' }}>
+              <h3 style={{ color: '#fca5a5', marginTop: 0 }}>🛡️ Notice Defense Matrix</h3>
+              <p style={{ fontSize: '12px', color: '#94a3b8' }}>Automated legal reply generator formulated under Water Act Sec 33A and Air Act provisions.</p>
               <div style={{ backgroundColor: '#0f172a', padding: '15px', borderRadius: '6px', marginTop: '15px' }}>
-                <p style={{ color: '#eab308', fontWeight: 'bold', margin: 0 }}>Current Power Factor: 0.98 (Optimal - Zero Penalty)</p>
+                <p style={{ color: '#fff', margin: 0 }}>Status: No active show-cause notices. Legal draft assistant on standby.</p>
               </div>
             </div>
           )}
 
-          {/* 6. ETP CAPEX & ROI */}
+          {/* 6. MSEDCL SMART GRID */}
+          {activeTab === 'gridmon' && (
+            <div style={{ backgroundColor: '#1e293b', padding: '20px', borderRadius: '8px', border: '2px solid #eab308' }}>
+              <h3 style={{ color: '#fef08a', marginTop: 0 }}>⚡ MSEDCL Smart Energy Grid &amp; PF Penalty Shield</h3>
+              <p style={{ fontSize: '12px', color: '#94a3b8' }}>Live monitoring dashboard tracking Power Factor (PF) and grid voltage harmonics.</p>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '10px', marginTop: '15px' }}>
+                <div style={{ backgroundColor: '#0f172a', padding: '12px', borderRadius: '6px', borderLeft: '4px solid #22c55e' }}>
+                  <span style={{ fontSize: '10px', color: '#94a3b8' }}>POWER FACTOR (PF)</span>
+                  <p style={{ margin: '4px 0 0 0', fontWeight: 'bold', color: '#22c55e', fontSize: '14px' }}>0.99 (Incentive Eligible)</p>
+                </div>
+                <div style={{ backgroundColor: '#0f172a', padding: '12px', borderRadius: '6px', borderLeft: '4px solid #38bdf8' }}>
+                  <span style={{ fontSize: '10px', color: '#94a3b8' }}>3-PHASE GRID VOLTAGE</span>
+                  <p style={{ margin: '4px 0 0 0', fontWeight: 'bold', color: '#38bdf8', fontSize: '14px' }}>415 V Balanced</p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* 7. ETP CAPEX & ROI */}
           {activeTab === 'capex' && (
             <div style={{ backgroundColor: '#1e293b', padding: '20px', borderRadius: '8px', border: '2px solid #eab308' }}>
               <h3 style={{ color: '#fef08a', marginTop: 0 }}>💡 ETP &amp; Green Tech CAPEX / ROI Calculator</h3>
@@ -325,21 +351,44 @@ export default function EcoTraceUnifiedProductionOS() {
             </div>
           )}
 
-          {/* 7. FORM V & LEGAL SHIELD */}
-          {activeTab === 'legalshield' && (
-            <div style={{ backgroundColor: '#1e293b', padding: '20px', borderRadius: '8px', border: '2px solid #ef4444' }}>
-              <h3 style={{ color: '#fca5a5', marginTop: 0 }}>🚨 MPCB Legal Shield &amp; Form V Automation</h3>
-              <p style={{ fontSize: '12px', color: '#94a3b8' }}>Zero-error statutory compliance protecting factories from surprise inspections and closure notices.</p>
+          {/* 8. FORM 3, 4 & 5 ANNUAL RETURNS */}
+          {activeTab === 'formreturns' && (
+            <div style={{ backgroundColor: '#1e293b', padding: '20px', borderRadius: '8px', border: '2px solid #10b981' }}>
+              <h3 style={{ color: '#6ee7b7', marginTop: 0 }}>📜 Form 3, Form 4 &amp; Form 5 Annual Returns Generator</h3>
+              <p style={{ fontSize: '12px', color: '#94a3b8' }}>Dedicated modules to instantly format daily logbooks, annual hazardous waste returns, and environmental statements directly matching MPCB formats.</p>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '10px', marginTop: '15px' }}>
+                <div style={{ backgroundColor: '#0f172a', padding: '12px', borderRadius: '6px', borderLeft: '4px solid #22c55e' }}>
+                  <span style={{ fontSize: '10px', color: '#94a3b8' }}>FORM 3 (WATER CESS)</span>
+                  <p style={{ margin: '4px 0 0 0', fontWeight: 'bold', color: '#22c55e', fontSize: '13px' }}>Auto-Compiled &amp; Ready</p>
+                </div>
+                <div style={{ backgroundColor: '#0f172a', padding: '12px', borderRadius: '6px', borderLeft: '4px solid #38bdf8' }}>
+                  <span style={{ fontSize: '10px', color: '#94a3b8' }}>FORM 4 (HAZARDOUS WASTE)</span>
+                  <p style={{ margin: '4px 0 0 0', fontWeight: 'bold', color: '#38bdf8', fontSize: '13px' }}>MWML Verified</p>
+                </div>
+                <div style={{ backgroundColor: '#0f172a', padding: '12px', borderRadius: '6px', borderLeft: '4px solid #eab308' }}>
+                  <span style={{ fontSize: '10px', color: '#94a3b8' }}>FORM 5 (ENVIRONMENT STATEMENT)</span>
+                  <p style={{ margin: '4px 0 0 0', fontWeight: 'bold', color: '#fef08a', fontSize: '13px' }}>Ready for Portal Submission</p>
+                </div>
+              </div>
+              <button type="button" onClick={handlePrint} style={{ backgroundColor: '#10b981', color: '#0f172a', padding: '8px 12px', border: 'none', borderRadius: '6px', fontWeight: 'bold', fontSize: '12px', cursor: 'pointer', marginTop: '15px' }}>🖨️ Export All Returns (PDF)</button>
+            </div>
+          )}
+
+          {/* 9. CTO RENEWAL AUTO-DOSSIER */}
+          {activeTab === 'ctorenewal' && (
+            <div style={{ backgroundColor: '#1e293b', padding: '20px', borderRadius: '8px', border: '2px solid #10b981' }}>
+              <h3 style={{ color: '#6ee7b7', marginTop: 0 }}>📑 CTO Renewal Auto-Dossier Generator</h3>
+              <p style={{ fontSize: '12px', color: '#94a3b8' }}>Automated package compiler targeting the MPCB OCMMS portal for Consent to Operate renewals.</p>
               <div style={{ backgroundColor: '#0f172a', padding: '15px', borderRadius: '6px', marginTop: '15px' }}>
-                <p style={{ color: '#22c55e', fontWeight: 'bold', margin: 0 }}>Form V Status: Ready for MPCB Portal Submission</p>
+                <p style={{ color: '#22c55e', fontWeight: 'bold', margin: 0 }}>CTO Expiry in {activeFactory.ctoDaysLeft} Days — Dossier Ready for 1-Click Submission</p>
               </div>
             </div>
           )}
 
-          {/* 8. B2B GREEN PASSPORT */}
+          {/* 10. B2B GREEN PASSPORT */}
           {activeTab === 'greenpassport' && (
-            <div style={{ backgroundColor: '#1e293b', padding: '20px', borderRadius: '8px', border: '2px solid #38bdf8' }}>
-              <h3 style={{ color: '#38bdf8', marginTop: 0 }}>🌿 B2B Green Passport &amp; SEBI BRSR Core Engine</h3>
+            <div style={{ backgroundColor: '#1e293b', padding: '20px', borderRadius: '8px', border: '2px solid #06b6d4' }}>
+              <h3 style={{ color: '#a5f3fc', marginTop: 0 }}>🌿 B2B Green Passport &amp; SEBI BRSR Core Engine</h3>
               <p style={{ fontSize: '12px', color: '#94a3b8' }}>Instantly generates certified 3-page sustainability reports for Tier-1 &amp; Tier-2 vendors supplying to Tata and Mahindra.</p>
               <div style={{ backgroundColor: '#0f172a', padding: '15px', borderRadius: '6px', marginTop: '15px' }}>
                 <p style={{ color: '#4ade80', fontWeight: 'bold', margin: 0 }}>Green Passport ID: {activeFactory.greenPassportId}</p>
@@ -347,10 +396,32 @@ export default function EcoTraceUnifiedProductionOS() {
             </div>
           )}
 
-          {/* 9. FINANCIAL REBATE */}
+          {/* 11. TANKER GPS & FORM 10 */}
+          {activeTab === 'tankergps' && (
+            <div style={{ backgroundColor: '#1e293b', padding: '20px', borderRadius: '8px', border: '2px solid #06b6d4' }}>
+              <h3 style={{ color: '#a5f3fc', marginTop: 0 }}>🚛 Hazardous Waste Tanker Route &amp; Form 10 Manifest</h3>
+              <p style={{ fontSize: '12px', color: '#94a3b8' }}>Live tracking integration for transport vehicles moving hazardous waste to CHWTSDF facilities (e.g., MEPL Ranjangaon).</p>
+              <div style={{ backgroundColor: '#0f172a', padding: '15px', borderRadius: '6px', marginTop: '15px' }}>
+                <p style={{ color: '#38bdf8', fontWeight: 'bold', margin: 0 }}>Tanker GPS: In-Transit to Ranjangaon (Geo-Fence Secure)</p>
+              </div>
+            </div>
+          )}
+
+          {/* 12. E-WASTE & BATTERY EPR VAULT */}
+          {activeTab === 'ewaste' && (
+            <div style={{ backgroundColor: '#1e293b', padding: '20px', borderRadius: '8px', border: '2px solid #06b6d4' }}>
+              <h3 style={{ color: '#a5f3fc', marginTop: 0 }}>🔋 E-Waste &amp; Battery EPR Statutory Vault</h3>
+              <p style={{ fontSize: '12px', color: '#94a3b8' }}>Tracking registry for electronic waste and industrial battery disposal volumes under 2022 framework rules.</p>
+              <div style={{ backgroundColor: '#0f172a', padding: '15px', borderRadius: '6px', marginTop: '15px' }}>
+                <p style={{ color: '#22c55e', fontWeight: 'bold', margin: 0 }}>EPR Compliance Status: 100% Certified &amp; Audit Ready</p>
+              </div>
+            </div>
+          )}
+
+          {/* 13. FINANCIAL REBATE */}
           {activeTab === 'financials' && (
-            <div style={{ backgroundColor: '#1e293b', padding: '20px', borderRadius: '8px', border: '2px solid #eab308' }}>
-              <h3 style={{ color: '#fef08a', marginTop: 0 }}>💰 SBI / SIDBI Working Capital Interest Rebate</h3>
+            <div style={{ backgroundColor: '#1e293b', padding: '20px', borderRadius: '8px', border: '2px solid #06b6d4' }}>
+              <h3 style={{ color: '#a5f3fc', marginTop: 0 }}>💰 SBI / SIDBI Working Capital Interest Rebate</h3>
               <p style={{ fontSize: '12px', color: '#94a3b8' }}>Use your verified Green Passport to secure up to 1.5% interest rate reduction on business loans.</p>
               <div style={{ backgroundColor: '#0f172a', padding: '15px', borderRadius: '6px', marginTop: '15px' }}>
                 <p style={{ color: '#22c55e', fontWeight: 'bold', margin: 0 }}>Status: {activeFactory.loanDiscountEligible}</p>
@@ -358,7 +429,29 @@ export default function EcoTraceUnifiedProductionOS() {
             </div>
           )}
 
-          {/* 10. MULTI-TENANT ONBOARDING */}
+          {/* 14. BLOCKCHAIN AUDIT LEDGER */}
+          {activeTab === 'blockchain' && (
+            <div style={{ backgroundColor: '#1e293b', padding: '20px', borderRadius: '8px', border: '2px solid #6366f1' }}>
+              <h3 style={{ color: '#c7d2fe', marginTop: 0 }}>🔒 Blockchain Immutable Audit Trail Ledger</h3>
+              <p style={{ fontSize: '12px', color: '#94a3b8' }}>Cryptographically signed logging system recording IoT sensor data updates with permanent hashes.</p>
+              <div style={{ backgroundColor: '#0f172a', padding: '15px', borderRadius: '6px', marginTop: '15px' }}>
+                <p style={{ color: '#fef08a', fontFamily: 'monospace', margin: 0 }}>Active Hash: {activeFactory.blockHash} (Tamper-Proof Verified)</p>
+              </div>
+            </div>
+          )}
+
+          {/* 15. MCCI GRANTS */}
+          {activeTab === 'mccigrants' && (
+            <div style={{ backgroundColor: '#1e293b', padding: '20px', borderRadius: '8px', border: '2px solid #6366f1' }}>
+              <h3 style={{ color: '#c7d2fe', marginTop: 0 }}>🤝 MCCI Privacy Shield &amp; Govt Grants</h3>
+              <p style={{ fontSize: '12px', color: '#94a3b8' }}>Portal connector linking MSMEs to capital subsidies (such as up to 50% CAPEX support) while keeping individual factory data private.</p>
+              <div style={{ backgroundColor: '#0f172a', padding: '15px', borderRadius: '6px', marginTop: '15px' }}>
+                <p style={{ color: '#22c55e', fontWeight: 'bold', margin: 0 }}>MCCI Partnership Status: Active &amp; Verified for State Grants</p>
+              </div>
+            </div>
+          )}
+
+          {/* 16. MULTI-TENANT ONBOARDING */}
           {activeTab === 'onboarding' && (
             <div style={{ backgroundColor: '#1e293b', padding: '20px', borderRadius: '8px', border: '2px solid #a855f7' }}>
               <h3 style={{ color: '#c084fc', marginTop: 0 }}>🏭 Multi-Tenant Client Onboarding Engine</h3>
