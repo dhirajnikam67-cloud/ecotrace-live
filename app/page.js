@@ -25,7 +25,7 @@ export default function EcoTraceUnifiedProductionOS() {
       carbonScope3: '12.5 MT',
       blockHash: '0xa8f392c1b4e87019d6f2231e',
       greenPassportId: 'ET-GP-2026-9942',
-      loanDiscountEligible: 'Up to 1.5% SBI / SIDBI Interest Rebate'
+      loanDiscountEligible: 'Eligible for Working Capital Interest Rebate'
     }
   ]);
   const [selectedFactoryId, setSelectedFactoryId] = useState(1);
@@ -90,7 +90,7 @@ export default function EcoTraceUnifiedProductionOS() {
       carbonScope3: '9.2 MT',
       blockHash: '0x' + Math.random().toString(16).substring(2, 14),
       greenPassportId: 'ET-GP-2026-' + Math.floor(1000 + Math.random() * 9000),
-      loanDiscountEligible: 'Eligible for SBI / SIDBI Interest Rebate'
+      loanDiscountEligible: 'Eligible for Working Capital Interest Rebate'
     };
     setFactoryList(prev => [newUnit, ...prev]);
     setSelectedFactoryId(newId);
@@ -386,11 +386,11 @@ export default function EcoTraceUnifiedProductionOS() {
             </div>
           )}
 
-          {/* 10. B2B GREEN PASSPORT (FULLY WORKING VIEW & DOWNLOAD) */}
+          {/* 10. B2B GREEN PASSPORT (LEGALLY SAFE & PROFESSIONAL TEXT) */}
           {activeTab === 'greenpassport' && (
             <div style={{ backgroundColor: '#1e293b', padding: '20px', borderRadius: '8px', border: '2px solid #06b6d4' }}>
-              <h3 style={{ color: '#a5f3fc', marginTop: 0 }}>🌿 B2B Green Passport &amp; SEBI BRSR Core Engine[cite: 2]</h3>
-              <p style={{ fontSize: '12px', color: '#94a3b8' }}>Instantly generates certified 3-page sustainability reports for Tier-1 &amp; Tier-2 vendors supplying to Tata and Mahindra[cite: 2].</p>
+              <h3 style={{ color: '#a5f3fc', marginTop: 0 }}>🌿 B2B Green Passport &amp; SEBI BRSR Core Engine</h3>
+              <p style={{ fontSize: '12px', color: '#94a3b8' }}>Instantly generates certified 3-page sustainability reports aligned with major OEM &amp; Tier-1 supply chain frameworks.</p>
               
               <div style={{ backgroundColor: '#0f172a', padding: '20px', borderRadius: '8px', marginTop: '15px', border: '1px solid #334155' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '10px' }}>
@@ -400,10 +400,10 @@ export default function EcoTraceUnifiedProductionOS() {
                   </div>
                   <div style={{ display: 'flex', gap: '10px' }}>
                     <button type="button" onClick={() => setShowPassportModal(true)} style={{ backgroundColor: '#06b6d4', color: '#0f172a', padding: '10px 15px', border: 'none', borderRadius: '6px', fontWeight: 'bold', fontSize: '12px', cursor: 'pointer' }}>
-                      👁️ View 3-Page Green Passport Report[cite: 2]
+                      👁️ View 3-Page Green Passport Report
                     </button>
                     <button type="button" onClick={handlePrint} style={{ backgroundColor: '#22c55e', color: '#0f172a', padding: '10px 15px', border: 'none', borderRadius: '6px', fontWeight: 'bold', fontSize: '12px', cursor: 'pointer' }}>
-                      📥 Download PDF[cite: 2]
+                      📥 Download PDF
                     </button>
                   </div>
                 </div>
@@ -411,17 +411,17 @@ export default function EcoTraceUnifiedProductionOS() {
                 {showPassportModal && (
                   <div style={{ marginTop: '20px', padding: '20px', backgroundColor: '#1e293b', border: '2px solid #22c55e', borderRadius: '8px' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #334155', paddingBottom: '10px' }}>
-                      <h4 style={{ color: '#22c55e', margin: 0 }}>📄 EcoTrace Certified B2B Green Passport (Page 1 of 3)[cite: 2]</h4>
+                      <h4 style={{ color: '#22c55e', margin: 0 }}>📄 EcoTrace Certified B2B Green Passport (Page 1 of 3)</h4>
                       <button type="button" onClick={() => setShowPassportModal(false)} style={{ background: 'none', border: 'none', color: '#ef4444', fontWeight: 'bold', cursor: 'pointer', fontSize: '14px' }}>✕ Close</button>
                     </div>
                     <div style={{ marginTop: '15px', fontSize: '13px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                      <p style={{ margin: 0 }}><strong>Standard Compliance:</strong> SEBI BRSR Core &amp; GHG Protocol Aligned[cite: 2]</p>
+                      <p style={{ margin: 0 }}><strong>Standard Compliance:</strong> SEBI BRSR Core &amp; GHG Protocol Aligned</p>
                       <p style={{ margin: 0 }}><strong>Scope 1 Direct Emissions:</strong> {activeFactory.carbonScope1} (Diesel &amp; Furnace Oil)</p>
                       <p style={{ margin: 0 }}><strong>Scope 2 Indirect Emissions:</strong> {activeFactory.carbonScope2} (MSEDCL Grid Electricity)</p>
                       <p style={{ margin: 0 }}><strong>Scope 3 Supply Chain:</strong> {activeFactory.carbonScope3} (Raw Materials &amp; Transport)</p>
                       <p style={{ margin: 0, color: '#38bdf8' }}><strong>Blockchain Authentication Hash:</strong> {activeFactory.blockHash}</p>
                       <div style={{ backgroundColor: '#0f172a', padding: '10px', borderRadius: '6px', marginTop: '10px', textAlign: 'center', color: '#fef08a', fontSize: '12px' }}>
-                        ✓ QR Code Verified: Accepted by Tata Motors, Mahindra &amp; SIDBI[cite: 2]
+                        ✓ QR Code Verified: Fully Compatible with OEM Supply Chain &amp; Financial Standards
                       </div>
                     </div>
                   </div>
@@ -455,10 +455,10 @@ export default function EcoTraceUnifiedProductionOS() {
           {/* 13. FINANCIAL REBATE */}
           {activeTab === 'financials' && (
             <div style={{ backgroundColor: '#1e293b', padding: '20px', borderRadius: '8px', border: '2px solid #06b6d4' }}>
-              <h3 style={{ color: '#a5f3fc', marginTop: 0 }}>💰 SBI / SIDBI Working Capital Interest Rebate[cite: 2]</h3>
-              <p style={{ fontSize: '12px', color: '#94a3b8' }}>Use your verified Green Passport to secure up to 1.5% interest rate reduction on business loans[cite: 2].</p>
+              <h3 style={{ color: '#a5f3fc', marginTop: 0 }}>💰 SBI / SIDBI Working Capital Interest Rebate</h3>
+              <p style={{ fontSize: '12px', color: '#94a3b8' }}>Use your verified Green Passport to secure up to 1.5% interest rate reduction on business loans.</p>
               <div style={{ backgroundColor: '#0f172a', padding: '15px', borderRadius: '6px', marginTop: '15px' }}>
-                <p style={{ color: '#22c55e', fontWeight: 'bold', margin: 0 }}>Status: {activeFactory.loanDiscountEligible}[cite: 2]</p>
+                <p style={{ color: '#22c55e', fontWeight: 'bold', margin: 0 }}>Status: {activeFactory.loanDiscountEligible}</p>
               </div>
             </div>
           )}
