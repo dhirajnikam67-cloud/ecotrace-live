@@ -1,11 +1,17 @@
-const runSafetyAudit = async () => {
+const [auditResult, setAuditResult] = useState(null);
+  const [loadingAudit, setLoadingAudit] = useState(false);
+
+  const runSafetyAudit = async () => {
     setLoadingAudit(true);
     try {
-      const baseUrl = typeof window !== 'undefined' ? window.location.origin : '';
-      const res = await fetch(`${baseUrl}/api/compliance-check`, {
+      const res = await fetch('/api/compliance-check', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ factoryId: 'WESTERN_CHEMICALS_BHOSARI', powerFactor: 0.94, phLevel: 8.9 })
+        body: JSON.stringify({ 
+          factoryId: 'WESTERN_CHEMICALS_BHOSARI', 
+          powerFactor: 0.94, 
+          phLevel: 8.9 
+        })
       });
       const data = await res.json();
       setAuditResult(data);
