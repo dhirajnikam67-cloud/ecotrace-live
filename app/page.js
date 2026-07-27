@@ -31,7 +31,7 @@ export default function EcoTraceDashboard() {
   return (
     <main style={{ padding: '20px', background: '#0b0f19', color: '#fff', minHeight: '100vh', fontFamily: 'sans-serif' }}>
       
-      {/* Top Navigation Bar */}
+      {/* Top Header & Global Navigation Toggle */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #30363d', paddingBottom: '15px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
           <button 
@@ -96,14 +96,7 @@ export default function EcoTraceDashboard() {
         </div>
       )}
 
-      {/* ACTIVE MONITORED ENTERPRISE HEADER */}
-      <div style={{ marginTop: '20px', background: '#161b22', padding: '20px', borderRadius: '8px', border: '1px solid #30363d' }}>
-        <div style={{ fontSize: '12px', color: '#8b949e', textTransform: 'uppercase' }}>Active Monitored Enterprise</div>
-        <h3 style={{ color: '#7ee787', margin: '5px 0 10px 0', fontSize: '20px' }}>WESTERN CHEMICALS - BHOSARI MIDC, PUNE</h3>
-        <p style={{ color: '#58a6ff', fontSize: '13px', margin: 0 }}>Status: COMPLIANT & AUDIT READY | Green Passport ID: ET-GP-2026-9942 | Current Active View: <b style={{color: '#ff7b72'}}>{activeModule.toUpperCase()}</b></p>
-      </div>
-
-      {/* Model 1 Safe Integration Panel */}
+      {/* Model 1 Safe Integration Panel (Always active on top) */}
       <div style={{ margin: '20px 0', padding: '15px', background: '#161b22', borderRadius: '8px', border: '1px solid #388bfd' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div>
@@ -126,41 +119,82 @@ export default function EcoTraceDashboard() {
         )}
       </div>
 
-      {/* DYNAMIC MODULE DETAILS VIEW (Changes based on Global Navigation selection) */}
+      {/* 1. MAIN DASHBOARD VIEW */}
       {activeModule === 'mainDashboard' && (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '15px', marginTop: '20px' }}>
-          <div style={{ background: '#161b22', padding: '15px', borderRadius: '8px', border: '1px solid #30363d' }}>
-            <div style={{ color: '#f85149', fontWeight: 'bold', fontSize: '13px' }}>🚨 MPCB Legal Shield</div>
-            <div style={{ fontSize: '16px', fontWeight: 'bold', color: '#fff', marginTop: '8px' }}>AUTO-GENERATED (Form V Ready)</div>
-            <div style={{ color: '#8b949e', fontSize: '12px', marginTop: '5px' }}>CTO Valid: 82 Days Left</div>
-          </div>
-          <div style={{ background: '#161b22', padding: '15px', borderRadius: '8px', border: '1px solid #30363d' }}>
-            <div style={{ color: '#58a6ff', fontWeight: 'bold', fontSize: '13px' }}>📊 dMRV Carbon Emissions</div>
-            <div style={{ fontSize: '16px', fontWeight: 'bold', color: '#fff', marginTop: '8px' }}>Scope 1: 1.2 MT</div>
-            <div style={{ color: '#8b949e', fontSize: '12px', marginTop: '5px' }}>Scope 2 & 3 Verified via CEA</div>
-          </div>
-          <div style={{ background: '#161b22', padding: '15px', borderRadius: '8px', border: '1px solid #30363d' }}>
-            <div style={{ color: '#d29922', fontWeight: 'bold', fontSize: '13px' }}>💰 Financial Subsidy Rebate</div>
-            <div style={{ fontSize: '16px', fontWeight: 'bold', color: '#fff', marginTop: '8px' }}>Eligible for Working Capital</div>
-            <div style={{ color: '#8b949e', fontSize: '12px', marginTop: '5px' }}>Verified via Green Passport ID</div>
+        <div style={{ marginTop: '20px', background: '#161b22', padding: '25px', borderRadius: '12px', border: '1px solid #30363d' }}>
+          <div style={{ fontSize: '12px', color: '#8b949e', textTransform: 'uppercase' }}>Active Monitored Enterprise</div>
+          <h3 style={{ color: '#7ee787', margin: '5px 0 10px 0', fontSize: '22px' }}>WESTERN CHEMICALS - BHOSARI MIDC, PUNE</h3>
+          <p style={{ color: '#58a6ff', fontSize: '13px', margin: '0 0 20px 0' }}>Status: COMPLIANT & AUDIT READY | Green Passport ID: ET-GP-2026-9942</p>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '15px' }}>
+            <div style={{ background: '#0d1117', padding: '20px', borderRadius: '8px', border: '1px solid #30363d' }}>
+              <div style={{ color: '#f85149', fontWeight: 'bold', fontSize: '13px' }}>🚨 MPCB Legal Shield</div>
+              <div style={{ fontSize: '16px', fontWeight: 'bold', color: '#fff', marginTop: '8px' }}>AUTO-GENERATED (Form V Ready)</div>
+              <div style={{ color: '#8b949e', fontSize: '12px', marginTop: '5px' }}>CTO Valid: 82 Days Left</div>
+            </div>
+            <div style={{ background: '#0d1117', padding: '20px', borderRadius: '8px', border: '1px solid #30363d' }}>
+              <div style={{ color: '#58a6ff', fontWeight: 'bold', fontSize: '13px' }}>📊 dMRV Carbon Emissions</div>
+              <div style={{ fontSize: '16px', fontWeight: 'bold', color: '#fff', marginTop: '8px' }}>Scope 1: 1.2 MT</div>
+              <div style={{ color: '#8b949e', fontSize: '12px', marginTop: '5px' }}>Scope 2 & 3 Verified via CEA</div>
+            </div>
+            <div style={{ background: '#0d1117', padding: '20px', borderRadius: '8px', border: '1px solid #30363d' }}>
+              <div style={{ color: '#d29922', fontWeight: 'bold', fontSize: '13px' }}>💰 Financial Subsidy Rebate</div>
+              <div style={{ fontSize: '16px', fontWeight: 'bold', color: '#fff', marginTop: '8px' }}>Eligible for Working Capital</div>
+              <div style={{ color: '#8b949e', fontSize: '12px', marginTop: '5px' }}>Verified via Green Passport ID</div>
+            </div>
           </div>
         </div>
       )}
 
-      {activeModule !== 'mainDashboard' && (
-        <div style={{ marginTop: '20px', background: '#161b22', padding: '25px', borderRadius: '8px', border: '1px solid #58a6ff' }}>
-          <h3 style={{ color: '#58a6ff', marginTop: 0 }}>📂 Detailed View: {activeModule.toUpperCase()} Module</h3>
-          <p style={{ color: '#c9d1d9', fontSize: '14px' }}>This module is fully active for <b>WESTERN CHEMICALS - BHOSARI MIDC, PUNE</b>. Real-time telemetry, automated compliance reporting, and blockchain audit logs are synchronized.</p>
-          <div style={{ background: '#0d1117', padding: '15px', borderRadius: '6px', color: '#7ee787', fontFamily: 'monospace', fontSize: '12px', marginTop: '15px' }}>
+      {/* 2. MACRO CORRIDOR VIEW (Exact Match to Your Photo) */}
+      {activeModule === 'corridor' && (
+        <div style={{ marginTop: '20px', background: '#161b22', padding: '25px', borderRadius: '12px', border: '1px solid #30363d' }}>
+          <div style={{ color: '#58a6ff', fontSize: '20px', fontWeight: 'bold', marginBottom: '5px' }}>🌐 Macro-Level Green Industrial Corridor</div>
+          <div style={{ color: '#8b949e', fontSize: '13px', marginBottom: '20px' }}>India's First Green Industrial Corridor - Pune Region — Government & MCCI Regional Monitoring</div>
+          
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '25px' }}>
+            <div style={{ background: '#0d1117', padding: '20px', borderRadius: '8px', border: '1px solid #30363d', textAlign: 'center' }}>
+              <div style={{ color: '#8b949e', fontSize: '13px', textTransform: 'uppercase' }}>Active Units</div>
+              <div style={{ color: '#58a6ff', fontSize: '32px', fontWeight: 'bold', marginTop: '5px' }}>142</div>
+            </div>
+            <div style={{ background: '#0d1117', padding: '20px', borderRadius: '8px', border: '1px solid #30363d', textAlign: 'center' }}>
+              <div style={{ color: '#8b949e', fontSize: '13px', textTransform: 'uppercase' }}>Total Carbon</div>
+              <div style={{ color: '#d29922', fontSize: '32px', fontWeight: 'bold', marginTop: '5px' }}>1250.4 T</div>
+            </div>
+          </div>
+
+          <div style={{ background: '#0d1117', padding: '20px', borderRadius: '8px', border: '1px solid #30363d' }}>
+            <div style={{ color: '#7ee787', fontWeight: 'bold', fontSize: '14px', marginBottom: '5px' }}>🔒 Zero-Knowledge Privacy Shield</div>
+            <div style={{ color: '#8b949e', fontSize: '12px', marginBottom: '15px' }}>State & MCCI audit access with complete business data protection & anonymization.</div>
+            <div style={{ background: '#238636', color: '#fff', padding: '12px', borderRadius: '6px', textAlign: 'center', fontWeight: 'bold', fontSize: '13px' }}>
+              Status: Active - 100% Data Anonymization Maintained
+            </div>
+          </div>
+
+          <button 
+            onClick={() => setActiveModule('mainDashboard')}
+            style={{ marginTop: '20px', background: '#21262d', color: '#fff', border: '1px solid #30363d', padding: '8px 15px', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold' }}
+          >
+            ← Back to Main Dashboard
+          </button>
+        </div>
+      )}
+
+      {/* 3. OTHER MODULES DETAILED VIEW */}
+      {activeModule !== 'mainDashboard' && activeModule !== 'corridor' && (
+        <div style={{ marginTop: '20px', background: '#161b22', padding: '25px', borderRadius: '12px', border: '1px solid #58a6ff' }}>
+          <h3 style={{ color: '#58a6ff', marginTop: 0, fontSize: '20px' }}>📂 Detailed View: {activeModule.toUpperCase()} Module</h3>
+          <p style={{ color: '#c9d1d9', fontSize: '14px', lineHeight: '1.6' }}>This module is fully active and synchronized for <b>WESTERN CHEMICALS - BHOSARI MIDC, PUNE</b>. Real-time telemetry, automated compliance reporting, and blockchain audit logs are fully operational.</p>
+          <div style={{ background: '#0d1117', padding: '15px', borderRadius: '8px', color: '#7ee787', fontFamily: 'monospace', fontSize: '12px', marginTop: '15px' }}>
             {`>> Status: SECURE_SYNC_ACTIVE`} <br/>
             {`>> Module ID: ${activeModule}_2026_PROD`} <br/>
             {`>> Telemetry Data Feed: Connected to MSEDCL Smart Meter & ETP Sensors (Advisory Mode)`}
           </div>
           <button 
             onClick={() => setActiveModule('mainDashboard')}
-            style={{ marginTop: '15px', background: '#21262d', color: '#fff', border: '1px solid #30363d', padding: '8px 15px', borderRadius: '4px', cursor: 'pointer' }}
+            style={{ marginTop: '20px', background: '#21262d', color: '#fff', border: '1px solid #30363d', padding: '10px 20px', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold' }}
           >
-            ← Back to Main Enterprise Overview
+            ← Back to Main Dashboard
           </button>
         </div>
       )}
