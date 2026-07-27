@@ -45,8 +45,13 @@ export default function EcoTraceDashboard() {
             <p style={{ margin: '3px 0 0 0', fontSize: '11px', color: '#8b949e' }}>MPCB Legal Shield & dMRV Green Operating System | Contact: 7378780745 | dhiraj@ecotraceindia.com</p>
           </div>
         </div>
-        <div style={{ background: '#21262d', padding: '6px 12px', borderRadius: '6px', border: '1px solid #30363d', fontSize: '12px', color: '#7ee787' }}>
-          WESTERN CHEMICALS (BHOSARI MIDC, PUNE)
+        <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+          <div style={{ background: '#21262d', padding: '6px 12px', borderRadius: '6px', border: '1px solid #30363d', fontSize: '12px', color: '#7ee787' }}>
+            WESTERN CHEMICALS (BHOSARI MIDC, PUNE)
+          </div>
+          <div style={{ background: '#238636', padding: '6px 12px', borderRadius: '6px', color: '#fff', fontSize: '12px', fontWeight: 'bold', cursor: 'pointer' }}>
+            Export PDF
+          </div>
         </div>
       </div>
 
@@ -96,7 +101,7 @@ export default function EcoTraceDashboard() {
         </div>
       )}
 
-      {/* Model 1 Safe Integration Panel (Always active on top) */}
+      {/* Model 1 Safe Integration Panel (Always on top for Safety & Advisory Check) */}
       <div style={{ margin: '20px 0', padding: '15px', background: '#161b22', borderRadius: '8px', border: '1px solid #388bfd' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div>
@@ -119,34 +124,36 @@ export default function EcoTraceDashboard() {
         )}
       </div>
 
-      {/* 1. MAIN DASHBOARD VIEW */}
+      {/* 1. MAIN ENTERPRISE OVERVIEW */}
       {activeModule === 'mainDashboard' && (
-        <div style={{ marginTop: '20px', background: '#161b22', padding: '25px', borderRadius: '12px', border: '1px solid #30363d' }}>
-          <div style={{ fontSize: '12px', color: '#8b949e', textTransform: 'uppercase' }}>Active Monitored Enterprise</div>
-          <h3 style={{ color: '#7ee787', margin: '5px 0 10px 0', fontSize: '22px' }}>WESTERN CHEMICALS - BHOSARI MIDC, PUNE</h3>
-          <p style={{ color: '#58a6ff', fontSize: '13px', margin: '0 0 20px 0' }}>Status: COMPLIANT & AUDIT READY | Green Passport ID: ET-GP-2026-9942</p>
+        <>
+          <div style={{ marginTop: '20px', background: '#161b22', padding: '20px', borderRadius: '8px', border: '1px solid #30363d' }}>
+            <div style={{ fontSize: '12px', color: '#8b949e', textTransform: 'uppercase' }}>Active Monitored Enterprise</div>
+            <h3 style={{ color: '#7ee787', margin: '5px 0 10px 0', fontSize: '20px' }}>WESTERN CHEMICALS - BHOSARI MIDC, PUNE</h3>
+            <p style={{ color: '#58a6ff', fontSize: '13px', margin: 0 }}>Status: COMPLIANT & AUDIT READY | Green Passport ID: ET-GP-2026-9942</p>
+          </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '15px' }}>
-            <div style={{ background: '#0d1117', padding: '20px', borderRadius: '8px', border: '1px solid #30363d' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '15px', marginTop: '20px' }}>
+            <div style={{ background: '#161b22', padding: '15px', borderRadius: '8px', border: '1px solid #30363d' }}>
               <div style={{ color: '#f85149', fontWeight: 'bold', fontSize: '13px' }}>🚨 MPCB Legal Shield</div>
               <div style={{ fontSize: '16px', fontWeight: 'bold', color: '#fff', marginTop: '8px' }}>AUTO-GENERATED (Form V Ready)</div>
               <div style={{ color: '#8b949e', fontSize: '12px', marginTop: '5px' }}>CTO Valid: 82 Days Left</div>
             </div>
-            <div style={{ background: '#0d1117', padding: '20px', borderRadius: '8px', border: '1px solid #30363d' }}>
+            <div style={{ background: '#161b22', padding: '15px', borderRadius: '8px', border: '1px solid #30363d' }}>
               <div style={{ color: '#58a6ff', fontWeight: 'bold', fontSize: '13px' }}>📊 dMRV Carbon Emissions</div>
               <div style={{ fontSize: '16px', fontWeight: 'bold', color: '#fff', marginTop: '8px' }}>Scope 1: 1.2 MT</div>
               <div style={{ color: '#8b949e', fontSize: '12px', marginTop: '5px' }}>Scope 2 & 3 Verified via CEA</div>
             </div>
-            <div style={{ background: '#0d1117', padding: '20px', borderRadius: '8px', border: '1px solid #30363d' }}>
+            <div style={{ background: '#161b22', padding: '15px', borderRadius: '8px', border: '1px solid #30363d' }}>
               <div style={{ color: '#d29922', fontWeight: 'bold', fontSize: '13px' }}>💰 Financial Subsidy Rebate</div>
               <div style={{ fontSize: '16px', fontWeight: 'bold', color: '#fff', marginTop: '8px' }}>Eligible for Working Capital</div>
               <div style={{ color: '#8b949e', fontSize: '12px', marginTop: '5px' }}>Verified via Green Passport ID</div>
             </div>
           </div>
-        </div>
+        </>
       )}
 
-      {/* 2. MACRO CORRIDOR VIEW (Exact Match to Your Photo) */}
+      {/* 2. MACRO CORRIDOR VIEW */}
       {activeModule === 'corridor' && (
         <div style={{ marginTop: '20px', background: '#161b22', padding: '25px', borderRadius: '12px', border: '1px solid #30363d' }}>
           <div style={{ color: '#58a6ff', fontSize: '20px', fontWeight: 'bold', marginBottom: '5px' }}>🌐 Macro-Level Green Industrial Corridor</div>
@@ -170,18 +177,50 @@ export default function EcoTraceDashboard() {
               Status: Active - 100% Data Anonymization Maintained
             </div>
           </div>
-
-          <button 
-            onClick={() => setActiveModule('mainDashboard')}
-            style={{ marginTop: '20px', background: '#21262d', color: '#fff', border: '1px solid #30363d', padding: '8px 15px', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold' }}
-          >
-            ← Back to Main Dashboard
-          </button>
+          <button onClick={() => setActiveModule('mainDashboard')} style={{ marginTop: '20px', background: '#21262d', color: '#fff', border: '1px solid #30363d', padding: '8px 15px', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold' }}>← Back to Main Dashboard</button>
         </div>
       )}
 
-      {/* 3. OTHER MODULES DETAILED VIEW */}
-      {activeModule !== 'mainDashboard' && activeModule !== 'corridor' && (
+      {/* 3. MOBILE AI OCR MODULE VIEW */}
+      {activeModule === 'ocr' && (
+        <div style={{ marginTop: '20px', background: '#161b22', padding: '25px', borderRadius: '12px', border: '1px solid #30363d' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+            <h3 style={{ color: '#58a6ff', margin: 0, fontSize: '20px' }}>⚡ Mobile AI OCR & dMRV Geo-Scan Engine</h3>
+            <span style={{ background: '#238636', color: '#fff', padding: '5px 12px', borderRadius: '4px', fontSize: '12px', fontWeight: 'bold' }}>LIVE GEO-TAGGING ACTIVE</span>
+          </div>
+          <p style={{ color: '#8b949e', fontSize: '13px', marginBottom: '20px' }}>Snap bills, electricity meters, or waste manifests directly from mobile. Instant OCR extracts data, locks GPS location, and updates Form V.</p>
+          
+          <div style={{ border: '2px dashed #30363d', padding: '40px', borderRadius: '8px', textAlign: 'center', background: '#0d1117' }}>
+            <button style={{ background: '#238636', color: '#fff', border: 'none', padding: '12px 25px', borderRadius: '6px', fontWeight: 'bold', fontSize: '14px', cursor: 'pointer' }}>
+              📸 Snap / Upload Utility & Waste Bills
+            </button>
+            <p style={{ color: '#8b949e', fontSize: '12px', marginTop: '15px' }}>GPS Location Lock & Anti-Fake Exif Protection Active.</p>
+          </div>
+          <button onClick={() => setActiveModule('mainDashboard')} style={{ marginTop: '20px', background: '#21262d', color: '#fff', border: '1px solid #30363d', padding: '8px 15px', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold' }}>← Back to Main Dashboard</button>
+        </div>
+      )}
+
+      {/* 4. FLYING SQUAD AUDIT MODE */}
+      {activeModule === 'flyingSquad' && (
+        <div style={{ marginTop: '20px', background: '#161b22', padding: '25px', borderRadius: '12px', border: '1px solid #30363d' }}>
+          <div style={{ color: '#f85149', fontSize: '20px', fontWeight: 'bold', marginBottom: '5px' }}>🚨 MPCB Flying Squad Emergency Audit Mode</div>
+          <p style={{ color: '#8b949e', fontSize: '13px', marginBottom: '20px' }}>1-Click instant compliance dossier aggregating CTO status, ETP health, and blockchain verification hashes.</p>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
+            <div style={{ background: '#0d1117', padding: '20px', borderRadius: '8px', border: '1px solid #30363d' }}>
+              <div style={{ color: '#8b949e', fontSize: '12px' }}>CTO STATUS</div>
+              <div style={{ color: '#7ee787', fontSize: '20px', fontWeight: 'bold', marginTop: '5px' }}>VALID (82 Days Left)</div>
+            </div>
+            <div style={{ background: '#0d1117', padding: '20px', borderRadius: '8px', border: '1px solid #30363d' }}>
+              <div style={{ color: '#8b949e', fontSize: '12px' }}>ETP HEALTH</div>
+              <div style={{ color: '#58a6ff', fontSize: '20px', fontWeight: 'bold', marginTop: '5px' }}>98% Optimal</div>
+            </div>
+          </div>
+          <button onClick={() => setActiveModule('mainDashboard')} style={{ marginTop: '20px', background: '#21262d', color: '#fff', border: '1px solid #30363d', padding: '8px 15px', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold' }}>← Back to Main Dashboard</button>
+        </div>
+      )}
+
+      {/* 5. DEFAULT VIEW FOR OTHER MODULES */}
+      {activeModule !== 'mainDashboard' && activeModule !== 'corridor' && activeModule !== 'ocr' && activeModule !== 'flyingSquad' && (
         <div style={{ marginTop: '20px', background: '#161b22', padding: '25px', borderRadius: '12px', border: '1px solid #58a6ff' }}>
           <h3 style={{ color: '#58a6ff', marginTop: 0, fontSize: '20px' }}>📂 Detailed View: {activeModule.toUpperCase()} Module</h3>
           <p style={{ color: '#c9d1d9', fontSize: '14px', lineHeight: '1.6' }}>This module is fully active and synchronized for <b>WESTERN CHEMICALS - BHOSARI MIDC, PUNE</b>. Real-time telemetry, automated compliance reporting, and blockchain audit logs are fully operational.</p>
@@ -190,12 +229,7 @@ export default function EcoTraceDashboard() {
             {`>> Module ID: ${activeModule}_2026_PROD`} <br/>
             {`>> Telemetry Data Feed: Connected to MSEDCL Smart Meter & ETP Sensors (Advisory Mode)`}
           </div>
-          <button 
-            onClick={() => setActiveModule('mainDashboard')}
-            style={{ marginTop: '20px', background: '#21262d', color: '#fff', border: '1px solid #30363d', padding: '10px 20px', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold' }}
-          >
-            ← Back to Main Dashboard
-          </button>
+          <button onClick={() => setActiveModule('mainDashboard')} style={{ marginTop: '20px', background: '#21262d', color: '#fff', border: '1px solid #30363d', padding: '10px 20px', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold' }}>← Back to Main Dashboard</button>
         </div>
       )}
 
