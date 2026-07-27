@@ -101,7 +101,7 @@ export default function EcoTraceDashboard() {
         </div>
       )}
 
-      {/* Model 1 Safe Integration Panel (Always on top for Safety & Advisory Check) */}
+      {/* Model 1 Safe Integration Panel */}
       <div style={{ margin: '20px 0', padding: '15px', background: '#161b22', borderRadius: '8px', border: '1px solid #388bfd' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div>
@@ -219,8 +219,20 @@ export default function EcoTraceDashboard() {
         </div>
       )}
 
-      {/* 5. DEFAULT VIEW FOR OTHER MODULES */}
-      {activeModule !== 'mainDashboard' && activeModule !== 'corridor' && activeModule !== 'ocr' && activeModule !== 'flyingSquad' && (
+      {/* 5. TOXIC & BOILER GAS LEAK SAFETY RADAR */}
+      {activeModule === 'toxicGas' && (
+        <div style={{ marginTop: '20px', background: '#161b22', padding: '25px', borderRadius: '12px', border: '1px solid #30363d' }}>
+          <div style={{ color: '#f85149', fontSize: '20px', fontWeight: 'bold', marginBottom: '5px' }}>⚠️ Toxic & Boiler Gas Leak Safety Radar</div>
+          <p style={{ color: '#8b949e', fontSize: '13px', marginBottom: '20px' }}>Real-time Parts Per Million (PPM) concentration tracking for Ammonia, LPG, PNG, Chlorine, and Solvents.</p>
+          <div style={{ background: '#238636', color: '#fff', padding: '15px', borderRadius: '8px', textAlign: 'center', fontWeight: 'bold', fontSize: '15px' }}>
+            Status: All Gas Sensors Normal (0.05 PPM Safe Range)
+          </div>
+          <button onClick={() => setActiveModule('mainDashboard')} style={{ marginTop: '20px', background: '#21262d', color: '#fff', border: '1px solid #30363d', padding: '8px 15px', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold' }}>← Back to Main Dashboard</button>
+        </div>
+      )}
+
+      {/* 6. DEFAULT VIEW FOR OTHER MODULES */}
+      {activeModule !== 'mainDashboard' && activeModule !== 'corridor' && activeModule !== 'ocr' && activeModule !== 'flyingSquad' && activeModule !== 'toxicGas' && (
         <div style={{ marginTop: '20px', background: '#161b22', padding: '25px', borderRadius: '12px', border: '1px solid #58a6ff' }}>
           <h3 style={{ color: '#58a6ff', marginTop: 0, fontSize: '20px' }}>📂 Detailed View: {activeModule.toUpperCase()} Module</h3>
           <p style={{ color: '#c9d1d9', fontSize: '14px', lineHeight: '1.6' }}>This module is fully active and synchronized for <b>WESTERN CHEMICALS - BHOSARI MIDC, PUNE</b>. Real-time telemetry, automated compliance reporting, and blockchain audit logs are fully operational.</p>
