@@ -26,7 +26,7 @@ export default function EcoTraceDashboard() {
     return (
         <main style={{ minHeight: '100vh', backgroundColor: '#0b0f19', color: '#ffffff', fontFamily: 'sans-serif', position: 'relative' }}>
             
-            {/* Top Navigation Bar with exact Contact Details */}
+            {/* Top Navigation Bar */}
             <header style={{ borderBottom: '1px solid #1f2937', padding: '16px 24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: '#111827' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
                     <button 
@@ -53,9 +53,9 @@ export default function EcoTraceDashboard() {
                 </div>
             </header>
 
-            {/* Collapsible Sidebar Navigation */}
+            {/* Collapsible Sidebar with smooth padding at bottom so nothing gets hidden */}
             {isMenuOpen && (
-                <aside style={{ position: 'absolute', top: '70px', left: 0, width: '340px', height: 'calc(100vh - 70px)', backgroundColor: '#111827', borderRight: '1px solid #1f2937', zIndex: 100, overflowY: 'auto', padding: '16px' }}>
+                <aside style={{ position: 'absolute', top: '70px', left: 0, width: '340px', height: 'calc(100vh - 70px)', backgroundColor: '#111827', borderRight: '1px solid #1f2937', zIndex: 100, overflowY: 'auto', padding: '16px 16px 60px 16px' }}>
                     <h3 style={{ fontSize: '12px', color: '#9ca3af', textTransform: 'uppercase', marginBottom: '12px' }}>Unified Command Dashboard</h3>
                     
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
@@ -107,7 +107,7 @@ export default function EcoTraceDashboard() {
                             <div style={{ fontSize: '12px', padding: '4px', cursor: 'pointer', color: '#d1d5db' }} onClick={() => { setActiveModule('mcciGrants'); setIsMenuOpen(false); }}>• MCCI Privacy Shield & Grants</div>
                         </div>
 
-                        <div style={{ border: '1px solid #6366f1', borderRadius: '8px', padding: '8px', backgroundColor: '#1f2937', cursor: 'pointer' }} onClick={() => { setActiveModule('onboard'); setIsMenuOpen(false); }}>
+                        <div style={{ border: '1px solid #6366f1', borderRadius: '8px', padding: '8px', backgroundColor: '#1f2937', cursor: 'pointer', marginBottom: '20px' }} onClick={() => { setActiveModule('onboard'); setIsMenuOpen(false); }}>
                             <strong style={{ color: '#818cf8', fontSize: '13px' }}>🏢 Multi-Tenant Client Onboarding</strong>
                         </div>
                     </div>
@@ -117,7 +117,6 @@ export default function EcoTraceDashboard() {
             {/* Main Content Area */}
             <div style={{ padding: '24px', maxWidth: '1100px', margin: '0 auto' }}>
                 
-                {/* 1. Main Dashboard */}
                 {activeModule === 'mainDashboard' && (
                     <div>
                         <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '20px', marginBottom: '20px' }}>
@@ -125,7 +124,6 @@ export default function EcoTraceDashboard() {
                             <h2 style={{ color: '#34d399', margin: '0 0 6px 0', fontSize: '20px' }}>WESTERN CHEMICALS - BHOSARI MIDC, PUNE</h2>
                             <p style={{ margin: 0, fontSize: '12px', color: '#34d399' }}>Status: COMPLIANT & AUDIT READY | Green Passport ID: ET-GP-2026-9942</p>
                         </div>
-
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '20px' }}>
                             <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '20px' }}>
                                 <h4 style={{ color: '#ef4444', margin: '0 0 6px 0' }}>🚨 MPCB Legal Shield</h4>
@@ -146,7 +144,6 @@ export default function EcoTraceDashboard() {
                     </div>
                 )}
 
-                {/* 2. Macro Green Corridor Dashboard */}
                 {activeModule === 'greenCorridor' && (
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
                         <div style={{ backgroundColor: '#111827', border: '1px solid #3b82f6', borderRadius: '12px', padding: '24px' }}>
@@ -177,7 +174,6 @@ export default function EcoTraceDashboard() {
                     </div>
                 )}
 
-                {/* 3. Mobile AI OCR */}
                 {activeModule === 'ocrScan' && (
                     <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '24px' }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
@@ -194,7 +190,6 @@ export default function EcoTraceDashboard() {
                     </div>
                 )}
 
-                {/* 4. Flying Squad Audit Mode */}
                 {activeModule === 'risk1' && (
                     <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '24px' }}>
                         <h2 style={{ color: '#ef4444', marginTop: 0, fontSize: '20px' }}>🚨 MPCB Flying Squad Emergency Audit Mode</h2>
@@ -212,7 +207,6 @@ export default function EcoTraceDashboard() {
                     </div>
                 )}
 
-                {/* 5. Toxic Gas Leak Radar */}
                 {activeModule === 'risk2' && (
                     <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '24px' }}>
                         <h2 style={{ color: '#ef4444', marginTop: 0, fontSize: '20px' }}>⚠️ Toxic & Boiler Gas Leak Safety Radar</h2>
@@ -223,7 +217,6 @@ export default function EcoTraceDashboard() {
                     </div>
                 )}
 
-                {/* 6. Notice Defense Matrix */}
                 {activeModule === 'risk3' && (
                     <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '24px' }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
@@ -253,7 +246,6 @@ export default function EcoTraceDashboard() {
                     </div>
                 )}
 
-                {/* 7. MSEDCL Smart Grid & PF */}
                 {activeModule === 'utility1' && (
                     <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '24px' }}>
                         <h2 style={{ color: '#3b82f6', marginTop: 0, fontSize: '20px' }}>⚡ MSEDCL Smart Energy Grid & PF Penalty Shield</h2>
@@ -271,7 +263,6 @@ export default function EcoTraceDashboard() {
                     </div>
                 )}
 
-                {/* 8. ETP CAPEX & ROI Calculator */}
                 {activeModule === 'utility2' && (
                     <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '24px' }}>
                         <h2 style={{ color: '#3b82f6', marginTop: 0, fontSize: '20px' }}>💡 ETP & Green Tech CAPEX / ROI Calculator</h2>
@@ -282,7 +273,6 @@ export default function EcoTraceDashboard() {
                     </div>
                 )}
 
-                {/* 9. Form 3, 4 & 5 Annual Returns */}
                 {activeModule === 'stat1' && (
                     <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '24px' }}>
                         <h2 style={{ color: '#eab308', marginTop: 0, fontSize: '20px' }}>📜 Form 3, Form 4 & Form 5 Annual Returns Generator</h2>
@@ -307,7 +297,6 @@ export default function EcoTraceDashboard() {
                     </div>
                 )}
 
-                {/* 10. CTO Renewal Auto-Dossier */}
                 {activeModule === 'ctoDossier' && (
                     <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '24px' }}>
                         <h2 style={{ color: '#eab308', marginTop: 0, fontSize: '20px' }}>📑 CTO Renewal Auto-Dossier Generator</h2>
@@ -318,7 +307,6 @@ export default function EcoTraceDashboard() {
                     </div>
                 )}
 
-                {/* 11. B2B Green Passport */}
                 {activeModule === 'greenPassport' && (
                     <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '24px' }}>
                         <h2 style={{ color: '#10b981', marginTop: 0, fontSize: '20px' }}>🌱 B2B Green Passport & SEBI BRSR Core Engine</h2>
@@ -336,7 +324,6 @@ export default function EcoTraceDashboard() {
                     </div>
                 )}
 
-                {/* 12. Tanker GPS & Form 10 Manifest */}
                 {activeModule === 'tankerGPS' && (
                     <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '24px' }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
@@ -367,7 +354,6 @@ export default function EcoTraceDashboard() {
                     </div>
                 )}
 
-                {/* 13. E-Waste & Battery EPR Vault */}
                 {activeModule === 'ewaste' && (
                     <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '24px' }}>
                         <h2 style={{ color: '#10b981', marginTop: 0, fontSize: '20px' }}>📦 E-Waste & Battery EPR Statutory Vault</h2>
@@ -378,7 +364,6 @@ export default function EcoTraceDashboard() {
                     </div>
                 )}
 
-                {/* 14. SBI / SIDBI Loan Rebate */}
                 {activeModule === 'sbiRebate' && (
                     <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '24px' }}>
                         <h2 style={{ color: '#eab308', marginTop: 0, fontSize: '20px' }}>💰 SBI / SIDBI Working Capital Interest Rebate</h2>
@@ -389,7 +374,6 @@ export default function EcoTraceDashboard() {
                     </div>
                 )}
 
-                {/* 15. Blockchain Ledger */}
                 {activeModule === 'blockchain' && (
                     <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '24px' }}>
                         <h2 style={{ color: '#8b5cf6', marginTop: 0, fontSize: '20px' }}>⛓️ Blockchain Immutable Audit Trail Ledger</h2>
@@ -403,7 +387,6 @@ export default function EcoTraceDashboard() {
                     </div>
                 )}
 
-                {/* 16. MCCI Grants */}
                 {activeModule === 'mcciGrants' && (
                     <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '24px' }}>
                         <h2 style={{ color: '#8b5cf6', marginTop: 0, fontSize: '20px' }}>🏛️ MCCI Privacy Shield & Govt Grants</h2>
@@ -414,7 +397,6 @@ export default function EcoTraceDashboard() {
                     </div>
                 )}
 
-                {/* 17. Multi-Tenant Onboard */}
                 {activeModule === 'onboard' && (
                     <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '24px' }}>
                         <h2 style={{ color: '#6366f1', marginTop: 0, fontSize: '20px' }}>🏢 Multi-Tenant Client Onboarding Engine</h2>
