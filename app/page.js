@@ -505,6 +505,16 @@ export default function EcoTraceUnifiedProductionOS() {
             </div>
           )}
 
+          {/* Developer Legal Disclaimer Footer */}
+          <footer style={{ marginTop: '40px', padding: '15px', backgroundColor: '#0b0f19', borderTop: '1px solid #1e293b', textAlign: 'center', fontSize: '10px', color: '#64748b' }}>
+            <p style={{ margin: '0 0 4px 0' }}>
+              <strong>LEGAL DISCLAIMER &amp; DEVELOPER LIABILITY WAIVER:</strong> EcoTrace India Private Limited and its developers act solely as a software interface provider aggregating IoT data and statutory records.
+            </p>
+            <p style={{ margin: 0 }}>
+              We assume NO liability or responsibility for any industrial accidents, gas leaks, equipment failures, financial losses, or statutory penalties arising from factory operations. Physical safety protocols, hardware calibration, and compliance adherence remain the absolute and sole responsibility of the factory management and authorized operators.
+            </p>
+          </footer>
+
         </main>
       </div>
     </div>
