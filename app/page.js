@@ -2,13 +2,9 @@
 import React, { useState } from 'react';
 
 export default function EcoTraceDashboard() {
-    // State for Sidebar Menu Toggle
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-    
-    // State to switch active modules in main view
     const [activeModule, setActiveModule] = useState('greenCorridor');
 
-    // Macro-Level Corridor & Privacy Shield State
     const [macroData, setMacroData] = useState({
         corridorName: "India's First Green Industrial Corridor - Pune Region",
         activeMonitoringUnits: 142,
@@ -20,7 +16,6 @@ export default function EcoTraceDashboard() {
         privacyShieldStatus: "Active - 100% Data Anonymization Maintained"
     });
 
-    // Cryptographic Hashing State
     const [activeHash, setActiveHash] = useState("0xa8f392c1b4e87019d6f2231e");
 
     const generateNewHash = () => {
@@ -44,7 +39,7 @@ export default function EcoTraceDashboard() {
                         <p style={{ fontSize: '12px', color: '#9ca3af', margin: 0 }}>MPCB Legal Shield & dMRV Green Operating System | Project by Dhiraj Nikam</p>
                     </div>
                 </div>
-                <div style={{ backgroundColor: '#1f2937', border: '1px solid '#374151', padding: '6px 12px', borderRadius: '8px', fontSize: '12px', color: '#34d399' }}>
+                <div style={{ backgroundColor: '#1f2937', border: '1px solid #374151', padding: '6px 12px', borderRadius: '8px', fontSize: '12px', color: '#34d399' }}>
                     WESTERN CHEMICALS (BHOSARI MIDC, PUNE)
                 </div>
             </header>
