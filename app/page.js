@@ -2,254 +2,260 @@
 import React, { useState } from 'react';
 
 export default function EcoTraceDashboard() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [activeModule, setActiveModule] = useState('mainDashboard');
-  const [auditResult, setAuditResult] = useState(null);
-  const [loadingAudit, setLoadingAudit] = useState(false);
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [activeModule, setActiveModule] = useState('mainDashboard');
 
-  const runSafetyAudit = async () => {
-    setLoadingAudit(true);
-    try {
-      const res = await fetch('/api/compliance-check', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          factoryId: 'WESTERN_CHEMICALS_BHOSARI', 
-          powerFactor: 0.94, 
-          phLevel: 8.9 
-        })
-      });
-      const data = await res.json();
-      setAuditResult(data);
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setLoadingAudit(false);
-    }
-  };
+    // Model 1 State for Safety & Advisory Check
+    const [auditResult, setAuditResult] = useState(null);
+    const [loadingAudit, setLoadingAudit] = useState(false);
 
-  return (
-    <main style={{ padding: '20px', background: '#0b0f19', color: '#fff', minHeight: '100vh', fontFamily: 'sans-serif' }}>
-      
-      {/* Top Header & Global Navigation Toggle */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #30363d', paddingBottom: '15px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
-          <button 
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            style={{ background: isMenuOpen ? '#f85149' : '#238636', color: '#fff', border: 'none', padding: '8px 15px', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold' }}
-          >
-            {isMenuOpen ? '✕ Close Console' : '☰ Global Navigation'}
-          </button>
-          <div>
-            <h2 style={{ margin: 0, color: '#58a6ff', fontSize: '18px' }}>EcoTrace India Private Limited</h2>
-            <p style={{ margin: '3px 0 0 0', fontSize: '11px', color: '#8b949e' }}>MPCB Legal Shield & dMRV Green Operating System | Contact: 7378780745 | dhiraj@ecotraceindia.com</p>
-          </div>
-        </div>
-        <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-          <div style={{ background: '#21262d', padding: '6px 12px', borderRadius: '6px', border: '1px solid #30363d', fontSize: '12px', color: '#7ee787' }}>
-            WESTERN CHEMICALS (BHOSARI MIDC, PUNE)
-          </div>
-          <div style={{ background: '#238636', padding: '6px 12px', borderRadius: '6px', color: '#fff', fontSize: '12px', fontWeight: 'bold', cursor: 'pointer' }}>
-            Export PDF
-          </div>
-        </div>
-      </div>
+    const runSafetyAudit = async () => {
+        setLoadingAudit(true);
+        try {
+            const res = await fetch('/api/compliance-check', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 
+                    factoryId: 'WESTERN_CHEMICALS_BHOSARI', 
+                    powerFactor: 0.94, 
+                    phLevel: 8.9 
+                })
+            });
+            const data = await res.json();
+            setAuditResult(data);
+        } catch (err) {
+            console.error(err);
+        } finally {
+            setLoadingAudit(false);
+        }
+    };
 
-      {/* GLOBAL COMMAND CENTER MODAL / CONSOLE */}
-      {isMenuOpen && (
-        <div style={{ background: '#161b22', padding: '20px', borderRadius: '8px', border: '1px solid #30363d', margin: '20px 0' }}>
-          <h3 style={{ color: '#58a6ff', marginTop: 0, fontSize: '15px' }}>🌐 GLOBAL COMMAND CENTER - ENTERPRISE MODULES</h3>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '15px', fontSize: '12px', marginTop: '15px' }}>
+    const [macroData] = useState({
+        corridorName: "India's First Green Industrial Corridor - Pune Region",
+        activeMonitoringUnits: 142,
+        regionalAggregates: {
+            totalCarbonEmissionTonnes: 1250.4,
+            totalWaterConsumptionKL: 45000,
+            greenCompliancePercentage: "94.5%"
+        },
+        privacyShieldStatus: "Active - 100% Data Anonymization Maintained"
+    });
+
+    const [activeHash, setActiveHash] = useState("0xa8f392c1b4e87019d6f2231e");
+
+    const generateNewHash = () => {
+        const randomHash = "0x" + Math.random().toString(16).substring(2, 18) + Math.random().toString(16).substring(2, 18);
+        setActiveHash(randomHash);
+    };
+
+    return (
+        <main style={{ minHeight: '100vh', backgroundColor: '#0b0f19', color: '#ffffff', fontFamily: 'sans-serif', position: 'relative' }}>
             
-            <div style={{ background: '#0d1117', padding: '10px', borderRadius: '6px', border: '1px solid #30363d' }}>
-              <div style={{ color: '#7ee787', fontWeight: 'bold', marginBottom: '8px' }}>CORE PLATFORM</div>
-              <div onClick={() => { setActiveModule('mainDashboard'); setIsMenuOpen(false); }} style={{ padding: '6px', background: '#21262d', borderRadius: '4px', marginBottom: '5px', cursor: 'pointer' }}>🏠 Main Enterprise Overview</div>
-              <div onClick={() => { setActiveModule('corridor'); setIsMenuOpen(false); }} style={{ padding: '6px', background: '#21262d', borderRadius: '4px', marginBottom: '5px', cursor: 'pointer' }}>🌐 Macro Green Industrial Corridor</div>
-              <div onClick={() => { setActiveModule('ocr'); setIsMenuOpen(false); }} style={{ padding: '6px', background: '#21262d', borderRadius: '4px', cursor: 'pointer' }}>⚡ Mobile AI OCR & dMRV Geo-Scan</div>
+            {/* Top Navigation Bar */}
+            <header style={{ borderBottom: '1px solid #1f2937', padding: '16px 24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: '#111827' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                    <button 
+                        onClick={() => setIsMenuOpen(!isMenuOpen)}
+                        style={{ backgroundColor: '#059669', color: 'white', border: 'none', padding: '8px 16px', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold', fontSize: '14px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                        {isMenuOpen ? '✕ Close Console' : '☰ Global Navigation'}
+                    </button>
+                    <div>
+                        <h1 style={{ fontSize: '18px', fontWeight: 'bold', color: '#10b981', margin: '0' }}>EcoTrace India Private Limited</h1>
+                        <p style={{ fontSize: '11px', color: '#9ca3af', margin: 0 }}>MPCB Legal Shield & dMRV Green Operating System | Contact: 7378780745 | dhiraj@ecotraceindia.com</p>
+                    </div>
+                </div>
+                
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                    <div style={{ backgroundColor: '#1f2937', border: '1px solid #374151', padding: '6px 12px', borderRadius: '8px', fontSize: '12px', color: '#34d399' }}>
+                        WESTERN CHEMICALS (BHOSARI MIDC, PUNE)
+                    </div>
+                    <button style={{ backgroundColor: '#059669', color: 'white', border: 'none', padding: '6px 12px', borderRadius: '6px', fontSize: '12px', fontWeight: 'bold', cursor: 'pointer' }}>
+                        Export PDF
+                    </button>
+                    <button style={{ backgroundColor: '#0284c7', color: 'white', border: 'none', padding: '6px 12px', borderRadius: '6px', fontSize: '12px', fontWeight: 'bold', cursor: 'pointer' }}>
+                        Sync MPCB/OEM
+                    </button>
+                </div>
+            </header>
+
+            {/* Professional Wide Global Navigation Drawer */}
+            {isMenuOpen && (
+                <div style={{ position: 'absolute', top: '70px', left: 0, width: '100%', backgroundColor: '#111827', borderBottom: '2px solid #1f2937', zIndex: 100, padding: '24px', boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.5)' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', borderBottom: '1px solid #1f2937', paddingBottom: '10px' }}>
+                        <h3 style={{ fontSize: '13px', color: '#34d399', textTransform: 'uppercase', margin: 0, letterSpacing: '1px' }}>🌐 Global Command Center - Enterprise Modules</h3>
+                        <button onClick={() => setIsMenuOpen(false)} style={{ background: 'none', border: 'none', color: '#9ca3af', cursor: 'pointer', fontSize: '14px' }}>✕ Close</button>
+                    </div>
+
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '16px' }}>
+                        
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                            <div style={{ fontSize: '11px', fontWeight: 'bold', color: '#10b981' }}>CORE PLATFORM</div>
+                            <div style={{ padding: '8px', backgroundColor: '#1f2937', borderRadius: '6px', cursor: 'pointer', fontSize: '12px' }} onClick={() => { setActiveModule('mainDashboard'); setIsMenuOpen(false); }}>🏠 Main Enterprise Overview</div>
+                            <div style={{ padding: '8px', backgroundColor: '#1f2937', borderRadius: '6px', cursor: 'pointer', fontSize: '12px' }} onClick={() => { setActiveModule('greenCorridor'); setIsMenuOpen(false); }}>🌐 Macro Green Industrial Corridor</div>
+                            <div style={{ padding: '8px', backgroundColor: '#1f2937', borderRadius: '6px', cursor: 'pointer', fontSize: '12px' }} onClick={() => { setActiveModule('ocrScan'); setIsMenuOpen(false); }}>⚡ Mobile AI OCR & dMRV Geo-Scan</div>
+                        </div>
+
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                            <div style={{ fontSize: '11px', fontWeight: 'bold', color: '#ef4444' }}>[A] RISK & EMERGENCY SHIELD</div>
+                            <div style={{ padding: '6px 8px', backgroundColor: '#1f2937', borderRadius: '6px', cursor: 'pointer', fontSize: '12px' }} onClick={() => { setActiveModule('risk1'); setIsMenuOpen(false); }}>• Flying Squad Audit Mode</div>
+                            <div style={{ padding: '6px 8px', backgroundColor: '#1f2937', borderRadius: '6px', cursor: 'pointer', fontSize: '12px' }} onClick={() => { setActiveModule('risk2'); setIsMenuOpen(false); }}>• Toxic Gas Leak Radar</div>
+                            <div style={{ padding: '6px 8px', backgroundColor: '#1f2937', borderRadius: '6px', cursor: 'pointer', fontSize: '12px' }} onClick={() => { setActiveModule('risk3'); setIsMenuOpen(false); }}>• Notice Defense Matrix</div>
+                        </div>
+
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                            <div style={{ fontSize: '11px', fontWeight: 'bold', color: '#3b82f6' }}>[B] UTILITY & [C] STATUTORY</div>
+                            <div style={{ padding: '6px 8px', backgroundColor: '#1f2937', borderRadius: '6px', cursor: 'pointer', fontSize: '12px' }} onClick={() => { setActiveModule('utility1'); setIsMenuOpen(false); }}>• MSEDCL Smart Grid & PF</div>
+                            <div style={{ padding: '6px 8px', backgroundColor: '#1f2937', borderRadius: '6px', cursor: 'pointer', fontSize: '12px' }} onClick={() => { setActiveModule('utility2'); setIsMenuOpen(false); }}>• ETP CAPEX & ROI Calculator</div>
+                            <div style={{ padding: '6px 8px', backgroundColor: '#1f2937', borderRadius: '6px', cursor: 'pointer', fontSize: '12px' }} onClick={() => { setActiveModule('stat1'); setIsMenuOpen(false); }}>• Form 3, 4 & 5 Annual Returns</div>
+                            <div style={{ padding: '6px 8px', backgroundColor: '#1f2937', borderRadius: '6px', cursor: 'pointer', fontSize: '12px' }} onClick={() => { setActiveModule('ctoDossier'); setIsMenuOpen(false); }}>• CTO Renewal Auto-Dossier</div>
+                        </div>
+
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                            <div style={{ fontSize: '11px', fontWeight: 'bold', color: '#10b981' }}>[D] SUPPLY CHAIN & ESG</div>
+                            <div style={{ padding: '6px 8px', backgroundColor: '#1f2937', borderRadius: '6px', cursor: 'pointer', fontSize: '12px' }} onClick={() => { setActiveModule('greenPassport'); setIsMenuOpen(false); }}>• B2B Green Passport & BRSR</div>
+                            <div style={{ padding: '6px 8px', backgroundColor: '#1f2937', borderRadius: '6px', cursor: 'pointer', fontSize: '12px' }} onClick={() => { setActiveModule('tankerGPS'); setIsMenuOpen(false); }}>• Tanker GPS & Form 10 Manifest</div>
+                            <div style={{ padding: '6px 8px', backgroundColor: '#1f2937', borderRadius: '6px', cursor: 'pointer', fontSize: '12px' }} onClick={() => { setActiveModule('ewaste'); setIsMenuOpen(false); }}>• E-Waste & Battery EPR Vault</div>
+                            <div style={{ padding: '6px 8px', backgroundColor: '#1f2937', borderRadius: '6px', cursor: 'pointer', fontSize: '12px' }} onClick={() => { setActiveModule('sbiRebate'); setIsMenuOpen(false); }}>• SBI / SIDBI Loan Rebate</div>
+                        </div>
+
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                            <div style={{ fontSize: '11px', fontWeight: 'bold', color: '#8b5cf6' }}>[E] COMMAND & ONBOARDING</div>
+                            <div style={{ padding: '6px 8px', backgroundColor: '#1f2937', borderRadius: '6px', cursor: 'pointer', fontSize: '12px' }} onClick={() => { setActiveModule('blockchain'); setIsMenuOpen(false); }}>• Blockchain Immutable Ledger</div>
+                            <div style={{ padding: '6px 8px', backgroundColor: '#1f2937', borderRadius: '6px', cursor: 'pointer', fontSize: '12px' }} onClick={() => { setActiveModule('mcciGrants'); setIsMenuOpen(false); }}>• MCCI Privacy Shield & Grants</div>
+                            <div style={{ padding: '6px 8px', backgroundColor: '#1f2937', borderRadius: '6px', cursor: 'pointer', fontSize: '12px', color: '#818cf8', fontWeight: 'bold' }} onClick={() => { setActiveModule('onboard'); setIsMenuOpen(false); }}>🏢 Multi-Tenant Client Onboarding</div>
+                        </div>
+
+                    </div>
+                </div>
+            )}
+
+            {/* Main Content Area */}
+            <div style={{ padding: '24px', maxWidth: '1100px', margin: '0 auto' }}>
+                
+                {/* Model 1 Safe Integration Panel (Added on top without losing any old design) */}
+                <div style={{ marginBottom: '20px', padding: '16px', background: '#111827', borderRadius: '12px', border: '1px solid #3b82f6' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <div>
+                            <h4 style={{ color: '#60a5fa', margin: '0 0 4px 0', fontSize: '15px' }}>Model 1: Intelligent Watchman & Legal Shield</h4>
+                            <p style={{ color: '#9ca3af', margin: 0, fontSize: '12px' }}>Zero Machine Trip / Advisory Alert Mode Active</p>
+                        </div>
+                        <button 
+                            onClick={runSafetyAudit}
+                            style={{ backgroundColor: '#059669', color: 'white', border: 'none', padding: '8px 16px', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold', fontSize: '12px' }}
+                            disabled={loadingAudit}
+                        >
+                            {loadingAudit ? 'Running Audit...' : 'Run Safety & Notice Defense Check'}
+                        </button>
+                    </div>
+
+                    {auditResult && (
+                        <div style={{ marginTop: '12px', padding: '12px', background: '#0d1117', borderRadius: '8px', border: '1px solid #1f2937', color: '#34d399', fontSize: '11px', fontFamily: 'monospace', overflowX: 'auto' }}>
+                            <pre style={{ margin: 0 }}>{JSON.stringify(auditResult, null, 2)}</pre>
+                        </div>
+                    )}
+                </div>
+
+                {activeModule === 'mainDashboard' && (
+                    <div>
+                        <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '20px', marginBottom: '20px' }}>
+                            <p style={{ margin: '0 0 4px 0', fontSize: '11px', color: '#9ca3af', textTransform: 'uppercase' }}>Active Monitored Enterprise</p>
+                            <h2 style={{ color: '#34d399', margin: '0 0 6px 0', fontSize: '20px' }}>WESTERN CHEMICALS - BHOSARI MIDC, PUNE</h2>
+                            <p style={{ margin: 0, fontSize: '12px', color: '#34d399' }}>Status: COMPLIANT & AUDIT READY | Green Passport ID: ET-GP-2026-9942</p>
+                        </div>
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '20px' }}>
+                            <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '20px' }}>
+                                <h4 style={{ color: '#ef4444', margin: '0 0 6px 0' }}>🚨 MPCB Legal Shield</h4>
+                                <h3 style={{ margin: '0 0 6px 0', fontSize: '16px' }}>AUTO-GENERATED (Form V Ready)</h3>
+                                <p style={{ margin: 0, fontSize: '12px', color: '#9ca3af' }}>CTO Valid: 82 Days Left</p>
+                            </div>
+                            <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '20px' }}>
+                                <h4 style={{ color: '#3b82f6', margin: '0 0 6px 0' }}>📊 dMRV Carbon Emissions</h4>
+                                <h3 style={{ margin: '0 0 6px 0', fontSize: '16px' }}>Scope 1: 1.2 MT</h3>
+                                <p style={{ margin: 0, fontSize: '12px', color: '#9ca3af' }}>Scope 2 & 3 Verified via CEA</p>
+                            </div>
+                            <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '20px' }}>
+                                <h4 style={{ color: '#eab308', margin: '0 0 6px 0' }}>💰 Financial Subvention</h4>
+                                <h3 style={{ margin: '0 0 6px 0', fontSize: '15px' }}>Eligible for Working Capital Interest Rebate</h3>
+                                <p style={{ margin: 0, fontSize: '12px', color: '#9ca3af' }}>Verified via Green Passport</p>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                {activeModule === 'greenCorridor' && (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                        <div style={{ backgroundColor: '#111827', border: '1px solid #3b82f6', borderRadius: '12px', padding: '24px' }}>
+                            <h2 style={{ color: '#60a5fa', marginTop: 0 }}>🌐 Macro-Level Green Industrial Corridor</h2>
+                            <p style={{ fontSize: '13px', color: '#9ca3af' }}>{macroData.corridorName} — Government & MCCI Regional Monitoring</p>
+                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px', marginTop: '16px' }}>
+                                <div style={{ backgroundColor: '#1f2937', padding: '16px', borderRadius: '8px', textAlign: 'center' }}>
+                                    <p style={{ margin: '0', fontSize: '12px', color: '#9ca3af' }}>Active Units</p>
+                                    <p style={{ margin: '8px 0 0 0', fontSize: '20px', fontWeight: 'bold', color: '#34d399' }}>{macroData.activeMonitoringUnits}</p>
+                                </div>
+                                <div style={{ backgroundColor: '#1f2937', padding: '16px', borderRadius: '8px', textAlign: 'center' }}>
+                                    <p style={{ margin: '0', fontSize: '12px', color: '#9ca3af' }}>Total Carbon</p>
+                                    <p style={{ margin: '8px 0 0 0', fontSize: '20px', fontWeight: 'bold', color: '#f59e0b' }}>{macroData.regionalAggregates.totalCarbonEmissionTonnes} T</p>
+                                </div>
+                                <div style={{ backgroundColor: '#1f2937', padding: '16px', borderRadius: '8px', textAlign: 'center' }}>
+                                    <p style={{ margin: '0', fontSize: '12px', color: '#9ca3af' }}>Green Compliance</p>
+                                    <p style={{ margin: '8px 0 0 0', fontSize: '20px', fontWeight: 'bold', color: '#10b981' }}>{macroData.regionalAggregates.greenCompliancePercentage}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '24px' }}>
+                            <h3 style={{ color: '#34d399', marginTop: 0 }}>🔒 Zero-Knowledge Privacy Shield</h3>
+                            <p style={{ fontSize: '13px', color: '#9ca3af' }}>State & MCCI audit access with complete business data protection & anonymization.</p>
+                            <div style={{ backgroundColor: '#166534', color: '#dcfce7', padding: '12px', borderRadius: '8px', marginTop: '16px', fontSize: '14px', fontWeight: '500', textAlign: 'center' }}>
+                                Status: {macroData.privacyShieldStatus}
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                {activeModule === 'ocrScan' && (
+                    <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '24px' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                            <h2 style={{ color: '#34d399', margin: 0, fontSize: '20px' }}>⚡ Mobile AI OCR & dMRV Geo-Scan Engine</h2>
+                            <span style={{ backgroundColor: '#065f46', color: '#d1fae5', padding: '4px 10px', borderRadius: '6px', fontSize: '11px', fontWeight: 'bold' }}>LIVE GEO-TAGGING ACTIVE</span>
+                        </div>
+                        <p style={{ color: '#9ca3af', fontSize: '13px' }}>Snap bills, electricity meters, or waste manifests directly from mobile. Instant OCR extracts data, locks GPS location, and updates Form V.</p>
+                        <div style={{ marginTop: '20px', padding: '30px', border: '2px dashed #374151', borderRadius: '8px', textAlign: 'center', backgroundColor: '#1f2937' }}>
+                            <button style={{ backgroundColor: '#059669', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer' }}>
+                                📸 Snap / Upload Utility & Waste Bills
+                            </button>
+                            <p style={{ margin: '12px 0 0 0', fontSize: '12px', color: '#9ca3af' }}>GPS Location Lock & Anti-Fake Exif Protection Active.</p>
+                        </div>
+                    </div>
+                )}
+
+                {activeModule === 'risk1' && (
+                    <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '24px' }}>
+                        <h2 style={{ color: '#ef4444', marginTop: 0, fontSize: '20px' }}>🚨 MPCB Flying Squad Emergency Audit Mode</h2>
+                        <p style={{ color: '#9ca3af', fontSize: '13px', marginBottom: '16px' }}>1-Click instant compliance dossier aggregating CTO status, ETP health, and blockchain verification hashes.</p>
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '16px' }}>
+                            <div style={{ backgroundColor: '#1f2937', padding: '16px', borderRadius: '8px' }}>
+                                <p style={{ margin: '0 0 4px 0', fontSize: '11px', color: '#9ca3af', textTransform: 'uppercase' }}>CTO Status</p>
+                                <p style={{ margin: 0, fontSize: '18px', fontWeight: 'bold', color: '#34d399' }}>VALID (82 Days)</p>
+                            </div>
+                            <div style={{ backgroundColor: '#1f2937', padding: '16px', borderRadius: '8px' }}>
+                                <p style={{ margin: '0 0 4px 0', fontSize: '11px', color: '#9ca3af', textTransform: 'uppercase' }}>ETP Health</p>
+                                <p style={{ margin: 0, fontSize: '18px', fontWeight: 'bold', color: '#3b82f6' }}>98% Optimal</p>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                {activeModule === 'risk2' && (
+                    <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '24px' }}>
+                        <h2 style={{ color: '#ef4444', marginTop: 0, fontSize: '20px' }}>⚠️ Toxic & Boiler Gas Leak Safety Radar</h2>
+                        <p style={{ color: '#9ca3af', fontSize: '13px', marginBottom: '16px' }}>Real-time Parts Per Million (PPM) concentration tracking for Ammonia, LPG, PNG, Chlorine, and Solvents.</p>
+                        <div style={{ backgroundColor: '#166534', color: '#dcfce7', padding: '16px', borderRadius: '8px', fontWeight: 'bold', fontSize: '14px' }}>
+                            Status: All Gas Sensors Normal (0.05 PPM Safe Range)
+                        </div>
+                    </div>
+                )}
+
             </div>
-
-            <div style={{ background: '#0d1117', padding: '10px', borderRadius: '6px', border: '1px solid #30363d' }}>
-              <div style={{ color: '#f85149', fontWeight: 'bold', marginBottom: '8px' }}>[A] RISK & EMERGENCY SHIELD</div>
-              <div onClick={() => { setActiveModule('flyingSquad'); setIsMenuOpen(false); }} style={{ padding: '6px', background: '#21262d', borderRadius: '4px', marginBottom: '5px', cursor: 'pointer' }}>• Flying Squad Audit Mode</div>
-              <div onClick={() => { setActiveModule('toxicGas'); setIsMenuOpen(false); }} style={{ padding: '6px', background: '#21262d', borderRadius: '4px', marginBottom: '5px', cursor: 'pointer' }}>• Toxic Gas Leak Radar</div>
-              <div onClick={() => { setActiveModule('noticeDefense'); setIsMenuOpen(false); }} style={{ padding: '6px', background: '#21262d', borderRadius: '4px', cursor: 'pointer' }}>• Notice Defense Matrix</div>
-            </div>
-
-            <div style={{ background: '#0d1117', padding: '10px', borderRadius: '6px', border: '1px solid #30363d' }}>
-              <div style={{ color: '#58a6ff', fontWeight: 'bold', marginBottom: '8px' }}>[B] UTILITY & [C] STATUTORY</div>
-              <div onClick={() => { setActiveModule('msedcl'); setIsMenuOpen(false); }} style={{ padding: '6px', background: '#21262d', borderRadius: '4px', marginBottom: '5px', cursor: 'pointer' }}>• MSEDCL Smart Grid & PF</div>
-              <div onClick={() => { setActiveModule('etp'); setIsMenuOpen(false); }} style={{ padding: '6px', background: '#21262d', borderRadius: '4px', marginBottom: '5px', cursor: 'pointer' }}>• ETP CAPEX & ROI Calculator</div>
-              <div onClick={() => { setActiveModule('returns'); setIsMenuOpen(false); }} style={{ padding: '6px', background: '#21262d', borderRadius: '4px', marginBottom: '5px', cursor: 'pointer' }}>• Form 3, 4 & 5 Annual Returns</div>
-              <div onClick={() => { setActiveModule('cto'); setIsMenuOpen(false); }} style={{ padding: '6px', background: '#21262d', borderRadius: '4px', cursor: 'pointer' }}>• CTO Renewal Auto-Dossier</div>
-            </div>
-
-            <div style={{ background: '#0d1117', padding: '10px', borderRadius: '6px', border: '1px solid #30363d' }}>
-              <div style={{ color: '#d29922', fontWeight: 'bold', marginBottom: '8px' }}>[D] SUPPLY CHAIN & ESG</div>
-              <div onClick={() => { setActiveModule('greenPassport'); setIsMenuOpen(false); }} style={{ padding: '6px', background: '#21262d', borderRadius: '4px', marginBottom: '5px', cursor: 'pointer' }}>• B2B Green Passport & BRSR</div>
-              <div onClick={() => { setActiveModule('tanker'); setIsMenuOpen(false); }} style={{ padding: '6px', background: '#21262d', borderRadius: '4px', marginBottom: '5px', cursor: 'pointer' }}>• Tanker GPS & Form 10 Manifest</div>
-              <div onClick={() => { setActiveModule('ewaste'); setIsMenuOpen(false); }} style={{ padding: '6px', background: '#21262d', borderRadius: '4px', marginBottom: '5px', cursor: 'pointer' }}>• E-Waste & Battery EPR Vault</div>
-              <div onClick={() => { setActiveModule('loanRebate'); setIsMenuOpen(false); }} style={{ padding: '6px', background: '#21262d', borderRadius: '4px', cursor: 'pointer' }}>• SBI / SIDBI Loan Rebate</div>
-            </div>
-
-            <div style={{ background: '#0d1117', padding: '10px', borderRadius: '6px', border: '1px solid #30363d' }}>
-              <div style={{ color: '#bc8cff', fontWeight: 'bold', marginBottom: '8px' }}>[E] COMPLIANCE</div>
-              <div onClick={() => { setActiveModule('blockchain'); setIsMenuOpen(false); }} style={{ padding: '6px', background: '#21262d', borderRadius: '4px', marginBottom: '5px', cursor: 'pointer' }}>• Blockchain Hash Vault</div>
-              <div onClick={() => { setActiveModule('mcci'); setIsMenuOpen(false); }} style={{ padding: '6px', background: '#21262d', borderRadius: '4px', cursor: 'pointer' }}>• MCCI Channel Network</div>
-            </div>
-
-          </div>
-        </div>
-      )}
-
-      {/* Model 1 Safe Integration Panel */}
-      <div style={{ margin: '20px 0', padding: '15px', background: '#161b22', borderRadius: '8px', border: '1px solid #388bfd' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <div>
-            <h4 style={{ color: '#58a6ff', margin: '0 0 5px 0', fontSize: '14px' }}>Model 1: Intelligent Watchman & Legal Shield</h4>
-            <p style={{ color: '#8b949e', margin: 0, fontSize: '12px' }}>Zero Machine Trip / Advisory Alert Mode Active</p>
-          </div>
-          <button 
-            onClick={runSafetyAudit}
-            style={{ background: '#238636', color: '#fff', border: 'none', padding: '10px 20px', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold', fontSize: '13px' }}
-            disabled={loadingAudit}
-          >
-            {loadingAudit ? 'Running Audit...' : 'Run Safety & Notice Defense Check'}
-          </button>
-        </div>
-
-        {auditResult && (
-          <div style={{ marginTop: '15px', padding: '12px', background: '#0d1117', borderRadius: '6px', border: '1px solid #388bfd', color: '#7ee787', fontSize: '11px', fontFamily: 'monospace', overflowX: 'auto' }}>
-            <pre style={{ margin: 0 }}>{JSON.stringify(auditResult, null, 2)}</pre>
-          </div>
-        )}
-      </div>
-
-      {/* 1. MAIN ENTERPRISE OVERVIEW */}
-      {activeModule === 'mainDashboard' && (
-        <>
-          <div style={{ marginTop: '20px', background: '#161b22', padding: '20px', borderRadius: '8px', border: '1px solid #30363d' }}>
-            <div style={{ fontSize: '12px', color: '#8b949e', textTransform: 'uppercase' }}>Active Monitored Enterprise</div>
-            <h3 style={{ color: '#7ee787', margin: '5px 0 10px 0', fontSize: '20px' }}>WESTERN CHEMICALS - BHOSARI MIDC, PUNE</h3>
-            <p style={{ color: '#58a6ff', fontSize: '13px', margin: 0 }}>Status: COMPLIANT & AUDIT READY | Green Passport ID: ET-GP-2026-9942</p>
-          </div>
-
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '15px', marginTop: '20px' }}>
-            <div style={{ background: '#161b22', padding: '15px', borderRadius: '8px', border: '1px solid #30363d' }}>
-              <div style={{ color: '#f85149', fontWeight: 'bold', fontSize: '13px' }}>🚨 MPCB Legal Shield</div>
-              <div style={{ fontSize: '16px', fontWeight: 'bold', color: '#fff', marginTop: '8px' }}>AUTO-GENERATED (Form V Ready)</div>
-              <div style={{ color: '#8b949e', fontSize: '12px', marginTop: '5px' }}>CTO Valid: 82 Days Left</div>
-            </div>
-            <div style={{ background: '#161b22', padding: '15px', borderRadius: '8px', border: '1px solid #30363d' }}>
-              <div style={{ color: '#58a6ff', fontWeight: 'bold', fontSize: '13px' }}>📊 dMRV Carbon Emissions</div>
-              <div style={{ fontSize: '16px', fontWeight: 'bold', color: '#fff', marginTop: '8px' }}>Scope 1: 1.2 MT</div>
-              <div style={{ color: '#8b949e', fontSize: '12px', marginTop: '5px' }}>Scope 2 & 3 Verified via CEA</div>
-            </div>
-            <div style={{ background: '#161b22', padding: '15px', borderRadius: '8px', border: '1px solid #30363d' }}>
-              <div style={{ color: '#d29922', fontWeight: 'bold', fontSize: '13px' }}>💰 Financial Subsidy Rebate</div>
-              <div style={{ fontSize: '16px', fontWeight: 'bold', color: '#fff', marginTop: '8px' }}>Eligible for Working Capital</div>
-              <div style={{ color: '#8b949e', fontSize: '12px', marginTop: '5px' }}>Verified via Green Passport ID</div>
-            </div>
-          </div>
-        </>
-      )}
-
-      {/* 2. MACRO CORRIDOR VIEW */}
-      {activeModule === 'corridor' && (
-        <div style={{ marginTop: '20px', background: '#161b22', padding: '25px', borderRadius: '12px', border: '1px solid #30363d' }}>
-          <div style={{ color: '#58a6ff', fontSize: '20px', fontWeight: 'bold', marginBottom: '5px' }}>🌐 Macro-Level Green Industrial Corridor</div>
-          <div style={{ color: '#8b949e', fontSize: '13px', marginBottom: '20px' }}>India's First Green Industrial Corridor - Pune Region — Government & MCCI Regional Monitoring</div>
-          
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '25px' }}>
-            <div style={{ background: '#0d1117', padding: '20px', borderRadius: '8px', border: '1px solid #30363d', textAlign: 'center' }}>
-              <div style={{ color: '#8b949e', fontSize: '13px', textTransform: 'uppercase' }}>Active Units</div>
-              <div style={{ color: '#58a6ff', fontSize: '32px', fontWeight: 'bold', marginTop: '5px' }}>142</div>
-            </div>
-            <div style={{ background: '#0d1117', padding: '20px', borderRadius: '8px', border: '1px solid #30363d', textAlign: 'center' }}>
-              <div style={{ color: '#8b949e', fontSize: '13px', textTransform: 'uppercase' }}>Total Carbon</div>
-              <div style={{ color: '#d29922', fontSize: '32px', fontWeight: 'bold', marginTop: '5px' }}>1250.4 T</div>
-            </div>
-          </div>
-
-          <div style={{ background: '#0d1117', padding: '20px', borderRadius: '8px', border: '1px solid #30363d' }}>
-            <div style={{ color: '#7ee787', fontWeight: 'bold', fontSize: '14px', marginBottom: '5px' }}>🔒 Zero-Knowledge Privacy Shield</div>
-            <div style={{ color: '#8b949e', fontSize: '12px', marginBottom: '15px' }}>State & MCCI audit access with complete business data protection & anonymization.</div>
-            <div style={{ background: '#238636', color: '#fff', padding: '12px', borderRadius: '6px', textAlign: 'center', fontWeight: 'bold', fontSize: '13px' }}>
-              Status: Active - 100% Data Anonymization Maintained
-            </div>
-          </div>
-          <button onClick={() => setActiveModule('mainDashboard')} style={{ marginTop: '20px', background: '#21262d', color: '#fff', border: '1px solid #30363d', padding: '8px 15px', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold' }}>← Back to Main Dashboard</button>
-        </div>
-      )}
-
-      {/* 3. MOBILE AI OCR MODULE VIEW */}
-      {activeModule === 'ocr' && (
-        <div style={{ marginTop: '20px', background: '#161b22', padding: '25px', borderRadius: '12px', border: '1px solid #30363d' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
-            <h3 style={{ color: '#58a6ff', margin: 0, fontSize: '20px' }}>⚡ Mobile AI OCR & dMRV Geo-Scan Engine</h3>
-            <span style={{ background: '#238636', color: '#fff', padding: '5px 12px', borderRadius: '4px', fontSize: '12px', fontWeight: 'bold' }}>LIVE GEO-TAGGING ACTIVE</span>
-          </div>
-          <p style={{ color: '#8b949e', fontSize: '13px', marginBottom: '20px' }}>Snap bills, electricity meters, or waste manifests directly from mobile. Instant OCR extracts data, locks GPS location, and updates Form V.</p>
-          
-          <div style={{ border: '2px dashed #30363d', padding: '40px', borderRadius: '8px', textAlign: 'center', background: '#0d1117' }}>
-            <button style={{ background: '#238636', color: '#fff', border: 'none', padding: '12px 25px', borderRadius: '6px', fontWeight: 'bold', fontSize: '14px', cursor: 'pointer' }}>
-              📸 Snap / Upload Utility & Waste Bills
-            </button>
-            <p style={{ color: '#8b949e', fontSize: '12px', marginTop: '15px' }}>GPS Location Lock & Anti-Fake Exif Protection Active.</p>
-          </div>
-          <button onClick={() => setActiveModule('mainDashboard')} style={{ marginTop: '20px', background: '#21262d', color: '#fff', border: '1px solid #30363d', padding: '8px 15px', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold' }}>← Back to Main Dashboard</button>
-        </div>
-      )}
-
-      {/* 4. FLYING SQUAD AUDIT MODE */}
-      {activeModule === 'flyingSquad' && (
-        <div style={{ marginTop: '20px', background: '#161b22', padding: '25px', borderRadius: '12px', border: '1px solid #30363d' }}>
-          <div style={{ color: '#f85149', fontSize: '20px', fontWeight: 'bold', marginBottom: '5px' }}>🚨 MPCB Flying Squad Emergency Audit Mode</div>
-          <p style={{ color: '#8b949e', fontSize: '13px', marginBottom: '20px' }}>1-Click instant compliance dossier aggregating CTO status, ETP health, and blockchain verification hashes.</p>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
-            <div style={{ background: '#0d1117', padding: '20px', borderRadius: '8px', border: '1px solid #30363d' }}>
-              <div style={{ color: '#8b949e', fontSize: '12px' }}>CTO STATUS</div>
-              <div style={{ color: '#7ee787', fontSize: '20px', fontWeight: 'bold', marginTop: '5px' }}>VALID (82 Days Left)</div>
-            </div>
-            <div style={{ background: '#0d1117', padding: '20px', borderRadius: '8px', border: '1px solid #30363d' }}>
-              <div style={{ color: '#8b949e', fontSize: '12px' }}>ETP HEALTH</div>
-              <div style={{ color: '#58a6ff', fontSize: '20px', fontWeight: 'bold', marginTop: '5px' }}>98% Optimal</div>
-            </div>
-          </div>
-          <button onClick={() => setActiveModule('mainDashboard')} style={{ marginTop: '20px', background: '#21262d', color: '#fff', border: '1px solid #30363d', padding: '8px 15px', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold' }}>← Back to Main Dashboard</button>
-        </div>
-      )}
-
-      {/* 5. TOXIC & BOILER GAS LEAK SAFETY RADAR */}
-      {activeModule === 'toxicGas' && (
-        <div style={{ marginTop: '20px', background: '#161b22', padding: '25px', borderRadius: '12px', border: '1px solid #30363d' }}>
-          <div style={{ color: '#f85149', fontSize: '20px', fontWeight: 'bold', marginBottom: '5px' }}>⚠️ Toxic & Boiler Gas Leak Safety Radar</div>
-          <p style={{ color: '#8b949e', fontSize: '13px', marginBottom: '20px' }}>Real-time Parts Per Million (PPM) concentration tracking for Ammonia, LPG, PNG, Chlorine, and Solvents.</p>
-          <div style={{ background: '#238636', color: '#fff', padding: '15px', borderRadius: '8px', textAlign: 'center', fontWeight: 'bold', fontSize: '15px' }}>
-            Status: All Gas Sensors Normal (0.05 PPM Safe Range)
-          </div>
-          <button onClick={() => setActiveModule('mainDashboard')} style={{ marginTop: '20px', background: '#21262d', color: '#fff', border: '1px solid #30363d', padding: '8px 15px', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold' }}>← Back to Main Dashboard</button>
-        </div>
-      )}
-
-      {/* 6. DEFAULT VIEW FOR OTHER MODULES */}
-      {activeModule !== 'mainDashboard' && activeModule !== 'corridor' && activeModule !== 'ocr' && activeModule !== 'flyingSquad' && activeModule !== 'toxicGas' && (
-        <div style={{ marginTop: '20px', background: '#161b22', padding: '25px', borderRadius: '12px', border: '1px solid #58a6ff' }}>
-          <h3 style={{ color: '#58a6ff', marginTop: 0, fontSize: '20px' }}>📂 Detailed View: {activeModule.toUpperCase()} Module</h3>
-          <p style={{ color: '#c9d1d9', fontSize: '14px', lineHeight: '1.6' }}>This module is fully active and synchronized for <b>WESTERN CHEMICALS - BHOSARI MIDC, PUNE</b>. Real-time telemetry, automated compliance reporting, and blockchain audit logs are fully operational.</p>
-          <div style={{ background: '#0d1117', padding: '15px', borderRadius: '8px', color: '#7ee787', fontFamily: 'monospace', fontSize: '12px', marginTop: '15px' }}>
-            {`>> Status: SECURE_SYNC_ACTIVE`} <br/>
-            {`>> Module ID: ${activeModule}_2026_PROD`} <br/>
-            {`>> Telemetry Data Feed: Connected to MSEDCL Smart Meter & ETP Sensors (Advisory Mode)`}
-          </div>
-          <button onClick={() => setActiveModule('mainDashboard')} style={{ marginTop: '20px', background: '#21262d', color: '#fff', border: '1px solid #30363d', padding: '10px 20px', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold' }}>← Back to Main Dashboard</button>
-        </div>
-      )}
-
-      {/* Legal Disclaimer */}
-      <div style={{ marginTop: '30px', fontSize: '10px', color: '#8b949e', borderTop: '1px solid #30363d', paddingTop: '10px' }}>
-        LEGAL DISCLAIMER & DEVELOPER LIABILITY WAIVER: EcoTrace India Private Limited and its developers act solely as a software interface provider aggregating IoT data and statutory records. We assume NO liability for equipment failures, financial losses, or statutory penalties arising from factory operations.
-      </div>
-
-    </main>
-  );
+        </main>
+    );
 }
