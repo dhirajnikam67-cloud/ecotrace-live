@@ -27,6 +27,15 @@ export default function EcoTraceDashboard() {
         }
     };
 
+    // Export Handlers to prevent blinking without action
+    const handleExportPdf = () => {
+        alert(`Generating and downloading compliance PDF for ${companyName}...`);
+    };
+
+    const handleExportAuditPackage = () => {
+        alert(`Compiling Verified Audit Package (Form V & Tamper-Evident Logs) for ${companyName}...`);
+    };
+
     // Model 1 State & Auto-Trigger on Load
     const [auditResult, setAuditResult] = useState(null);
     const [loadingAudit, setLoadingAudit] = useState(false);
@@ -102,10 +111,16 @@ export default function EcoTraceDashboard() {
                     <div style={{ backgroundColor: '#1f2937', border: '1px solid #374151', padding: '6px 10px', borderRadius: '8px', fontSize: '11px', color: '#34d399', fontWeight: 'bold' }}>
                         {companyName} ({midcLocation})
                     </div>
-                    <button style={{ backgroundColor: '#059669', color: 'white', border: 'none', padding: '6px 10px', borderRadius: '6px', fontSize: '11px', fontWeight: 'bold', cursor: 'pointer' }}>
+                    <button 
+                        onClick={handleExportPdf}
+                        style={{ backgroundColor: '#059669', color: 'white', border: 'none', padding: '6px 10px', borderRadius: '6px', fontSize: '11px', fontWeight: 'bold', cursor: 'pointer' }}
+                    >
                         Export PDF
                     </button>
-                    <button style={{ backgroundColor: '#374151', color: 'white', border: 'none', padding: '6px 10px', borderRadius: '6px', fontSize: '11px', fontWeight: 'bold', cursor: 'pointer' }}>
+                    <button 
+                        onClick={handleExportAuditPackage}
+                        style={{ backgroundColor: '#374151', color: 'white', border: 'none', padding: '6px 10px', borderRadius: '6px', fontSize: '11px', fontWeight: 'bold', cursor: 'pointer' }}
+                    >
                         Export Verified Audit Package
                     </button>
                 </div>
@@ -261,7 +276,10 @@ export default function EcoTraceDashboard() {
                         </div>
                         <p style={{ color: '#9ca3af', fontSize: '13px' }}>Snap bills, electricity meters, or waste manifests directly from mobile. Instant OCR extracts data, locks GPS location, and updates Form V. (Guardrail: Review & Edit Step Included)</p>
                         <div style={{ marginTop: '20px', padding: '30px', border: '2px dashed #374151', borderRadius: '8px', textAlign: 'center', backgroundColor: '#1f2937' }}>
-                            <button style={{ backgroundColor: '#059669', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer' }}>
+                            <button 
+                                onClick={() => alert('Opening mobile camera for OCR & GPS Geo-Tagging...')}
+                                style={{ backgroundColor: '#059669', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer' }}
+                            >
                                 📸 Snap / Upload Utility & Waste Bills
                             </button>
                             <p style={{ margin: '12px 0 0 0', fontSize: '12px', color: '#9ca3af' }}>GPS Location Lock & Exif Metadata Verification Active.</p>
@@ -314,7 +332,10 @@ export default function EcoTraceDashboard() {
                         </div>
                         <div style={{ backgroundColor: '#1f2937', padding: '20px', borderRadius: '8px' }}>
                             <h3 style={{ color: '#60a5fa', margin: '0 0 6px 0', fontSize: '15px' }}>📄 AI Legal Reply Dossier Generator</h3>
-                            <button style={{ backgroundColor: '#ef4444', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer', fontSize: '12px' }}>
+                            <button 
+                                onClick={() => alert('Generating MPCB Legal Defense Reply PDF...')}
+                                style={{ backgroundColor: '#ef4444', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer', fontSize: '12px' }}
+                            >
                                 ⚡ Generate & Download MPCB Legal Defense Reply (PDF)
                             </button>
                         </div>
@@ -330,7 +351,10 @@ export default function EcoTraceDashboard() {
                                 <p style={{ margin: '0 0 4px 0', fontSize: '11px', color: '#9ca3af' }}>Current Power Factor</p>
                                 <p style={{ margin: 0, fontSize: '18px', fontWeight: 'bold', color: '#34d399' }}>0.94 (Above Penalty Threshold 0.90)</p>
                             </div>
-                            <button style={{ backgroundColor: '#3b82f6', color: 'white', border: 'none', padding: '8px 14px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer', fontSize: '12px' }}>
+                            <button 
+                                onClick={() => alert('Operator recommendation triggered: Check capacitor bank settings.')}
+                                style={{ backgroundColor: '#3b82f6', color: 'white', border: 'none', padding: '8px 14px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer', fontSize: '12px' }}
+                            >
                                 Trigger Operator Recommendation
                             </button>
                         </div>
@@ -365,7 +389,10 @@ export default function EcoTraceDashboard() {
                                 <p style={{ margin: 0, fontSize: '14px', fontWeight: 'bold', color: '#f59e0b' }}>Ready for Review</p>
                             </div>
                         </div>
-                        <button style={{ backgroundColor: '#059669', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer', fontSize: '12px' }}>
+                        <button 
+                            onClick={() => alert('Reviewing and exporting Annual Returns PDF bundle...')}
+                            style={{ backgroundColor: '#059669', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer', fontSize: '12px' }}
+                        >
                             📥 Review & Export All Returns (PDF)
                         </button>
                     </div>
@@ -390,10 +417,16 @@ export default function EcoTraceDashboard() {
                             <p style={{ margin: 0, fontSize: '13px', color: '#d1d5db' }}>Company: <strong>{companyName}</strong> | Location: {midcLocation}</p>
                         </div>
                         <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
-                            <button style={{ backgroundColor: '#059669', color: 'white', border: 'none', padding: '8px 16px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer', fontSize: '12px' }}>
+                            <button 
+                                onClick={() => alert('Opening 3-Page Green Passport viewer...')}
+                                style={{ backgroundColor: '#059669', color: 'white', border: 'none', padding: '8px 16px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer', fontSize: '12px' }}
+                            >
                                 View 3-Page Green Passport Report
                             </button>
-                            <button style={{ backgroundColor: '#374151', color: 'white', border: 'none', padding: '8px 16px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer', fontSize: '12px' }}>
+                            <button 
+                                onClick={() => alert('Downloading Green Passport PDF...')}
+                                style={{ backgroundColor: '#374151', color: 'white', border: 'none', padding: '8px 16px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer', fontSize: '12px' }}
+                            >
                                 Download PDF
                             </button>
                         </div>
@@ -424,7 +457,10 @@ export default function EcoTraceDashboard() {
                         <div style={{ backgroundColor: '#065f46', color: '#d1fae5', padding: '14px', borderRadius: '8px', fontWeight: 'bold', fontSize: '12px', marginBottom: '16px', textAlign: 'center' }}>
                             📍 Tanker GPS Live Status: In-Transit (Secured via Geo-Fence)
                         </div>
-                        <button style={{ backgroundColor: '#059669', color: 'white', border: 'none', padding: '8px 16px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer', fontSize: '12px' }}>
+                        <button 
+                            onClick={() => alert('Downloading Form 10 Digital Manifest Copy...')}
+                            style={{ backgroundColor: '#059669', color: 'white', border: 'none', padding: '8px 16px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer', fontSize: '12px' }}
+                        >
                             Download Form 10 Digital Manifest Copy
                         </button>
                     </div>
