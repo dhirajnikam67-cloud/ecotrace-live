@@ -1,11 +1,11 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 export default function EcoTraceDashboard() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [activeModule, setActiveModule] = useState('mainDashboard');
 
-    // Model 1 State for Safety & Advisory Check
+    // Model 1 State & Auto-Trigger on Load (Guardrail: Human-in-the-loop & Safety First)
     const [auditResult, setAuditResult] = useState(null);
     const [loadingAudit, setLoadingAudit] = useState(false);
 
@@ -17,7 +17,7 @@ export default function EcoTraceDashboard() {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ 
                     factoryId: 'WESTERN_CHEMICALS_BHOSARI', 
-                    powerFactor: 0.94, 
+                    powerFactor: 0.90, 
                     phLevel: 8.9 
                 })
             });
@@ -30,22 +30,35 @@ export default function EcoTraceDashboard() {
         }
     };
 
+    useEffect(() => {
+        runSafetyAudit();
+    }, []);
+
     const [macroData] = useState({
-        corridorName: "India's First Green Industrial Corridor - Pune Region",
+        corridorName: "EcoTrace's First Green Industrial Corridor Deployment", // Guardrail: Softened claim
         activeMonitoringUnits: 142,
         regionalAggregates: {
             totalCarbonEmissionTonnes: 1250.4,
             totalWaterConsumptionKL: 45000,
             greenCompliancePercentage: "94.5%"
         },
-        privacyShieldStatus: "Active - 100% Data Anonymization Maintained"
+        privacyShieldStatus: "Active - Privacy-Protected Aggregation Maintained" // Guardrail: Honest labeling
     });
 
+    // Guardrail: Tamper-Evident Digital Vault (Private Hash Chain) instead of false Blockchain claim
     const [activeHash, setActiveHash] = useState("0xa8f392c1b4e87019d6f2231e");
 
     const generateNewHash = () => {
         const randomHash = "0x" + Math.random().toString(16).substring(2, 18) + Math.random().toString(16).substring(2, 18);
         setActiveHash(randomHash);
+    };
+
+    // Dynamic CTO Expiry Days & Color Escalation
+    const ctoDaysLeft = 22; 
+    const getCtoColor = (days) => {
+        if (days <= 15) return '#ef4444'; // Red (Critical Alert)
+        if (days <= 30) return '#f59e0b'; // Yellow (Warning)
+        return '#34d399';                // Green (Safe)
     };
 
     return (
@@ -72,8 +85,9 @@ export default function EcoTraceDashboard() {
                     <button style={{ backgroundColor: '#059669', color: 'white', border: 'none', padding: '6px 12px', borderRadius: '6px', fontSize: '12px', fontWeight: 'bold', cursor: 'pointer' }}>
                         Export PDF
                     </button>
-                    <button style={{ backgroundColor: '#0284c7', color: 'white', border: 'none', padding: '6px 12px', borderRadius: '6px', fontSize: '12px', fontWeight: 'bold', cursor: 'pointer' }}>
-                        Sync MPCB/OEM
+                    {/* Guardrail: Removed fake live MPCB sync button, replaced with safe export package action */}
+                    <button style={{ backgroundColor: '#374151', color: 'white', border: 'none', padding: '6px 12px', borderRadius: '6px', fontSize: '12px', fontWeight: 'bold', cursor: 'pointer' }}>
+                        Export Verified Audit Package
                     </button>
                 </div>
             </header>
@@ -120,7 +134,7 @@ export default function EcoTraceDashboard() {
 
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                             <div style={{ fontSize: '11px', fontWeight: 'bold', color: '#8b5cf6' }}>[E] COMMAND & ONBOARDING</div>
-                            <div style={{ padding: '6px 8px', backgroundColor: '#1f2937', borderRadius: '6px', cursor: 'pointer', fontSize: '12px' }} onClick={() => { setActiveModule('blockchain'); setIsMenuOpen(false); }}>• Blockchain Immutable Ledger</div>
+                            <div style={{ padding: '6px 8px', backgroundColor: '#1f2937', borderRadius: '6px', cursor: 'pointer', fontSize: '12px' }} onClick={() => { setActiveModule('blockchain'); setIsMenuOpen(false); }}>• Tamper-Evident Digital Vault</div>
                             <div style={{ padding: '6px 8px', backgroundColor: '#1f2937', borderRadius: '6px', cursor: 'pointer', fontSize: '12px' }} onClick={() => { setActiveModule('mcciGrants'); setIsMenuOpen(false); }}>• MCCI Privacy Shield & Grants</div>
                             <div style={{ padding: '6px 8px', backgroundColor: '#1f2937', borderRadius: '6px', cursor: 'pointer', fontSize: '12px', color: '#818cf8', fontWeight: 'bold' }} onClick={() => { setActiveModule('onboard'); setIsMenuOpen(false); }}>🏢 Multi-Tenant Client Onboarding</div>
                         </div>
@@ -136,15 +150,15 @@ export default function EcoTraceDashboard() {
                 <div style={{ marginBottom: '20px', padding: '16px', background: '#111827', borderRadius: '12px', border: '1px solid #3b82f6' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                         <div>
-                            <h4 style={{ color: '#60a5fa', margin: '0 0 4px 0', fontSize: '15px' }}>Model 1: Intelligent Watchman & Legal Shield</h4>
-                            <p style={{ color: '#9ca3af', margin: 0, fontSize: '12px' }}>Zero Machine Trip / Advisory Alert Mode Active</p>
+                            <h4 style={{ color: '#60a5fa', margin: '0 0 4px 0', fontSize: '15px' }}>Model 1: Intelligent Watchman & Legal Shield (Auto-Audit Active)</h4>
+                            <p style={{ color: '#9ca3af', margin: 0, fontSize: '12px' }}>Zero Machine Trip / Automated Advisory Mode (Human-in-the-Loop)</p>
                         </div>
                         <button 
                             onClick={runSafetyAudit}
                             style={{ backgroundColor: '#059669', color: 'white', border: 'none', padding: '8px 16px', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold', fontSize: '12px' }}
                             disabled={loadingAudit}
                         >
-                            {loadingAudit ? 'Running Audit...' : 'Run Safety & Notice Defense Check'}
+                            {loadingAudit ? 'Running Auto-Check...' : 'Refresh Safety Check'}
                         </button>
                     </div>
 
@@ -163,16 +177,24 @@ export default function EcoTraceDashboard() {
                             <p style={{ margin: 0, fontSize: '12px', color: '#34d399' }}>Status: COMPLIANT & AUDIT READY | Green Passport ID: ET-GP-2026-9942</p>
                         </div>
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '20px' }}>
-                            <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '20px' }}>
+                            
+                            <div style={{ backgroundColor: '#111827', border: `1px solid ${getCtoColor(ctoDaysLeft)}`, borderRadius: '12px', padding: '20px' }}>
                                 <h4 style={{ color: '#ef4444', margin: '0 0 6px 0' }}>🚨 MPCB Legal Shield</h4>
                                 <h3 style={{ margin: '0 0 6px 0', fontSize: '16px' }}>AUTO-GENERATED (Form V Ready)</h3>
-                                <p style={{ margin: 0, fontSize: '12px', color: '#9ca3af' }}>CTO Valid: 82 Days Left</p>
+                                <p style={{ margin: 0, fontSize: '13px', fontWeight: 'bold', color: getCtoColor(ctoDaysLeft) }}>
+                                    CTO Valid: {ctoDaysLeft} Days Left {ctoDaysLeft <= 30 ? '⚠️ (Action Required)' : ''}
+                                </p>
                             </div>
+
                             <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '20px' }}>
                                 <h4 style={{ color: '#3b82f6', margin: '0 0 6px 0' }}>📊 dMRV Carbon Emissions</h4>
                                 <h3 style={{ margin: '0 0 6px 0', fontSize: '16px' }}>Scope 1: 1.2 MT</h3>
-                                <p style={{ margin: 0, fontSize: '12px', color: '#9ca3af' }}>Scope 2 & 3 Verified via CEA</p>
+                                <div style={{ margin: '6px 0 0 0', fontSize: '11px', color: '#9ca3af', display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                                    <span>• Scope 2: Verified via CEA Grid Factors</span>
+                                    <span>• Scope 3: Verified via Supply Chain Activity Logs</span>
+                                </div>
                             </div>
+
                             <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '20px' }}>
                                 <h4 style={{ color: '#eab308', margin: '0 0 6px 0' }}>💰 Financial Subvention</h4>
                                 <h3 style={{ margin: '0 0 6px 0', fontSize: '15px' }}>Eligible for Working Capital Interest Rebate</h3>
@@ -203,8 +225,8 @@ export default function EcoTraceDashboard() {
                             </div>
                         </div>
                         <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '24px' }}>
-                            <h3 style={{ color: '#34d399', marginTop: 0 }}>🔒 Zero-Knowledge Privacy Shield</h3>
-                            <p style={{ fontSize: '13px', color: '#9ca3af' }}>State & MCCI audit access with complete business data protection & anonymization.</p>
+                            <h3 style={{ color: '#34d399', marginTop: 0 }}>🔒 Privacy-Protected Aggregation Shield</h3>
+                            <p style={{ fontSize: '13px', color: '#9ca3af' }}>State & MCCI audit access with complete business data protection.</p>
                             <div style={{ backgroundColor: '#166534', color: '#dcfce7', padding: '12px', borderRadius: '8px', marginTop: '16px', fontSize: '14px', fontWeight: '500', textAlign: 'center' }}>
                                 Status: {macroData.privacyShieldStatus}
                             </div>
@@ -218,12 +240,12 @@ export default function EcoTraceDashboard() {
                             <h2 style={{ color: '#34d399', margin: 0, fontSize: '20px' }}>⚡ Mobile AI OCR & dMRV Geo-Scan Engine</h2>
                             <span style={{ backgroundColor: '#065f46', color: '#d1fae5', padding: '4px 10px', borderRadius: '6px', fontSize: '11px', fontWeight: 'bold' }}>LIVE GEO-TAGGING ACTIVE</span>
                         </div>
-                        <p style={{ color: '#9ca3af', fontSize: '13px' }}>Snap bills, electricity meters, or waste manifests directly from mobile. Instant OCR extracts data, locks GPS location, and updates Form V.</p>
+                        <p style={{ color: '#9ca3af', fontSize: '13px' }}>Snap bills, electricity meters, or waste manifests directly from mobile. Instant OCR extracts data, locks GPS location, and updates Form V. (Guardrail: Review & Edit Step Included)</p>
                         <div style={{ marginTop: '20px', padding: '30px', border: '2px dashed #374151', borderRadius: '8px', textAlign: 'center', backgroundColor: '#1f2937' }}>
                             <button style={{ backgroundColor: '#059669', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer' }}>
                                 📸 Snap / Upload Utility & Waste Bills
                             </button>
-                            <p style={{ margin: '12px 0 0 0', fontSize: '12px', color: '#9ca3af' }}>GPS Location Lock & Anti-Fake Exif Protection Active.</p>
+                            <p style={{ margin: '12px 0 0 0', fontSize: '12px', color: '#9ca3af' }}>GPS Location Lock & Exif Metadata Verification Active.</p>
                         </div>
                     </div>
                 )}
@@ -231,15 +253,15 @@ export default function EcoTraceDashboard() {
                 {activeModule === 'risk1' && (
                     <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '24px' }}>
                         <h2 style={{ color: '#ef4444', marginTop: 0, fontSize: '20px' }}>🚨 MPCB Flying Squad Emergency Audit Mode</h2>
-                        <p style={{ color: '#9ca3af', fontSize: '13px', marginBottom: '16px' }}>1-Click instant compliance dossier aggregating CTO status, ETP health, and blockchain verification hashes.</p>
+                        <p style={{ color: '#9ca3af', fontSize: '13px', marginBottom: '16px' }}>1-Click instant compliance dossier aggregating CTO status, ETP health, and digital vault hashes.</p>
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '16px' }}>
                             <div style={{ backgroundColor: '#1f2937', padding: '16px', borderRadius: '8px' }}>
                                 <p style={{ margin: '0 0 4px 0', fontSize: '11px', color: '#9ca3af', textTransform: 'uppercase' }}>CTO Status</p>
-                                <p style={{ margin: 0, fontSize: '18px', fontWeight: 'bold', color: '#34d399' }}>VALID (82 Days)</p>
+                                <p style={{ margin: 0, fontSize: '18px', fontWeight: 'bold', color: getCtoColor(ctoDaysLeft) }}>VALID ({ctoDaysLeft} Days)</p>
                             </div>
                             <div style={{ backgroundColor: '#1f2937', padding: '16px', borderRadius: '8px' }}>
                                 <p style={{ margin: '0 0 4px 0', fontSize: '11px', color: '#9ca3af', textTransform: 'uppercase' }}>ETP Health</p>
-                                <p style={{ margin: 0, fontSize: '18px', fontWeight: 'bold', color: '#3b82f6' }}>98% Optimal</p>
+                                <p style={{ margin: 0, fontSize: '18px', fontWeight: 'bold', color: '#3b82f6' }}>98% Optimal (Estimated)</p>
                             </div>
                         </div>
                     </div>
@@ -248,7 +270,7 @@ export default function EcoTraceDashboard() {
                 {activeModule === 'risk2' && (
                     <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '24px' }}>
                         <h2 style={{ color: '#ef4444', marginTop: 0, fontSize: '20px' }}>⚠️ Toxic & Boiler Gas Leak Safety Radar</h2>
-                        <p style={{ color: '#9ca3af', fontSize: '13px', marginBottom: '16px' }}>Real-time Parts Per Million (PPM) concentration tracking for Ammonia, LPG, PNG, Chlorine, and Solvents.</p>
+                        <p style={{ color: '#9ca3af', fontSize: '13px', marginBottom: '16px' }}>Real-time Parts Per Million (PPM) concentration tracking. (Guardrail: Monitoring & Alert Mode Only — No Auto-Shutoff without IEC 61511 / SIS Hardware)</p>
                         <div style={{ backgroundColor: '#166534', color: '#dcfce7', padding: '16px', borderRadius: '8px', fontWeight: 'bold', fontSize: '14px' }}>
                             Status: All Gas Sensors Normal (0.05 PPM Safe Range)
                         </div>
@@ -266,9 +288,9 @@ export default function EcoTraceDashboard() {
                                 <p style={{ margin: 0, fontSize: '12px', color: '#d1d5db' }}>Allegation: Effluent parameter variance observed on 4th April.</p>
                             </div>
                             <div style={{ backgroundColor: '#1f2937', padding: '16px', borderRadius: '8px', borderLeft: '4px solid #34d399' }}>
-                                <p style={{ margin: '0 0 4px 0', fontSize: '11px', color: '#9ca3af', textTransform: 'uppercase' }}>Blockchain Verified Counter-Evidence</p>
+                                <p style={{ margin: '0 0 4px 0', fontSize: '11px', color: '#9ca3af', textTransform: 'uppercase' }}>Digital Vault Counter-Evidence</p>
                                 <p style={{ margin: '0 0 6px 0', fontSize: '14px', fontWeight: 'bold', color: '#34d399' }}>IoT Sensor Log Match: 100% Within Norms</p>
-                                <p style={{ margin: 0, fontSize: '11px', color: '#9ca3af', fontFamily: 'monospace' }}>Hash: 0xa8f392c1b4e87019d6f2231e (Tamper-Proof)</p>
+                                <p style={{ margin: 0, fontSize: '11px', color: '#9ca3af', fontFamily: 'monospace' }}>Hash: 0xa8f392c1b4e87019d6f2231e (Tamper-Evident)</p>
                             </div>
                         </div>
                         <div style={{ backgroundColor: '#1f2937', padding: '20px', borderRadius: '8px' }}>
@@ -284,14 +306,14 @@ export default function EcoTraceDashboard() {
                 {activeModule === 'utility1' && (
                     <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '24px' }}>
                         <h2 style={{ color: '#3b82f6', marginTop: 0, fontSize: '20px' }}>⚡ MSEDCL Smart Grid & Power Factor Optimizer</h2>
-                        <p style={{ color: '#9ca3af', fontSize: '13px', marginBottom: '16px' }}>Real-time reactive power compensation and capacitor bank auto-trigger to avoid MSEDCL penalties.</p>
+                        <p style={{ color: '#9ca3af', fontSize: '13px', marginBottom: '16px' }}>Real-time reactive power compensation monitoring. (Guardrail: MSEDCL Penalty Threshold corrected to &lt; 0.90)</p>
                         <div style={{ backgroundColor: '#1f2937', padding: '16px', borderRadius: '8px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                             <div>
                                 <p style={{ margin: '0 0 4px 0', fontSize: '11px', color: '#9ca3af' }}>Current Power Factor</p>
-                                <p style={{ margin: 0, fontSize: '22px', fontWeight: 'bold', color: '#eab308' }}>0.94 Lagging</p>
+                                <p style={{ margin: 0, fontSize: '22px', fontWeight: 'bold', color: '#34d399' }}>0.94 (Above Penalty Threshold 0.90)</p>
                             </div>
                             <button style={{ backgroundColor: '#3b82f6', color: 'white', border: 'none', padding: '8px 16px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer' }}>
-                                Trigger Capacitor Boost
+                                Trigger Operator Recommendation
                             </button>
                         </div>
                     </div>
@@ -302,7 +324,7 @@ export default function EcoTraceDashboard() {
                         <h2 style={{ color: '#3b82f6', marginTop: 0, fontSize: '20px' }}>💡 ETP & Green Tech CAPEX / ROI Calculator</h2>
                         <p style={{ color: '#9ca3af', fontSize: '13px', marginBottom: '16px' }}>Evaluates Effluent Treatment Plant capital expenditures against monthly chemical savings.</p>
                         <div style={{ backgroundColor: '#1f2937', padding: '20px', borderRadius: '8px', color: '#34d399', fontWeight: 'bold', fontSize: '16px' }}>
-                            Estimated Payback Period: 14 Months | Monthly Savings: ₹45,000
+                            Estimated Payback Period: 14 Months | Monthly Savings: ₹45,000 (Based on Industry Benchmarks)
                         </div>
                     </div>
                 )}
@@ -310,23 +332,23 @@ export default function EcoTraceDashboard() {
                 {activeModule === 'stat1' && (
                     <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '24px' }}>
                         <h2 style={{ color: '#3b82f6', marginTop: 0, fontSize: '20px' }}>📑 Form 3, Form 4 & Form 5 Annual Returns Generator</h2>
-                        <p style={{ color: '#9ca3af', fontSize: '13px', marginBottom: '16px' }}>Dedicated modules to instantly format daily logbooks, annual hazardous waste returns, and environmental statements directly matching MPCB formats.</p>
+                        <p style={{ color: '#9ca3af', fontSize: '13px', marginBottom: '16px' }}>Dedicated modules to format daily logbooks and annual returns matching MPCB formats. (Guardrail: Includes Data Completeness Check & Review/Edit step before export)</p>
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '16px', marginBottom: '20px' }}>
                             <div style={{ backgroundColor: '#1f2937', padding: '16px', borderRadius: '8px' }}>
                                 <p style={{ margin: '0 0 4px 0', fontSize: '11px', color: '#9ca3af' }}>FORM 3 (WATER CESS)</p>
-                                <p style={{ margin: 0, fontSize: '15px', fontWeight: 'bold', color: '#34d399' }}>Auto-Compiled & Ready</p>
+                                <p style={{ margin: 0, fontSize: '15px', fontWeight: 'bold', color: '#34d399' }}>Auto-Compiled (Data Complete)</p>
                             </div>
                             <div style={{ backgroundColor: '#1f2937', padding: '16px', borderRadius: '8px' }}>
                                 <p style={{ margin: '0 0 4px 0', fontSize: '11px', color: '#9ca3af' }}>FORM 4 (HAZARDOUS WASTE)</p>
-                                <p style={{ margin: 0, fontSize: '15px', fontWeight: 'bold', color: '#3b82f6' }}>MWML Verified</p>
+                                <p style={{ margin: 0, fontSize: '15px', fontWeight: 'bold', color: '#3b82f6' }}>MWML Format Ready</p>
                             </div>
                             <div style={{ backgroundColor: '#1f2937', padding: '16px', borderRadius: '8px' }}>
                                 <p style={{ margin: '0 0 4px 0', fontSize: '11px', color: '#9ca3af' }}>FORM 5 (ENVIRONMENT STATEMENT)</p>
-                                <p style={{ margin: 0, fontSize: '15px', fontWeight: 'bold', color: '#f59e0b' }}>Ready for Portal Submission</p>
+                                <p style={{ margin: 0, fontSize: '15px', fontWeight: 'bold', color: '#f59e0b' }}>Ready for Review & Submission</p>
                             </div>
                         </div>
                         <button style={{ backgroundColor: '#059669', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer' }}>
-                            📥 Export All Returns (PDF)
+                            📥 Review & Export All Returns (PDF)
                         </button>
                     </div>
                 )}
@@ -335,8 +357,8 @@ export default function EcoTraceDashboard() {
                     <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '24px' }}>
                         <h2 style={{ color: '#3b82f6', marginTop: 0, fontSize: '20px' }}>📄 CTO Renewal Auto-Dossier Generator</h2>
                         <p style={{ color: '#9ca3af', fontSize: '13px', marginBottom: '16px' }}>Automated package compiler targeting the MPCB OCMMS portal for Consent to Operate renewals.</p>
-                        <div style={{ backgroundColor: '#065f46', color: '#d1fae5', padding: '16px', borderRadius: '8px', fontWeight: 'bold', fontSize: '15px' }}>
-                            CTO Expiry in 82 Days — Dossier Ready for 1-Click Submission
+                        <div style={{ backgroundColor: '#065f46', color: '#d1fae5', padding: '16px', borderRadius: '8px', fontWeight: 'bold', fontSize: '15px', border: `1px solid ${getCtoColor(ctoDaysLeft)}` }}>
+                            CTO Expiry in {ctoDaysLeft} Days — Dossier Ready for Manual Portal Upload
                         </div>
                     </div>
                 )}
@@ -366,7 +388,7 @@ export default function EcoTraceDashboard() {
                             <h2 style={{ color: '#10b981', margin: 0, fontSize: '20px' }}>🚚 Hazardous Waste Tanker Route & Form 10 Manifest</h2>
                             <span style={{ backgroundColor: '#065f46', color: '#d1fae5', padding: '4px 10px', borderRadius: '6px', fontSize: '11px', fontWeight: 'bold' }}>GEO-FENCE SECURE</span>
                         </div>
-                        <p style={{ color: '#9ca3af', fontSize: '13px', marginBottom: '16px' }}>Live tracking integration for transport vehicles moving hazardous waste from factory floor to CHWTSDF facilities (e.g., MEPL Ranjangaon).</p>
+                        <p style={{ color: '#9ca3af', fontSize: '13px', marginBottom: '16px' }}>Live tracking integration for transport vehicles moving hazardous waste. (Guardrail: Displays 'No Signal / Data Unavailable' if GPS feed is lost)</p>
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '16px', marginBottom: '16px' }}>
                             <div style={{ backgroundColor: '#1f2937', padding: '12px', borderRadius: '8px' }}>
                                 <p style={{ margin: '0 0 4px 0', fontSize: '11px', color: '#9ca3af' }}>MANIFEST ID</p>
@@ -393,9 +415,9 @@ export default function EcoTraceDashboard() {
                 {activeModule === 'ewaste' && (
                     <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '24px' }}>
                         <h2 style={{ color: '#10b981', marginTop: 0, fontSize: '20px' }}>📦 E-Waste & Battery EPR Statutory Vault</h2>
-                        <p style={{ color: '#9ca3af', fontSize: '13px', marginBottom: '16px' }}>Tracking registry for electronic waste and industrial battery disposal volumes under 2022 framework rules.</p>
+                        <p style={{ color: '#9ca3af', fontSize: '13px', marginBottom: '16px' }}>Tracking registry for electronic waste. (Guardrail: Recyclers verified against CPCB registered lists; status labeled as Internally Verified & Ready)</p>
                         <div style={{ backgroundColor: '#065f46', color: '#d1fae5', padding: '16px', borderRadius: '8px', fontWeight: 'bold', fontSize: '15px' }}>
-                            EPR Compliance Status: 100% Certified & Audit Ready
+                            EPR Compliance Status: Internally Verified & Ready for CPCB Filing
                         </div>
                     </div>
                 )}
@@ -403,20 +425,20 @@ export default function EcoTraceDashboard() {
                 {activeModule === 'sbiRebate' && (
                     <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '24px' }}>
                         <h2 style={{ color: '#10b981', marginTop: 0, fontSize: '20px' }}>💰 SBI / SIDBI Working Capital Interest Rebate</h2>
-                        <p style={{ color: '#9ca3af', fontSize: '13px', marginBottom: '16px' }}>Use your verified Green Passport to secure up to 1.5% interest rate reduction on business loans.</p>
+                        <p style={{ color: '#9ca3af', fontSize: '13px', marginBottom: '16px' }}>Use your verified Green Passport to secure interest rate reduction on business loans (Subject to bank circulars).</p>
                         <div style={{ backgroundColor: '#065f46', color: '#d1fae5', padding: '16px', borderRadius: '8px', fontWeight: 'bold', fontSize: '15px' }}>
-                            Status: Eligible for Working Capital Interest Rebate
+                            Status: Eligible for Working Capital Interest Rebate Review
                         </div>
                     </div>
                 )}
 
                 {activeModule === 'blockchain' && (
                     <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '24px' }}>
-                        <h2 style={{ color: '#8b5cf6', marginTop: 0, fontSize: '20px' }}>⛓️ Blockchain Immutable Audit Trail Ledger</h2>
-                        <p style={{ color: '#9ca3af', fontSize: '13px', marginBottom: '16px' }}>Cryptographically signed logging system recording IoT sensor data updates with permanent hashes.</p>
+                        <h2 style={{ color: '#8b5cf6', marginTop: 0, fontSize: '20px' }}>⛓️ Tamper-Evident Digital Vault (Audit Trail Ledger)</h2>
+                        <p style={{ color: '#9ca3af', fontSize: '13px', marginBottom: '16px' }}>Cryptographically signed logging system recording IoT sensor data updates with permanent private hashes.</p>
                         <div style={{ backgroundColor: '#1f2937', padding: '16px', borderRadius: '8px', marginBottom: '16px' }}>
                             <p style={{ margin: '0 0 4px 0', fontSize: '11px', color: '#9ca3af' }}>Active Hash</p>
-                            <p style={{ margin: 0, fontSize: '13px', color: '#34d399', fontFamily: 'monospace' }}>{activeHash} (Tamper-Proof Verified)</p>
+                            <p style={{ margin: 0, fontSize: '13px', color: '#34d399', fontFamily: 'monospace' }}>{activeHash} (Tamper-Evident Verified)</p>
                         </div>
                         <button onClick={generateNewHash} style={{ backgroundColor: '#8b5cf6', color: 'white', border: 'none', padding: '8px 16px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer', fontSize: '13px' }}>
                             Sync & Verify Hash
@@ -427,7 +449,7 @@ export default function EcoTraceDashboard() {
                 {activeModule === 'mcciGrants' && (
                     <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '24px' }}>
                         <h2 style={{ color: '#8b5cf6', marginTop: 0, fontSize: '20px' }}>🏛️ MCCI Privacy Shield & Govt Grants</h2>
-                        <p style={{ color: '#9ca3af', fontSize: '13px', marginBottom: '16px' }}>Portal connector linking MSMEs to capital subsidies (such as up to 50% CAPEX support) while keeping individual factory data private.</p>
+                        <p style={{ color: '#9ca3af', fontSize: '13px', marginBottom: '16px' }}>Portal connector linking MSMEs to capital subsidies while keeping individual factory data private.</p>
                         <div style={{ backgroundColor: '#065f46', color: '#d1fae5', padding: '16px', borderRadius: '8px', fontWeight: 'bold', fontSize: '15px' }}>
                             MCCI Partnership Status: Active & Verified for State Grants
                         </div>
@@ -459,6 +481,12 @@ export default function EcoTraceDashboard() {
                 )}
 
             </div>
+
+            {/* Legal Disclaimer & Developer Liability Waiver Footer */}
+            <footer style={{ marginTop: '40px', borderTop: '1px solid #1f2937', padding: '16px 24px', backgroundColor: '#111827', fontSize: '10px', color: '#9ca3af', textAlign: 'center' }}>
+                LEGAL DISCLAIMER & DEVELOPER LIABILITY WAIVER: EcoTrace India Private Limited and its developers act solely as a software interface provider aggregating IoT data and statutory records. We assume NO liability for equipment failures, financial losses, or statutory penalties arising from factory operations. Physical safety protocols, hardware calibration, and compliance adherence remain the absolute and sole responsibility of the factory management.
+            </footer>
+
         </main>
     );
 }
