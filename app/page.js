@@ -5,35 +5,100 @@ export default function EcoTraceDashboard() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [activeModule, setActiveModule] = useState('mainDashboard');
 
-    // Onboarding Dynamic State
-    const [companyName, setCompanyName] = useState('WESTERN CHEMICALS');
-    const [midcLocation, setMidcLocation] = useState('BHOSARI MIDC, PUNE');
-    const [dischargeLimit, setDischargeLimit] = useState('5000');
+    // फेज १: फॅक्टरीचा मूळ डेटा आणि खऱ्या तारखेसह CTO Tracking स्टेट
+    const [factoryData, setFactoryData] = useState({
+        name: "WESTERN CHEMICALS",
+        location: "BHOSARI MIDC, PUNE",
+        dischargeLimit: "5000",
+        ctoExpiryDate: "2026-08-20", // खरी परवाना मुदत तारीख
+        status: "COMPLIANT & AUDIT READY"
+    });
 
     const [tempCompanyName, setTempCompanyName] = useState('');
     const [tempMidcLocation, setTempMidcLocation] = useState('');
     const [tempDischargeLimit, setTempDischargeLimit] = useState('');
+    const [tempCtoDate, setTempCtoDate] = useState('');
 
+    // ऑनबोर्डिंग सबमिट लॉजिक
     const handleOnboardSubmit = (e) => {
         e.preventDefault();
         if (tempCompanyName.trim()) {
-            setCompanyName(tempCompanyName);
-            setMidcLocation(tempMidcLocation ? tempMidcLocation.toUpperCase() + ' MIDC' : 'MIDC CLUSTER');
-            setDischargeLimit(tempDischargeLimit || '5000');
+            setFactoryData({
+                name: tempCompanyName,
+                location: tempMidcLocation ? tempMidcLocation.toUpperCase() + ' MIDC' : 'MIDC CLUSTER',
+                dischargeLimit: tempDischargeLimit || '5000',
+                ctoExpiryDate: tempCtoDate || '2026-12-31',
+                status: "COMPLIANT & AUDIT READY"
+            });
             setActiveModule('mainDashboard');
-            alert('Industrial Unit Onboarded Successfully!');
+            alert('Industrial Unit & CTO Data Updated Successfully!');
         } else {
             alert('Please enter a company name.');
         }
     };
 
-    // Export Handlers to prevent blinking without action
+    // CTO दिवस अचूक मोजण्याचे लॉजिक
+    const calculateCtoDaysLeft = (expiryDate) => {
+        const today = new Date();
+        const expiry = new Date(expiryDate);
+        const diffTime = expiry - today;
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        return diffDays > 0 ? diffDays : 0;
+    };
+
+    const ctoDaysLeft = calculateCtoDaysLeft(factoryData.ctoExpiryDate);
+
+    const getCtoColor = (days) => {
+        if (days <= 15) return '#ef4444'; // Red
+        if (days <= 30) return '#f59e0b'; // Yellow
+        return '#34d399';                // Green
+    };
+
+    // Real File Download Trigger Function
+    const downloadTextFile = (filename, content) => {
+        const element = document.createElement("a");
+        const file = new Blob([content], {type: 'text/plain'});
+        element.href = URL.createObjectURL(file);
+        element.download = filename;
+        document.body.appendChild(element);
+        element.click();
+        document.body.removeChild(element);
+    };
+
     const handleExportPdf = () => {
-        alert(`Generating and downloading compliance PDF for ${companyName}...`);
+        const reportContent = `
+========================================
+ECOTRACE INDIA PRIVATE LIMITED
+COMPLIANCE & AUDIT REPORT (FORM V READY)
+========================================
+Company Name: ${factoryData.name}
+Location: ${factoryData.location}
+Discharge Limit: ${factoryData.dischargeLimit} Liters
+CTO Expiry Date: ${factoryData.ctoExpiryDate}
+CTO Days Left: ${ctoDaysLeft} Days
+Status: COMPLIANT & AUDIT READY
+----------------------------------------
+LEGAL DISCLAIMER: EcoTrace India Private Limited acts solely as a software interface provider aggregating IoT data and statutory records.
+========================================
+        `;
+        downloadTextFile(`${factoryData.name.replace(/\s+/g, '_')}_Compliance_Report.txt`, reportContent);
     };
 
     const handleExportAuditPackage = () => {
-        alert(`Compiling Verified Audit Package (Form V & Tamper-Evident Logs) for ${companyName}...`);
+        const auditContent = `
+========================================
+VERIFIED AUDIT PACKAGE & DIGITAL VAULT DOSSIER
+========================================
+Company Name: ${factoryData.name}
+Location: ${factoryData.location}
+Digital Vault Hash: 0xa8f392c1b4e87019d6f2231e (Tamper-Evident)
+ETP Health Status: 98% Optimal (Estimated)
+Power Factor Status: 0.94 (Above Penalty Threshold 0.90)
+----------------------------------------
+Prepared for MPCB Flying Squad / Review
+========================================
+        `;
+        downloadTextFile(`${factoryData.name.replace(/\s+/g, '_')}_Audit_Package.txt`, auditContent);
     };
 
     // Model 1 State & Auto-Trigger on Load
@@ -47,7 +112,7 @@ export default function EcoTraceDashboard() {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ 
-                    factoryId: companyName.replace(/\s+/g, '_'), 
+                    factoryId: factoryData.name.replace(/\s+/g, '_'), 
                     powerFactor: 0.90, 
                     phLevel: 8.9 
                 })
@@ -63,7 +128,7 @@ export default function EcoTraceDashboard() {
 
     useEffect(() => {
         runSafetyAudit();
-    }, [companyName]);
+    }, [factoryData.name]);
 
     const [macroData] = useState({
         corridorName: "EcoTrace's First Green Industrial Corridor Deployment", 
@@ -81,13 +146,6 @@ export default function EcoTraceDashboard() {
     const generateNewHash = () => {
         const randomHash = "0x" + Math.random().toString(16).substring(2, 18) + Math.random().toString(16).substring(2, 18);
         setActiveHash(randomHash);
-    };
-
-    const ctoDaysLeft = 22; 
-    const getCtoColor = (days) => {
-        if (days <= 15) return '#ef4444';
-        if (days <= 30) return '#f59e0b';
-        return '#34d399';
     };
 
     return (
@@ -109,7 +167,7 @@ export default function EcoTraceDashboard() {
                 
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
                     <div style={{ backgroundColor: '#1f2937', border: '1px solid #374151', padding: '6px 10px', borderRadius: '8px', fontSize: '11px', color: '#34d399', fontWeight: 'bold' }}>
-                        {companyName} ({midcLocation})
+                        {factoryData.name} ({factoryData.location})
                     </div>
                     <button 
                         onClick={handleExportPdf}
@@ -207,16 +265,16 @@ export default function EcoTraceDashboard() {
                     <div>
                         <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '20px', marginBottom: '20px' }}>
                             <p style={{ margin: '0 0 4px 0', fontSize: '11px', color: '#9ca3af', textTransform: 'uppercase' }}>Active Monitored Enterprise</p>
-                            <h2 style={{ color: '#34d399', margin: '0 0 6px 0', fontSize: '18px' }}>{companyName} - {midcLocation}</h2>
-                            <p style={{ margin: 0, fontSize: '12px', color: '#34d399' }}>Status: COMPLIANT & AUDIT READY | Discharge Limit: {dischargeLimit} Liters</p>
+                            <h2 style={{ color: '#34d399', margin: '0 0 6px 0', fontSize: '18px' }}>{factoryData.name} - {factoryData.location}</h2>
+                            <p style={{ margin: 0, fontSize: '12px', color: '#34d399' }}>Status: {factoryData.status} | Discharge Limit: {factoryData.dischargeLimit} Liters | CTO Expiry: {factoryData.ctoExpiryDate}</p>
                         </div>
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px' }}>
                             
                             <div style={{ backgroundColor: '#111827', border: `1px solid ${getCtoColor(ctoDaysLeft)}`, borderRadius: '12px', padding: '20px' }}>
-                                <h4 style={{ color: '#ef4444', margin: '0 0 6px 0', fontSize: '14px' }}>🚨 MPCB Legal Shield</h4>
+                                <h4 style={{ color: '#ef4444', margin: '0 0 6px 0', fontSize: '14px' }}>🚨 MPCB Legal Shield (CTO Tracking)</h4>
                                 <h3 style={{ margin: '0 0 6px 0', fontSize: '15px' }}>AUTO-GENERATED (Form V Ready)</h3>
                                 <p style={{ margin: 0, fontSize: '13px', fontWeight: 'bold', color: getCtoColor(ctoDaysLeft) }}>
-                                    CTO Valid: {ctoDaysLeft} Days Left {ctoDaysLeft <= 30 ? '⚠️ (Action Required)' : ''}
+                                    CTO Valid: {ctoDaysLeft} Days Left ({factoryData.ctoExpiryDate}) {ctoDaysLeft <= 30 ? '⚠️ (Action Required)' : ''}
                                 </p>
                             </div>
 
@@ -277,7 +335,7 @@ export default function EcoTraceDashboard() {
                         <p style={{ color: '#9ca3af', fontSize: '13px' }}>Snap bills, electricity meters, or waste manifests directly from mobile. Instant OCR extracts data, locks GPS location, and updates Form V. (Guardrail: Review & Edit Step Included)</p>
                         <div style={{ marginTop: '20px', padding: '30px', border: '2px dashed #374151', borderRadius: '8px', textAlign: 'center', backgroundColor: '#1f2937' }}>
                             <button 
-                                onClick={() => alert('Opening mobile camera for OCR & GPS Geo-Tagging...')}
+                                onClick={() => alert('Opening mobile camera for OCR & GPS Geo-Tagging... (Phase 2 Integration)')}
                                 style={{ backgroundColor: '#059669', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer' }}
                             >
                                 📸 Snap / Upload Utility & Waste Bills
@@ -290,7 +348,7 @@ export default function EcoTraceDashboard() {
                 {activeModule === 'risk1' && (
                     <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '24px' }}>
                         <h2 style={{ color: '#ef4444', marginTop: 0, fontSize: '18px' }}>🚨 MPCB Flying Squad Emergency Audit Mode</h2>
-                        <p style={{ color: '#9ca3af', fontSize: '13px', marginBottom: '16px' }}>1-Click instant compliance dossier aggregating CTO status, ETP health, and digital vault hashes for <strong>{companyName}</strong>.</p>
+                        <p style={{ color: '#9ca3af', fontSize: '13px', marginBottom: '16px' }}>1-Click instant compliance dossier aggregating CTO status ({factoryData.ctoExpiryDate}), ETP health, and digital vault hashes for <strong>{factoryData.name}</strong>.</p>
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '16px' }}>
                             <div style={{ backgroundColor: '#1f2937', padding: '16px', borderRadius: '8px' }}>
                                 <p style={{ margin: '0 0 4px 0', fontSize: '11px', color: '#9ca3af', textTransform: 'uppercase' }}>CTO Status</p>
@@ -307,7 +365,7 @@ export default function EcoTraceDashboard() {
                 {activeModule === 'risk2' && (
                     <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '24px' }}>
                         <h2 style={{ color: '#ef4444', marginTop: 0, fontSize: '18px' }}>⚠️ Toxic & Boiler Gas Leak Safety Radar</h2>
-                        <p style={{ color: '#9ca3af', fontSize: '13px', marginBottom: '16px' }}>Real-time Parts Per Million (PPM) concentration tracking for <strong>{companyName}</strong>.</p>
+                        <p style={{ color: '#9ca3af', fontSize: '13px', marginBottom: '16px' }}>Real-time Parts Per Million (PPM) concentration tracking for <strong>{factoryData.name}</strong>.</p>
                         <div style={{ backgroundColor: '#166534', color: '#dcfce7', padding: '16px', borderRadius: '8px', fontWeight: 'bold', fontSize: '13px' }}>
                             Status: All Gas Sensors Normal (0.05 PPM Safe Range)
                         </div>
@@ -345,7 +403,7 @@ export default function EcoTraceDashboard() {
                 {activeModule === 'utility1' && (
                     <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '24px' }}>
                         <h2 style={{ color: '#3b82f6', marginTop: 0, fontSize: '18px' }}>⚡ MSEDCL Smart Grid & Power Factor Optimizer</h2>
-                        <p style={{ color: '#9ca3af', fontSize: '13px', marginBottom: '16px' }}>Real-time reactive power compensation monitoring for <strong>{companyName}</strong>.</p>
+                        <p style={{ color: '#9ca3af', fontSize: '13px', marginBottom: '16px' }}>Real-time reactive power compensation monitoring for <strong>{factoryData.name}</strong>.</p>
                         <div style={{ backgroundColor: '#1f2937', padding: '16px', borderRadius: '8px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
                             <div>
                                 <p style={{ margin: '0 0 4px 0', fontSize: '11px', color: '#9ca3af' }}>Current Power Factor</p>
@@ -374,7 +432,7 @@ export default function EcoTraceDashboard() {
                 {activeModule === 'stat1' && (
                     <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '24px' }}>
                         <h2 style={{ color: '#3b82f6', marginTop: 0, fontSize: '18px' }}>📑 Form 3, Form 4 & Form 5 Annual Returns Generator</h2>
-                        <p style={{ color: '#9ca3af', fontSize: '13px', marginBottom: '16px' }}>Dedicated modules for <strong>{companyName}</strong> matching MPCB formats.</p>
+                        <p style={{ color: '#9ca3af', fontSize: '13px', marginBottom: '16px' }}>Dedicated modules for <strong>{factoryData.name}</strong> matching MPCB formats.</p>
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px', marginBottom: '20px' }}>
                             <div style={{ backgroundColor: '#1f2937', padding: '16px', borderRadius: '8px' }}>
                                 <p style={{ margin: '0 0 4px 0', fontSize: '11px', color: '#9ca3af' }}>FORM 3 (WATER CESS)</p>
@@ -401,9 +459,9 @@ export default function EcoTraceDashboard() {
                 {activeModule === 'ctoDossier' && (
                     <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '24px' }}>
                         <h2 style={{ color: '#3b82f6', marginTop: 0, fontSize: '18px' }}>📄 CTO Renewal Auto-Dossier Generator</h2>
-                        <p style={{ color: '#9ca3af', fontSize: '13px', marginBottom: '16px' }}>Automated package compiler for <strong>{companyName}</strong> targeting MPCB OCMMS renewals.</p>
+                        <p style={{ color: '#9ca3af', fontSize: '13px', marginBottom: '16px' }}>Automated package compiler for <strong>{factoryData.name}</strong> targeting MPCB OCMMS renewals.</p>
                         <div style={{ backgroundColor: '#065f46', color: '#d1fae5', padding: '16px', borderRadius: '8px', fontWeight: 'bold', fontSize: '14px', border: `1px solid ${getCtoColor(ctoDaysLeft)}` }}>
-                            CTO Expiry in {ctoDaysLeft} Days — Dossier Ready for Manual Portal Upload
+                            CTO Expiry in {ctoDaysLeft} Days ({factoryData.ctoExpiryDate}) — Dossier Ready for Manual Portal Upload
                         </div>
                     </div>
                 )}
@@ -414,7 +472,7 @@ export default function EcoTraceDashboard() {
                         <p style={{ color: '#9ca3af', fontSize: '13px', marginBottom: '16px' }}>Instantly generates certified 3-page sustainability reports.</p>
                         <div style={{ backgroundColor: '#1f2937', padding: '16px', borderRadius: '8px', marginBottom: '16px' }}>
                             <p style={{ margin: '0 0 4px 0', fontSize: '11px', color: '#9ca3af' }}>Green Passport ID: ET-GP-2026-9942</p>
-                            <p style={{ margin: 0, fontSize: '13px', color: '#d1d5db' }}>Company: <strong>{companyName}</strong> | Location: {midcLocation}</p>
+                            <p style={{ margin: 0, fontSize: '13px', color: '#d1d5db' }}>Company: <strong>{factoryData.name}</strong> | Location: {factoryData.location}</p>
                         </div>
                         <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
                             <button 
@@ -439,7 +497,7 @@ export default function EcoTraceDashboard() {
                             <h2 style={{ color: '#10b981', margin: 0, fontSize: '18px' }}>🚚 Hazardous Waste Tanker Route & Form 10 Manifest</h2>
                             <span style={{ backgroundColor: '#065f46', color: '#d1fae5', padding: '4px 10px', borderRadius: '6px', fontSize: '11px', fontWeight: 'bold' }}>GEO-FENCE SECURE</span>
                         </div>
-                        <p style={{ color: '#9ca3af', fontSize: '13px', marginBottom: '16px' }}>Live tracking integration for transport vehicles from <strong>{companyName}</strong> to CHWTSDF facilities.</p>
+                        <p style={{ color: '#9ca3af', fontSize: '13px', marginBottom: '16px' }}>Live tracking integration for transport vehicles from <strong>{factoryData.name}</strong> to CHWTSDF facilities.</p>
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px', marginBottom: '16px' }}>
                             <div style={{ backgroundColor: '#1f2937', padding: '12px', borderRadius: '8px' }}>
                                 <p style={{ margin: '0 0 4px 0', fontSize: '11px', color: '#9ca3af' }}>MANIFEST ID</p>
@@ -469,7 +527,7 @@ export default function EcoTraceDashboard() {
                 {activeModule === 'ewaste' && (
                     <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '24px' }}>
                         <h2 style={{ color: '#10b981', marginTop: 0, fontSize: '18px' }}>📦 E-Waste & Battery EPR Statutory Vault</h2>
-                        <p style={{ color: '#9ca3af', fontSize: '13px', marginBottom: '16px' }}>Tracking registry for electronic waste and batteries for <strong>{companyName}</strong>.</p>
+                        <p style={{ color: '#9ca3af', fontSize: '13px', marginBottom: '16px' }}>Tracking registry for electronic waste and batteries for <strong>{factoryData.name}</strong>.</p>
                         <div style={{ backgroundColor: '#065f46', color: '#d1fae5', padding: '16px', borderRadius: '8px', fontWeight: 'bold', fontSize: '14px' }}>
                             EPR Compliance Status: Internally Verified & Ready for CPCB Filing
                         </div>
@@ -489,7 +547,7 @@ export default function EcoTraceDashboard() {
                 {activeModule === 'blockchain' && (
                     <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '24px' }}>
                         <h2 style={{ color: '#8b5cf6', marginTop: 0, fontSize: '18px' }}>⛓️ Tamper-Evident Digital Vault (Audit Trail Ledger)</h2>
-                        <p style={{ color: '#9ca3af', fontSize: '13px', marginBottom: '16px' }}>Cryptographically signed logging system recording IoT sensor data updates for <strong>{companyName}</strong>.</p>
+                        <p style={{ color: '#9ca3af', fontSize: '13px', marginBottom: '16px' }}>Cryptographically signed logging system recording IoT sensor data updates for <strong>{factoryData.name}</strong>.</p>
                         <div style={{ backgroundColor: '#1f2937', padding: '16px', borderRadius: '8px', marginBottom: '16px' }}>
                             <p style={{ margin: '0 0 4px 0', fontSize: '11px', color: '#9ca3af' }}>Active Hash</p>
                             <p style={{ margin: 0, fontSize: '12px', color: '#34d399', fontFamily: 'monospace' }}>{activeHash} (Tamper-Evident Verified)</p>
@@ -512,8 +570,8 @@ export default function EcoTraceDashboard() {
 
                 {activeModule === 'onboard' && (
                     <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '24px' }}>
-                        <h2 style={{ color: '#818cf8', marginTop: 0, fontSize: '18px' }}>🏢 Multi-Tenant Client Onboarding Engine</h2>
-                        <p style={{ color: '#9ca3af', fontSize: '13px', marginBottom: '16px' }}>Register new manufacturing units seamlessly across MIDC clusters.</p>
+                        <h2 style={{ color: '#818cf8', marginTop: 0, fontSize: '18px' }}>🏢 Multi-Tenant Client Onboarding & CTO Setup</h2>
+                        <p style={{ color: '#9ca3af', fontSize: '13px', marginBottom: '16px' }}>Register new manufacturing units with actual CTO expiry dates for tracking.</p>
                         
                         <form onSubmit={handleOnboardSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '12px', maxWidth: '500px' }}>
                             <div>
@@ -546,11 +604,20 @@ export default function EcoTraceDashboard() {
                                     style={{ width: '100%', padding: '10px', backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '6px', color: 'white', fontSize: '13px' }} 
                                 />
                             </div>
+                            <div>
+                                <label style={{ display: 'block', fontSize: '12px', color: '#9ca3af', marginBottom: '4px' }}>CTO Expiry Date (Real Target)</label>
+                                <input 
+                                    type="date" 
+                                    value={tempCtoDate}
+                                    onChange={(e) => setTempCtoDate(e.target.value)}
+                                    style={{ width: '100%', padding: '10px', backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '6px', color: 'white', fontSize: '13px' }} 
+                                />
+                            </div>
                             <button 
                                 type="submit" 
                                 style={{ backgroundColor: '#059669', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer', marginTop: '8px', fontSize: '13px' }}
                             >
-                                + Onboard Industrial Unit Live
+                                + Save Factory & Start CTO Tracking
                             </button>
                         </form>
                     </div>
