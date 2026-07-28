@@ -4,6 +4,7 @@ export async function POST(request) {
     try {
         const body = await request.json();
         
+        // पायलटसाठी Google Cloud Vision API सिम्युलेशन आणि एक्सट्रॅक्टेड डेटा
         return NextResponse.json({
             success: true,
             extractedData: {
