@@ -35,14 +35,14 @@ export default function EcoTraceDashboard() {
     }, []);
 
     const [macroData] = useState({
-        corridorName: "EcoTrace's First Green Industrial Corridor Deployment", // Guardrail: Softened claim
+        corridorName: "EcoTrace's First Green Industrial Corridor Deployment", 
         activeMonitoringUnits: 142,
         regionalAggregates: {
             totalCarbonEmissionTonnes: 1250.4,
             totalWaterConsumptionKL: 45000,
             greenCompliancePercentage: "94.5%"
         },
-        privacyShieldStatus: "Active - Privacy-Protected Aggregation Maintained" // Guardrail: Honest labeling
+        privacyShieldStatus: "Active - Privacy-Protected Aggregation Maintained" 
     });
 
     // Guardrail: Tamper-Evident Digital Vault (Private Hash Chain) instead of false Blockchain claim
@@ -85,14 +85,14 @@ export default function EcoTraceDashboard() {
                     <button style={{ backgroundColor: '#059669', color: 'white', border: 'none', padding: '6px 12px', borderRadius: '6px', fontSize: '12px', fontWeight: 'bold', cursor: 'pointer' }}>
                         Export PDF
                     </button>
-                    {/* Guardrail: Removed fake live MPCB sync button, replaced with safe export package action */}
+                    {/* Guardrail: Removed risky fake MPCB Sync button entirely from global header */}
                     <button style={{ backgroundColor: '#374151', color: 'white', border: 'none', padding: '6px 12px', borderRadius: '6px', fontSize: '12px', fontWeight: 'bold', cursor: 'pointer' }}>
                         Export Verified Audit Package
                     </button>
                 </div>
             </header>
 
-            {/* Professional Wide Global Navigation Drawer */}
+            {/* Professional Wide Global Navigation Drawer (Cleaned of risky/fake terms) */}
             {isMenuOpen && (
                 <div style={{ position: 'absolute', top: '70px', left: 0, width: '100%', backgroundColor: '#111827', borderBottom: '2px solid #1f2937', zIndex: 100, padding: '24px', boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.5)' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', borderBottom: '1px solid #1f2937', paddingBottom: '10px' }}>
@@ -134,6 +134,7 @@ export default function EcoTraceDashboard() {
 
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                             <div style={{ fontSize: '11px', fontWeight: 'bold', color: '#8b5cf6' }}>[E] COMMAND & ONBOARDING</div>
+                            {/* Guardrail: Renamed from 'Blockchain Immutable Ledger' to honest 'Tamper-Evident Digital Vault' */}
                             <div style={{ padding: '6px 8px', backgroundColor: '#1f2937', borderRadius: '6px', cursor: 'pointer', fontSize: '12px' }} onClick={() => { setActiveModule('blockchain'); setIsMenuOpen(false); }}>• Tamper-Evident Digital Vault</div>
                             <div style={{ padding: '6px 8px', backgroundColor: '#1f2937', borderRadius: '6px', cursor: 'pointer', fontSize: '12px' }} onClick={() => { setActiveModule('mcciGrants'); setIsMenuOpen(false); }}>• MCCI Privacy Shield & Grants</div>
                             <div style={{ padding: '6px 8px', backgroundColor: '#1f2937', borderRadius: '6px', cursor: 'pointer', fontSize: '12px', color: '#818cf8', fontWeight: 'bold' }} onClick={() => { setActiveModule('onboard'); setIsMenuOpen(false); }}>🏢 Multi-Tenant Client Onboarding</div>
