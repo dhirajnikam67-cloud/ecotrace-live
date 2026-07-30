@@ -364,10 +364,10 @@ Prepared for MPCB Flying Squad / Review
                 });
                 setIsEditing(true);
             } else {
-                alert('Scan failed: ' + result.error);
-            }
-        }
+        alert('Scan failed: ' + result.error);
+    }
   }
+})
 
     
         
