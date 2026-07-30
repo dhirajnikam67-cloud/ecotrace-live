@@ -414,7 +414,7 @@ Prepared for MPCB Flying Squad / Review
                             <p style={{ margin: '12px 0 0 0', fontSize: '12px', color: '#9ca3af' }}>GPS Location Lock & Exif Metadata Verification Active.</p>
                         </div>
                     </div>
-                )}
+                
 
                 {activeModule === 'risk1' && (
                     <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '24px' }}>
