@@ -355,9 +355,16 @@ Prepared for MPCB Flying Squad / Review
                 body: formData
             });
             const result = await res.json();
-            if(result.success) {
-                alert('Scan Successful! Data extracted: ' + result.data.unitsConsumed);
-            }
+          if(result.success) {
+        setOcrResult(result.data);
+        setEditForm({
+            unitsConsumed: result.data.unitsConsumed,
+            calculatedVolume: result.data.calculatedVolume
+        });
+        setIsEditing(true);
+    } else {
+        alert('Scan failed: ' + result.error);
+    }
         }
     }}
     />
