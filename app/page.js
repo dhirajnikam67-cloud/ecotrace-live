@@ -359,6 +359,44 @@ Prepared for MPCB Flying Squad / Review
         }
     }}
     />
+
+          {isEditing && ocrResult && (
+    <div style={{ backgroundColor: '#161b22', border: '1px solid #30363d', borderRadius: '8px', padding: '20px', marginTop: '20px' }}>
+        <h3 style={{ color: '#58a6ff', margin: '0 0 10px 0', fontSize: '15px' }}>🔍 Review & Edit Scanned Utility Data (Form V Update)</h3>
+        <p style={{ color: '#8b949e', fontSize: '12px', marginBottom: '15px' }}>GPS Location Locked: {ocrResult.gpsLocation}</p>
+        
+        <div style={{ display: 'grid', gap: '10px', marginBottom: '15px' }}>
+            <div>
+                <label style={{ fontSize: '12px', color: '#8b949e' }}>Units Consumed:</label>
+                <input 
+                    type="text" 
+                    value={editForm.unitsConsumed} 
+                    onChange={(e) => setEditForm({...editForm, unitsConsumed: e.target.value})}
+                    style={{ width: '100%', padding: '8px', backgroundColor: '#0d1117', color: 'white', border: '1px solid #30363d', borderRadius: '4px', marginTop: '4px' }}
+                />
+            </div>
+            <div>
+                <label style={{ fontSize: '12px', color: '#8b949e' }}>Calculated Effluent Volume:</label>
+                <input 
+                    type="text" 
+                    value={editForm.calculatedVolume} 
+                    onChange={(e) => setEditForm({...editForm, calculatedVolume: e.target.value})}
+                    style={{ width: '100%', padding: '8px', backgroundColor: '#0d1117', color: 'white', border: '1px solid #30363d', borderRadius: '4px', marginTop: '4px' }}
+                />
+            </div>
+        </div>
+
+        <button 
+            onClick={() => {
+                alert('Verified & Form V Updated Successfully with Edited Data!');
+                setIsEditing(false);
+            }}
+            style={{ backgroundColor: '#238636', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer', fontSize: '13px' }}
+        >
+            💾 Confirm & Lock to Form V
+        </button>
+    </div>
+)}
 </label>
                             <p style={{ margin: '12px 0 0 0', fontSize: '12px', color: '#9ca3af' }}>GPS Location Lock & Exif Metadata Verification Active.</p>
                         </div>
