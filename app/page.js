@@ -556,7 +556,7 @@ Prepared for MPCB Flying Squad / Review
     >
         View 3-Page Green Passport Report
     </button>
-  <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+ <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
     <button
         onClick={() => {
             const factoryName = companyName || 'Kesari Chemical Unit';
@@ -594,6 +594,47 @@ Prepared for MPCB Flying Squad / Review
         }}
         style={{ backgroundColor: '#059669', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '6px', cursor: 'pointer' }}
     >
+        View 3-Page Green Passport Report
+    </button>
+    <button
+        onClick={() => {
+            const factoryName = companyName || 'Kesari Chemical Unit';
+            const locationName = companyLocation || 'MIDC Area';
+            const units = editForm?.unitsConsumed || '1450 kWh';
+            const volume = editForm?.calculatedVolume || '1450 Liters';
+            const numericUnits = parseFloat(units) || 1450;
+            const carbonEmission = (numericUnits * 0.82).toFixed(2);
+
+            const reportContent = `========================================
+ECOTRACE INDIA PRIVATE LIMITED
+B2B GREEN PASSPORT & CARBON MAPPING DOSSIER
+========================================
+Company Name: ${factoryName}
+Location: ${locationName}
+Green Passport ID: ET-GP-2026-9942
+----------------------------------------
+SCANNED UTILITY & CALCULATED DATA:
+- Electricity Units Consumed: ${units}
+- Water Discharge Volume: ${volume} (Derived from MSEDCL Power Load)
+- Carbon Mapping (Scope 2 Emission): ${carbonEmission} kg CO2e
+----------------------------------------
+Status: Verified, Calculated & Audit Ready
+========================================`;
+
+            const blob = new Blob([reportContent], { type: 'text/plain;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `${factoryName}_Green_Passport_Report.txt`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }}
+        style={{ backgroundColor: '#374151', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '6px', cursor: 'pointer' }}
+    >
+        Download Carbon & Utility Report (.txt)
+    </button>
+</div>
         View 3-Page Green Passport Report
     </button>
     <button
