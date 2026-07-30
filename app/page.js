@@ -366,11 +366,14 @@ Prepared for MPCB Flying Squad / Review
             } else {
                 alert('Scan failed: ' + result.error);
             }
-        
-    }}
         }
-    }}
-    />
+}
+/>
+</label>
+    
+        
+    
+    
 
           {isEditing && ocrResult && (
     <div style={{ backgroundColor: '#161b22', border: '1px solid #30363d', borderRadius: '8px', padding: '20px', marginTop: '20px' }}>
