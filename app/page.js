@@ -556,22 +556,22 @@ Prepared for MPCB Flying Squad / Review
     >
         View 3-Page Green Passport Report
     </button>
-    <button
-        onClick={() => {
-            const reportContent = "ECOTRACE INDIA PRIVATE LIMITED\nGREEN PASSPORT DOSSIER PDF\nStatus: Compliant & Locked\nCompany: Kesari polymer";
-            const blob = new Blob([reportContent], { type: 'application/pdf;charset=utf-8' });
-            const url = URL.createObjectURL(blob);
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = 'Green_Passport_Report.pdf';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        }}
-        style={{ backgroundColor: '#374151', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '6px', cursor: 'pointer' }}
-    >
-        Download PDF
-    </button>
+   <button
+    onClick={() => {
+        const reportContent = "========================================\nECOTRACE INDIA PRIVATE LIMITED\nB2B GREEN PASSPORT DOSSIER (AUDIT READY)\n========================================\nCompany: Kesari cement\nLocation: PUNE MIDC\nGreen Passport ID: ET-GP-2026-9942\nStatus: Verified & Compliant\n========================================";
+        const blob = new Blob([reportContent], { type: 'text/plain;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'Green_Passport_Report.txt';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }}
+    style={{ backgroundColor: '#374151', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '6px', cursor: 'pointer' }}
+>
+    Download Report (.txt)
+</button>
 </div>
                         </div>
                     </div>
