@@ -396,10 +396,12 @@ Prepared for MPCB Flying Squad / Review
         </div>
 
         <button 
-            onClick={() => {
-                alert('Verified & Form V Updated Successfully with Edited Data!');
-                setIsEditing(false);
-            }}
+          onClick={() => {
+    alert('Verified & Form V Updated & Green Passport Generated Successfully!');
+    setIsEditing(false);
+    // ग्रीन पासपोर्ट जनरेट किंवा अनलॉक करण्यासाठी हे स्टेट जोडा:
+    setGreenPassportReady(true); 
+}}
             style={{ backgroundColor: '#238636', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer', fontSize: '13px' }}
         >
             💾 Confirm & Lock to Form V
