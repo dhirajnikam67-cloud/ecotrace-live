@@ -367,7 +367,6 @@ Prepared for MPCB Flying Squad / Review
         alert('Scan failed: ' + result.error);
     }
   }
-})
 
     
         
