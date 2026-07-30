@@ -544,18 +544,35 @@ Prepared for MPCB Flying Squad / Review
                             <p style={{ margin: 0, fontSize: '13px', color: '#d1d5db' }}>Company: <strong>{factoryData.name}</strong> | Location: {factoryData.location}</p>
                         </div>
                         <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
-                            <button 
-                                onClick={() => alert('Opening 3-Page Green Passport viewer...')}
-                                style={{ backgroundColor: '#059669', color: 'white', border: 'none', padding: '8px 16px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer', fontSize: '12px' }}
-                            >
-                                View 3-Page Green Passport Report
-                            </button>
-                            <button 
-                                onClick={() => alert('Downloading Green Passport PDF...')}
-                                style={{ backgroundColor: '#374151', color: 'white', border: 'none', padding: '8px 16px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer', fontSize: '12px' }}
-                            >
-                                Download PDF
-                            </button>
+                           <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+    <button
+        onClick={() => {
+            const reportContent = "ECOTRACE INDIA PRIVATE LIMITED\n3-PAGE GREEN PASSPORT REPORT\nStatus: Verified & Audit Ready\nCompany: Kesari polymer";
+            const blob = new Blob([reportContent], { type: 'text/plain;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            window.open(url, '_blank');
+        }}
+        style={{ backgroundColor: '#059669', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '6px', cursor: 'pointer' }}
+    >
+        View 3-Page Green Passport Report
+    </button>
+    <button
+        onClick={() => {
+            const reportContent = "ECOTRACE INDIA PRIVATE LIMITED\nGREEN PASSPORT DOSSIER PDF\nStatus: Compliant & Locked\nCompany: Kesari polymer";
+            const blob = new Blob([reportContent], { type: 'application/pdf;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'Green_Passport_Report.pdf';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }}
+        style={{ backgroundColor: '#374151', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '6px', cursor: 'pointer' }}
+    >
+        Download PDF
+    </button>
+</div>
                         </div>
                     </div>
                 )}
