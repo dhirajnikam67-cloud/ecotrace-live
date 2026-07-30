@@ -348,16 +348,26 @@ Prepared for MPCB Flying Squad / Review
             const formData = new FormData();
             formData.append('file', e.target.files[0]);
             
-            alert('Uploading & Scanning via OCR & GPS...');
+            alert('Uploading & Scanning MSEDCL Bill via OCR & GPS...');
             
             const res = await fetch('/api/ocr-scan', {
                 method: 'POST',
                 body: formData
             });
             const result = await res.json();
+            
             if(result.success) {
-                alert('Scan Successful! Data extracted: ' + result.data.unitsConsumed);
+                setOcrResult(result.data);
+                setEditForm({ 
+                    unitsConsumed: result.data.unitsConsumed, 
+                    calculatedVolume: result.data.calculatedVolume 
+                });
+                setIsEditing(true);
+            } else {
+                alert('Scan failed: ' + result.error);
             }
+        }
+    }}
         }
     }}
     />
