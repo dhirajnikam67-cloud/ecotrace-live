@@ -341,11 +341,23 @@ Prepared for MPCB Flying Squad / Review
         accept="image/*" 
         capture="environment"
         style={{ display: 'none' }}
-        onChange={(e) => {
-            if(e.target.files && e.target.files[0]) {
-                alert('File Selected: ' + e.target.files[0].name + ' - OCR Scan Complete!');
+      onChange={async (e) => {
+        if(e.target.files && e.target.files[0]) {
+            const formData = new FormData();
+            formData.append('file', e.target.files[0]);
+            
+            alert('Uploading & Scanning via OCR & GPS...');
+            
+            const res = await fetch('/api/ocr-scan', {
+                method: 'POST',
+                body: formData
+            });
+            const result = await res.json();
+            if(result.success) {
+                alert('Scan Successful! Data extracted: ' + result.data.unitsConsumed);
             }
-        }}
+        }
+    }}
     />
 </label>
                             <p style={{ margin: '12px 0 0 0', fontSize: '12px', color: '#9ca3af' }}>GPS Location Lock & Exif Metadata Verification Active.</p>
