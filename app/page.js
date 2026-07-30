@@ -339,7 +339,7 @@ Prepared for MPCB Flying Squad / Review
     <input 
         type="file" 
         accept="image/*" 
-        capture="environment"
+        
         style={{ display: 'none' }}
       onChange={async (e) => {
         if(e.target.files && e.target.files[0]) {
