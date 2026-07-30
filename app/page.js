@@ -4,7 +4,9 @@ import React, { useState, useEffect } from 'react';
 export default function EcoTraceDashboard() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [activeModule, setActiveModule] = useState('mainDashboard');
-
+const [ocrResult, setOcrResult] = useState(null);
+const [isEditing, setIsEditing] = useState(false);
+const [editForm, setEditForm] = useState({ unitsConsumed: '', calculatedVolume: '' });
     // फेज १: फॅक्टरीचा मूळ डेटा आणि खऱ्या तारखेसह CTO Tracking स्टेट
     const [factoryData, setFactoryData] = useState({
         name: "WESTERN CHEMICALS",
