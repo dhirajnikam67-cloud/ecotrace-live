@@ -348,30 +348,19 @@ Prepared for MPCB Flying Squad / Review
             const formData = new FormData();
             formData.append('file', e.target.files[0]);
             
-            alert('Uploading & Scanning MSEDCL Bill via OCR & GPS...');
+            alert('Uploading & Scanning via OCR & GPS...');
             
             const res = await fetch('/api/ocr-scan', {
                 method: 'POST',
                 body: formData
             });
             const result = await res.json();
-            
             if(result.success) {
-                setOcrResult(result.data);
-                setEditForm({ 
-                    unitsConsumed: result.data.unitsConsumed, 
-                    calculatedVolume: result.data.calculatedVolume 
-                });
-                setIsEditing(true);
-            } else {
-        alert('Scan failed: ' + result.error);
-    }
-  }
-
-    
-        
-    
-    
+                alert('Scan Successful! Data extracted: ' + result.data.unitsConsumed);
+            }
+        }
+    }}
+    />
 
           {isEditing && ocrResult && (
     <div style={{ backgroundColor: '#161b22', border: '1px solid #30363d', borderRadius: '8px', padding: '20px', marginTop: '20px' }}>
@@ -409,12 +398,12 @@ Prepared for MPCB Flying Squad / Review
             💾 Confirm & Lock to Form V
         </button>
     </div>
-
-
-                          
-                        
-                    
-                
+)}
+</label>
+                            <p style={{ margin: '12px 0 0 0', fontSize: '12px', color: '#9ca3af' }}>GPS Location Lock & Exif Metadata Verification Active.</p>
+                        </div>
+                    </div>
+                )}
 
                 {activeModule === 'risk1' && (
                     <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '24px' }}>
