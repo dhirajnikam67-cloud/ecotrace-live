@@ -292,17 +292,17 @@ Prepared for MPCB Flying Squad / Review
 
                             <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '20px' }}>
                                 <h4 style={{ color: '#3b82f6', margin: '0 0 6px 0', fontSize: '14px' }}>📊 dMRV Carbon Emissions</h4>
-                                <h3 style={{ margin: '0 0 6px 0', fontSize: '15px' }}>Scope 1: 1.2 MT</h3>
+                                <h3 style={{ margin: '0 0 6px 0', fontSize: '15px' }}>Scope 1: 1.2 MT (Estimated / Awaiting Fuel Consumption Input)</h3>
                                 <div style={{ margin: '6px 0 0 0', fontSize: '11px', color: '#9ca3af', display: 'flex', flexDirection: 'column', gap: '2px' }}>
                                     <span>• Scope 2: Verified via CEA Grid Factors</span>
-                                    <span>• Scope 3: Verified via Supply Chain Activity Logs</span>
+                                    <span>• Scope 3: Estimated via Supply Chain Activity Logs</span>
                                 </div>
                             </div>
 
                             <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '20px' }}>
                                 <h4 style={{ color: '#eab308', margin: '0 0 6px 0', fontSize: '14px' }}>💰 Financial Subvention</h4>
                                 <h3 style={{ margin: '0 0 6px 0', fontSize: '15px' }}>Eligible for Working Capital Interest Rebate</h3>
-                                <p style={{ margin: 0, fontSize: '12px', color: '#9ca3af' }}>Verified via Green Passport</p>
+                                <p style={{ margin: 0, fontSize: '12px', color: '#9ca3af' }}>Eligible for Review (Subject to bank circulars)</p>
                             </div>
                         </div>
                     </div>
@@ -467,7 +467,7 @@ Prepared for MPCB Flying Squad / Review
                 {activeModule === 'risk2' && (
                     <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '24px' }}>
                         <h2 style={{ color: '#ef4444', marginTop: 0, fontSize: '18px' }}>⚠️ Toxic & Boiler Gas Leak Safety Radar</h2>
-                        <p style={{ color: '#9ca3af', fontSize: '13px', marginBottom: '16px' }}>Real-time Parts Per Million (PPM) concentration tracking for <strong>{factoryData.name}</strong>.</p>
+                        <p style={{ color: '#9ca3af', fontSize: '13px', marginBottom: '16px' }}>Real-time (when sensor connected) Parts Per Million (PPM) concentration tracking for <strong>{factoryData.name}</strong>.</p>
                         
                         <div style={{ backgroundColor: '#1f2937', border: '1px solid #f59e0b', color: '#fcd34d', padding: '16px', borderRadius: '8px', fontWeight: 'bold', fontSize: '13px', marginBottom: '16px' }}>
                             Status: Simulated Demo Data — Awaiting Physical Sensor Integration (0.05 PPM Safe Range)
@@ -669,7 +669,7 @@ Status: Certified & Audit Ready for MPCB Inspection
 
                 {activeModule === 'tankerGPS' && (
                     <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '24px' }}>
-                        <h2 style={{ color: '#10b981', marginTop: 0, fontSize: '18px' }}>🚚 Tanker GPS & Form 10 Hazardous Waste Manifest</h2>
+                        <h2 style={{ color: '#10b981', marginTop: 0, fontSize: '18px' }}>🚚 Tanker GPS (when connected) & Form 10 Hazardous Waste Manifest</h2>
                         <p style={{ color: '#9ca3af', fontSize: '13px', marginBottom: '16px' }}>Real-time GPS tracking of hazardous waste tankers moving from <strong>{factoryData.name}</strong> to MWML Taloja/Ranjangaon.</p>
                         
                         <div style={{ backgroundColor: '#1f2937', border: '1px solid #f59e0b', color: '#fcd34d', padding: '16px', borderRadius: '8px', fontWeight: 'bold', fontSize: '13px', marginBottom: '16px' }}>
