@@ -860,7 +860,6 @@ Status: Verified, Calculated & Audit Ready
                 LEGAL DISCLAIMER & DEVELOPER LIABILITY WAIVER: EcoTrace India Private Limited and its developers act solely as a software interface provider aggregating IoT data and statutory records. We assume NO liability for equipment failures, financial losses, or statutory penalties arising from factory operations. Physical safety protocols, hardware calibration, and compliance adherence remain the absolute and sole responsibility of the factory management.
             </footer>
 
-       </main>
+      </main>
     </div>
   );
-}
