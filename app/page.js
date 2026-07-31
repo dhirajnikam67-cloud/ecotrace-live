@@ -469,12 +469,10 @@ Prepared for MPCB Flying Squad / Review
                         <h2 style={{ color: '#ef4444', marginTop: 0, fontSize: '18px' }}>⚠️ Toxic & Boiler Gas Leak Safety Radar</h2>
                         <p style={{ color: '#9ca3af', fontSize: '13px', marginBottom: '16px' }}>Real-time Parts Per Million (PPM) concentration tracking for <strong>{factoryData.name}</strong>.</p>
                         
-                        {/* Corrected Simulated Demo Status Box */}
                         <div style={{ backgroundColor: '#1f2937', border: '1px solid #f59e0b', color: '#fcd34d', padding: '16px', borderRadius: '8px', fontWeight: 'bold', fontSize: '13px', marginBottom: '16px' }}>
                             Status: Simulated Demo Data — Awaiting Physical Sensor Integration (0.05 PPM Safe Range)
                         </div>
 
-                        {/* IEC 61511 / SIS Guardrail Notice */}
                         <div style={{ backgroundColor: '#1f2937', padding: '16px', borderRadius: '8px', border: '1px solid #374151' }}>
                             <h4 style={{ color: '#f59e0b', margin: '0 0 6px 0', fontSize: '13px' }}>🛡️ Safety Instrumented System (SIS) Compliance Notice</h4>
                             <p style={{ margin: 0, fontSize: '12px', color: '#d1d5db' }}>
@@ -502,7 +500,6 @@ Prepared for MPCB Flying Squad / Review
                             </div>
                         </div>
 
-                        {/* Notice Defense Matrix UI Box for OCR Audit Trail & CPCB Category */}
                         <div style={{ backgroundColor: '#1f2937', padding: '16px', borderRadius: '8px', border: '1px solid #374151', marginBottom: '20px' }}>
                             <h4 style={{ color: '#34d399', margin: '0 0 10px 0', fontSize: '13px' }}>📋 Attached Defense Evidence (Manager Verified)</h4>
                             <div style={{ display: 'grid', gap: '8px', fontSize: '12px', color: '#d1d5db' }}>
@@ -674,10 +671,19 @@ Status: Certified & Audit Ready for MPCB Inspection
                     <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '24px' }}>
                         <h2 style={{ color: '#10b981', marginTop: 0, fontSize: '18px' }}>🚚 Tanker GPS & Form 10 Hazardous Waste Manifest</h2>
                         <p style={{ color: '#9ca3af', fontSize: '13px', marginBottom: '16px' }}>Real-time GPS tracking of hazardous waste tankers moving from <strong>{factoryData.name}</strong> to MWML Taloja/Ranjangaon.</p>
-                        <div style={{ backgroundColor: '#1f2937', padding: '16px', borderRadius: '8px', marginBottom: '16px' }}>
-                            <p style={{ margin: '0 0 4px 0', fontSize: '11px', color: '#9ca3af' }}>Form 10 Manifest ID: MH-HW-2026-8819</p>
-                            <p style={{ margin: 0, fontSize: '13px', color: '#34d399', fontWeight: 'bold' }}>Tanker Status: En Route to Treatment Facility (Ready for Manual Portal Upload)</p>
+                        
+                        {/* Tanker GPS No Signal Guardrail Box */}
+                        <div style={{ backgroundColor: '#1f2937', border: '1px solid #f59e0b', color: '#fcd34d', padding: '16px', borderRadius: '8px', fontWeight: 'bold', fontSize: '13px', marginBottom: '16px' }}>
+                            Status: No Signal / Data Unavailable — Fallback to Manual Form 10 Manifest & Log Verification
                         </div>
+
+                        {/* Manager Audit Trail Summary for Tanker & Waste */}
+                        <div style={{ backgroundColor: '#1f2937', padding: '16px', borderRadius: '8px', border: '1px solid #374151', marginBottom: '16px' }}>
+                            <h4 style={{ color: '#34d399', margin: '0 0 8px 0', fontSize: '13px' }}>📋 Manifest & CPCB Category Reference</h4>
+                            <p style={{ margin: '0 0 4px 0', fontSize: '12px', color: '#d1d5db' }}>• Form 10 Manifest ID: MH-HW-2026-8819</p>
+                            <p style={{ margin: 0, fontSize: '12px', color: '#d1d5db' }}>• Linked Hazardous Classification: <strong>{editForm.hazardousCategory}</strong></p>
+                        </div>
+
                         <button onClick={() => alert('Generating Form 10 Manifest Certificate (.txt)...')} style={{ backgroundColor: '#059669', color: 'white', border: 'none', padding: '10px 16px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer', fontSize: '12px' }}>
                             📥 Download Form 10 Manifest
                         </button>
@@ -787,7 +793,14 @@ Status: Verified, Calculated & Audit Ready
                 {activeModule === 'ewaste' && (
                     <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '24px' }}>
                         <h2 style={{ color: '#10b981', marginTop: 0, fontSize: '18px' }}>📦 E-Waste & Battery EPR Statutory Vault</h2>
-                        <p style={{ color: '#9ca3af', fontSize: '13px', marginBottom: '16px' }}>Tracking registry for electronic waste and batteries for <strong>{factoryData.name}</strong>.</p>
+                        <p style={{ color: '#9ca3af', fontSize: '13px', marginBottom: '16px' }}>Tracking registry and CPCB Registered Recycler verification for <strong>{factoryData.name}</strong>.</p>
+                        
+                        <div style={{ backgroundColor: '#1f2937', padding: '16px', borderRadius: '8px', border: '1px solid #374151', marginBottom: '16px' }}>
+                            <h4 style={{ color: '#34d399', margin: '0 0 8px 0', fontSize: '13px' }}>♻️ CPCB Registered Recycler Verification</h4>
+                            <p style={{ margin: '0 0 4px 0', fontSize: '12px', color: '#d1d5db' }}>• Partner Recycler: EcoRecycle India Pvt Ltd (CPCB Reg No: B-29016/Recycler/2025)</p>
+                            <p style={{ margin: 0, fontSize: '12px', color: '#d1d5db' }}>• Linked Waste Category: <strong>{editForm.hazardousCategory}</strong></p>
+                        </div>
+
                         <div style={{ backgroundColor: '#065f46', color: '#d1fae5', padding: '16px', borderRadius: '8px', fontWeight: 'bold', fontSize: '14px' }}>
                             EPR Compliance Status: Internally Verified & Ready for CPCB Filing
                         </div>
