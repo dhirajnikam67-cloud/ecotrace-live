@@ -4,15 +4,16 @@ import React, { useState, useEffect } from 'react';
 export default function EcoTraceDashboard() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [activeModule, setActiveModule] = useState('mainDashboard');
-const [ocrResult, setOcrResult] = useState(null);
-const [isEditing, setIsEditing] = useState(false);
-const [editForm, setEditForm] = useState({ unitsConsumed: '', calculatedVolume: '' });
-    // फेज १: फॅक्टरीचा मूळ डेटा आणि खऱ्या तारखेसह CTO Tracking स्टेट
+    const [ocrResult, setOcrResult] = useState(null);
+    const [isEditing, setIsEditing] = useState(false);
+    const [editForm, setEditForm] = useState({ unitsConsumed: '', calculatedVolume: '' });
+    
+    // फॅक्टरीचा मूळ डेटा आणि खऱ्या तारखेसह CTO Tracking स्टेट
     const [factoryData, setFactoryData] = useState({
         name: "WESTERN CHEMICALS",
         location: "BHOSARI MIDC, PUNE",
         dischargeLimit: "5000",
-        ctoExpiryDate: "2026-08-20", // खरी परवाना मुदत तारीख
+        ctoExpiryDate: "2026-08-20",
         status: "COMPLIANT & AUDIT READY"
     });
 
@@ -103,7 +104,6 @@ Prepared for MPCB Flying Squad / Review
         downloadTextFile(`${factoryData.name.replace(/\s+/g, '_')}_Audit_Package.txt`, auditContent);
     };
 
-    // Model 1 State & Auto-Trigger on Load
     const [auditResult, setAuditResult] = useState(null);
     const [loadingAudit, setLoadingAudit] = useState(false);
 
@@ -221,7 +221,6 @@ Prepared for MPCB Flying Squad / Review
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                             <div style={{ fontSize: '11px', fontWeight: 'bold', color: '#10b981' }}>[D] SUPPLY CHAIN & ESG</div>
                             <div style={{ padding: '6px 8px', backgroundColor: '#1f2937', borderRadius: '6px', cursor: 'pointer', fontSize: '12px' }} onClick={() => { setActiveModule('greenPassport'); setIsMenuOpen(false); }}>• B2B Green Passport & BRSR</div>
-                            <div style={{ padding: '6px 8px', backgroundColor: '#1f2937', borderRadius: '6px', cursor: 'pointer', fontSize: '12px' }} onClick={() => { setActiveModule('tankerGPS'); setIsMenuOpen(false); }}>• Tanker GPS & Form 10 Manifest</div>
                             <div style={{ padding: '6px 8px', backgroundColor: '#1f2937', borderRadius: '6px', cursor: 'pointer', fontSize: '12px' }} onClick={() => { setActiveModule('ewaste'); setIsMenuOpen(false); }}>• E-Waste & Battery EPR Vault</div>
                             <div style={{ padding: '6px 8px', backgroundColor: '#1f2937', borderRadius: '6px', cursor: 'pointer', fontSize: '12px' }} onClick={() => { setActiveModule('sbiRebate'); setIsMenuOpen(false); }}>• SBI / SIDBI Loan Rebate</div>
                         </div>
@@ -337,78 +336,75 @@ Prepared for MPCB Flying Squad / Review
                         <p style={{ color: '#9ca3af', fontSize: '13px' }}>Snap bills, electricity meters, or waste manifests directly from mobile. Instant OCR extracts data, locks GPS location, and updates Form V. (Guardrail: Review & Edit Step Included)</p>
                         <div style={{ marginTop: '20px', padding: '30px', border: '2px dashed #374151', borderRadius: '8px', textAlign: 'center', backgroundColor: '#1f2937' }}>
                            <label style={{ display: 'inline-block', backgroundColor: '#059669', color: 'white', padding: '12px 24px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer', fontSize: '14px' }}>
-    📸 Snap / Upload Utility & Waste Bills
-    <input 
-        type="file" 
-        accept="image/*" 
-        
-        style={{ display: 'none' }}
-      onChange={async (e) => {
-        if(e.target.files && e.target.files[0]) {
-            const formData = new FormData();
-            formData.append('file', e.target.files[0]);
-            
-            alert('Uploading & Scanning via OCR & GPS...');
-            
-            const res = await fetch('/api/ocr-scan', {
-                method: 'POST',
-                body: formData
-            });
-            const result = await res.json();
-          if(result.success) {
-        setOcrResult(result.data);
-        setEditForm({
-            unitsConsumed: result.data.unitsConsumed,
-            calculatedVolume: result.data.calculatedVolume
-        });
-        setIsEditing(true);
-    } else {
-        alert('Scan failed: ' + result.error);
-    }
-        }
-    }}
-    />
+                            📸 Snap / Upload Utility & Waste Bills
+                            <input 
+                                type="file" 
+                                accept="image/*" 
+                                style={{ display: 'none' }}
+                                onChange={async (e) => {
+                                    if(e.target.files && e.target.files[0]) {
+                                        const formData = new FormData();
+                                        formData.append('file', e.target.files[0]);
+                                        
+                                        alert('Uploading & Scanning via OCR & GPS...');
+                                        
+                                        const res = await fetch('/api/ocr-scan', {
+                                            method: 'POST',
+                                            body: formData
+                                        });
+                                        const result = await res.json();
+                                        if(result.success) {
+                                            setOcrResult(result.data);
+                                            setEditForm({
+                                                unitsConsumed: result.data.unitsConsumed,
+                                                calculatedVolume: result.data.calculatedVolume
+                                            });
+                                            setIsEditing(true);
+                                        } else {
+                                            alert('Scan failed: ' + result.error);
+                                        }
+                                    }
+                                }}
+                            />
+                            </label>
 
-          {isEditing && ocrResult && (
-    <div style={{ backgroundColor: '#161b22', border: '1px solid #30363d', borderRadius: '8px', padding: '20px', marginTop: '20px' }}>
-        <h3 style={{ color: '#58a6ff', margin: '0 0 10px 0', fontSize: '15px' }}>🔍 Review & Edit Scanned Utility Data (Form V Update)</h3>
-        <p style={{ color: '#8b949e', fontSize: '12px', marginBottom: '15px' }}>GPS Location Locked: {ocrResult.gpsLocation}</p>
-        
-        <div style={{ display: 'grid', gap: '10px', marginBottom: '15px' }}>
-            <div>
-                <label style={{ fontSize: '12px', color: '#8b949e' }}>Units Consumed:</label>
-                <input 
-                    type="text" 
-                    value={editForm.unitsConsumed} 
-                    onChange={(e) => setEditForm({...editForm, unitsConsumed: e.target.value})}
-                    style={{ width: '100%', padding: '8px', backgroundColor: '#0d1117', color: 'white', border: '1px solid #30363d', borderRadius: '4px', marginTop: '4px' }}
-                />
-            </div>
-            <div>
-                <label style={{ fontSize: '12px', color: '#8b949e' }}>Calculated Effluent Volume:</label>
-                <input 
-                    type="text" 
-                    value={editForm.calculatedVolume} 
-                    onChange={(e) => setEditForm({...editForm, calculatedVolume: e.target.value})}
-                    style={{ width: '100%', padding: '8px', backgroundColor: '#0d1117', color: 'white', border: '1px solid #30363d', borderRadius: '4px', marginTop: '4px' }}
-                />
-            </div>
-        </div>
+                            {isEditing && ocrResult && (
+                                <div style={{ backgroundColor: '#161b22', border: '1px solid #30363d', borderRadius: '8px', padding: '20px', marginTop: '20px', textAlign: 'left' }}>
+                                    <h3 style={{ color: '#58a6ff', margin: '0 0 10px 0', fontSize: '15px' }}>🔍 Review & Edit Scanned Utility Data (Form V Update)</h3>
+                                    <p style={{ color: '#8b949e', fontSize: '12px', marginBottom: '15px' }}>GPS Location Locked: {ocrResult.gpsLocation}</p>
+                                    
+                                    <div style={{ display: 'grid', gap: '10px', marginBottom: '15px' }}>
+                                        <div>
+                                            <label style={{ fontSize: '12px', color: '#8b949e' }}>Units Consumed:</label>
+                                            <input 
+                                                type="text" 
+                                                value={editForm.unitsConsumed} 
+                                                onChange={(e) => setEditForm({...editForm, unitsConsumed: e.target.value})}
+                                                style={{ width: '100%', padding: '8px', backgroundColor: '#0d1117', color: 'white', border: '1px solid #30363d', borderRadius: '4px', marginTop: '4px' }}
+                                            />
+                                        </div>
+                                        <div>
+                                            <label style={{ fontSize: '12px', color: '#8b949e' }}>Calculated Effluent Volume:</label>
+                                            <input 
+                                                type="text" 
+                                                value={editForm.calculatedVolume} 
+                                                onChange={(e) => setEditForm({...editForm, calculatedVolume: e.target.value})}
+                                                style={{ width: '100%', padding: '8px', backgroundColor: '#0d1117', color: 'white', border: '1px solid #30363d', borderRadius: '4px', marginTop: '4px' }}
+                                            />
+                                        </div>
+                                    </div>
 
-        <button 
-          onClick={() => {
-    alert('Verified & Form V Updated & Green Passport Generated Successfully!');
-    setIsEditing(false);
-    // ग्रीन पासपोर्ट जनरेट किंवा अनलॉक करण्यासाठी हे स्टेट जोडा:
-    setGreenPassportReady(true); 
-}}
-            style={{ backgroundColor: '#238636', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer', fontSize: '13px' }}
-        >
-            💾 Confirm & Lock to Form V
-        </button>
-    </div>
-)}
-</label>
+                                    <button 
+                                        onClick={() => {
+                                            alert('Verified & Form V Updated & Green Passport Generated Successfully!');
+                                            setIsEditing(false);
+                                        }}
+                                        style={{ backgroundColor: '#238636', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer', fontSize: '13px' }}
+                                    >
+                                        💾 Confirm & Lock to Form V
+                                    </button>
+                                </div>
+                            )}
                             <p style={{ margin: '12px 0 0 0', fontSize: '12px', color: '#9ca3af' }}>GPS Location Lock & Exif Metadata Verification Active.</p>
                         </div>
                     </div>
@@ -544,216 +540,73 @@ Prepared for MPCB Flying Squad / Review
                             <p style={{ margin: 0, fontSize: '13px', color: '#d1d5db' }}>Company: <strong>{factoryData.name}</strong> | Location: {factoryData.location}</p>
                         </div>
                         <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
-                           <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
-    <button
-        onClick={() => {
-            const reportContent = "ECOTRACE INDIA PRIVATE LIMITED\n3-PAGE GREEN PASSPORT REPORT\nStatus: Verified & Audit Ready\nCompany: Kesari polymer";
-            const blob = new Blob([reportContent], { type: 'text/plain;charset=utf-8' });
-            const url = URL.createObjectURL(blob);
-            window.open(url, '_blank');
-        }}
-        style={{ backgroundColor: '#059669', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '6px', cursor: 'pointer' }}
-    >
-        View 3-Page Green Passport Report
-    </button>
-<div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', marginTop: '12px' }}>
-    <button
-        onClick={() => {
-            const factoryName = companyName || 'Kesari Chemical Unit';
-            const locationName = companyLocation || 'MIDC Area';
-            const units = editForm?.unitsConsumed || '1450 kWh';
-            const volume = editForm?.calculatedVolume || '1450 Liters';
-            const numericUnits = parseFloat(units) || 1450;
-            const carbonEmission = (numericUnits * 0.82).toFixed(2);
+                            <button
+                                onClick={() => {
+                                    const reportHtml = `<html>
+                                        <head><title>Green Passport - ${factoryData.name}</title></head>
+                                        <body style="font-family: Arial; padding: 20px; background: #f4f4f4;">
+                                            <div style="background: white; padding: 20px; border-radius: 8px; max-width: 600px; margin: auto;">
+                                                <h2 style="color: #059669;">ECOTRACE INDIA PRIVATE LIMITED</h2>
+                                                <h3>3-Page Green Passport & Carbon Dossier</h3>
+                                                <hr/>
+                                                <p><strong>Company Name:</strong> ${factoryData.name}</p>
+                                                <p><strong>Location:</strong> ${factoryData.location}</p>
+                                                <p><strong>Green Passport ID:</strong> ET-GP-2026-9942</p>
+                                                <hr/>
+                                                <h4>Scanned Utility & Calculated Metrics:</h4>
+                                                <ul>
+                                                    <li>Electricity Consumed: <strong>1450 kWh</strong></li>
+                                                    <li>Water Discharge Volume: <strong>1450 Liters</strong></li>
+                                                    <li>Carbon Mapping (Scope 2 Emissions): <strong>1189.00 kg CO2e</strong></li>
+                                                </ul>
+                                                <p style="color: green; font-weight: bold;">Status: Verified, Compliant & Audit Ready</p>
+                                            </div>
+                                        </body>
+                                    </html>`;
 
-            const reportHtml = `<html>
-                <head><title>Green Passport - ${factoryName}</title></head>
-                <body style="font-family: Arial; padding: 20px; background: #f4f4f4;">
-                    <div style="background: white; padding: 20px; border-radius: 8px; max-width: 600px; margin: auto;">
-                        <h2 style="color: #059669;">ECOTRACE INDIA PRIVATE LIMITED</h2>
-                        <h3>3-Page Green Passport & Carbon Dossier</h3>
-                        <hr/>
-                        <p><strong>Company Name:</strong> ${factoryName}</p>
-                        <p><strong>Location:</strong> ${locationName}</p>
-                        <p><strong>Green Passport ID:</strong> ET-GP-2026-9942</p>
-                        <hr/>
-                        <h4>Scanned Utility & Calculated Metrics:</h4>
-                        <ul>
-                            <li>Electricity Consumed: <strong>${units}</strong></li>
-                            <li>Water Discharge Volume (Calculated via Power Ratio): <strong>${volume}</strong></li>
-                            <li>Carbon Mapping (Scope 2 Emissions): <strong>${carbonEmission} kg CO2e</strong></li>
-                        </ul>
-                        <p style="color: green; font-weight: bold;">Status: Verified, Compliant & Audit Ready</p>
+                                    const blob = new Blob([reportHtml], { type: 'text/html;charset=utf-8' });
+                                    const url = URL.createObjectURL(blob);
+                                    window.open(url, '_blank');
+                                }}
+                                style={{ backgroundColor: '#059669', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '6px', cursor: 'pointer' }}
+                            >
+                                View 3-Page Green Passport Report
+                            </button>
+                            <button
+                                onClick={() => {
+                                    const reportContent = `========================================
+ECOTRACE INDIA PRIVATE LIMITED
+B2B GREEN PASSPORT & CARBON MAPPING DOSSIER
+========================================
+Company Name: ${factoryData.name}
+Location: ${factoryData.location}
+Green Passport ID: ET-GP-2026-9942
+----------------------------------------
+SCANNED UTILITY & CALCULATED DATA:
+- Electricity Units Consumed: 1450 kWh
+- Water Discharge Volume: 1450 Liters
+- Carbon Mapping (Scope 2 Emission): 1189.00 kg CO2e
+----------------------------------------
+Status: Verified, Calculated & Audit Ready
+========================================`;
+
+                                    const blob = new Blob([reportContent], { type: 'text/plain;charset=utf-8' });
+                                    const url = URL.createObjectURL(blob);
+                                    const link = document.createElement('a');
+                                    link.href = url;
+                                    link.download = `${factoryData.name}_Green_Passport_Report.txt`;
+                                    document.body.appendChild(link);
+                                    link.click();
+                                    document.body.removeChild(link);
+                                }}
+                                style={{ backgroundColor: '#374151', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '6px', cursor: 'pointer' }}
+                            >
+                                Download Carbon & Utility Report (.txt)
+                            </button>
+                        </div>
                     </div>
-                </body>
-            </html>`;
+                )}
 
-            const blob = new Blob([reportHtml], { type: 'text/html;charset=utf-8' });
-            const url = URL.createObjectURL(blob);
-            window.open(url, '_blank');
-        }}
-        style={{ backgroundColor: '#059669', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '6px', cursor: 'pointer' }}
-    >
-        View 3-Page Green Passport Report
-    </button>
-    <button
-        onClick={() => {
-            const factoryName = companyName || 'Kesari Chemical Unit';
-            const locationName = companyLocation || 'MIDC Area';
-            const units = editForm?.unitsConsumed || '1450 kWh';
-            const volume = editForm?.calculatedVolume || '1450 Liters';
-            const numericUnits = parseFloat(units) || 1450;
-            const carbonEmission = (numericUnits * 0.82).toFixed(2);
-
-            const reportContent = `========================================
-ECOTRACE INDIA PRIVATE LIMITED
-B2B GREEN PASSPORT & CARBON MAPPING DOSSIER
-========================================
-Company Name: ${factoryName}
-Location: ${locationName}
-Green Passport ID: ET-GP-2026-9942
-----------------------------------------
-SCANNED UTILITY & CALCULATED DATA:
-- Electricity Units Consumed: ${units}
-- Water Discharge Volume: ${volume} (Derived from MSEDCL Power Load)
-- Carbon Mapping (Scope 2 Emission): ${carbonEmission} kg CO2e
-----------------------------------------
-Status: Verified, Calculated & Audit Ready
-========================================`;
-
-            const blob = new Blob([reportContent], { type: 'text/plain;charset=utf-8' });
-            const url = URL.createObjectURL(blob);
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = `${factoryName}_Green_Passport_Report.txt`;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        }}
-        style={{ backgroundColor: '#374151', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '6px', cursor: 'pointer' }}
-    >
-        Download Carbon & Utility Report (.txt)
-    </button>
-</div>
-       
-    <button
-        onClick={() => {
-            const factoryName = companyName || 'Kesari Chemical Unit';
-            const locationName = companyLocation || 'MIDC Area';
-            const units = editForm?.unitsConsumed || '1450 kWh';
-            const volume = editForm?.calculatedVolume || '1450 Liters';
-            const numericUnits = parseFloat(units) || 1450;
-            const carbonEmission = (numericUnits * 0.82).toFixed(2);
-
-            const reportContent = `========================================
-ECOTRACE INDIA PRIVATE LIMITED
-B2B GREEN PASSPORT & CARBON MAPPING DOSSIER
-========================================
-Company Name: ${factoryName}
-Location: ${locationName}
-Green Passport ID: ET-GP-2026-9942
-----------------------------------------
-SCANNED UTILITY & CALCULATED DATA:
-- Electricity Units Consumed: ${units}
-- Water Discharge Volume: ${volume} (Derived from MSEDCL Power Load)
-- Carbon Mapping (Scope 2 Emission): ${carbonEmission} kg CO2e
-----------------------------------------
-Status: Verified, Calculated & Audit Ready
-========================================`;
-
-            const blob = new Blob([reportContent], { type: 'text/plain;charset=utf-8' });
-            const url = URL.createObjectURL(blob);
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = `${factoryName}_Green_Passport_Report.txt`;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        }}
-        style={{ backgroundColor: '#374151', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '6px', cursor: 'pointer' }}
-    >
-        Download Carbon & Utility Report (.txt)
-    </button>
-</div>
-       <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', marginTop: '12px' }}>
-    <button
-        onClick={() => {
-            const factoryName = companyName || 'Kesari Chemical Unit';
-            const locationName = companyLocation || 'MIDC Area';
-            const units = editForm?.unitsConsumed || '1450 kWh';
-            const volume = editForm?.calculatedVolume || '1450 Liters';
-            const numericUnits = parseFloat(units) || 1450;
-            const carbonEmission = (numericUnits * 0.82).toFixed(2);
-
-            const reportHtml = `<html>
-                <head><title>Green Passport - ${factoryName}</title></head>
-                <body style="font-family: Arial; padding: 20px; background: #f4f4f4;">
-                    <div style="background: white; padding: 20px; border-radius: 8px; max-width: 600px; margin: auto;">
-                        <h2 style="color: #059669;">ECOTRACE INDIA PRIVATE LIMITED</h2>
-                        <h3>3-Page Green Passport & Carbon Dossier</h3>
-                        <hr/>
-                        <p><strong>Company Name:</strong> ${factoryName}</p>
-                        <p><strong>Location:</strong> ${locationName}</p>
-                        <p><strong>Green Passport ID:</strong> ET-GP-2026-9942</p>
-                        <hr/>
-                        <h4>Scanned Utility & Calculated Metrics:</h4>
-                        <ul>
-                            <li>Electricity Consumed: <strong>${units}</strong></li>
-                            <li>Water Discharge Volume: <strong>${volume}</strong></li>
-                            <li>Carbon Mapping (Scope 2 Emissions): <strong>${carbonEmission} kg CO2e</strong></li>
-                        </ul>
-                        <p style="color: green; font-weight: bold;">Status: Verified, Compliant & Audit Ready</p>
-                    </div>
-                </body>
-            </html>`;
-
-            const blob = new Blob([reportHtml], { type: 'text/html;charset=utf-8' });
-            const url = URL.createObjectURL(blob);
-            window.open(url, '_blank');
-        }}
-        style={{ backgroundColor: '#059669', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '6px', cursor: 'pointer' }}
-    >
-        View 3-Page Green Passport Report
-    </button>
-    <button
-        onClick={() => {
-            const factoryName = companyName || 'Kesari Chemical Unit';
-            const locationName = companyLocation || 'MIDC Area';
-            const units = editForm?.unitsConsumed || '1450 kWh';
-            const volume = editForm?.calculatedVolume || '1450 Liters';
-            const numericUnits = parseFloat(units) || 1450;
-            const carbonEmission = (numericUnits * 0.82).toFixed(2);
-
-            const reportContent = `========================================
-ECOTRACE INDIA PRIVATE LIMITED
-B2B GREEN PASSPORT & CARBON MAPPING DOSSIER
-========================================
-Company Name: ${factoryName}
-Location: ${locationName}
-Green Passport ID: ET-GP-2026-9942
-----------------------------------------
-SCANNED UTILITY & CALCULATED DATA:
-- Electricity Units Consumed: ${units}
-- Water Discharge Volume: ${volume}
-- Carbon Mapping (Scope 2 Emission): ${carbonEmission} kg CO2e
-----------------------------------------
-Status: Verified, Calculated & Audit Ready
-========================================`;
-
-            const blob = new Blob([reportContent], { type: 'text/plain;charset=utf-8' });
-            const url = URL.createObjectURL(blob);
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = `${factoryName}_Green_Passport_Report.txt`;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        }}
-        style={{ backgroundColor: '#374151', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '6px', cursor: 'pointer' }}
-    >
-        Download Carbon & Utility Report (.txt)
-    </button>
-</div>
                 {activeModule === 'ewaste' && (
                     <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '24px' }}>
                         <h2 style={{ color: '#10b981', marginTop: 0, fontSize: '18px' }}>📦 E-Waste & Battery EPR Statutory Vault</h2>
@@ -849,15 +702,14 @@ Status: Verified, Calculated & Audit Ready
                             >
                                 + Save Factory & Start CTO Tracking
                             </button>
-                      </form>
-      </div>
-      
-     
-    </div>
-    <footer style={{ marginTop: '40px', borderTop: '1px solid #1f2937', paddingTop: '20px', textAlign: 'center', color: '#9ca3af', fontSize: '12px' }}>
-      LEGAL DISCLAIMER & DEVELOPER LIABILITY WAIVER: EcoTrace India Private Limited is an independent compliance platform.
-    </footer>
-  </main>
-</div>
-);
+                        </form>
+                    </div>
+                )}
+            </div>
+
+            <footer style={{ marginTop: '40px', borderTop: '1px solid #1f2937', paddingTop: '20px', textAlign: 'center', color: '#9ca3af', fontSize: '12px' }}>
+                LEGAL DISCLAIMER & DEVELOPER LIABILITY WAIVER: EcoTrace India Private Limited is an independent compliance platform.
+            </footer>
+        </main>
+    );
 }
