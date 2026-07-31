@@ -7,7 +7,7 @@ export default function EcoTraceDashboard() {
     const [ocrResult, setOcrResult] = useState(null);
     const [isEditing, setIsEditing] = useState(false);
     
-    // Original OCR vs Manager Confirmed ट्रॅकिंगसाठी स्टेट
+    // Original OCR vs Manager Confirmed ट्रॅकिंगसाठी स्पष्ट स्टेट
     const [editForm, setEditForm] = useState({ 
         originalElectricity: '1420', 
         unitsConsumed: '1450', 
@@ -342,7 +342,7 @@ Prepared for MPCB Flying Squad / Review
                             <h2 style={{ color: '#34d399', margin: 0, fontSize: '18px' }}>⚡ Multi-File Batch OCR & Human-in-the-Loop Review</h2>
                             <span style={{ backgroundColor: '#065f46', color: '#d1fae5', padding: '4px 10px', borderRadius: '6px', fontSize: '11px', fontWeight: 'bold' }}>TRANSPARENT AUDIT TRAIL ACTIVE</span>
                         </div>
-                        <p style={{ color: '#9ca3af', fontSize: '13px' }}>Upload bills. The system records the original OCR reading and allows manager verification/correction, maintaining full compliance transparency.</p>
+                        <p style={{ color: '#9ca3af', fontSize: '13px' }}>Upload bills. The system records the original OCR reading vs manager verification, flagging any discrepancies for absolute transparency.</p>
                         <div style={{ marginTop: '20px', padding: '30px', border: '2px dashed #374151', borderRadius: '8px', textAlign: 'center', backgroundColor: '#1f2937' }}>
                            <label style={{ display: 'inline-block', backgroundColor: '#059669', color: 'white', padding: '12px 24px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer', fontSize: '14px' }}>
                             📁 Select Multiple Bills / Manifests (Batch Upload)
@@ -355,14 +355,14 @@ Prepared for MPCB Flying Squad / Review
                                     if(e.target.files && e.target.files.length > 0) {
                                         const filesArray = Array.from(e.target.files);
                                         setBatchFiles(filesArray);
-                                        alert(`Successfully queued ${filesArray.length} file(s). Review original vs verified metrics below.`);
+                                        alert(`Successfully queued ${filesArray.length} file(s). Review original OCR vs manager verification below.`);
                                         setIsEditing(true);
                                     }
                                 }}
                             />
                             </label>
 
-                            {/* Batch Files Preview & Transparent Review Box */}
+                            {/* Batch Files Preview & Discrepancy Tracking Box */}
                             {isEditing && (
                                 <div style={{ backgroundColor: '#161b22', border: '1px solid #30363d', borderRadius: '8px', padding: '20px', marginTop: '20px', textAlign: 'left' }}>
                                     <h3 style={{ color: '#58a6ff', margin: '0 0 10px 0', fontSize: '15px' }}>🔍 Original OCR Scan vs. Manager Confirmed Audit Review</h3>
@@ -380,6 +380,9 @@ Prepared for MPCB Flying Squad / Review
                                                 onChange={(e) => setEditForm({...editForm, unitsConsumed: e.target.value})}
                                                 style={{ width: '100%', padding: '8px', backgroundColor: '#161b22', color: 'white', border: '1px solid #374151', borderRadius: '4px', marginTop: '4px' }}
                                             />
+                                            {editForm.unitsConsumed !== editForm.originalElectricity && (
+                                                <p style={{ margin: '6px 0 0 0', fontSize: '10px', color: '#ef4444' }}>⚠️ Discrepancy Flagged: Manager corrected the OCR value.</p>
+                                            )}
                                         </div>
 
                                         <div style={{ backgroundColor: '#0d1117', padding: '12px', borderRadius: '6px', border: '1px solid #30363d' }}>
@@ -392,21 +395,24 @@ Prepared for MPCB Flying Squad / Review
                                                 onChange={(e) => setEditForm({...editForm, waterDischarge: e.target.value})}
                                                 style={{ width: '100%', padding: '8px', backgroundColor: '#161b22', color: 'white', border: '1px solid #374151', borderRadius: '4px', marginTop: '4px' }}
                                             />
+                                            {editForm.waterDischarge !== editForm.originalWater && (
+                                                <p style={{ margin: '6px 0 0 0', fontSize: '10px', color: '#ef4444' }}>⚠️ Discrepancy Flagged: Manager corrected the OCR value.</p>
+                                            )}
                                         </div>
                                     </div>
 
                                     <button 
                                         onClick={() => {
-                                            alert('Audit trail locked: Original OCR + Manager Verified values saved successfully!');
+                                            alert('Audit trail locked with discrepancy tracking successfully!');
                                             setIsEditing(false);
                                         }}
                                         style={{ backgroundColor: '#238636', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer', fontSize: '13px' }}
                                     >
-                                        💾 Lock Audit Trail & Update Form V
+                                        💾 Lock Discrepancy Audit Trail & Update Form V
                                     </button>
                                 </div>
                             )}
-                            <p style={{ margin: '12px 0 0 0', fontSize: '12px', color: '#9ca3af' }}>Transparent human-in-the-loop review active.</p>
+                            <p style={{ margin: '12px 0 0 0', fontSize: '12px', color: '#9ca3af' }}>Transparent discrepancy logging active.</p>
                         </div>
                     </div>
                 )}
@@ -497,14 +503,14 @@ Prepared for MPCB Flying Squad / Review
 
                 {activeModule === 'stat1' && (
                     <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '24px' }}>
-                        <h2 style={{ color: '#3b82f6', marginTop: 0, fontSize: '18px' }}>📑 Form 3, Form 4 & Form 5 Annual Returns Generator (Transparent Audit Trail)</h2>
+                        <h2 style={{ color: '#3b82f6', marginTop: 0, fontSize: '18px' }}>📑 Form 3, Form 4 & Form 5 Annual Returns Generator (Discrepancy Audit Trail)</h2>
                         <p style={{ color: '#9ca3af', fontSize: '13px', marginBottom: '16px' }}>Automated MPCB Statutory Form Compilation for <strong>{factoryData.name}</strong>.</p>
                         
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '16px', marginBottom: '20px' }}>
                             <div style={{ backgroundColor: '#1f2937', padding: '16px', borderRadius: '8px' }}>
                                 <p style={{ margin: '0 0 4px 0', fontSize: '11px', color: '#9ca3af' }}>FORM 3 (WATER CESS)</p>
                                 <p style={{ margin: '4px 0', fontSize: '14px', fontWeight: 'bold', color: '#34d399' }}>Verified Water: {editForm.waterDischarge} Liters</p>
-                                <p style={{ margin: 0, fontSize: '11px', color: '#9ca3af' }}>OCR Read: {editForm.originalWater} Liters</p>
+                                <p style={{ margin: 0, fontSize: '11px', color: '#9ca3af' }}>{editForm.waterDischarge !== editForm.originalWater ? '⚠️ Corrected from OCR (' + editForm.originalWater + ')' : '✓ Verified (No Discrepancy)'}</p>
                             </div>
                             <div style={{ backgroundColor: '#1f2937', padding: '16px', borderRadius: '8px' }}>
                                 <p style={{ margin: '0 0 4px 0', fontSize: '11px', color: '#9ca3af' }}>FORM 4 (HAZARDOUS WASTE)</p>
@@ -514,7 +520,7 @@ Prepared for MPCB Flying Squad / Review
                             <div style={{ backgroundColor: '#1f2937', padding: '16px', borderRadius: '8px' }}>
                                 <p style={{ margin: '0 0 4px 0', fontSize: '11px', color: '#9ca3af' }}>FORM 5 (ENVIRONMENT STATEMENT)</p>
                                 <p style={{ margin: '4px 0', fontSize: '14px', fontWeight: 'bold', color: '#f59e0b' }}>Verified Power: {editForm.unitsConsumed} kWh</p>
-                                <p style={{ margin: 0, fontSize: '11px', color: '#9ca3af' }}>OCR Read: {editForm.originalElectricity} kWh</p>
+                                <p style={{ margin: 0, fontSize: '11px', color: '#9ca3af' }}>{editForm.unitsConsumed !== editForm.originalElectricity ? '⚠️ Corrected from OCR (' + editForm.originalElectricity + ')' : '✓ Verified (No Discrepancy)'}</p>
                             </div>
                         </div>
 
@@ -523,6 +529,8 @@ Prepared for MPCB Flying Squad / Review
                                 const unitsNum = parseFloat(editForm.unitsConsumed) || 1450;
                                 const waterVol = editForm.waterDischarge || '3200';
                                 const carbonMap = (unitsNum * 0.82).toFixed(2);
+                                const waterStatus = waterVol !== editForm.originalWater ? `Corrected by Manager (Original OCR Read: ${editForm.originalWater} Liters)` : `OCR Verified (No Discrepancy: ${editForm.originalWater} Liters)`;
+                                const electricityStatus = unitsNum.toString() !== editForm.originalElectricity ? `Corrected by Manager (Original OCR Read: ${editForm.originalElectricity} kWh)` : `OCR Verified (No Discrepancy: ${editForm.originalElectricity} kWh)`;
 
                                 const reportContent = `========================================
 ECOTRACE INDIA PRIVATE LIMITED
@@ -534,8 +542,8 @@ Discharge Limit: ${factoryData.dischargeLimit} Liters
 CTO Expiry Date: ${factoryData.ctoExpiryDate}
 ----------------------------------------
 1. FORM 3 (WATER CESS CALCULATION - AUDIT TRAIL):
-   - Original OCR Water Reading: ${editForm.originalWater} Liters
    - Manager Confirmed Water Volume: ${waterVol} Liters
+   - Audit Status: ${waterStatus}
    - Status: Verified & Human-in-the-Loop Approved
 
 2. FORM 4 (HAZARDOUS WASTE MANIFEST SUMMARY & FORM 10):
@@ -544,8 +552,8 @@ CTO Expiry Date: ${factoryData.ctoExpiryDate}
    - Storage Facility Capacity: Compliant (Within 90 Days Limit)
 
 3. FORM 5 (ENVIRONMENTAL STATEMENT & AUDIT TRAIL):
-   - Original OCR Electricity Reading: ${editForm.originalElectricity} kWh
    - Manager Confirmed Power Input: ${unitsNum} kWh
+   - Audit Status: ${electricityStatus}
    - Scope 2 Carbon Footprint: ${carbonMap} kg CO2e
    - Efficiency Index: 96.2% Optimal
 ----------------------------------------
@@ -608,6 +616,8 @@ Status: Certified & Audit Ready for MPCB Inspection
                                     const unitsNum = parseFloat(editForm.unitsConsumed) || 1450;
                                     const waterVol = editForm.waterDischarge || '3200';
                                     const carbonMap = (unitsNum * 0.82).toFixed(2);
+                                    const waterStatus = waterVol !== editForm.originalWater ? `Corrected by Manager (OCR Read: ${editForm.originalWater})` : `Verified (No Discrepancy)`;
+                                    const electricityStatus = unitsNum.toString() !== editForm.originalElectricity ? `Corrected by Manager (OCR Read: ${editForm.originalElectricity})` : `Verified (No Discrepancy)`;
 
                                     const reportHtml = `<html>
                                         <head><title>Green Passport - ${factoryData.name}</title></head>
@@ -622,8 +632,8 @@ Status: Certified & Audit Ready for MPCB Inspection
                                                 <hr/>
                                                 <h4>Scanned Utility & Audit Trail Metrics:</h4>
                                                 <ul>
-                                                    <li>Electricity Consumed: <strong>${unitsNum} kWh</strong> (OCR Read: ${editForm.originalElectricity} kWh)</li>
-                                                    <li>Water Discharge Volume: <strong>${waterVol} Liters</strong> (OCR Read: ${editForm.originalWater} Liters)</li>
+                                                    <li>Electricity Consumed: <strong>${unitsNum} kWh</strong> [Status: ${electricityStatus}]</li>
+                                                    <li>Water Discharge Volume: <strong>${waterVol} Liters</strong> [Status: ${waterStatus}]</li>
                                                     <li>Carbon Mapping (Scope 2 Emissions): <strong>${carbonMap} kg CO2e</strong></li>
                                                 </ul>
                                                 <p style="color: green; font-weight: bold;">Status: Verified, Compliant & Audit Ready</p>
@@ -644,6 +654,8 @@ Status: Certified & Audit Ready for MPCB Inspection
                                     const unitsNum = parseFloat(editForm.unitsConsumed) || 1450;
                                     const waterVol = editForm.waterDischarge || '3200';
                                     const carbonMap = (unitsNum * 0.82).toFixed(2);
+                                    const waterStatus = waterVol !== editForm.originalWater ? `Corrected by Manager (OCR Read: ${editForm.originalWater})` : `Verified (No Discrepancy)`;
+                                    const electricityStatus = unitsNum.toString() !== editForm.originalElectricity ? `Corrected by Manager (OCR Read: ${editForm.originalElectricity})` : `Verified (No Discrepancy)`;
 
                                     const reportContent = `========================================
 ECOTRACE INDIA PRIVATE LIMITED
@@ -654,8 +666,8 @@ Location: ${factoryData.location}
 Green Passport ID: ET-GP-2026-9942
 ----------------------------------------
 SCANNED UTILITY & AUDIT TRAIL DATA:
-- Electricity Units Consumed: ${unitsNum} kWh (OCR Read: ${editForm.originalElectricity} kWh)
-- Water Discharge Volume: ${waterVol} Liters (OCR Read: ${editForm.originalWater} Liters)
+- Electricity Units Consumed: ${unitsNum} kWh [Status: ${electricityStatus}]
+- Water Discharge Volume: ${waterVol} Liters [Status: ${waterStatus}]
 - Carbon Mapping (Scope 2 Emission): ${carbonMap} kg CO2e
 ----------------------------------------
 Status: Verified, Calculated & Audit Ready
