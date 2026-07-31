@@ -7,13 +7,13 @@ export default function EcoTraceDashboard() {
     const [ocrResult, setOcrResult] = useState(null);
     const [isEditing, setIsEditing] = useState(false);
     
-    // Original OCR vs Manager Confirmed ट्रॅकिंगसाठी स्टेट
+    // Original OCR vs Manager Confirmed ट्रॅकिंगसाठी स्टेट (अधिकृत CPCB Schedule I नुसार)
     const [editForm, setEditForm] = useState({ 
         originalElectricity: '1420', 
         unitsConsumed: '1450', 
         originalWater: '3000', 
         waterDischarge: '3200',
-        hazardousCategory: 'Cat 34.3 — Chemical / ETP Sludge from Wastewater Treatment',
+        hazardousCategory: 'Cat 34.3 — Chemical sludge from waste water treatment',
         hazardousTonnage: '12.33 MT (Estimated / Sample Value)'
     });
     const [batchFiles, setBatchFiles] = useState([]);
@@ -344,7 +344,7 @@ Prepared for MPCB Flying Squad / Review
                             <h2 style={{ color: '#34d399', margin: 0, fontSize: '18px' }}>⚡ Multi-File Batch OCR & CPCB Schedule Selector</h2>
                             <span style={{ backgroundColor: '#065f46', color: '#d1fae5', padding: '4px 10px', borderRadius: '6px', fontSize: '11px', fontWeight: 'bold' }}>AUDIT TRAIL & CLASSIFICATION ACTIVE</span>
                         </div>
-                        <p style={{ color: '#9ca3af', fontSize: '13px' }}>Upload bills and assign CPCB Schedule categories. The system records original OCR reads vs manager verification without fake calculations.</p>
+                        <p style={{ color: '#9ca3af', fontSize: '13px' }}>Upload bills and assign official CPCB Schedule I categories. The system records original OCR reads vs manager verification.</p>
                         <div style={{ marginTop: '20px', padding: '30px', border: '2px dashed #374151', borderRadius: '8px', textAlign: 'center', backgroundColor: '#1f2937' }}>
                            <label style={{ display: 'inline-block', backgroundColor: '#059669', color: 'white', padding: '12px 24px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer', fontSize: '14px' }}>
                             📁 Select Multiple Bills / Manifests (Batch Upload)
@@ -364,10 +364,10 @@ Prepared for MPCB Flying Squad / Review
                             />
                             </label>
 
-                            {/* Batch Files Preview & CPCB Category Selector Box */}
+                            {/* Batch Files Preview & Verified CPCB Schedule Category Selector Box */}
                             {isEditing && (
                                 <div style={{ backgroundColor: '#161b22', border: '1px solid #30363d', borderRadius: '8px', padding: '20px', marginTop: '20px', textAlign: 'left' }}>
-                                    <h3 style={{ color: '#58a6ff', margin: '0 0 10px 0', fontSize: '15px' }}>🔍 Utility Review & CPCB Schedule Selector</h3>
+                                    <h3 style={{ color: '#58a6ff', margin: '0 0 10px 0', fontSize: '15px' }}>🔍 Utility Review & Official CPCB Schedule I Selector</h3>
                                     <p style={{ color: '#8b949e', fontSize: '12px', marginBottom: '10px' }}>Queued Files: {batchFiles.map(f => f.name).join(', ')}</p>
                                     <p style={{ color: '#8b949e', fontSize: '12px', marginBottom: '15px' }}>GPS Location Locked: Pune MIDC Cluster (Verified)</p>
                                     
@@ -396,20 +396,20 @@ Prepared for MPCB Flying Squad / Review
                                             />
                                         </div>
 
-                                        {/* CPCB Schedule Category Selector */}
+                                        {/* Official CPCB Schedule I Category Selector */}
                                         <div style={{ backgroundColor: '#0d1117', padding: '12px', borderRadius: '6px', border: '1px solid #30363d' }}>
-                                            <p style={{ margin: '0 0 6px 0', fontSize: '12px', color: '#8b949e' }}>CPCB Schedule Hazardous Waste Category Selector:</p>
+                                            <p style={{ margin: '0 0 6px 0', fontSize: '12px', color: '#8b949e' }}>Official CPCB Schedule I Hazardous Waste Category Selector:</p>
                                             <select 
                                                 value={editForm.hazardousCategory}
                                                 onChange={(e) => setEditForm({...editForm, hazardousCategory: e.target.value})}
                                                 style={{ width: '100%', padding: '8px', backgroundColor: '#161b22', color: 'white', border: '1px solid #374151', borderRadius: '4px', marginTop: '4px', fontSize: '12px' }}
                                             >
-                                                <option value="Cat 34.3 — Chemical / ETP Sludge from Wastewater Treatment">Cat 34.3 — Chemical / ETP Sludge from Wastewater Treatment</option>
-                                                <option value="Cat 5.1 — Used / Spent Oil from Machinery & Generators">Cat 5.1 — Used / Spent Oil from Machinery & Generators</option>
-                                                <option value="Cat 35.1 — Wastes from Petroleum Refining / Chemical Processes">Cat 35.1 — Wastes from Petroleum Refining / Chemical Processes</option>
-                                                <option value="Cat 12.1 — Acid/Alkali Residues from Surface Treatment">Cat 12.1 — Acid/Alkali Residues from Surface Treatment</option>
+                                                <option value="Cat 34.3 — Chemical sludge from waste water treatment">Cat 34.3 — Chemical sludge from waste water treatment</option>
+                                                <option value="Cat 5.1 — Used or spent oil">Cat 5.1 — Used or spent oil</option>
+                                                <option value="Cat 35.1 — Filters and filter material which have organic liquids in them, e.g. mineral oil, synthetic oil and organic chlorine compounds">Cat 35.1 — Filters and filter material which have organic liquids in them, e.g. mineral oil, synthetic oil and organic chlorine compounds</option>
+                                                <option value="Cat 32.2 — Corrosive wastes arising from use of strong acids and bases">Cat 32.2 — Corrosive wastes arising from use of strong acids and bases</option>
                                             </select>
-                                            <p style={{ margin: '6px 0 0 0', fontSize: '10px', color: '#34d399' }}>ℹ️ Selects official CPCB classification schedule (No fake calculation formula applied).</p>
+                                            <p style={{ margin: '6px 0 0 0', fontSize: '10px', color: '#34d399' }}>ℹ️ Note: तुमचा प्रत्यक्ष टनेज आकडा नेहमी तुमच्या मॅनिफेस्ट रेकॉर्ड्स आणि प्लांट ऑडिटशी जुळायला हवा — हे सॉफ्टवेअर फक्त योग्य कायदेशीर वर्गीकरण निवडण्यास मदत करते.</p>
                                         </div>
                                     </div>
 
@@ -424,7 +424,7 @@ Prepared for MPCB Flying Squad / Review
                                     </button>
                                 </div>
                             )}
-                            <p style={{ margin: '12px 0 0 0', fontSize: '12px', color: '#9ca3af' }}>Regulatory category selector active.</p>
+                            <p style={{ margin: '12px 0 0 0', fontSize: '12px', color: '#9ca3af' }}>Verified statutory category selector active.</p>
                         </div>
                     </div>
                 )}
@@ -561,6 +561,7 @@ CTO Expiry Date: ${factoryData.ctoExpiryDate}
 2. FORM 4 (HAZARDOUS WASTE & CPCB SCHEDULE CLASSIFICATION):
    - Selected Schedule Category: ${editForm.hazardousCategory}
    - Reported Tonnage: 12.33 Metric Tonnes (Estimated / Sample Value - Awaiting Plant Audit Data)
+   - Note: Actual tonnage must match manifest records and plant audit logs (Software provides legal classification, not calculation formula).
    - Form 10 Transporter Manifest: Ready for Manual Portal Upload
    - Storage Facility Capacity: Compliant (Within 90 Days Limit)
 
