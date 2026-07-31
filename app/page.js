@@ -3,11 +3,10 @@ import React, { useState, useEffect } from 'react';
 
 export default function EcoTraceDashboard() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const [activeModule, setActiveModule] = useState('mainDashboard');
-    const [ocrResult, setOcrResult] = useState(null);
+    const [activeModule, setActiveModule] = useState('onboard'); // डीफॉल्ट विंडो ऑनबोर्डिंगवर सेट केली आहे
     const [isEditing, setIsEditing] = useState(false);
     
-    // Original OCR vs Manager Confirmed ट्रॅकिंगसाठी स्टेट (अधिकृत CPCB Schedule I नुसार)
+    // Original OCR vs Manager Confirmed ट्रॅकिंगसाठी स्टेट
     const [editForm, setEditForm] = useState({ 
         originalElectricity: '1420', 
         unitsConsumed: '1450', 
@@ -18,13 +17,13 @@ export default function EcoTraceDashboard() {
     });
     const [batchFiles, setBatchFiles] = useState([]);
     
-    // फॅक्टरीचा मूळ डेटा आणि खऱ्या तारखेसह CTO Tracking स्टेट
+    // फॅक्टरीचा मूळ डेटा — सुरुवातीला कोणतीही फॅक्टरी नसल्यास रिकामी स्थिती
     const [factoryData, setFactoryData] = useState({
-        name: "WESTERN CHEMICALS",
-        location: "BHOSARI MIDC, PUNE",
-        dischargeLimit: "5000",
-        ctoExpiryDate: "2026-08-20",
-        status: "COMPLIANT & AUDIT READY"
+        name: "",
+        location: "",
+        dischargeLimit: "",
+        ctoExpiryDate: "",
+        status: "PENDING ONBOARDING"
     });
 
     const [tempCompanyName, setTempCompanyName] = useState('');
@@ -32,26 +31,29 @@ export default function EcoTraceDashboard() {
     const [tempDischargeLimit, setTempDischargeLimit] = useState('');
     const [tempCtoDate, setTempCtoDate] = useState('');
 
+    const isFactoryActive = factoryData.name.trim() !== "";
+
     // ऑनबोर्डिंग सबमिट लॉजिक
     const handleOnboardSubmit = (e) => {
         e.preventDefault();
         if (tempCompanyName.trim()) {
             setFactoryData({
-                name: tempCompanyName,
+                name: tempCompanyName.trim().toUpperCase(),
                 location: tempMidcLocation ? tempMidcLocation.toUpperCase() + ' MIDC' : 'MIDC CLUSTER',
                 dischargeLimit: tempDischargeLimit || '5000',
                 ctoExpiryDate: tempCtoDate || '2026-12-31',
                 status: "COMPLIANT & AUDIT READY"
             });
             setActiveModule('mainDashboard');
-            alert('Industrial Unit & CTO Data Updated Successfully!');
+            alert('Industrial Unit & CTO Data Onboarded Successfully!');
         } else {
-            alert('Please enter a company name.');
+            alert('Please enter a valid company name.');
         }
     };
 
     // CTO दिवस अचूक मोजण्याचे लॉजिक
     const calculateCtoDaysLeft = (expiryDate) => {
+        if (!expiryDate) return 0;
         const today = new Date();
         const expiry = new Date(expiryDate);
         const diffTime = expiry - today;
@@ -67,7 +69,6 @@ export default function EcoTraceDashboard() {
         return '#34d399';                // Green
     };
 
-    // Real File Download Trigger Function
     const downloadTextFile = (filename, content) => {
         const element = document.createElement("a");
         const file = new Blob([content], {type: 'text/plain'});
@@ -79,6 +80,10 @@ export default function EcoTraceDashboard() {
     };
 
     const handleExportPdf = () => {
+        if (!isFactoryActive) {
+            alert('Please onboard a factory unit first.');
+            return;
+        }
         const reportContent = `
 ========================================
 ECOTRACE INDIA PRIVATE LIMITED
@@ -98,6 +103,10 @@ LEGAL DISCLAIMER: EcoTrace India Private Limited acts solely as a software inter
     };
 
     const handleExportAuditPackage = () => {
+        if (!isFactoryActive) {
+            alert('Please onboard a factory unit first.');
+            return;
+        }
         const auditContent = `
 ========================================
 VERIFIED AUDIT PACKAGE & DIGITAL VAULT DOSSIER
@@ -118,6 +127,7 @@ Prepared for MPCB Flying Squad / Review
     const [loadingAudit, setLoadingAudit] = useState(false);
 
     const runSafetyAudit = async () => {
+        if (!isFactoryActive) return;
         setLoadingAudit(true);
         try {
             const res = await fetch('/api/compliance-check', {
@@ -139,7 +149,9 @@ Prepared for MPCB Flying Squad / Review
     };
 
     useEffect(() => {
-        runSafetyAudit();
+        if (isFactoryActive) {
+            runSafetyAudit();
+        }
     }, [factoryData.name]);
 
     const [macroData] = useState({
@@ -160,6 +172,12 @@ Prepared for MPCB Flying Squad / Review
         setActiveHash(randomHash);
     };
 
+    // डायनॅमिक आयडी जनरेटर्स
+    const companyCode = isFactoryActive ? factoryData.name.substring(0, 4).toUpperCase() : "DEMO";
+    const dynamicGreenPassportId = `ET-GP-2026-${isFactoryActive ? Math.abs(factoryData.name.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0)) % 9000 + 1000 : '9942'}`;
+    const dynamicManifestId = `MH-HW-2026-${isFactoryActive ? Math.abs(factoryData.name.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0)) % 9000 + 1000 : '8819'}`;
+    const dynamicNoticeRef = `MPCB/RO/Notice/2026/${isFactoryActive ? Math.abs(factoryData.name.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0)) % 900 + 100 : '049'}`;
+
     return (
         <main style={{ minHeight: '100vh', backgroundColor: '#0b0f19', color: '#ffffff', fontFamily: 'sans-serif', position: 'relative' }}>
             
@@ -178,21 +196,25 @@ Prepared for MPCB Flying Squad / Review
                 </div>
                 
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
-                    <div style={{ backgroundColor: '#1f2937', border: '1px solid #374151', padding: '6px 10px', borderRadius: '8px', fontSize: '11px', color: '#34d399', fontWeight: 'bold' }}>
-                        {factoryData.name} ({factoryData.location})
+                    <div style={{ backgroundColor: '#1f2937', border: '1px solid #374151', padding: '6px 10px', borderRadius: '8px', fontSize: '11px', color: isFactoryActive ? '#34d399' : '#f59e0b', fontWeight: 'bold' }}>
+                        {isFactoryActive ? `${factoryData.name} (${factoryData.location})` : 'No Factory Onboarded — Please Register Your Unit'}
                     </div>
-                    <button 
-                        onClick={handleExportPdf}
-                        style={{ backgroundColor: '#059669', color: 'white', border: 'none', padding: '6px 10px', borderRadius: '6px', fontSize: '11px', fontWeight: 'bold', cursor: 'pointer' }}
-                    >
-                        Export Report (.txt)
-                    </button>
-                    <button 
-                        onClick={handleExportAuditPackage}
-                        style={{ backgroundColor: '#374151', color: 'white', border: 'none', padding: '6px 10px', borderRadius: '6px', fontSize: '11px', fontWeight: 'bold', cursor: 'pointer' }}
-                    >
-                        Export Verified Audit Package (.txt)
-                    </button>
+                    {isFactoryActive && (
+                        <>
+                            <button 
+                                onClick={handleExportPdf}
+                                style={{ backgroundColor: '#059669', color: 'white', border: 'none', padding: '6px 10px', borderRadius: '6px', fontSize: '11px', fontWeight: 'bold', cursor: 'pointer' }}
+                            >
+                                Export Report (.txt)
+                            </button>
+                            <button 
+                                onClick={handleExportAuditPackage}
+                                style={{ backgroundColor: '#374151', color: 'white', border: 'none', padding: '6px 10px', borderRadius: '6px', fontSize: '11px', fontWeight: 'bold', cursor: 'pointer' }}
+                            >
+                                Export Verified Audit Package (.txt)
+                            </button>
+                        </>
+                    )}
                 </div>
             </header>
 
@@ -250,6 +272,20 @@ Prepared for MPCB Flying Squad / Review
             {/* Main Content Area */}
             <div style={{ padding: '24px', maxWidth: '1100px', margin: '0 auto' }}>
                 
+                {/* Notice Banner if No Factory Onboarded */}
+                {!isFactoryActive && activeModule !== 'onboard' && (
+                    <div style={{ marginBottom: '20px', padding: '20px', background: '#1f2937', borderRadius: '12px', border: '1px solid #f59e0b', textAlign: 'center' }}>
+                        <h3 style={{ color: '#f59e0b', margin: '0 0 8px 0', fontSize: '16px' }}>⚠️ No Industrial Unit Onboarded</h3>
+                        <p style={{ color: '#d1d5db', margin: '0 0 16px 0', fontSize: '13px' }}>Please register your factory details to activate live compliance tracking and dynamic reporting.</p>
+                        <button 
+                            onClick={() => setActiveModule('onboard')}
+                            style={{ backgroundColor: '#059669', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer', fontSize: '14px' }}
+                        >
+                            + Go to Multi-Tenant Client Onboarding
+                        </button>
+                    </div>
+                )}
+
                 {/* Model 1 Safe Integration Panel */}
                 <div style={{ marginBottom: '20px', padding: '16px', background: '#111827', borderRadius: '12px', border: '1px solid #3b82f6' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '10px' }}>
@@ -260,7 +296,7 @@ Prepared for MPCB Flying Squad / Review
                         <button 
                             onClick={runSafetyAudit}
                             style={{ backgroundColor: '#059669', color: 'white', border: 'none', padding: '8px 14px', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold', fontSize: '11px' }}
-                            disabled={loadingAudit}
+                            disabled={loadingAudit || !isFactoryActive}
                         >
                             {loadingAudit ? 'Running Auto-Check...' : 'Refresh Safety Check'}
                         </button>
@@ -277,16 +313,18 @@ Prepared for MPCB Flying Squad / Review
                     <div>
                         <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '20px', marginBottom: '20px' }}>
                             <p style={{ margin: '0 0 4px 0', fontSize: '11px', color: '#9ca3af', textTransform: 'uppercase' }}>Active Monitored Enterprise</p>
-                            <h2 style={{ color: '#34d399', margin: '0 0 6px 0', fontSize: '18px' }}>{factoryData.name} - {factoryData.location}</h2>
-                            <p style={{ margin: 0, fontSize: '12px', color: '#34d399' }}>Status: {factoryData.status} | Discharge Limit: {factoryData.dischargeLimit} Liters | CTO Expiry: {factoryData.ctoExpiryDate}</p>
+                            <h2 style={{ color: '#34d399', margin: '0 0 6px 0', fontSize: '18px' }}>{isFactoryActive ? `${factoryData.name} - ${factoryData.location}` : 'Awaiting Factory Data'}</h2>
+                            <p style={{ margin: 0, fontSize: '12px', color: isFactoryActive ? '#34d399' : '#9ca3af' }}>
+                                {isFactoryActive ? `Status: ${factoryData.status} | Discharge Limit: ${factoryData.dischargeLimit} Liters | CTO Expiry: ${factoryData.ctoExpiryDate}` : 'Please register unit via Multi-Tenant Client Onboarding'}
+                            </p>
                         </div>
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px' }}>
                             
-                            <div style={{ backgroundColor: '#111827', border: `1px solid ${getCtoColor(ctoDaysLeft)}`, borderRadius: '12px', padding: '20px' }}>
+                            <div style={{ backgroundColor: '#111827', border: `1px solid ${isFactoryActive ? getCtoColor(ctoDaysLeft) : '#374151'}`, borderRadius: '12px', padding: '20px' }}>
                                 <h4 style={{ color: '#ef4444', margin: '0 0 6px 0', fontSize: '14px' }}>🚨 MPCB Legal Shield (CTO Tracking)</h4>
                                 <h3 style={{ margin: '0 0 6px 0', fontSize: '15px' }}>AUTO-GENERATED (Form V Ready)</h3>
-                                <p style={{ margin: 0, fontSize: '13px', fontWeight: 'bold', color: getCtoColor(ctoDaysLeft) }}>
-                                    CTO Valid: {ctoDaysLeft} Days Left ({factoryData.ctoExpiryDate}) {ctoDaysLeft <= 30 ? '⚠️ (Action Required)' : ''}
+                                <p style={{ margin: 0, fontSize: '13px', fontWeight: 'bold', color: isFactoryActive ? getCtoColor(ctoDaysLeft) : '#9ca3af' }}>
+                                    {isFactoryActive ? `CTO Valid: ${ctoDaysLeft} Days Left (${factoryData.ctoExpiryDate}) ${ctoDaysLeft <= 30 ? '⚠️ (Action Required)' : ''}` : 'Awaiting Factory Data'}
                                 </p>
                             </div>
 
@@ -369,7 +407,7 @@ Prepared for MPCB Flying Squad / Review
                                 <div style={{ backgroundColor: '#161b22', border: '1px solid #30363d', borderRadius: '8px', padding: '20px', marginTop: '20px', textAlign: 'left' }}>
                                     <h3 style={{ color: '#58a6ff', margin: '0 0 10px 0', fontSize: '15px' }}>🔍 Utility Review & Official CPCB Schedule I Selector</h3>
                                     <p style={{ color: '#8b949e', fontSize: '12px', marginBottom: '10px' }}>Queued Files: {batchFiles.map(f => f.name).join(', ')}</p>
-                                    <p style={{ color: '#8b949e', fontSize: '12px', marginBottom: '15px' }}>GPS Location Locked: Pune MIDC Cluster (Verified)</p>
+                                    <p style={{ color: '#8b949e', fontSize: '12px', marginBottom: '15px' }}>Active Unit: {isFactoryActive ? factoryData.name : 'Awaiting Factory Data'}</p>
                                     
                                     <div style={{ display: 'grid', gap: '15px', marginBottom: '20px' }}>
                                         <div style={{ backgroundColor: '#0d1117', padding: '12px', borderRadius: '6px', border: '1px solid #30363d' }}>
@@ -432,13 +470,17 @@ Prepared for MPCB Flying Squad / Review
                 {activeModule === 'risk1' && (
                     <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '24px' }}>
                         <h2 style={{ color: '#ef4444', marginTop: 0, fontSize: '18px' }}>🚨 MPCB Flying Squad Emergency Audit Mode</h2>
-                        <p style={{ color: '#9ca3af', fontSize: '13px', marginBottom: '16px' }}>1-Click instant compliance dossier aggregating CTO status ({factoryData.ctoExpiryDate}), ETP health, CPCB Schedule category, and digital vault hashes for <strong>{factoryData.name}</strong>.</p>
+                        <p style={{ color: '#9ca3af', fontSize: '13px', marginBottom: '16px' }}>
+                            1-Click instant compliance dossier aggregating CTO status ({isFactoryActive ? factoryData.ctoExpiryDate : 'Awaiting Data'}), ETP health, CPCB Schedule category, and digital vault hashes for <strong>{isFactoryActive ? factoryData.name : 'Awaiting Factory Data'}</strong>.
+                        </p>
                         
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '16px', marginBottom: '20px' }}>
                             <div style={{ backgroundColor: '#1f2937', padding: '16px', borderRadius: '8px' }}>
                                 <p style={{ margin: '0 0 4px 0', fontSize: '11px', color: '#9ca3af', textTransform: 'uppercase' }}>CTO Status & Days Left</p>
-                                <p style={{ margin: 0, fontSize: '15px', fontWeight: 'bold', color: getCtoColor(ctoDaysLeft) }}>VALID ({ctoDaysLeft} Days Left)</p>
-                                <p style={{ margin: '4px 0 0 0', fontSize: '10px', color: '#9ca3af' }}>Expiry: {factoryData.ctoExpiryDate}</p>
+                                <p style={{ margin: 0, fontSize: '15px', fontWeight: 'bold', color: isFactoryActive ? getCtoColor(ctoDaysLeft) : '#9ca3af' }}>
+                                    {isFactoryActive ? `VALID (${ctoDaysLeft} Days Left)` : 'Awaiting Factory Data'}
+                                </p>
+                                <p style={{ margin: '4px 0 0 0', fontSize: '10px', color: '#9ca3af' }}>Expiry: {isFactoryActive ? factoryData.ctoExpiryDate : 'Pending'}</p>
                             </div>
                             <div style={{ backgroundColor: '#1f2937', padding: '16px', borderRadius: '8px' }}>
                                 <p style={{ margin: '0 0 4px 0', fontSize: '11px', color: '#9ca3af', textTransform: 'uppercase' }}>ETP Health Status</p>
@@ -452,7 +494,6 @@ Prepared for MPCB Flying Squad / Review
                             </div>
                         </div>
 
-                        {/* Flying Squad Summary Box for OCR Discrepancy & CPCB Category */}
                         <div style={{ backgroundColor: '#1f2937', padding: '16px', borderRadius: '8px', border: '1px solid #374151' }}>
                             <h4 style={{ color: '#34d399', margin: '0 0 10px 0', fontSize: '13px' }}>📋 Aggregated Utility Audit Trail & CPCB Classification</h4>
                             <div style={{ display: 'grid', gap: '8px', fontSize: '12px', color: '#d1d5db' }}>
@@ -467,7 +508,7 @@ Prepared for MPCB Flying Squad / Review
                 {activeModule === 'risk2' && (
                     <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '24px' }}>
                         <h2 style={{ color: '#ef4444', marginTop: 0, fontSize: '18px' }}>⚠️ Toxic & Boiler Gas Leak Safety Radar</h2>
-                        <p style={{ color: '#9ca3af', fontSize: '13px', marginBottom: '16px' }}>Real-time (when sensor connected) Parts Per Million (PPM) concentration tracking for <strong>{factoryData.name}</strong>.</p>
+                        <p style={{ color: '#9ca3af', fontSize: '13px', marginBottom: '16px' }}>Real-time (when sensor connected) Parts Per Million (PPM) concentration tracking for <strong>{isFactoryActive ? factoryData.name : 'Awaiting Factory Data'}</strong>.</p>
                         
                         <div style={{ backgroundColor: '#1f2937', border: '1px solid #f59e0b', color: '#fcd34d', padding: '16px', borderRadius: '8px', fontWeight: 'bold', fontSize: '13px', marginBottom: '16px' }}>
                             Status: Simulated Demo Data — Awaiting Physical Sensor Integration (0.05 PPM Safe Range)
@@ -490,7 +531,7 @@ Prepared for MPCB Flying Squad / Review
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '16px', marginBottom: '20px' }}>
                             <div style={{ backgroundColor: '#1f2937', padding: '16px', borderRadius: '8px', borderLeft: '4px solid #ef4444' }}>
                                 <p style={{ margin: '0 0 4px 0', fontSize: '11px', color: '#9ca3af', textTransform: 'uppercase' }}>Latest Received Notice</p>
-                                <p style={{ margin: '0 0 6px 0', fontSize: '13px', fontWeight: 'bold', color: '#f87171' }}>Ref: MPCB/RO/Notice/2026/049</p>
+                                <p style={{ margin: '0 0 6px 0', fontSize: '13px', fontWeight: 'bold', color: '#f87171' }}>Ref: {dynamicNoticeRef}</p>
                                 <p style={{ margin: 0, fontSize: '12px', color: '#d1d5db' }}>Allegation: Effluent parameter & hazardous waste variance observed.</p>
                             </div>
                             <div style={{ backgroundColor: '#1f2937', padding: '16px', borderRadius: '8px', borderLeft: '4px solid #34d399' }}>
@@ -513,6 +554,10 @@ Prepared for MPCB Flying Squad / Review
                             <h3 style={{ color: '#60a5fa', margin: '0 0 6px 0', fontSize: '15px' }}>📄 AI Legal Reply Dossier Generator</h3>
                             <button 
                                 onClick={() => {
+                                    if (!isFactoryActive) {
+                                        alert('Please onboard a factory unit first.');
+                                        return;
+                                    }
                                     const unitsNum = parseFloat(editForm.unitsConsumed) || 1450;
                                     const waterVol = editForm.waterDischarge || '3200';
                                     const waterStatus = waterVol !== editForm.originalWater ? `Corrected by Manager (Original OCR Read: ${editForm.originalWater} Liters)` : `OCR Verified (No Discrepancy: ${editForm.originalWater} Liters)`;
@@ -524,7 +569,7 @@ MPCB LEGAL NOTICE DEFENSE & REPLY DOSSIER
 ========================================
 Company Name: ${factoryData.name}
 Location: ${factoryData.location}
-Notice Ref: MPCB/RO/Notice/2026/049
+Notice Ref: ${dynamicNoticeRef}
 CTO Expiry Date: ${factoryData.ctoExpiryDate}
 ----------------------------------------
 1. COUNTER-EVIDENCE & IoT SENSOR LOG MATCH:
@@ -562,7 +607,7 @@ SUBMITTED VIA ECOTRACE LEGAL SHIELD PLATFORM
                 {activeModule === 'utility1' && (
                     <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '24px' }}>
                         <h2 style={{ color: '#3b82f6', marginTop: 0, fontSize: '18px' }}>⚡ MSEDCL Smart Grid & Power Factor Optimizer</h2>
-                        <p style={{ color: '#9ca3af', fontSize: '13px', marginBottom: '16px' }}>Real-time reactive power compensation monitoring for <strong>{factoryData.name}</strong>.</p>
+                        <p style={{ color: '#9ca3af', fontSize: '13px', marginBottom: '16px' }}>Real-time reactive power compensation monitoring for <strong>{isFactoryActive ? factoryData.name : 'Awaiting Factory Data'}</strong>.</p>
                         <div style={{ backgroundColor: '#1f2937', padding: '16px', borderRadius: '8px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
                             <div>
                                 <p style={{ margin: '0 0 4px 0', fontSize: '11px', color: '#9ca3af' }}>Current Power Factor</p>
@@ -591,7 +636,7 @@ SUBMITTED VIA ECOTRACE LEGAL SHIELD PLATFORM
                 {activeModule === 'stat1' && (
                     <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '24px' }}>
                         <h2 style={{ color: '#3b82f6', marginTop: 0, fontSize: '18px' }}>📑 Form 3, Form 4 & Form 5 Annual Returns Generator (CPCB Schedule Classified)</h2>
-                        <p style={{ color: '#9ca3af', fontSize: '13px', marginBottom: '16px' }}>Automated MPCB Statutory Form Compilation for <strong>{factoryData.name}</strong>.</p>
+                        <p style={{ color: '#9ca3af', fontSize: '13px', marginBottom: '16px' }}>Automated MPCB Statutory Form Compilation for <strong>{isFactoryActive ? factoryData.name : 'Awaiting Factory Data'}</strong>.</p>
                         
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '16px', marginBottom: '20px' }}>
                             <div style={{ backgroundColor: '#1f2937', padding: '16px', borderRadius: '8px' }}>
@@ -613,6 +658,10 @@ SUBMITTED VIA ECOTRACE LEGAL SHIELD PLATFORM
 
                         <button 
                             onClick={() => {
+                                if (!isFactoryActive) {
+                                    alert('Please onboard a factory unit first.');
+                                    return;
+                                }
                                 const unitsNum = parseFloat(editForm.unitsConsumed) || 1450;
                                 const waterVol = editForm.waterDischarge || '3200';
                                 const carbonMap = (unitsNum * 0.82).toFixed(2);
@@ -670,7 +719,7 @@ Status: Certified & Audit Ready for MPCB Inspection
                 {activeModule === 'tankerGPS' && (
                     <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '24px' }}>
                         <h2 style={{ color: '#10b981', marginTop: 0, fontSize: '18px' }}>🚚 Tanker GPS (when connected) & Form 10 Hazardous Waste Manifest</h2>
-                        <p style={{ color: '#9ca3af', fontSize: '13px', marginBottom: '16px' }}>Real-time GPS tracking of hazardous waste tankers moving from <strong>{factoryData.name}</strong> to MWML Taloja/Ranjangaon.</p>
+                        <p style={{ color: '#9ca3af', fontSize: '13px', marginBottom: '16px' }}>Real-time GPS tracking of hazardous waste tankers moving from <strong>{isFactoryActive ? factoryData.name : 'Awaiting Factory Data'}</strong> to MWML Taloja/Ranjangaon.</p>
                         
                         <div style={{ backgroundColor: '#1f2937', border: '1px solid #f59e0b', color: '#fcd34d', padding: '16px', borderRadius: '8px', fontWeight: 'bold', fontSize: '13px', marginBottom: '16px' }}>
                             Status: No Signal / Data Unavailable — Fallback to Manual Form 10 Manifest & Log Verification
@@ -678,7 +727,7 @@ Status: Certified & Audit Ready for MPCB Inspection
 
                         <div style={{ backgroundColor: '#1f2937', padding: '16px', borderRadius: '8px', border: '1px solid #374151', marginBottom: '16px' }}>
                             <h4 style={{ color: '#34d399', margin: '0 0 8px 0', fontSize: '13px' }}>📋 Manifest & CPCB Category Reference</h4>
-                            <p style={{ margin: '0 0 4px 0', fontSize: '12px', color: '#d1d5db' }}>• Form 10 Manifest ID: MH-HW-2026-8819</p>
+                            <p style={{ margin: '0 0 4px 0', fontSize: '12px', color: '#d1d5db' }}>• Form 10 Manifest ID: {dynamicManifestId}</p>
                             <p style={{ margin: 0, fontSize: '12px', color: '#d1d5db' }}>• Linked Hazardous Classification: <strong>{editForm.hazardousCategory}</strong></p>
                         </div>
 
@@ -691,9 +740,9 @@ Status: Certified & Audit Ready for MPCB Inspection
                 {activeModule === 'ctoDossier' && (
                     <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '24px' }}>
                         <h2 style={{ color: '#3b82f6', marginTop: 0, fontSize: '18px' }}>📄 CTO Renewal Auto-Dossier Generator</h2>
-                        <p style={{ color: '#9ca3af', fontSize: '13px', marginBottom: '16px' }}>Automated package compiler for <strong>{factoryData.name}</strong> targeting MPCB OCMMS renewals.</p>
-                        <div style={{ backgroundColor: '#065f46', color: '#d1fae5', padding: '16px', borderRadius: '8px', fontWeight: 'bold', fontSize: '14px', border: `1px solid ${getCtoColor(ctoDaysLeft)}` }}>
-                            CTO Expiry in {ctoDaysLeft} Days ({factoryData.ctoExpiryDate}) — Dossier Ready for Manual Portal Upload
+                        <p style={{ color: '#9ca3af', fontSize: '13px', marginBottom: '16px' }}>Automated package compiler for <strong>{isFactoryActive ? factoryData.name : 'Awaiting Factory Data'}</strong> targeting MPCB OCMMS renewals.</p>
+                        <div style={{ backgroundColor: '#065f46', color: '#d1fae5', padding: '16px', borderRadius: '8px', fontWeight: 'bold', fontSize: '14px', border: `1px solid ${isFactoryActive ? getCtoColor(ctoDaysLeft) : '#374151'}` }}>
+                            {isFactoryActive ? `CTO Expiry in ${ctoDaysLeft} Days (${factoryData.ctoExpiryDate}) — Dossier Ready for Manual Portal Upload` : 'Please register factory unit to generate dossier.'}
                         </div>
                     </div>
                 )}
@@ -703,12 +752,16 @@ Status: Certified & Audit Ready for MPCB Inspection
                         <h2 style={{ color: '#10b981', marginTop: 0, fontSize: '18px' }}>🌱 B2B Green Passport & SEBI BRSR Core Engine</h2>
                         <p style={{ color: '#9ca3af', fontSize: '13px', marginBottom: '16px' }}>Instantly generates a structured 3-page sustainability report.</p>
                         <div style={{ backgroundColor: '#1f2937', padding: '16px', borderRadius: '8px', marginBottom: '16px' }}>
-                            <p style={{ margin: '0 0 4px 0', fontSize: '11px', color: '#9ca3af' }}>Green Passport ID: ET-GP-2026-9942</p>
-                            <p style={{ margin: 0, fontSize: '13px', color: '#d1d5db' }}>Company: <strong>{factoryData.name}</strong> | Location: {factoryData.location}</p>
+                            <p style={{ margin: '0 0 4px 0', fontSize: '11px', color: '#9ca3af' }}>Green Passport ID: {dynamicGreenPassportId}</p>
+                            <p style={{ margin: 0, fontSize: '13px', color: '#d1d5db' }}>Company: <strong>{isFactoryActive ? factoryData.name : 'Awaiting Factory Data'}</strong> | Location: {isFactoryActive ? factoryData.location : 'Pending'}</p>
                         </div>
                         <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
                             <button
                                 onClick={() => {
+                                    if (!isFactoryActive) {
+                                        alert('Please onboard a factory unit first.');
+                                        return;
+                                    }
                                     const unitsNum = parseFloat(editForm.unitsConsumed) || 1450;
                                     const waterVol = editForm.waterDischarge || '3200';
                                     const carbonMap = (unitsNum * 0.82).toFixed(2);
@@ -724,7 +777,7 @@ Status: Certified & Audit Ready for MPCB Inspection
                                                 <hr/>
                                                 <p><strong>Company Name:</strong> ${factoryData.name}</p>
                                                 <p><strong>Location:</strong> ${factoryData.location}</p>
-                                                <p><strong>Green Passport ID:</strong> ET-GP-2026-9942</p>
+                                                <p><strong>Green Passport ID:</strong> ${dynamicGreenPassportId}</p>
                                                 <hr/>
                                                 <h4>Scanned Utility & Audit Trail Metrics:</h4>
                                                 <ul>
@@ -748,6 +801,10 @@ Status: Certified & Audit Ready for MPCB Inspection
                             </button>
                             <button
                                 onClick={() => {
+                                    if (!isFactoryActive) {
+                                        alert('Please onboard a factory unit first.');
+                                        return;
+                                    }
                                     const unitsNum = parseFloat(editForm.unitsConsumed) || 1450;
                                     const waterVol = editForm.waterDischarge || '3200';
                                     const carbonMap = (unitsNum * 0.82).toFixed(2);
@@ -760,7 +817,7 @@ B2B GREEN PASSPORT & CARBON MAPPING DOSSIER
 ========================================
 Company Name: ${factoryData.name}
 Location: ${factoryData.location}
-Green Passport ID: ET-GP-2026-9942
+Green Passport ID: ${dynamicGreenPassportId}
 ----------------------------------------
 SCANNED UTILITY & AUDIT TRAIL DATA:
 - Electricity Units Consumed: ${unitsNum} kWh [Status: ${electricityStatus}]
@@ -791,7 +848,7 @@ Status: Verified, Calculated & Audit Ready
                 {activeModule === 'ewaste' && (
                     <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '24px' }}>
                         <h2 style={{ color: '#10b981', marginTop: 0, fontSize: '18px' }}>📦 E-Waste & Battery EPR Statutory Vault</h2>
-                        <p style={{ color: '#9ca3af', fontSize: '13px', marginBottom: '16px' }}>Tracking registry and recycler verification for <strong>{factoryData.name}</strong>.</p>
+                        <p style={{ color: '#9ca3af', fontSize: '13px', marginBottom: '16px' }}>Tracking registry and recycler verification for <strong>{isFactoryActive ? factoryData.name : 'Awaiting Factory Data'}</strong>.</p>
                         
                         <div style={{ backgroundColor: '#1f2937', padding: '16px', borderRadius: '8px', border: '1px solid #374151', marginBottom: '16px' }}>
                             <h4 style={{ color: '#f59e0b', margin: '0 0 8px 0', fontSize: '13px' }}>♻️ Recycler Partner Status</h4>
@@ -819,7 +876,7 @@ Status: Verified, Calculated & Audit Ready
                 {activeModule === 'blockchain' && (
                     <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '24px' }}>
                         <h2 style={{ color: '#8b5cf6', marginTop: 0, fontSize: '18px' }}>⛓️ Tamper-Evident Digital Vault (Audit Trail Ledger)</h2>
-                        <p style={{ color: '#9ca3af', fontSize: '13px', marginBottom: '16px' }}>Cryptographically signed logging system recording IoT sensor data updates for <strong>{factoryData.name}</strong>.</p>
+                        <p style={{ color: '#9ca3af', fontSize: '13px', marginBottom: '16px' }}>Cryptographically signed logging system recording IoT sensor data updates for <strong>{isFactoryActive ? factoryData.name : 'Awaiting Factory Data'}</strong>.</p>
                         <div style={{ backgroundColor: '#1f2937', padding: '16px', borderRadius: '8px', marginBottom: '16px' }}>
                             <p style={{ margin: '0 0 4px 0', fontSize: '11px', color: '#9ca3af' }}>Active Hash</p>
                             <p style={{ margin: 0, fontSize: '12px', color: '#34d399', fontFamily: 'monospace' }}>{activeHash} (Tamper-Evident Verified)</p>
