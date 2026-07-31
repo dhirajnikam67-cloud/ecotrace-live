@@ -855,7 +855,7 @@ Status: Verified, Calculated & Audit Ready
      
     </div>
     <footer style={{ marginTop: '40px', borderTop: '1px solid #1f2937', paddingTop: '20px', textAlign: 'center', color: '#9ca3af', fontSize: '12px' }}>
-      LEGAL DISCLAIMER & DEVELOPER LIABILITY WAIVER: EcoTrace India Private Limited is an independent carbon tracking and utility compliance platform.
+      LEGAL DISCLAIMER & DEVELOPER LIABILITY WAIVER: EcoTrace India Private Limited is an independent compliance platform.
     </footer>
   </main>
 </div>
