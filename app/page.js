@@ -144,11 +144,11 @@ Prepared for MPCB Flying Squad / Review
 
     const [macroData] = useState({
         corridorName: "EcoTrace's First Green Industrial Corridor Deployment", 
-        activeMonitoringUnits: 142,
+        activeMonitoringUnits: "Demo / Projected Data — Awaiting Real Regional Onboarding",
         regionalAggregates: {
-            totalCarbonEmissionTonnes: 1250.4,
+            totalCarbonEmissionTonnes: "Demo Data (1250.4 T Projected)",
             totalWaterConsumptionKL: 45000,
-            greenCompliancePercentage: "94.5%"
+            greenCompliancePercentage: "94.5% (Projected Sample)"
         },
         privacyShieldStatus: "Active - Privacy-Protected Aggregation Maintained" 
     });
@@ -313,18 +313,18 @@ Prepared for MPCB Flying Squad / Review
                         <div style={{ backgroundColor: '#111827', border: '1px solid #3b82f6', borderRadius: '12px', padding: '24px' }}>
                             <h2 style={{ color: '#60a5fa', marginTop: 0, fontSize: '18px' }}>🌐 Macro-Level Green Industrial Corridor</h2>
                             <p style={{ fontSize: '13px', color: '#9ca3af' }}>{macroData.corridorName} — Government & MCCI Regional Monitoring</p>
-                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '16px', marginTop: '16px' }}>
+                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '16px', marginTop: '16px' }}>
                                 <div style={{ backgroundColor: '#1f2937', padding: '16px', borderRadius: '8px', textAlign: 'center' }}>
-                                    <p style={{ margin: '0', fontSize: '12px', color: '#9ca3af' }}>Active Units</p>
-                                    <p style={{ margin: '8px 0 0 0', fontSize: '18px', fontWeight: 'bold', color: '#34d399' }}>{macroData.activeMonitoringUnits}</p>
+                                    <p style={{ margin: '0', fontSize: '11px', color: '#9ca3af' }}>Active Units</p>
+                                    <p style={{ margin: '8px 0 0 0', fontSize: '13px', fontWeight: 'bold', color: '#f59e0b' }}>{macroData.activeMonitoringUnits}</p>
                                 </div>
                                 <div style={{ backgroundColor: '#1f2937', padding: '16px', borderRadius: '8px', textAlign: 'center' }}>
-                                    <p style={{ margin: '0', fontSize: '12px', color: '#9ca3af' }}>Total Carbon</p>
-                                    <p style={{ margin: '8px 0 0 0', fontSize: '18px', fontWeight: 'bold', color: '#f59e0b' }}>{macroData.regionalAggregates.totalCarbonEmissionTonnes} T</p>
+                                    <p style={{ margin: '0', fontSize: '11px', color: '#9ca3af' }}>Total Carbon</p>
+                                    <p style={{ margin: '8px 0 0 0', fontSize: '13px', fontWeight: 'bold', color: '#f59e0b' }}>{macroData.regionalAggregates.totalCarbonEmissionTonnes}</p>
                                 </div>
                                 <div style={{ backgroundColor: '#1f2937', padding: '16px', borderRadius: '8px', textAlign: 'center' }}>
-                                    <p style={{ margin: '0', fontSize: '12px', color: '#9ca3af' }}>Green Compliance</p>
-                                    <p style={{ margin: '8px 0 0 0', fontSize: '18px', fontWeight: 'bold', color: '#10b981' }}>{macroData.regionalAggregates.greenCompliancePercentage}</p>
+                                    <p style={{ margin: '0', fontSize: '11px', color: '#9ca3af' }}>Green Compliance</p>
+                                    <p style={{ margin: '8px 0 0 0', fontSize: '13px', fontWeight: 'bold', color: '#34d399' }}>{macroData.regionalAggregates.greenCompliancePercentage}</p>
                                 </div>
                             </div>
                         </div>
@@ -701,7 +701,7 @@ Status: Certified & Audit Ready for MPCB Inspection
                 {activeModule === 'greenPassport' && (
                     <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '24px' }}>
                         <h2 style={{ color: '#10b981', marginTop: 0, fontSize: '18px' }}>🌱 B2B Green Passport & SEBI BRSR Core Engine</h2>
-                        <p style={{ color: '#9ca3af', fontSize: '13px', marginBottom: '16px' }}>Instantly generates certified 3-page sustainability reports.</p>
+                        <p style={{ color: '#9ca3af', fontSize: '13px', marginBottom: '16px' }}>Instantly generates a structured 3-page sustainability report.</p>
                         <div style={{ backgroundColor: '#1f2937', padding: '16px', borderRadius: '8px', marginBottom: '16px' }}>
                             <p style={{ margin: '0 0 4px 0', fontSize: '11px', color: '#9ca3af' }}>Green Passport ID: ET-GP-2026-9942</p>
                             <p style={{ margin: 0, fontSize: '13px', color: '#d1d5db' }}>Company: <strong>{factoryData.name}</strong> | Location: {factoryData.location}</p>
@@ -730,7 +730,7 @@ Status: Certified & Audit Ready for MPCB Inspection
                                                 <ul>
                                                     <li>Electricity Consumed: <strong>${unitsNum} kWh</strong> [Status: ${electricityStatus}]</li>
                                                     <li>Water Discharge Volume: <strong>${waterVol} Liters</strong> [Status: ${waterStatus}]</li>
-                                                    <li>CPCB Schedule Category: <strong>${editForm.hazardousCategory}</strong></li>
+                                                    <li>CPCB Schedule Category: <strong>{editForm.hazardousCategory}</strong></li>
                                                     <li>Carbon Mapping (Scope 2 Emissions): <strong>${carbonMap} kg CO2e</strong></li>
                                                 </ul>
                                                 <p style="color: green; font-weight: bold;">Status: Verified, Compliant & Audit Ready</p>
@@ -793,7 +793,6 @@ Status: Verified, Calculated & Audit Ready
                         <h2 style={{ color: '#10b981', marginTop: 0, fontSize: '18px' }}>📦 E-Waste & Battery EPR Statutory Vault</h2>
                         <p style={{ color: '#9ca3af', fontSize: '13px', marginBottom: '16px' }}>Tracking registry and recycler verification for <strong>{factoryData.name}</strong>.</p>
                         
-                        {/* Corrected Sample Recycler Partner Box */}
                         <div style={{ backgroundColor: '#1f2937', padding: '16px', borderRadius: '8px', border: '1px solid #374151', marginBottom: '16px' }}>
                             <h4 style={{ color: '#f59e0b', margin: '0 0 8px 0', fontSize: '13px' }}>♻️ Recycler Partner Status</h4>
                             <p style={{ margin: '0 0 4px 0', fontSize: '12px', color: '#d1d5db' }}>• Partner Recycler: <strong>Sample Recycler Partner (Pending Real Verification)</strong></p>
@@ -810,9 +809,10 @@ Status: Verified, Calculated & Audit Ready
                     <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '24px' }}>
                         <h2 style={{ color: '#10b981', marginTop: 0, fontSize: '18px' }}>💰 SBI / SIDBI Working Capital Interest Rebate</h2>
                         <p style={{ color: '#9ca3af', fontSize: '13px', marginBottom: '16px' }}>Use your verified Green Passport to secure interest rate reduction on business loans.</p>
-                        <div style={{ backgroundColor: '#065f46', color: '#d1fae5', padding: '16px', borderRadius: '8px', fontWeight: 'bold', fontSize: '14px' }}>
+                        <div style={{ backgroundColor: '#065f46', color: '#d1fae5', padding: '16px', borderRadius: '8px', fontWeight: 'bold', fontSize: '14px', marginBottom: '12px' }}>
                             Status: Eligible for Working Capital Interest Rebate Review
                         </div>
+                        <p style={{ margin: 0, fontSize: '11px', color: '#9ca3af' }}>(Subject to bank circulars)</p>
                     </div>
                 )}
 
@@ -834,8 +834,8 @@ Status: Verified, Calculated & Audit Ready
                     <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '24px' }}>
                         <h2 style={{ color: '#8b5cf6', marginTop: 0, fontSize: '18px' }}>🏛️ MCCI Privacy Shield & Govt Grants</h2>
                         <p style={{ color: '#9ca3af', fontSize: '13px', marginBottom: '16px' }}>Portal connector linking MSMEs to capital subsidies while keeping individual factory data private.</p>
-                        <div style={{ backgroundColor: '#065f46', color: '#d1fae5', padding: '16px', borderRadius: '8px', fontWeight: 'bold', fontSize: '14px' }}>
-                            MCCI Partnership Status: Active & Verified for State Grants
+                        <div style={{ backgroundColor: '#1f2937', border: '1px solid #f59e0b', color: '#fcd34d', padding: '16px', borderRadius: '8px', fontWeight: 'bold', fontSize: '14px' }}>
+                            MCCI Partnership Status: Pending / In Discussion (Sample Status)
                         </div>
                     </div>
                 )}
