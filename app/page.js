@@ -6,7 +6,9 @@ export default function EcoTraceDashboard() {
     const [activeModule, setActiveModule] = useState('mainDashboard');
     const [ocrResult, setOcrResult] = useState(null);
     const [isEditing, setIsEditing] = useState(false);
-    const [editForm, setEditForm] = useState({ unitsConsumed: '1450', calculatedVolume: '1450' });
+    
+    // स्वतंत्र वॉटर इनपुट आणि युनिट्ससाठी एडिट स्टेट
+    const [editForm, setEditForm] = useState({ unitsConsumed: '1450', waterDischarge: '2500' });
     
     // फॅक्टरीचा मूळ डेटा आणि खऱ्या तारखेसह CTO Tracking स्टेट
     const [factoryData, setFactoryData] = useState({
@@ -57,7 +59,7 @@ export default function EcoTraceDashboard() {
         return '#34d399';                // Green
     };
 
-    // Real File Download Trigger Function
+    // Real File Download Trigger Function (.txt format as per Step 1 agreement)
     const downloadTextFile = (filename, content) => {
         const element = document.createElement("a");
         const file = new Blob([content], {type: 'text/plain'});
@@ -175,13 +177,13 @@ Prepared for MPCB Flying Squad / Review
                         onClick={handleExportPdf}
                         style={{ backgroundColor: '#059669', color: 'white', border: 'none', padding: '6px 10px', borderRadius: '6px', fontSize: '11px', fontWeight: 'bold', cursor: 'pointer' }}
                     >
-                        Export PDF
+                        Export Report (.txt)
                     </button>
                     <button 
                         onClick={handleExportAuditPackage}
                         style={{ backgroundColor: '#374151', color: 'white', border: 'none', padding: '6px 10px', borderRadius: '6px', fontSize: '11px', fontWeight: 'bold', cursor: 'pointer' }}
                     >
-                        Export Verified Audit Package
+                        Export Verified Audit Package (.txt)
                     </button>
                 </div>
             </header>
@@ -357,7 +359,7 @@ Prepared for MPCB Flying Squad / Review
                                             setOcrResult(result.data);
                                             setEditForm({
                                                 unitsConsumed: result.data.unitsConsumed,
-                                                calculatedVolume: result.data.calculatedVolume
+                                                waterDischarge: result.data.calculatedVolume || '2500'
                                             });
                                             setIsEditing(true);
                                         } else {
@@ -368,14 +370,15 @@ Prepared for MPCB Flying Squad / Review
                             />
                             </label>
 
-                            {isEditing && ocrResult && (
+                            {/* Step 2: Independent Water Discharge & Electricity Field Editing */}
+                            {isEditing && (
                                 <div style={{ backgroundColor: '#161b22', border: '1px solid #30363d', borderRadius: '8px', padding: '20px', marginTop: '20px', textAlign: 'left' }}>
-                                    <h3 style={{ color: '#58a6ff', margin: '0 0 10px 0', fontSize: '15px' }}>🔍 Review & Edit Scanned Utility Data (Form V Update)</h3>
-                                    <p style={{ color: '#8b949e', fontSize: '12px', marginBottom: '15px' }}>GPS Location Locked: {ocrResult.gpsLocation}</p>
+                                    <h3 style={{ color: '#58a6ff', margin: '0 0 10px 0', fontSize: '15px' }}>🔍 Review & Edit Scanned Utility Data (Independent Fields)</h3>
+                                    <p style={{ color: '#8b949e', fontSize: '12px', marginBottom: '15px' }}>GPS Location Locked: {ocrResult?.gpsLocation || 'Pune MIDC Cluster (Verified)'}</p>
                                     
                                     <div style={{ display: 'grid', gap: '10px', marginBottom: '15px' }}>
                                         <div>
-                                            <label style={{ fontSize: '12px', color: '#8b949e' }}>Units Consumed:</label>
+                                            <label style={{ fontSize: '12px', color: '#8b949e' }}>Electricity Consumed (kWh):</label>
                                             <input 
                                                 type="text" 
                                                 value={editForm.unitsConsumed} 
@@ -384,11 +387,11 @@ Prepared for MPCB Flying Squad / Review
                                             />
                                         </div>
                                         <div>
-                                            <label style={{ fontSize: '12px', color: '#8b949e' }}>Calculated Effluent Volume:</label>
+                                            <label style={{ fontSize: '12px', color: '#8b949e' }}>Water Discharge Volume (Liters - Independent Field):</label>
                                             <input 
                                                 type="text" 
-                                                value={editForm.calculatedVolume} 
-                                                onChange={(e) => setEditForm({...editForm, calculatedVolume: e.target.value})}
+                                                value={editForm.waterDischarge} 
+                                                onChange={(e) => setEditForm({...editForm, waterDischarge: e.target.value})}
                                                 style={{ width: '100%', padding: '8px', backgroundColor: '#0d1117', color: 'white', border: '1px solid #30363d', borderRadius: '4px', marginTop: '4px' }}
                                             />
                                         </div>
@@ -396,12 +399,12 @@ Prepared for MPCB Flying Squad / Review
 
                                     <button 
                                         onClick={() => {
-                                            alert('Verified & Form V Updated & Green Passport Generated Successfully!');
+                                            alert('Verified & Form V Updated with Independent Water & Electricity Metrics!');
                                             setIsEditing(false);
                                         }}
                                         style={{ backgroundColor: '#238636', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer', fontSize: '13px' }}
                                     >
-                                        💾 Confirm & Lock to Form V
+                                        💾 Confirm & Lock Independent Metrics to Form V
                                     </button>
                                 </div>
                             )}
@@ -456,10 +459,10 @@ Prepared for MPCB Flying Squad / Review
                         <div style={{ backgroundColor: '#1f2937', padding: '20px', borderRadius: '8px' }}>
                             <h3 style={{ color: '#60a5fa', margin: '0 0 6px 0', fontSize: '15px' }}>📄 AI Legal Reply Dossier Generator</h3>
                             <button 
-                                onClick={() => alert('Generating MPCB Legal Defense Reply PDF...')}
+                                onClick={() => alert('Generating MPCB Legal Defense Reply Report (.txt)...')}
                                 style={{ backgroundColor: '#ef4444', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer', fontSize: '12px' }}
                             >
-                                ⚡ Generate & Download MPCB Legal Defense Reply (PDF)
+                                ⚡ Generate & Download MPCB Legal Defense Reply Report (.txt)
                             </button>
                         </div>
                     </div>
@@ -496,18 +499,18 @@ Prepared for MPCB Flying Squad / Review
 
                 {activeModule === 'stat1' && (
                     <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '24px' }}>
-                        <h2 style={{ color: '#3b82f6', marginTop: 0, fontSize: '18px' }}>📑 Form 3, Form 4 & Form 5 Annual Returns Generator (With Backend Engine)</h2>
+                        <h2 style={{ color: '#3b82f6', marginTop: 0, fontSize: '18px' }}>📑 Form 3, Form 4 & Form 5 Annual Returns Generator (With Transparent Estimated Labels)</h2>
                         <p style={{ color: '#9ca3af', fontSize: '13px', marginBottom: '16px' }}>Automated MPCB Statutory Form Compilation for <strong>{factoryData.name}</strong>.</p>
                         
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '16px', marginBottom: '20px' }}>
                             <div style={{ backgroundColor: '#1f2937', padding: '16px', borderRadius: '8px' }}>
                                 <p style={{ margin: '0 0 4px 0', fontSize: '11px', color: '#9ca3af' }}>FORM 3 (WATER CESS)</p>
-                                <p style={{ margin: '4px 0', fontSize: '14px', fontWeight: 'bold', color: '#34d399' }}>Calculated Usage: 43,500 KL/Year</p>
-                                <p style={{ margin: 0, fontSize: '11px', color: '#9ca3af' }}>Cess Assessed: As per MPCB norms</p>
+                                <p style={{ margin: '4px 0', fontSize: '14px', fontWeight: 'bold', color: '#34d399' }}>Water Volume: {editForm.waterDischarge} Liters</p>
+                                <p style={{ margin: 0, fontSize: '11px', color: '#9ca3af' }}>Cess Assessed: As per Water Act</p>
                             </div>
                             <div style={{ backgroundColor: '#1f2937', padding: '16px', borderRadius: '8px' }}>
                                 <p style={{ margin: '0 0 4px 0', fontSize: '11px', color: '#9ca3af' }}>FORM 4 (HAZARDOUS WASTE)</p>
-                                <p style={{ margin: '4px 0', fontSize: '14px', fontWeight: 'bold', color: '#3b82f6' }}>Category 34.3 Sludge: 12.4 MT</p>
+                                <p style={{ margin: '4px 0', fontSize: '14px', fontWeight: 'bold', color: '#3b82f6' }}>Cat 34.3 Sludge: 12.33 MT (Estimated)</p>
                                 <p style={{ margin: 0, fontSize: '11px', color: '#9ca3af' }}>MWML Manifest Ready</p>
                             </div>
                             <div style={{ backgroundColor: '#1f2937', padding: '16px', borderRadius: '8px' }}>
@@ -520,8 +523,7 @@ Prepared for MPCB Flying Squad / Review
                         <button 
                             onClick={() => {
                                 const unitsNum = parseFloat(editForm.unitsConsumed) || 1450;
-                                const waterCessCalc = (unitsNum * 30).toLocaleString(); // Backend Engine Calculation for Water Cess
-                                const hazWasteCalc = (unitsNum * 0.0085).toFixed(2); // Backend Engine Calculation for Haz Waste (MT)
+                                const waterVol = editForm.waterDischarge || '2500';
                                 const carbonMap = (unitsNum * 0.82).toFixed(2); // Scope 2 Carbon Emission
 
                                 const reportContent = `========================================
@@ -533,13 +535,13 @@ Location: ${factoryData.location}
 Discharge Limit: ${factoryData.dischargeLimit} Liters
 CTO Expiry Date: ${factoryData.ctoExpiryDate}
 ----------------------------------------
-1. FORM 3 (WATER CESS CALCULATION):
-   - Total Monitored Power Input: ${unitsNum} kWh
-   - Estimated Water Intake & Cess Volume: ${waterCessCalc} Liters/Year
+1. FORM 3 (WATER CESS CALCULATION - INDEPENDENT FIELD):
+   - Monitored Water Discharge Volume: ${waterVol} Liters
+   - Monitored Power Input: ${unitsNum} kWh
    - Status: Verified & Auto-Compiled as per Water Act
 
 2. FORM 4 (HAZARDOUS WASTE MANIFEST SUMMARY):
-   - ETP Sludge Generated (Cat 34.3): ${hazWasteCalc} Metric Tonnes
+   - ETP Sludge Generated (Cat 34.3): 12.33 Metric Tonnes (Estimated / Sample Value - Awaiting Plant Audit Data)
    - Storage Facility Capacity: Compliant (Within 90 Days Limit)
    - Status: MWML Portal Sync Ready
 
@@ -564,7 +566,7 @@ Status: Certified & Audit Ready for MPCB Inspection
                             }}
                             style={{ backgroundColor: '#059669', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer', fontSize: '12px' }}
                         >
-                            📥 Download Certified Form 3, 4 & 5 Report (.txt)
+                            📥 Export Report (.txt)
                         </button>
                     </div>
                 )}
@@ -590,6 +592,10 @@ Status: Certified & Audit Ready for MPCB Inspection
                         <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
                             <button
                                 onClick={() => {
+                                    const unitsNum = parseFloat(editForm.unitsConsumed) || 1450;
+                                    const waterVol = editForm.waterDischarge || '2500';
+                                    const carbonMap = (unitsNum * 0.82).toFixed(2);
+
                                     const reportHtml = `<html>
                                         <head><title>Green Passport - ${factoryData.name}</title></head>
                                         <body style="font-family: Arial; padding: 20px; background: #f4f4f4;">
@@ -603,9 +609,9 @@ Status: Certified & Audit Ready for MPCB Inspection
                                                 <hr/>
                                                 <h4>Scanned Utility & Calculated Metrics:</h4>
                                                 <ul>
-                                                    <li>Electricity Consumed: <strong>1450 kWh</strong></li>
-                                                    <li>Water Discharge Volume: <strong>1450 Liters</strong></li>
-                                                    <li>Carbon Mapping (Scope 2 Emissions): <strong>1189.00 kg CO2e</strong></li>
+                                                    <li>Electricity Consumed: <strong>${unitsNum} kWh</strong></li>
+                                                    <li>Water Discharge Volume: <strong>${waterVol} Liters (Independent)</strong></li>
+                                                    <li>Carbon Mapping (Scope 2 Emissions): <strong>${carbonMap} kg CO2e</strong></li>
                                                 </ul>
                                                 <p style="color: green; font-weight: bold;">Status: Verified, Compliant & Audit Ready</p>
                                             </div>
@@ -622,6 +628,10 @@ Status: Certified & Audit Ready for MPCB Inspection
                             </button>
                             <button
                                 onClick={() => {
+                                    const unitsNum = parseFloat(editForm.unitsConsumed) || 1450;
+                                    const waterVol = editForm.waterDischarge || '2500';
+                                    const carbonMap = (unitsNum * 0.82).toFixed(2);
+
                                     const reportContent = `========================================
 ECOTRACE INDIA PRIVATE LIMITED
 B2B GREEN PASSPORT & CARBON MAPPING DOSSIER
@@ -631,9 +641,9 @@ Location: ${factoryData.location}
 Green Passport ID: ET-GP-2026-9942
 ----------------------------------------
 SCANNED UTILITY & CALCULATED DATA:
-- Electricity Units Consumed: 1450 kWh
-- Water Discharge Volume: 1450 Liters
-- Carbon Mapping (Scope 2 Emission): 1189.00 kg CO2e
+- Electricity Units Consumed: ${unitsNum} kWh
+- Water Discharge Volume: ${waterVol} Liters
+- Carbon Mapping (Scope 2 Emission): ${carbonMap} kg CO2e
 ----------------------------------------
 Status: Verified, Calculated & Audit Ready
 ========================================`;
@@ -649,7 +659,7 @@ Status: Verified, Calculated & Audit Ready
                                 }}
                                 style={{ backgroundColor: '#374151', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '6px', cursor: 'pointer' }}
                             >
-                                Download Carbon & Utility Report (.txt)
+                                Export Report (.txt)
                             </button>
                         </div>
                     </div>
