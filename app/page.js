@@ -469,8 +469,9 @@ Prepared for MPCB Flying Squad / Review
                         <h2 style={{ color: '#ef4444', marginTop: 0, fontSize: '18px' }}>⚠️ Toxic & Boiler Gas Leak Safety Radar</h2>
                         <p style={{ color: '#9ca3af', fontSize: '13px', marginBottom: '16px' }}>Real-time Parts Per Million (PPM) concentration tracking for <strong>{factoryData.name}</strong>.</p>
                         
-                        <div style={{ backgroundColor: '#166534', color: '#dcfce7', padding: '16px', borderRadius: '8px', fontWeight: 'bold', fontSize: '13px', marginBottom: '16px' }}>
-                            Status: All Gas Sensors Normal (0.05 PPM Safe Range)
+                        {/* Corrected Simulated Demo Status Box */}
+                        <div style={{ backgroundColor: '#1f2937', border: '1px solid #f59e0b', color: '#fcd34d', padding: '16px', borderRadius: '8px', fontWeight: 'bold', fontSize: '13px', marginBottom: '16px' }}>
+                            Status: Simulated Demo Data — Awaiting Physical Sensor Integration (0.05 PPM Safe Range)
                         </div>
 
                         {/* IEC 61511 / SIS Guardrail Notice */}
@@ -883,7 +884,7 @@ Status: Verified, Calculated & Audit Ready
                 )}
             </div>
 
-            <footer style={{ marginTop: '40px', borderTop: '1px solid #1f2937', paddingTop: '20px', textAlign: 'center', color: '#9ca3af', fontSize: '12px' }}>
+            <footer style={{ marginTop: '40px', borderTop: '1px solid #1f2937', padding: '20px', textAlign: 'center', color: '#9ca3af', fontSize: '12px' }}>
                 LEGAL DISCLAIMER & DEVELOPER LIABILITY WAIVER: EcoTrace India Private Limited is an independent compliance platform.
             </footer>
         </main>
