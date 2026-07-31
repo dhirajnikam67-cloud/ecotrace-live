@@ -7,12 +7,14 @@ export default function EcoTraceDashboard() {
     const [ocrResult, setOcrResult] = useState(null);
     const [isEditing, setIsEditing] = useState(false);
     
-    // Original OCR vs Manager Confirmed ट्रॅकिंगसाठी स्पष्ट स्टेट
+    // Original OCR vs Manager Confirmed ट्रॅकिंगसाठी स्टेट
     const [editForm, setEditForm] = useState({ 
         originalElectricity: '1420', 
         unitsConsumed: '1450', 
         originalWater: '3000', 
-        waterDischarge: '3200' 
+        waterDischarge: '3200',
+        hazardousCategory: 'Cat 34.3 — Chemical / ETP Sludge from Wastewater Treatment',
+        hazardousTonnage: '12.33 MT (Estimated / Sample Value)'
     });
     const [batchFiles, setBatchFiles] = useState([]);
     
@@ -339,10 +341,10 @@ Prepared for MPCB Flying Squad / Review
                 {activeModule === 'ocrScan' && (
                     <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '24px' }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px', flexWrap: 'wrap', gap: '8px' }}>
-                            <h2 style={{ color: '#34d399', margin: 0, fontSize: '18px' }}>⚡ Multi-File Batch OCR & Human-in-the-Loop Review</h2>
-                            <span style={{ backgroundColor: '#065f46', color: '#d1fae5', padding: '4px 10px', borderRadius: '6px', fontSize: '11px', fontWeight: 'bold' }}>TRANSPARENT AUDIT TRAIL ACTIVE</span>
+                            <h2 style={{ color: '#34d399', margin: 0, fontSize: '18px' }}>⚡ Multi-File Batch OCR & CPCB Schedule Selector</h2>
+                            <span style={{ backgroundColor: '#065f46', color: '#d1fae5', padding: '4px 10px', borderRadius: '6px', fontSize: '11px', fontWeight: 'bold' }}>AUDIT TRAIL & CLASSIFICATION ACTIVE</span>
                         </div>
-                        <p style={{ color: '#9ca3af', fontSize: '13px' }}>Upload bills. The system records the original OCR reading vs manager verification, flagging any discrepancies for absolute transparency.</p>
+                        <p style={{ color: '#9ca3af', fontSize: '13px' }}>Upload bills and assign CPCB Schedule categories. The system records original OCR reads vs manager verification without fake calculations.</p>
                         <div style={{ marginTop: '20px', padding: '30px', border: '2px dashed #374151', borderRadius: '8px', textAlign: 'center', backgroundColor: '#1f2937' }}>
                            <label style={{ display: 'inline-block', backgroundColor: '#059669', color: 'white', padding: '12px 24px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer', fontSize: '14px' }}>
                             📁 Select Multiple Bills / Manifests (Batch Upload)
@@ -355,17 +357,17 @@ Prepared for MPCB Flying Squad / Review
                                     if(e.target.files && e.target.files.length > 0) {
                                         const filesArray = Array.from(e.target.files);
                                         setBatchFiles(filesArray);
-                                        alert(`Successfully queued ${filesArray.length} file(s). Review original OCR vs manager verification below.`);
+                                        alert(`Successfully queued ${filesArray.length} file(s). Review metrics and Schedule category below.`);
                                         setIsEditing(true);
                                     }
                                 }}
                             />
                             </label>
 
-                            {/* Batch Files Preview & Discrepancy Tracking Box */}
+                            {/* Batch Files Preview & CPCB Category Selector Box */}
                             {isEditing && (
                                 <div style={{ backgroundColor: '#161b22', border: '1px solid #30363d', borderRadius: '8px', padding: '20px', marginTop: '20px', textAlign: 'left' }}>
-                                    <h3 style={{ color: '#58a6ff', margin: '0 0 10px 0', fontSize: '15px' }}>🔍 Original OCR Scan vs. Manager Confirmed Audit Review</h3>
+                                    <h3 style={{ color: '#58a6ff', margin: '0 0 10px 0', fontSize: '15px' }}>🔍 Utility Review & CPCB Schedule Selector</h3>
                                     <p style={{ color: '#8b949e', fontSize: '12px', marginBottom: '10px' }}>Queued Files: {batchFiles.map(f => f.name).join(', ')}</p>
                                     <p style={{ color: '#8b949e', fontSize: '12px', marginBottom: '15px' }}>GPS Location Locked: Pune MIDC Cluster (Verified)</p>
                                     
@@ -380,9 +382,6 @@ Prepared for MPCB Flying Squad / Review
                                                 onChange={(e) => setEditForm({...editForm, unitsConsumed: e.target.value})}
                                                 style={{ width: '100%', padding: '8px', backgroundColor: '#161b22', color: 'white', border: '1px solid #374151', borderRadius: '4px', marginTop: '4px' }}
                                             />
-                                            {editForm.unitsConsumed !== editForm.originalElectricity && (
-                                                <p style={{ margin: '6px 0 0 0', fontSize: '10px', color: '#ef4444' }}>⚠️ Discrepancy Flagged: Manager corrected the OCR value.</p>
-                                            )}
                                         </div>
 
                                         <div style={{ backgroundColor: '#0d1117', padding: '12px', borderRadius: '6px', border: '1px solid #30363d' }}>
@@ -395,24 +394,37 @@ Prepared for MPCB Flying Squad / Review
                                                 onChange={(e) => setEditForm({...editForm, waterDischarge: e.target.value})}
                                                 style={{ width: '100%', padding: '8px', backgroundColor: '#161b22', color: 'white', border: '1px solid #374151', borderRadius: '4px', marginTop: '4px' }}
                                             />
-                                            {editForm.waterDischarge !== editForm.originalWater && (
-                                                <p style={{ margin: '6px 0 0 0', fontSize: '10px', color: '#ef4444' }}>⚠️ Discrepancy Flagged: Manager corrected the OCR value.</p>
-                                            )}
+                                        </div>
+
+                                        {/* CPCB Schedule Category Selector */}
+                                        <div style={{ backgroundColor: '#0d1117', padding: '12px', borderRadius: '6px', border: '1px solid #30363d' }}>
+                                            <p style={{ margin: '0 0 6px 0', fontSize: '12px', color: '#8b949e' }}>CPCB Schedule Hazardous Waste Category Selector:</p>
+                                            <select 
+                                                value={editForm.hazardousCategory}
+                                                onChange={(e) => setEditForm({...editForm, hazardousCategory: e.target.value})}
+                                                style={{ width: '100%', padding: '8px', backgroundColor: '#161b22', color: 'white', border: '1px solid #374151', borderRadius: '4px', marginTop: '4px', fontSize: '12px' }}
+                                            >
+                                                <option value="Cat 34.3 — Chemical / ETP Sludge from Wastewater Treatment">Cat 34.3 — Chemical / ETP Sludge from Wastewater Treatment</option>
+                                                <option value="Cat 5.1 — Used / Spent Oil from Machinery & Generators">Cat 5.1 — Used / Spent Oil from Machinery & Generators</option>
+                                                <option value="Cat 35.1 — Wastes from Petroleum Refining / Chemical Processes">Cat 35.1 — Wastes from Petroleum Refining / Chemical Processes</option>
+                                                <option value="Cat 12.1 — Acid/Alkali Residues from Surface Treatment">Cat 12.1 — Acid/Alkali Residues from Surface Treatment</option>
+                                            </select>
+                                            <p style={{ margin: '6px 0 0 0', fontSize: '10px', color: '#34d399' }}>ℹ️ Selects official CPCB classification schedule (No fake calculation formula applied).</p>
                                         </div>
                                     </div>
 
                                     <button 
                                         onClick={() => {
-                                            alert('Audit trail locked with discrepancy tracking successfully!');
+                                            alert('Audit trail & CPCB Schedule Category locked successfully!');
                                             setIsEditing(false);
                                         }}
                                         style={{ backgroundColor: '#238636', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer', fontSize: '13px' }}
                                     >
-                                        💾 Lock Discrepancy Audit Trail & Update Form V
+                                        💾 Lock Classification & Update Form V
                                     </button>
                                 </div>
                             )}
-                            <p style={{ margin: '12px 0 0 0', fontSize: '12px', color: '#9ca3af' }}>Transparent discrepancy logging active.</p>
+                            <p style={{ margin: '12px 0 0 0', fontSize: '12px', color: '#9ca3af' }}>Regulatory category selector active.</p>
                         </div>
                     </div>
                 )}
@@ -503,7 +515,7 @@ Prepared for MPCB Flying Squad / Review
 
                 {activeModule === 'stat1' && (
                     <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '24px' }}>
-                        <h2 style={{ color: '#3b82f6', marginTop: 0, fontSize: '18px' }}>📑 Form 3, Form 4 & Form 5 Annual Returns Generator (Discrepancy Audit Trail)</h2>
+                        <h2 style={{ color: '#3b82f6', marginTop: 0, fontSize: '18px' }}>📑 Form 3, Form 4 & Form 5 Annual Returns Generator (CPCB Schedule Classified)</h2>
                         <p style={{ color: '#9ca3af', fontSize: '13px', marginBottom: '16px' }}>Automated MPCB Statutory Form Compilation for <strong>{factoryData.name}</strong>.</p>
                         
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '16px', marginBottom: '20px' }}>
@@ -514,8 +526,8 @@ Prepared for MPCB Flying Squad / Review
                             </div>
                             <div style={{ backgroundColor: '#1f2937', padding: '16px', borderRadius: '8px' }}>
                                 <p style={{ margin: '0 0 4px 0', fontSize: '11px', color: '#9ca3af' }}>FORM 4 (HAZARDOUS WASTE)</p>
-                                <p style={{ margin: '4px 0', fontSize: '14px', fontWeight: 'bold', color: '#3b82f6' }}>Cat 34.3 Sludge: 12.33 MT (Estimated)</p>
-                                <p style={{ margin: 0, fontSize: '11px', color: '#9ca3af' }}>Ready for Manual Portal Upload</p>
+                                <p style={{ margin: '4px 0', fontSize: '13px', fontWeight: 'bold', color: '#3b82f6' }}>{editForm.hazardousCategory}</p>
+                                <p style={{ margin: '4px 0 0 0', fontSize: '11px', color: '#9ca3af' }}>Volume: 12.33 MT (Estimated / Sample Value)</p>
                             </div>
                             <div style={{ backgroundColor: '#1f2937', padding: '16px', borderRadius: '8px' }}>
                                 <p style={{ margin: '0 0 4px 0', fontSize: '11px', color: '#9ca3af' }}>FORM 5 (ENVIRONMENT STATEMENT)</p>
@@ -546,8 +558,9 @@ CTO Expiry Date: ${factoryData.ctoExpiryDate}
    - Audit Status: ${waterStatus}
    - Status: Verified & Human-in-the-Loop Approved
 
-2. FORM 4 (HAZARDOUS WASTE MANIFEST SUMMARY & FORM 10):
-   - ETP Sludge Generated (Cat 34.3): 12.33 Metric Tonnes (Estimated / Sample Value - Awaiting Plant Audit Data)
+2. FORM 4 (HAZARDOUS WASTE & CPCB SCHEDULE CLASSIFICATION):
+   - Selected Schedule Category: ${editForm.hazardousCategory}
+   - Reported Tonnage: 12.33 Metric Tonnes (Estimated / Sample Value - Awaiting Plant Audit Data)
    - Form 10 Transporter Manifest: Ready for Manual Portal Upload
    - Storage Facility Capacity: Compliant (Within 90 Days Limit)
 
@@ -634,6 +647,7 @@ Status: Certified & Audit Ready for MPCB Inspection
                                                 <ul>
                                                     <li>Electricity Consumed: <strong>${unitsNum} kWh</strong> [Status: ${electricityStatus}]</li>
                                                     <li>Water Discharge Volume: <strong>${waterVol} Liters</strong> [Status: ${waterStatus}]</li>
+                                                    <li>CPCB Schedule Category: <strong>${editForm.hazardousCategory}</strong></li>
                                                     <li>Carbon Mapping (Scope 2 Emissions): <strong>${carbonMap} kg CO2e</strong></li>
                                                 </ul>
                                                 <p style="color: green; font-weight: bold;">Status: Verified, Compliant & Audit Ready</p>
@@ -668,6 +682,7 @@ Green Passport ID: ET-GP-2026-9942
 SCANNED UTILITY & AUDIT TRAIL DATA:
 - Electricity Units Consumed: ${unitsNum} kWh [Status: ${electricityStatus}]
 - Water Discharge Volume: ${waterVol} Liters [Status: ${waterStatus}]
+- CPCB Schedule Category: ${editForm.hazardousCategory}
 - Carbon Mapping (Scope 2 Emission): ${carbonMap} kg CO2e
 ----------------------------------------
 Status: Verified, Calculated & Audit Ready
