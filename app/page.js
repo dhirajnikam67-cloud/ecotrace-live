@@ -105,7 +105,7 @@ VERIFIED AUDIT PACKAGE & DIGITAL VAULT DOSSIER
 Company Name: ${factoryData.name}
 Location: ${factoryData.location}
 Digital Vault Hash: 0xa8f392c1b4e87019d6f2231e (Tamper-Evident)
-ETP Health Status: 98% Optimal (Estimated)
+ETP Health Status: 98% Optimal (Estimated / Awaiting Plant Audit Data)
 Power Factor Status: 0.94 (Above Penalty Threshold 0.90)
 ----------------------------------------
 Prepared for MPCB Flying Squad / Review
@@ -432,15 +432,33 @@ Prepared for MPCB Flying Squad / Review
                 {activeModule === 'risk1' && (
                     <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '24px' }}>
                         <h2 style={{ color: '#ef4444', marginTop: 0, fontSize: '18px' }}>🚨 MPCB Flying Squad Emergency Audit Mode</h2>
-                        <p style={{ color: '#9ca3af', fontSize: '13px', marginBottom: '16px' }}>1-Click instant compliance dossier aggregating CTO status ({factoryData.ctoExpiryDate}), ETP health, and digital vault hashes for <strong>{factoryData.name}</strong>.</p>
-                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '16px' }}>
+                        <p style={{ color: '#9ca3af', fontSize: '13px', marginBottom: '16px' }}>1-Click instant compliance dossier aggregating CTO status ({factoryData.ctoExpiryDate}), ETP health, CPCB Schedule category, and digital vault hashes for <strong>{factoryData.name}</strong>.</p>
+                        
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '16px', marginBottom: '20px' }}>
                             <div style={{ backgroundColor: '#1f2937', padding: '16px', borderRadius: '8px' }}>
-                                <p style={{ margin: '0 0 4px 0', fontSize: '11px', color: '#9ca3af', textTransform: 'uppercase' }}>CTO Status</p>
-                                <p style={{ margin: 0, fontSize: '16px', fontWeight: 'bold', color: getCtoColor(ctoDaysLeft) }}>VALID ({ctoDaysLeft} Days)</p>
+                                <p style={{ margin: '0 0 4px 0', fontSize: '11px', color: '#9ca3af', textTransform: 'uppercase' }}>CTO Status & Days Left</p>
+                                <p style={{ margin: 0, fontSize: '15px', fontWeight: 'bold', color: getCtoColor(ctoDaysLeft) }}>VALID ({ctoDaysLeft} Days Left)</p>
+                                <p style={{ margin: '4px 0 0 0', fontSize: '10px', color: '#9ca3af' }}>Expiry: {factoryData.ctoExpiryDate}</p>
                             </div>
                             <div style={{ backgroundColor: '#1f2937', padding: '16px', borderRadius: '8px' }}>
-                                <p style={{ margin: '0 0 4px 0', fontSize: '11px', color: '#9ca3af', textTransform: 'uppercase' }}>ETP Health</p>
-                                <p style={{ margin: 0, fontSize: '16px', fontWeight: 'bold', color: '#3b82f6' }}>98% Optimal (Estimated)</p>
+                                <p style={{ margin: '0 0 4px 0', fontSize: '11px', color: '#9ca3af', textTransform: 'uppercase' }}>ETP Health Status</p>
+                                <p style={{ margin: 0, fontSize: '15px', fontWeight: 'bold', color: '#3b82f6' }}>98% Optimal (Estimated)</p>
+                                <p style={{ margin: '4px 0 0 0', fontSize: '10px', color: '#9ca3af' }}>Awaiting Plant Audit Data</p>
+                            </div>
+                            <div style={{ backgroundColor: '#1f2937', padding: '16px', borderRadius: '8px' }}>
+                                <p style={{ margin: '0 0 4px 0', fontSize: '11px', color: '#9ca3af', textTransform: 'uppercase' }}>Digital Vault Ledger</p>
+                                <p style={{ margin: 0, fontSize: '12px', fontWeight: 'bold', color: '#34d399', fontFamily: 'monospace' }}>{activeHash.substring(0, 12)}...</p>
+                                <p style={{ margin: '4px 0 0 0', fontSize: '10px', color: '#9ca3af' }}>Tamper-Evident Verified</p>
+                            </div>
+                        </div>
+
+                        {/* Flying Squad Summary Box for OCR Discrepancy & CPCB Category */}
+                        <div style={{ backgroundColor: '#1f2937', padding: '16px', borderRadius: '8px', border: '1px solid #374151' }}>
+                            <h4 style={{ color: '#34d399', margin: '0 0 10px 0', fontSize: '13px' }}>📋 Aggregated Utility Audit Trail & CPCB Classification</h4>
+                            <div style={{ display: 'grid', gap: '8px', fontSize: '12px', color: '#d1d5db' }}>
+                                <p style={{ margin: 0 }}>• Electricity Audit: Original OCR ({editForm.originalElectricity} kWh) vs Manager Confirmed ({editForm.unitsConsumed} kWh) — {editForm.unitsConsumed !== editForm.originalElectricity ? '⚠️ Discrepancy Flagged & Corrected' : '✓ No Discrepancy'}</p>
+                                <p style={{ margin: 0 }}>• Water Discharge: Original OCR ({editForm.originalWater} Liters) vs Manager Confirmed ({editForm.waterDischarge} Liters) — {editForm.waterDischarge !== editForm.originalWater ? '⚠️ Discrepancy Flagged & Corrected' : '✓ No Discrepancy'}</p>
+                                <p style={{ margin: 0 }}>• CPCB Schedule I Category: <strong>{editForm.hazardousCategory}</strong></p>
                             </div>
                         </div>
                     </div>
