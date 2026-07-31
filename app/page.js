@@ -672,12 +672,10 @@ Status: Certified & Audit Ready for MPCB Inspection
                         <h2 style={{ color: '#10b981', marginTop: 0, fontSize: '18px' }}>🚚 Tanker GPS & Form 10 Hazardous Waste Manifest</h2>
                         <p style={{ color: '#9ca3af', fontSize: '13px', marginBottom: '16px' }}>Real-time GPS tracking of hazardous waste tankers moving from <strong>{factoryData.name}</strong> to MWML Taloja/Ranjangaon.</p>
                         
-                        {/* Tanker GPS No Signal Guardrail Box */}
                         <div style={{ backgroundColor: '#1f2937', border: '1px solid #f59e0b', color: '#fcd34d', padding: '16px', borderRadius: '8px', fontWeight: 'bold', fontSize: '13px', marginBottom: '16px' }}>
                             Status: No Signal / Data Unavailable — Fallback to Manual Form 10 Manifest & Log Verification
                         </div>
 
-                        {/* Manager Audit Trail Summary for Tanker & Waste */}
                         <div style={{ backgroundColor: '#1f2937', padding: '16px', borderRadius: '8px', border: '1px solid #374151', marginBottom: '16px' }}>
                             <h4 style={{ color: '#34d399', margin: '0 0 8px 0', fontSize: '13px' }}>📋 Manifest & CPCB Category Reference</h4>
                             <p style={{ margin: '0 0 4px 0', fontSize: '12px', color: '#d1d5db' }}>• Form 10 Manifest ID: MH-HW-2026-8819</p>
@@ -793,11 +791,12 @@ Status: Verified, Calculated & Audit Ready
                 {activeModule === 'ewaste' && (
                     <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '24px' }}>
                         <h2 style={{ color: '#10b981', marginTop: 0, fontSize: '18px' }}>📦 E-Waste & Battery EPR Statutory Vault</h2>
-                        <p style={{ color: '#9ca3af', fontSize: '13px', marginBottom: '16px' }}>Tracking registry and CPCB Registered Recycler verification for <strong>{factoryData.name}</strong>.</p>
+                        <p style={{ color: '#9ca3af', fontSize: '13px', marginBottom: '16px' }}>Tracking registry and recycler verification for <strong>{factoryData.name}</strong>.</p>
                         
+                        {/* Corrected Sample Recycler Partner Box */}
                         <div style={{ backgroundColor: '#1f2937', padding: '16px', borderRadius: '8px', border: '1px solid #374151', marginBottom: '16px' }}>
-                            <h4 style={{ color: '#34d399', margin: '0 0 8px 0', fontSize: '13px' }}>♻️ CPCB Registered Recycler Verification</h4>
-                            <p style={{ margin: '0 0 4px 0', fontSize: '12px', color: '#d1d5db' }}>• Partner Recycler: EcoRecycle India Pvt Ltd (CPCB Reg No: B-29016/Recycler/2025)</p>
+                            <h4 style={{ color: '#f59e0b', margin: '0 0 8px 0', fontSize: '13px' }}>♻️ Recycler Partner Status</h4>
+                            <p style={{ margin: '0 0 4px 0', fontSize: '12px', color: '#d1d5db' }}>• Partner Recycler: <strong>Sample Recycler Partner (Pending Real Verification)</strong></p>
                             <p style={{ margin: 0, fontSize: '12px', color: '#d1d5db' }}>• Linked Waste Category: <strong>{editForm.hazardousCategory}</strong></p>
                         </div>
 
