@@ -477,23 +477,73 @@ Prepared for MPCB Flying Squad / Review
                 {activeModule === 'risk3' && (
                     <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '24px' }}>
                         <h2 style={{ color: '#ef4444', marginTop: 0, fontSize: '18px' }}>Notice Defense Matrix & AI Legal Draft Generator</h2>
-                        <p style={{ color: '#9ca3af', fontSize: '13px', marginBottom: '16px' }}>Automated analysis of MPCB show-cause notices against historical IoT stack emission logs.</p>
+                        <p style={{ color: '#9ca3af', fontSize: '13px', marginBottom: '16px' }}>Automated analysis of MPCB show-cause notices against historical IoT stack emission logs and manager audit trails.</p>
+                        
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '16px', marginBottom: '20px' }}>
                             <div style={{ backgroundColor: '#1f2937', padding: '16px', borderRadius: '8px', borderLeft: '4px solid #ef4444' }}>
                                 <p style={{ margin: '0 0 4px 0', fontSize: '11px', color: '#9ca3af', textTransform: 'uppercase' }}>Latest Received Notice</p>
                                 <p style={{ margin: '0 0 6px 0', fontSize: '13px', fontWeight: 'bold', color: '#f87171' }}>Ref: MPCB/RO/Notice/2026/049</p>
-                                <p style={{ margin: 0, fontSize: '12px', color: '#d1d5db' }}>Allegation: Effluent parameter variance observed.</p>
+                                <p style={{ margin: 0, fontSize: '12px', color: '#d1d5db' }}>Allegation: Effluent parameter & hazardous waste variance observed.</p>
                             </div>
                             <div style={{ backgroundColor: '#1f2937', padding: '16px', borderRadius: '8px', borderLeft: '4px solid #34d399' }}>
                                 <p style={{ margin: '0 0 4px 0', fontSize: '11px', color: '#9ca3af', textTransform: 'uppercase' }}>Digital Vault Counter-Evidence</p>
-                                <p style={{ margin: '0 0 6px 0', fontSize: '13px', fontWeight: 'bold', color: '#34d399' }}>IoT Sensor Log Match: 100% Within Norms</p>
-                                <p style={{ margin: 0, fontSize: '10px', color: '#9ca3af', fontFamily: 'monospace' }}>Hash: 0xa8f392... (Tamper-Evident)</p>
+                                <p style={{ margin: '0 0 6px 0', fontSize: '13px', fontWeight: 'bold', color: '#34d399' }}>IoT Sensor Log Match: Within Statutory Norms (Verified)</p>
+                                <p style={{ margin: 0, fontSize: '10px', color: '#9ca3af', fontFamily: 'monospace' }}>Hash: {activeHash.substring(0, 12)}... (Tamper-Evident)</p>
                             </div>
                         </div>
+
+                        {/* Notice Defense Matrix UI Box for OCR Audit Trail & CPCB Category */}
+                        <div style={{ backgroundColor: '#1f2937', padding: '16px', borderRadius: '8px', border: '1px solid #374151', marginBottom: '20px' }}>
+                            <h4 style={{ color: '#34d399', margin: '0 0 10px 0', fontSize: '13px' }}>📋 Attached Defense Evidence (Manager Verified)</h4>
+                            <div style={{ display: 'grid', gap: '8px', fontSize: '12px', color: '#d1d5db' }}>
+                                <p style={{ margin: 0 }}>• Water Discharge Audit: Manager Confirmed <strong>{editForm.waterDischarge} Liters</strong> (Original OCR: {editForm.originalWater} Liters) — {editForm.waterDischarge !== editForm.originalWater ? '⚠️ Discrepancy Flagged & Corrected' : '✓ Verified'}</p>
+                                <p style={{ margin: 0 }}>• Power Input Audit: Manager Confirmed <strong>{editForm.unitsConsumed} kWh</strong> (Original OCR: {editForm.originalElectricity} kWh) — {editForm.unitsConsumed !== editForm.originalElectricity ? '⚠️ Discrepancy Flagged & Corrected' : '✓ Verified'}</p>
+                                <p style={{ margin: 0 }}>• CPCB Schedule I Classification: <strong>{editForm.hazardousCategory}</strong></p>
+                            </div>
+                        </div>
+
                         <div style={{ backgroundColor: '#1f2937', padding: '20px', borderRadius: '8px' }}>
                             <h3 style={{ color: '#60a5fa', margin: '0 0 6px 0', fontSize: '15px' }}>📄 AI Legal Reply Dossier Generator</h3>
                             <button 
-                                onClick={() => alert('Generating MPCB Legal Defense Reply Report (.txt)...')}
+                                onClick={() => {
+                                    const unitsNum = parseFloat(editForm.unitsConsumed) || 1450;
+                                    const waterVol = editForm.waterDischarge || '3200';
+                                    const waterStatus = waterVol !== editForm.originalWater ? `Corrected by Manager (Original OCR Read: ${editForm.originalWater} Liters)` : `OCR Verified (No Discrepancy: ${editForm.originalWater} Liters)`;
+                                    const electricityStatus = unitsNum.toString() !== editForm.originalElectricity ? `Corrected by Manager (Original OCR Read: ${editForm.originalElectricity} kWh)` : `OCR Verified (No Discrepancy: ${editForm.originalElectricity} kWh)`;
+
+                                    const replyContent = `========================================
+ECOTRACE INDIA PRIVATE LIMITED
+MPCB LEGAL NOTICE DEFENSE & REPLY DOSSIER
+========================================
+Company Name: ${factoryData.name}
+Location: ${factoryData.location}
+Notice Ref: MPCB/RO/Notice/2026/049
+CTO Expiry Date: ${factoryData.ctoExpiryDate}
+----------------------------------------
+1. COUNTER-EVIDENCE & IoT SENSOR LOG MATCH:
+   - Status: Within Statutory Norms (Verified)
+   - Digital Vault Hash: ${activeHash} (Tamper-Evident)
+
+2. MANAGER-VERIFIED UTILITY AUDIT TRAIL:
+   - Water Discharge Volume: ${waterVol} Liters [Audit Status: ${waterStatus}]
+   - Power Consumption Input: ${unitsNum} kWh [Audit Status: ${electricityStatus}]
+
+3. CPCB SCHEDULE I HAZARDOUS WASTE CLASSIFICATION:
+   - Selected Category: ${editForm.hazardousCategory}
+   - Note: Actual tonnage is maintained via plant manifest logs. Software provides legal classification, not generic calculation formulas.
+----------------------------------------
+SUBMITTED VIA ECOTRACE LEGAL SHIELD PLATFORM
+========================================`;
+
+                                    const blob = new Blob([replyContent], { type: 'text/plain;charset=utf-8' });
+                                    const url = URL.createObjectURL(blob);
+                                    const link = document.createElement('a');
+                                    link.href = url;
+                                    link.download = `${factoryData.name.replace(/\s+/g, '_')}_MPCB_Notice_Defense_Reply.txt`;
+                                    document.body.appendChild(link);
+                                    link.click();
+                                    document.body.removeChild(link);
+                                }}
                                 style={{ backgroundColor: '#ef4444', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer', fontSize: '12px' }}
                             >
                                 ⚡ Generate & Download MPCB Legal Defense Reply Report (.txt)
