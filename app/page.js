@@ -675,6 +675,44 @@ Status: Verified, Calculated & Audit Ready
         Download Carbon & Utility Report (.txt)
     </button>
 </div>
+       <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', marginTop: '12px' }}>
+    <button
+        onClick={() => {
+            const factoryName = companyName || 'Kesari Chemical Unit';
+            const locationName = companyLocation || 'MIDC Area';
+            const units = editForm?.unitsConsumed || '1450 kWh';
+            const volume = editForm?.calculatedVolume || '1450 Liters';
+            const numericUnits = parseFloat(units) || 1450;
+            const carbonEmission = (numericUnits * 0.82).toFixed(2);
+
+            const reportHtml = `<html>
+                <head><title>Green Passport - ${factoryName}</title></head>
+                <body style="font-family: Arial; padding: 20px; background: #f4f4f4;">
+                    <div style="background: white; padding: 20px; border-radius: 8px; max-width: 600px; margin: auto;">
+                        <h2 style="color: #059669;">ECOTRACE INDIA PRIVATE LIMITED</h2>
+                        <h3>3-Page Green Passport & Carbon Dossier</h3>
+                        <hr/>
+                        <p><strong>Company Name:</strong> ${factoryName}</p>
+                        <p><strong>Location:</strong> ${locationName}</p>
+                        <p><strong>Green Passport ID:</strong> ET-GP-2026-9942</p>
+                        <hr/>
+                        <h4>Scanned Utility & Calculated Metrics:</h4>
+                        <ul>
+                            <li>Electricity Consumed: <strong>${units}</strong></li>
+                            <li>Water Discharge Volume: <strong>${volume}</strong></li>
+                            <li>Carbon Mapping (Scope 2 Emissions): <strong>${carbonEmission} kg CO2e</strong></li>
+                        </ul>
+                        <p style="color: green; font-weight: bold;">Status: Verified, Compliant & Audit Ready</p>
+                    </div>
+                </body>
+            </html>`;
+
+            const blob = new Blob([reportHtml], { type: 'text/html;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            window.open(url, '_blank');
+        }}
+        style={{ backgroundColor: '#059669', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '6px', cursor: 'pointer' }}
+    >
         View 3-Page Green Passport Report
     </button>
     <button
@@ -696,7 +734,7 @@ Green Passport ID: ET-GP-2026-9942
 ----------------------------------------
 SCANNED UTILITY & CALCULATED DATA:
 - Electricity Units Consumed: ${units}
-- Water Discharge Volume: ${volume} (Derived from MSEDCL Power Load)
+- Water Discharge Volume: ${volume}
 - Carbon Mapping (Scope 2 Emission): ${carbonEmission} kg CO2e
 ----------------------------------------
 Status: Verified, Calculated & Audit Ready
@@ -716,40 +754,6 @@ Status: Verified, Calculated & Audit Ready
         Download Carbon & Utility Report (.txt)
     </button>
 </div>
-
-                {activeModule === 'tankerGPS' && (
-                    <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '24px' }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', flexWrap: 'wrap', gap: '8px' }}>
-                            <h2 style={{ color: '#10b981', margin: 0, fontSize: '18px' }}>🚚 Hazardous Waste Tanker Route & Form 10 Manifest</h2>
-                            <span style={{ backgroundColor: '#065f46', color: '#d1fae5', padding: '4px 10px', borderRadius: '6px', fontSize: '11px', fontWeight: 'bold' }}>GEO-FENCE SECURE</span>
-                        </div>
-                        <p style={{ color: '#9ca3af', fontSize: '13px', marginBottom: '16px' }}>Live tracking integration for transport vehicles from <strong>{factoryData.name}</strong> to CHWTSDF facilities.</p>
-                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px', marginBottom: '16px' }}>
-                            <div style={{ backgroundColor: '#1f2937', padding: '12px', borderRadius: '8px' }}>
-                                <p style={{ margin: '0 0 4px 0', fontSize: '11px', color: '#9ca3af' }}>MANIFEST ID</p>
-                                <p style={{ margin: 0, fontSize: '13px', fontWeight: 'bold', color: '#34d399' }}>FORM-10 #WB-2026-884</p>
-                            </div>
-                            <div style={{ backgroundColor: '#1f2937', padding: '12px', borderRadius: '8px' }}>
-                                <p style={{ margin: '0 0 4px 0', fontSize: '11px', color: '#9ca3af' }}>TRANSPORTER</p>
-                                <p style={{ margin: 0, fontSize: '13px', fontWeight: 'bold', color: '#3b82f6' }}>MH-14-BW-4921</p>
-                            </div>
-                            <div style={{ backgroundColor: '#1f2937', padding: '12px', borderRadius: '8px' }}>
-                                <p style={{ margin: '0 0 4px 0', fontSize: '11px', color: '#9ca3af' }}>DESTINATION</p>
-                                <p style={{ margin: 0, fontSize: '13px', fontWeight: 'bold', color: '#f59e0b' }}>MEPL Ranjangaon</p>
-                            </div>
-                        </div>
-                        <div style={{ backgroundColor: '#065f46', color: '#d1fae5', padding: '14px', borderRadius: '8px', fontWeight: 'bold', fontSize: '12px', marginBottom: '16px', textAlign: 'center' }}>
-                            📍 Tanker GPS Live Status: In-Transit (Secured via Geo-Fence)
-                        </div>
-                        <button 
-                            onClick={() => alert('Downloading Form 10 Digital Manifest Copy...')}
-                            style={{ backgroundColor: '#059669', color: 'white', border: 'none', padding: '8px 16px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer', fontSize: '12px' }}
-                        >
-                            Download Form 10 Digital Manifest Copy
-                        </button>
-                    </div>
-                )}
-
                 {activeModule === 'ewaste' && (
                     <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '24px' }}>
                         <h2 style={{ color: '#10b981', marginTop: 0, fontSize: '18px' }}>📦 E-Waste & Battery EPR Statutory Vault</h2>
