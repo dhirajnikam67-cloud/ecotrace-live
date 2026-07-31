@@ -635,8 +635,7 @@ Status: Verified, Calculated & Audit Ready
         Download Carbon & Utility Report (.txt)
     </button>
 </div>
-        View 3-Page Green Passport Report
-    </button>
+       
     <button
         onClick={() => {
             const factoryName = companyName || 'Kesari Chemical Unit';
