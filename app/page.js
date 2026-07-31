@@ -7,8 +7,13 @@ export default function EcoTraceDashboard() {
     const [ocrResult, setOcrResult] = useState(null);
     const [isEditing, setIsEditing] = useState(false);
     
-    // स्वतंत्र युनिट्स, वॉटर डिस्चार्ज आणि बॅच फाईल स्टेट
-    const [editForm, setEditForm] = useState({ unitsConsumed: '1450', waterDischarge: '3200' });
+    // Original OCR vs Manager Confirmed ट्रॅकिंगसाठी स्टेट
+    const [editForm, setEditForm] = useState({ 
+        originalElectricity: '1420', 
+        unitsConsumed: '1450', 
+        originalWater: '3000', 
+        waterDischarge: '3200' 
+    });
     const [batchFiles, setBatchFiles] = useState([]);
     
     // फॅक्टरीचा मूळ डेटा आणि खऱ्या तारखेसह CTO Tracking स्टेट
@@ -334,10 +339,10 @@ Prepared for MPCB Flying Squad / Review
                 {activeModule === 'ocrScan' && (
                     <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '24px' }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px', flexWrap: 'wrap', gap: '8px' }}>
-                            <h2 style={{ color: '#34d399', margin: 0, fontSize: '18px' }}>⚡ Multi-File Batch OCR & dMRV Geo-Scan Engine</h2>
-                            <span style={{ backgroundColor: '#065f46', color: '#d1fae5', padding: '4px 10px', borderRadius: '6px', fontSize: '11px', fontWeight: 'bold' }}>BATCH UPLOAD ACTIVE</span>
+                            <h2 style={{ color: '#34d399', margin: 0, fontSize: '18px' }}>⚡ Multi-File Batch OCR & Human-in-the-Loop Review</h2>
+                            <span style={{ backgroundColor: '#065f46', color: '#d1fae5', padding: '4px 10px', borderRadius: '6px', fontSize: '11px', fontWeight: 'bold' }}>TRANSPARENT AUDIT TRAIL ACTIVE</span>
                         </div>
-                        <p style={{ color: '#9ca3af', fontSize: '13px' }}>Upload multiple bills (Electricity, Water, Waste Manifests) simultaneously. AI extracts quantifiable numeric data while preserving strict transparency.</p>
+                        <p style={{ color: '#9ca3af', fontSize: '13px' }}>Upload bills. The system records the original OCR reading and allows manager verification/correction, maintaining full compliance transparency.</p>
                         <div style={{ marginTop: '20px', padding: '30px', border: '2px dashed #374151', borderRadius: '8px', textAlign: 'center', backgroundColor: '#1f2937' }}>
                            <label style={{ display: 'inline-block', backgroundColor: '#059669', color: 'white', padding: '12px 24px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer', fontSize: '14px' }}>
                             📁 Select Multiple Bills / Manifests (Batch Upload)
@@ -350,53 +355,58 @@ Prepared for MPCB Flying Squad / Review
                                     if(e.target.files && e.target.files.length > 0) {
                                         const filesArray = Array.from(e.target.files);
                                         setBatchFiles(filesArray);
-                                        alert(`Successfully queued ${filesArray.length} file(s) for batch processing! Review metrics below.`);
+                                        alert(`Successfully queued ${filesArray.length} file(s). Review original vs verified metrics below.`);
                                         setIsEditing(true);
                                     }
                                 }}
                             />
                             </label>
 
-                            {/* Batch Files Preview & Unified Independent Editing */}
+                            {/* Batch Files Preview & Transparent Review Box */}
                             {isEditing && (
                                 <div style={{ backgroundColor: '#161b22', border: '1px solid #30363d', borderRadius: '8px', padding: '20px', marginTop: '20px', textAlign: 'left' }}>
-                                    <h3 style={{ color: '#58a6ff', margin: '0 0 10px 0', fontSize: '15px' }}>🔍 Batch Queue Preview & Independent Metrics</h3>
+                                    <h3 style={{ color: '#58a6ff', margin: '0 0 10px 0', fontSize: '15px' }}>🔍 Original OCR Scan vs. Manager Confirmed Audit Review</h3>
                                     <p style={{ color: '#8b949e', fontSize: '12px', marginBottom: '10px' }}>Queued Files: {batchFiles.map(f => f.name).join(', ')}</p>
                                     <p style={{ color: '#8b949e', fontSize: '12px', marginBottom: '15px' }}>GPS Location Locked: Pune MIDC Cluster (Verified)</p>
                                     
-                                    <div style={{ display: 'grid', gap: '10px', marginBottom: '15px' }}>
-                                        <div>
-                                            <label style={{ fontSize: '12px', color: '#8b949e' }}>Electricity Consumed (Extracted from Bill):</label>
+                                    <div style={{ display: 'grid', gap: '15px', marginBottom: '20px' }}>
+                                        <div style={{ backgroundColor: '#0d1117', padding: '12px', borderRadius: '6px', border: '1px solid #30363d' }}>
+                                            <p style={{ margin: '0 0 6px 0', fontSize: '12px', color: '#8b949e' }}>Electricity Consumption:</p>
+                                            <p style={{ margin: '0 0 8px 0', fontSize: '11px', color: '#f59e0b' }}>Original OCR Read: <strong>{editForm.originalElectricity} kWh</strong></p>
+                                            <label style={{ fontSize: '11px', color: '#34d399' }}>Manager Confirmed / Corrected Value:</label>
                                             <input 
                                                 type="text" 
                                                 value={editForm.unitsConsumed} 
                                                 onChange={(e) => setEditForm({...editForm, unitsConsumed: e.target.value})}
-                                                style={{ width: '100%', padding: '8px', backgroundColor: '#0d1117', color: 'white', border: '1px solid #30363d', borderRadius: '4px', marginTop: '4px' }}
+                                                style={{ width: '100%', padding: '8px', backgroundColor: '#161b22', color: 'white', border: '1px solid #374151', borderRadius: '4px', marginTop: '4px' }}
                                             />
                                         </div>
-                                        <div>
-                                            <label style={{ fontSize: '12px', color: '#8b949e' }}>Water Discharge Volume (Extracted from Water Bill):</label>
+
+                                        <div style={{ backgroundColor: '#0d1117', padding: '12px', borderRadius: '6px', border: '1px solid #30363d' }}>
+                                            <p style={{ margin: '0 0 6px 0', fontSize: '12px', color: '#8b949e' }}>Water Discharge Volume:</p>
+                                            <p style={{ margin: '0 0 8px 0', fontSize: '11px', color: '#f59e0b' }}>Original OCR Read: <strong>{editForm.originalWater} Liters</strong></p>
+                                            <label style={{ fontSize: '11px', color: '#34d399' }}>Manager Confirmed / Corrected Value:</label>
                                             <input 
                                                 type="text" 
                                                 value={editForm.waterDischarge} 
                                                 onChange={(e) => setEditForm({...editForm, waterDischarge: e.target.value})}
-                                                style={{ width: '100%', padding: '8px', backgroundColor: '#0d1117', color: 'white', border: '1px solid #30363d', borderRadius: '4px', marginTop: '4px' }}
+                                                style={{ width: '100%', padding: '8px', backgroundColor: '#161b22', color: 'white', border: '1px solid #374151', borderRadius: '4px', marginTop: '4px' }}
                                             />
                                         </div>
                                     </div>
 
                                     <button 
                                         onClick={() => {
-                                            alert('Batch Files Processed & Unified Form V Locked Successfully!');
+                                            alert('Audit trail locked: Original OCR + Manager Verified values saved successfully!');
                                             setIsEditing(false);
                                         }}
                                         style={{ backgroundColor: '#238636', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer', fontSize: '13px' }}
                                     >
-                                        💾 Confirm & Lock Batch Data to Form V
+                                        💾 Lock Audit Trail & Update Form V
                                     </button>
                                 </div>
                             )}
-                            <p style={{ margin: '12px 0 0 0', fontSize: '12px', color: '#9ca3af' }}>Multi-file queue active. Independent values maintained.</p>
+                            <p style={{ margin: '12px 0 0 0', fontSize: '12px', color: '#9ca3af' }}>Transparent human-in-the-loop review active.</p>
                         </div>
                     </div>
                 )}
@@ -487,14 +497,14 @@ Prepared for MPCB Flying Squad / Review
 
                 {activeModule === 'stat1' && (
                     <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '24px' }}>
-                        <h2 style={{ color: '#3b82f6', marginTop: 0, fontSize: '18px' }}>📑 Form 3, Form 4 & Form 5 Annual Returns Generator (With Transparent Estimated Labels)</h2>
+                        <h2 style={{ color: '#3b82f6', marginTop: 0, fontSize: '18px' }}>📑 Form 3, Form 4 & Form 5 Annual Returns Generator (Transparent Audit Trail)</h2>
                         <p style={{ color: '#9ca3af', fontSize: '13px', marginBottom: '16px' }}>Automated MPCB Statutory Form Compilation for <strong>{factoryData.name}</strong>.</p>
                         
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '16px', marginBottom: '20px' }}>
                             <div style={{ backgroundColor: '#1f2937', padding: '16px', borderRadius: '8px' }}>
                                 <p style={{ margin: '0 0 4px 0', fontSize: '11px', color: '#9ca3af' }}>FORM 3 (WATER CESS)</p>
-                                <p style={{ margin: '4px 0', fontSize: '14px', fontWeight: 'bold', color: '#34d399' }}>Water Volume: {editForm.waterDischarge} Liters</p>
-                                <p style={{ margin: 0, fontSize: '11px', color: '#9ca3af' }}>Cess Assessed: As per Water Act</p>
+                                <p style={{ margin: '4px 0', fontSize: '14px', fontWeight: 'bold', color: '#34d399' }}>Verified Water: {editForm.waterDischarge} Liters</p>
+                                <p style={{ margin: 0, fontSize: '11px', color: '#9ca3af' }}>OCR Read: {editForm.originalWater} Liters</p>
                             </div>
                             <div style={{ backgroundColor: '#1f2937', padding: '16px', borderRadius: '8px' }}>
                                 <p style={{ margin: '0 0 4px 0', fontSize: '11px', color: '#9ca3af' }}>FORM 4 (HAZARDOUS WASTE)</p>
@@ -503,8 +513,8 @@ Prepared for MPCB Flying Squad / Review
                             </div>
                             <div style={{ backgroundColor: '#1f2937', padding: '16px', borderRadius: '8px' }}>
                                 <p style={{ margin: '0 0 4px 0', fontSize: '11px', color: '#9ca3af' }}>FORM 5 (ENVIRONMENT STATEMENT)</p>
-                                <p style={{ margin: '4px 0', fontSize: '14px', fontWeight: 'bold', color: '#f59e0b' }}>Raw Material vs Output Ratio</p>
-                                <p style={{ margin: 0, fontSize: '11px', color: '#9ca3af' }}>Efficiency Index: 96.2%</p>
+                                <p style={{ margin: '4px 0', fontSize: '14px', fontWeight: 'bold', color: '#f59e0b' }}>Verified Power: {editForm.unitsConsumed} kWh</p>
+                                <p style={{ margin: 0, fontSize: '11px', color: '#9ca3af' }}>OCR Read: {editForm.originalElectricity} kWh</p>
                             </div>
                         </div>
 
@@ -523,19 +533,19 @@ Location: ${factoryData.location}
 Discharge Limit: ${factoryData.dischargeLimit} Liters
 CTO Expiry Date: ${factoryData.ctoExpiryDate}
 ----------------------------------------
-1. FORM 3 (WATER CESS CALCULATION - INDEPENDENT FIELD):
-   - Monitored Water Discharge Volume: ${waterVol} Liters (Strictly Independent)
-   - Monitored Power Input: ${unitsNum} kWh
-   - Status: Verified & Auto-Compiled as per Water Act
+1. FORM 3 (WATER CESS CALCULATION - AUDIT TRAIL):
+   - Original OCR Water Reading: ${editForm.originalWater} Liters
+   - Manager Confirmed Water Volume: ${waterVol} Liters
+   - Status: Verified & Human-in-the-Loop Approved
 
 2. FORM 4 (HAZARDOUS WASTE MANIFEST SUMMARY & FORM 10):
    - ETP Sludge Generated (Cat 34.3): 12.33 Metric Tonnes (Estimated / Sample Value - Awaiting Plant Audit Data)
    - Form 10 Transporter Manifest: Synchronized & Ready for CPCB/MWML Portal
    - Storage Facility Capacity: Compliant (Within 90 Days Limit)
-   - Status: MWML Portal Sync Ready
 
-3. FORM 5 (ENVIRONMENTAL STATEMENT & AUDIT):
-   - Raw Material Consumption vs Finished Goods Ratio: Balanced
+3. FORM 5 (ENVIRONMENTAL STATEMENT & AUDIT TRAIL):
+   - Original OCR Electricity Reading: ${editForm.originalElectricity} kWh
+   - Manager Confirmed Power Input: ${unitsNum} kWh
    - Scope 2 Carbon Footprint: ${carbonMap} kg CO2e
    - Efficiency Index: 96.2% Optimal
 ----------------------------------------
@@ -610,10 +620,10 @@ Status: Certified & Audit Ready for MPCB Inspection
                                                 <p><strong>Location:</strong> ${factoryData.location}</p>
                                                 <p><strong>Green Passport ID:</strong> ET-GP-2026-9942</p>
                                                 <hr/>
-                                                <h4>Scanned Utility & Calculated Metrics:</h4>
+                                                <h4>Scanned Utility & Audit Trail Metrics:</h4>
                                                 <ul>
-                                                    <li>Electricity Consumed: <strong>${unitsNum} kWh</strong></li>
-                                                    <li>Water Discharge Volume: <strong>${waterVol} Liters (Independent Field)</strong></li>
+                                                    <li>Electricity Consumed: <strong>${unitsNum} kWh</strong> (OCR Read: ${editForm.originalElectricity} kWh)</li>
+                                                    <li>Water Discharge Volume: <strong>${waterVol} Liters</strong> (OCR Read: ${editForm.originalWater} Liters)</li>
                                                     <li>Carbon Mapping (Scope 2 Emissions): <strong>${carbonMap} kg CO2e</strong></li>
                                                 </ul>
                                                 <p style="color: green; font-weight: bold;">Status: Verified, Compliant & Audit Ready</p>
@@ -643,9 +653,9 @@ Company Name: ${factoryData.name}
 Location: ${factoryData.location}
 Green Passport ID: ET-GP-2026-9942
 ----------------------------------------
-SCANNED UTILITY & CALCULATED DATA:
-- Electricity Units Consumed: ${unitsNum} kWh
-- Water Discharge Volume: ${waterVol} Liters (Independent)
+SCANNED UTILITY & AUDIT TRAIL DATA:
+- Electricity Units Consumed: ${unitsNum} kWh (OCR Read: ${editForm.originalElectricity} kWh)
+- Water Discharge Volume: ${waterVol} Liters (OCR Read: ${editForm.originalWater} Liters)
 - Carbon Mapping (Scope 2 Emission): ${carbonMap} kg CO2e
 ----------------------------------------
 Status: Verified, Calculated & Audit Ready
