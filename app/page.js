@@ -515,7 +515,7 @@ Prepared for MPCB Flying Squad / Review
                             <div style={{ backgroundColor: '#1f2937', padding: '16px', borderRadius: '8px' }}>
                                 <p style={{ margin: '0 0 4px 0', fontSize: '11px', color: '#9ca3af' }}>FORM 4 (HAZARDOUS WASTE)</p>
                                 <p style={{ margin: '4px 0', fontSize: '14px', fontWeight: 'bold', color: '#3b82f6' }}>Cat 34.3 Sludge: 12.33 MT (Estimated)</p>
-                                <p style={{ margin: 0, fontSize: '11px', color: '#9ca3af' }}>MWML Manifest Ready</p>
+                                <p style={{ margin: 0, fontSize: '11px', color: '#9ca3af' }}>Ready for Manual Portal Upload</p>
                             </div>
                             <div style={{ backgroundColor: '#1f2937', padding: '16px', borderRadius: '8px' }}>
                                 <p style={{ margin: '0 0 4px 0', fontSize: '11px', color: '#9ca3af' }}>FORM 5 (ENVIRONMENT STATEMENT)</p>
@@ -548,7 +548,7 @@ CTO Expiry Date: ${factoryData.ctoExpiryDate}
 
 2. FORM 4 (HAZARDOUS WASTE MANIFEST SUMMARY & FORM 10):
    - ETP Sludge Generated (Cat 34.3): 12.33 Metric Tonnes (Estimated / Sample Value - Awaiting Plant Audit Data)
-   - Form 10 Transporter Manifest: Synchronized & Ready for CPCB/MWML Portal
+   - Form 10 Transporter Manifest: Ready for Manual Portal Upload
    - Storage Facility Capacity: Compliant (Within 90 Days Limit)
 
 3. FORM 5 (ENVIRONMENTAL STATEMENT & AUDIT TRAIL):
@@ -584,7 +584,7 @@ Status: Certified & Audit Ready for MPCB Inspection
                         <p style={{ color: '#9ca3af', fontSize: '13px', marginBottom: '16px' }}>Real-time GPS tracking of hazardous waste tankers moving from <strong>{factoryData.name}</strong> to MWML Taloja/Ranjangaon.</p>
                         <div style={{ backgroundColor: '#1f2937', padding: '16px', borderRadius: '8px', marginBottom: '16px' }}>
                             <p style={{ margin: '0 0 4px 0', fontSize: '11px', color: '#9ca3af' }}>Form 10 Manifest ID: MH-HW-2026-8819</p>
-                            <p style={{ margin: 0, fontSize: '13px', color: '#34d399', fontWeight: 'bold' }}>Tanker Status: En Route to Treatment Facility (GPS Geofenced)</p>
+                            <p style={{ margin: 0, fontSize: '13px', color: '#34d399', fontWeight: 'bold' }}>Tanker Status: En Route to Treatment Facility (Ready for Manual Portal Upload)</p>
                         </div>
                         <button onClick={() => alert('Generating Form 10 Manifest Certificate (.txt)...')} style={{ backgroundColor: '#059669', color: 'white', border: 'none', padding: '10px 16px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer', fontSize: '12px' }}>
                             📥 Download Form 10 Manifest
