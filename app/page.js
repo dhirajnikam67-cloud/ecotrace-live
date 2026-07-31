@@ -849,18 +849,13 @@ Status: Verified, Calculated & Audit Ready
                             >
                                 + Save Factory & Start CTO Tracking
                             </button>
-                        </form>
-                    </div>
-                
-
-            </div>
-
-            {/* Legal Disclaimer & Developer Liability Waiver Footer */}
-            <footer style={{ marginTop: '40px', borderTop: '1px solid #1f2937', padding: '16px 24px', backgroundColor: '#111827', fontSize: '10px', color: '#9ca3af', textAlign: 'center' }}>
-                LEGAL DISCLAIMER & DEVELOPER LIABILITY WAIVER: EcoTrace India Private Limited and its developers act solely as a software interface provider aggregating IoT data and statutory records. We assume NO liability for equipment failures, financial losses, or statutory penalties arising from factory operations. Physical safety protocols, hardware calibration, and compliance adherence remain the absolute and sole responsibility of the factory management.
-            </footer>
-
+                      </form>
+      </div>
+      {/* Legal Disclaimer & Developer Liability Waiver Footer */}
+      <footer style={{ marginTop: '40px', borderTop: '1px solid #1f2937', paddingTop: '20px', textAlign: 'center', color: '#9ca3af', fontSize: '12px' }}>
+        LEGAL DISCLAIMER & DEVELOPER LIABILITY WAIVER: EcoTrace India Private Limited is an independent carbon tracking and utility compliance platform.
+      </footer>
     </main>
-    </div>
-  );
+  </div>
+);
 }
