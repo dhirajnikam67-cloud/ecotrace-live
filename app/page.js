@@ -468,8 +468,17 @@ Prepared for MPCB Flying Squad / Review
                     <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '24px' }}>
                         <h2 style={{ color: '#ef4444', marginTop: 0, fontSize: '18px' }}>⚠️ Toxic & Boiler Gas Leak Safety Radar</h2>
                         <p style={{ color: '#9ca3af', fontSize: '13px', marginBottom: '16px' }}>Real-time Parts Per Million (PPM) concentration tracking for <strong>{factoryData.name}</strong>.</p>
-                        <div style={{ backgroundColor: '#166534', color: '#dcfce7', padding: '16px', borderRadius: '8px', fontWeight: 'bold', fontSize: '13px' }}>
+                        
+                        <div style={{ backgroundColor: '#166534', color: '#dcfce7', padding: '16px', borderRadius: '8px', fontWeight: 'bold', fontSize: '13px', marginBottom: '16px' }}>
                             Status: All Gas Sensors Normal (0.05 PPM Safe Range)
+                        </div>
+
+                        {/* IEC 61511 / SIS Guardrail Notice */}
+                        <div style={{ backgroundColor: '#1f2937', padding: '16px', borderRadius: '8px', border: '1px solid #374151' }}>
+                            <h4 style={{ color: '#f59e0b', margin: '0 0 6px 0', fontSize: '13px' }}>🛡️ Safety Instrumented System (SIS) Compliance Notice</h4>
+                            <p style={{ margin: 0, fontSize: '12px', color: '#d1d5db' }}>
+                                <strong>No Auto-Shutoff without IEC 61511 / SIS Hardware:</strong> This software operates strictly in Automated Advisory & Warning Mode. In the event of toxic or boiler gas threshold breaches, automated emergency shutdown is locked pending physical IEC 61511-certified Safety Instrumented System hardware integration. Operator manual intervention is required.
+                            </p>
                         </div>
                     </div>
                 )}
