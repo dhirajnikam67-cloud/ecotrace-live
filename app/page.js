@@ -77,6 +77,8 @@ export default function EcoTraceDashboard() {
 ========================================
 ECOTRACE INDIA PRIVATE LIMITED
 COMPLIANCE & AUDIT REPORT (REVIEW DRAFT)
+Project Led By: D. S. Nikam
+Contact: 7378780745 | dhiraj@ectotraceindia.com
 ========================================
 Company Name: ${factoryData.name}
 Location: ${factoryData.location}
@@ -86,7 +88,7 @@ CTO Days Left: ${ctoDaysLeft} Days
 Status: COMPLIANT & AUDIT READY
 
 ----------------------------------------
-1. DISCREpANCY AUDIT TRAIL:
+1. DISCREPANCY AUDIT TRAIL:
 - Power Usage: 1450 kWh [Audit: Corrected by Manager — Original OCR Read: 1420 kWh]
 
 2. DATA COMPLETENESS & RECORD INTEGRITY:
@@ -102,7 +104,7 @@ Status: COMPLIANT & AUDIT READY
 - Structured per ISO 14064-1 standard (Scope 1, 2, 3)
 ----------------------------------------
 LEGAL DISCLAIMER:
-EcoTrace India Private Limited is an independent compliance platform. It aggregates data supplied by the factory and prepares statutory formats. It does not certify compliance, calculate hazardous waste quantities, or transmit to government portals, or provide legal opinions. Physical safety protocols, hardware calibration and compliance adherence remain the responsibility of the factory management.
+EcoTrace India Private Limited is an independent compliance platform. It aggregates data supplied by the factory and prepares statutory formats. It does not certify compliance, calculate hazardous waste quantities, transmit to government portals, or provide legal opinions. Physical safety protocols, hardware calibration and compliance adherence remain the responsibility of the factory management.
 ========================================
         `;
         downloadTextFile(`${factoryData.name.replace(/\s+/g, '_')}_Compliance_Report.txt`, reportContent);
@@ -111,11 +113,12 @@ EcoTrace India Private Limited is an independent compliance platform. It aggrega
     return (
         <main style={{ minHeight: '100vh', backgroundColor: '#0b0f19', color: '#ffffff', fontFamily: 'sans-serif', padding: '16px' }}>
             
-            {/* Header & Tagline */}
+            {/* Header & Tagline with Founder Contact Info */}
             <header style={{ borderBottom: '1px solid #1f2937', paddingBottom: '12px', marginBottom: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '10px' }}>
                 <div>
                     <h1 style={{ fontSize: '18px', fontWeight: 'bold', color: '#ffffff', margin: '0 0 4px 0' }}>EcoTrace India</h1>
-                    <p style={{ fontSize: '12px', color: '#9ca3af', margin: 0 }}>MPCB compliance · daily records · carbon data — for MSMEs</p>
+                    <p style={{ fontSize: '12px', color: '#9ca3af', margin: '0 0 4px 0' }}>MPCB compliance · daily records · carbon data — for MSMEs</p>
+                    <p style={{ fontSize: '11px', color: '#34d399', margin: 0 }}>Project Lead: D. S. Nikam | 📞 7378780745 | ✉️ dhiraj@ectotraceindia.com</p>
                 </div>
                 {isFactoryActive && (
                     <button 
@@ -306,9 +309,10 @@ EcoTrace India Private Limited is an independent compliance platform. It aggrega
                 </div>
             )}
 
-            {/* Legal Disclaimer Footer */}
+            {/* Legal Disclaimer & Founder Credit Footer */}
             <footer style={{ marginTop: '30px', borderTop: '1px solid #1f2937', padding: '16px 0', color: '#9ca3af', fontSize: '11px', lineHeight: '1.4' }}>
-                EcoTrace India Private Limited is an independent compliance platform. It aggregates data supplied by the factory and prepares statutory formats. It does not certify compliance, calculate hazardous waste quantities, or transmit to government portals, or provide legal opinions. Physical safety protocols, hardware calibration and compliance adherence remain the responsibility of the factory management.
+                <p style={{ margin: '0 0 6px 0', color: '#ffffff', fontWeight: 'bold' }}>EcoTrace India | Project by D. S. Nikam | Contact: 7378780745 | Email: dhiraj@ectotraceindia.com</p>
+                EcoTrace India Private Limited is an independent compliance platform. It aggregates data supplied by the factory and prepares statutory formats. It does not certify compliance, calculate hazardous waste quantities, transmit to government portals, or provide legal opinions. Physical safety protocols, hardware calibration and compliance adherence remain the responsibility of the factory management.
             </footer>
 
         </main>
