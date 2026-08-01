@@ -150,7 +150,6 @@ Prepared for MPCB Flying Squad / Review
         privacyShieldStatus: "Active - Privacy-Protected Aggregation Maintained" 
     });
 
-    // Daily Log State with G5 Sample Tagging
     const [dailyLog, setDailyLog] = useState({ ph: '7.2', water: '1420', power: '3150', sludge: '0.45' });
     const [logSubmitted, setLogSubmitted] = useState(false);
 
@@ -163,7 +162,7 @@ Prepared for MPCB Flying Squad / Review
     return (
         <main style={{ minHeight: '100vh', backgroundColor: '#0b0f19', color: '#ffffff', fontFamily: 'sans-serif', position: 'relative' }}>
             
-            {/* Top Navigation Bar */}
+            {/* Top Navigation Bar with Corrected Tagline */}
             <header style={{ borderBottom: '1px solid #1f2937', padding: '16px 24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: '#111827', flexWrap: 'wrap', gap: '12px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
                     <button 
@@ -173,7 +172,7 @@ Prepared for MPCB Flying Squad / Review
                     </button>
                     <div>
                         <h1 style={{ fontSize: '16px', fontWeight: 'bold', color: '#10b981', margin: '0' }}>EcoTrace India Private Limited</h1>
-                        <p style={{ fontSize: '10px', color: '#9ca3af', margin: 0 }}>MPCB Legal Shield & dMRV Green Operating System v3.0.1 | Contact: 7378780745</p>
+                        <p style={{ fontSize: '10px', color: '#9ca3af', margin: 0 }}>MPCB Statutory & dMRV Green Operating System v3.0.2 | Contact: 7378780745</p>
                     </div>
                 </div>
                 
@@ -267,7 +266,6 @@ Prepared for MPCB Flying Squad / Review
                     </div>
                 )}
 
-                {/* G10 Cleaned Compliance Advisory Panel */}
                 <div style={{ marginBottom: '20px', padding: '16px', background: '#111827', borderRadius: '12px', border: '1px solid #3b82f6' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '10px' }}>
                         <div>
@@ -302,7 +300,7 @@ Prepared for MPCB Flying Squad / Review
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px' }}>
                             
                             <div style={{ backgroundColor: '#111827', border: `1px solid ${isFactoryActive ? getCtoColor(ctoDaysLeft) : '#374151'}`, borderRadius: '12px', padding: '20px' }}>
-                                <h4 style={{ color: '#ef4444', margin: '0 0 6px 0', fontSize: '14px' }}>🚨 MPCB Legal Shield (CTO Tracking)</h4>
+                                <h4 style={{ color: '#ef4444', margin: '0 0 6px 0', fontSize: '14px' }}>🚨 MPCB Statutory Tracking (CTO)</h4>
                                 <h3 style={{ margin: '0 0 6px 0', fontSize: '15px' }}>AUTO-GENERATED (Form V Ready)</h3>
                                 <p style={{ margin: 0, fontSize: '13px', fontWeight: 'bold', color: isFactoryActive ? getCtoColor(ctoDaysLeft) : '#9ca3af' }}>
                                     {isFactoryActive ? `CTO Valid: ${ctoDaysLeft} Days Left (${factoryData.ctoExpiryDate}) ${ctoDaysLeft <= 30 ? '⚠️ (Action Required)' : ''}` : 'Awaiting Factory Data'}
@@ -327,7 +325,6 @@ Prepared for MPCB Flying Squad / Review
                     </div>
                 )}
 
-                {/* Daily Operator Logbook Module */}
                 {activeModule === 'dailyLogbook' && (
                     <div style={{ backgroundColor: '#111827', border: '1px solid #059669', borderRadius: '12px', padding: '24px' }}>
                         <span style={{ backgroundColor: '#065f46', color: '#d1fae5', padding: '4px 10px', borderRadius: '6px', fontSize: '11px', fontWeight: 'bold' }}>PILOT CRITICAL CORE MODULE</span>
@@ -367,7 +364,6 @@ Prepared for MPCB Flying Squad / Review
                     </div>
                 )}
 
-                {/* WhatsApp / SMS Alert Engine Module */}
                 {activeModule === 'alertsEngine' && (
                     <div style={{ backgroundColor: '#111827', border: '1px solid #3b82f6', borderRadius: '12px', padding: '24px' }}>
                         <span style={{ backgroundColor: '#1e40af', color: '#bfdbfe', padding: '4px 10px', borderRadius: '6px', fontSize: '11px', fontWeight: 'bold' }}>AUTOMATED TRIGGERS</span>
