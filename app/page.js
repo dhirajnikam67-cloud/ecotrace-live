@@ -4,17 +4,6 @@ import React, { useState, useEffect } from 'react';
 export default function EcoTraceDashboard() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [activeModule, setActiveModule] = useState('onboard'); 
-    const [isEditing, setIsEditing] = useState(false);
-    
-    const [editForm, setEditForm] = useState({ 
-        originalElectricity: '1420', 
-        unitsConsumed: '1450', 
-        originalWater: '3000', 
-        waterDischarge: '3200',
-        hazardousCategory: 'Cat 34.3 — Chemical sludge from waste water treatment',
-        hazardousTonnage: '12.33 MT (Estimated / Sample Value)'
-    });
-    const [batchFiles, setBatchFiles] = useState([]);
     
     const [factoryData, setFactoryData] = useState({
         name: "",
@@ -161,13 +150,6 @@ Prepared for MPCB Flying Squad / Review
         privacyShieldStatus: "Active - Privacy-Protected Aggregation Maintained" 
     });
 
-    const [activeHash, setActiveHash] = useState("0xa8f392c1b4e87019d6f2231e");
-
-    const generateNewHash = () => {
-        const randomHash = "0x" + Math.random().toString(16).substring(2, 18) + Math.random().toString(16).substring(2, 18);
-        setActiveHash(randomHash);
-    };
-
     // Daily Log State with G5 Sample Tagging
     const [dailyLog, setDailyLog] = useState({ ph: '7.2', water: '1420', power: '3150', sludge: '0.45' });
     const [logSubmitted, setLogSubmitted] = useState(false);
@@ -177,11 +159,6 @@ Prepared for MPCB Flying Squad / Review
         setLogSubmitted(true);
         setTimeout(() => setLogSubmitted(false), 4000);
     };
-
-    const companyCode = isFactoryActive ? factoryData.name.substring(0, 4).toUpperCase() : "DEMO";
-    const dynamicGreenPassportId = `ET-GP-2026-${isFactoryActive ? Math.abs(factoryData.name.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0)) % 9000 + 1000 : '9942'}`;
-    const dynamicManifestId = `MH-HW-2026-${isFactoryActive ? Math.abs(factoryData.name.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0)) % 9000 + 1000 : '8819'}`;
-    const dynamicNoticeRef = `MPCB/RO/Notice/2026/${isFactoryActive ? Math.abs(factoryData.name.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0)) % 900 + 100 : '049'}`;
 
     return (
         <main style={{ minHeight: '100vh', backgroundColor: '#0b0f19', color: '#ffffff', fontFamily: 'sans-serif', position: 'relative' }}>
@@ -196,7 +173,7 @@ Prepared for MPCB Flying Squad / Review
                     </button>
                     <div>
                         <h1 style={{ fontSize: '16px', fontWeight: 'bold', color: '#10b981', margin: '0' }}>EcoTrace India Private Limited</h1>
-                        <p style={{ fontSize: '10px', color: '#9ca3af', margin: 0 }}>MPCB Legal Shield & dMRV Green Operating System v3.0 | Contact: 7378780745</p>
+                        <p style={{ fontSize: '10px', color: '#9ca3af', margin: 0 }}>MPCB Legal Shield & dMRV Green Operating System v3.0.1 | Contact: 7378780745</p>
                     </div>
                 </div>
                 
@@ -290,11 +267,11 @@ Prepared for MPCB Flying Squad / Review
                     </div>
                 )}
 
-                {/* G1 & G10 Corrected Panel: Human-in-the-Loop Advisory & Audit Mode */}
+                {/* G10 Cleaned Compliance Advisory Panel */}
                 <div style={{ marginBottom: '20px', padding: '16px', background: '#111827', borderRadius: '12px', border: '1px solid #3b82f6' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '10px' }}>
                         <div>
-                            <h4 style={{ color: '#60a5fa', margin: '0 0 4px 0', fontSize: '14px' }}>Intelligent Watchman & Legal Shield (Internal Audit Active)</h4>
+                            <h4 style={{ color: '#60a5fa', margin: '0 0 4px 0', fontSize: '14px' }}>Model 1: Human-in-the-Loop Compliance Advisory</h4>
                             <p style={{ color: '#9ca3af', margin: 0, fontSize: '11px' }}>Minimized Machine Trip Risk / Automated Advisory Mode (Human-in-the-Loop)</p>
                         </div>
                         <button 
@@ -350,7 +327,7 @@ Prepared for MPCB Flying Squad / Review
                     </div>
                 )}
 
-                {/* Daily Operator Logbook Module with G1 / G5 Corrections */}
+                {/* Daily Operator Logbook Module */}
                 {activeModule === 'dailyLogbook' && (
                     <div style={{ backgroundColor: '#111827', border: '1px solid #059669', borderRadius: '12px', padding: '24px' }}>
                         <span style={{ backgroundColor: '#065f46', color: '#d1fae5', padding: '4px 10px', borderRadius: '6px', fontSize: '11px', fontWeight: 'bold' }}>PILOT CRITICAL CORE MODULE</span>
@@ -366,19 +343,19 @@ Prepared for MPCB Flying Squad / Review
 
                         <form onSubmit={handleLogSubmit} style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '16px' }}>
                             <div>
-                                <label style={{ display: 'block', fontSize: '12px', color: '#9ca3af', mb: '4px' }}>pH Level (ETP Outlet)</label>
+                                <label style={{ display: 'block', fontSize: '12px', color: '#9ca3af', marginBottom: '4px' }}>pH Level (ETP Outlet)</label>
                                 <input type="number" step="0.1" value={dailyLog.ph} onChange={(e) => setDailyLog({...dailyLog, ph: e.target.value})} style={{ width: '100%', padding: '10px', backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '6px', color: 'white', fontSize: '13px' }} required />
                             </div>
                             <div>
-                                <label style={{ display: 'block', fontSize: '12px', color: '#9ca3af', mb: '4px' }}>Water Meter Reading (KL)</label>
+                                <label style={{ display: 'block', fontSize: '12px', color: '#9ca3af', marginBottom: '4px' }}>Water Meter Reading (KL)</label>
                                 <input type="number" value={dailyLog.water} onChange={(e) => setDailyLog({...dailyLog, water: e.target.value})} style={{ width: '100%', padding: '10px', backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '6px', color: 'white', fontSize: '13px' }} required />
                             </div>
                             <div>
-                                <label style={{ display: 'block', fontSize: '12px', color: '#9ca3af', mb: '4px' }}>Power Meter Reading (kWh)</label>
+                                <label style={{ display: 'block', fontSize: '12px', color: '#9ca3af', marginBottom: '4px' }}>Power Meter Reading (kWh)</label>
                                 <input type="number" value={dailyLog.power} onChange={(e) => setDailyLog({...dailyLog, power: e.target.value})} style={{ width: '100%', padding: '10px', backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '6px', color: 'white', fontSize: '13px' }} required />
                             </div>
                             <div>
-                                <label style={{ display: 'block', fontSize: '12px', color: '#9ca3af', mb: '4px' }}>Sludge Generated (MT)</label>
+                                <label style={{ display: 'block', fontSize: '12px', color: '#9ca3af', marginBottom: '4px' }}>Sludge Generated (MT)</label>
                                 <input type="number" step="0.01" value={dailyLog.sludge} onChange={(e) => setDailyLog({...dailyLog, sludge: e.target.value})} style={{ width: '100%', padding: '10px', backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '6px', color: 'white', fontSize: '13px' }} required />
                             </div>
                             <div style={{ gridColumn: '1 / -1' }}>
