@@ -22,13 +22,12 @@ import {
 } from 'lucide-react';
 
 // ==========================================
-// ECOTRACE INDIA — GLOBAL COMMAND CENTER v3.0
-// Fully Integrated Enterprise Navigation Architecture
+// ECOTRACE INDIA — COMPLETE ENTERPRISE DASHBOARD v3.0 (Error-Free Build)
 // ==========================================
 
-export default function EcoTraceGlobalDashboard() {
+export default function EcoTraceDashboard() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [activeModule, setActiveModule] = useState<'overview' | 'logs' | 'alerts' | 'ocr' | 'forms' | 'notice' | 'vault' | 'phase2'>('logs');
+  const [activeModule, setActiveModule] = useState('logs');
   
   // Tenant State
   const [factory, setFactory] = useState({
@@ -48,16 +47,21 @@ export default function EcoTraceGlobalDashboard() {
   });
   const [logSubmitted, setLogSubmitted] = useState(false);
 
-  // Phase 2 Feedback State
-  const [p2FeedbackSubmitted, setP2FeedbackSubmitted] = useState<string | null>(null);
+  // Notice Defense State (Section 2.7)
+  const [noticeInput, setNoticeInput] = useState('');
+  const [noticeDrafted, setNoticeDrafted] = useState(false);
 
-  const handleLogSubmit = (e: React.FormEvent) => {
+  // Phase 2 Feedback State
+  const [p2FeedbackSubmitted, setP2FeedbackSubmitted] = useState(null);
+
+  // Clean JavaScript Handler (Fixed Syntax)
+  const handleLogSubmit = (e) => {
     e.preventDefault();
     setLogSubmitted(true);
     setTimeout(() => setLogSubmitted(false), 4000);
   };
 
-  const handleP2Click = (moduleName: string) => {
+  const handleP2Click = (moduleName) => {
     setP2FeedbackSubmitted(moduleName);
     setTimeout(() => setP2FeedbackSubmitted(null), 3500);
   };
@@ -92,9 +96,9 @@ export default function EcoTraceGlobalDashboard() {
         </div>
       </header>
 
-      {/* GLOBAL COMMAND CENTER OVERLAY MODAL / DRAWER (Matching Screenshot Structure) */}
+      {/* GLOBAL COMMAND CENTER OVERLAY MODAL */}
       {isMenuOpen && (
-        <div className="fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-md overflow-y-auto p-6 animate-fadeIn">
+        <div className="fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-md overflow-y-auto p-6">
           <div className="max-w-3xl mx-auto space-y-6 bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-2xl relative">
             
             <div className="flex justify-between items-center border-b border-slate-800 pb-4">
@@ -106,26 +110,25 @@ export default function EcoTraceGlobalDashboard() {
               </div>
               <button 
                 onClick={() => setIsMenuOpen(false)}
-                className="p-2 rounded-xl bg-slate-800 text-slate-300 hover:text-white"
+                className="p-2 rounded-xl bg-slate-800 text-slate-300 hover:text-white text-xs"
               >
                 Close ✕
               </button>
             </div>
 
-            {/* CATEGORIZED MENU ITEMS (Matching your reference screenshot layout) */}
             <div className="space-y-6 text-xs">
               
               {/* CORE PLATFORM */}
               <div className="space-y-2">
                 <p className="font-bold text-emerald-400 uppercase tracking-wider text-[10px]">CORE PLATFORM</p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                  <button onClick={() => { setActiveModule('overview'); setIsMenuOpen(false); }} className="p-3 bg-slate-950 hover:bg-slate-800 border border-slate-800 rounded-xl text-left flex items-center gap-2 text-slate-200">
+                  <button onClick={() => { setActiveModule('overview'); setIsMenuOpen(false); }} className="p-3 bg-slate-950 hover:bg-slate-800 border border-slate-800 rounded-xl text-left text-slate-200">
                     🏠 Main Enterprise Overview
                   </button>
-                  <button onClick={() => { setActiveModule('ocr'); setIsMenuOpen(false); }} className="p-3 bg-slate-950 hover:bg-slate-800 border border-slate-800 rounded-xl text-left flex items-center gap-2 text-slate-200">
+                  <button onClick={() => { setActiveModule('ocr'); setIsMenuOpen(false); }} className="p-3 bg-slate-950 hover:bg-slate-800 border border-slate-800 rounded-xl text-left text-slate-200">
                     ⚡ Multi-File Batch OCR & CPCB Selector
                   </button>
-                  <button onClick={() => { setActiveModule('logs'); setIsMenuOpen(false); }} className="p-3 bg-emerald-950/30 hover:bg-emerald-900/40 border border-emerald-500/30 rounded-xl text-left flex items-center gap-2 text-emerald-300 font-semibold sm:col-span-2">
+                  <button onClick={() => { setActiveModule('logs'); setIsMenuOpen(false); }} className="p-3 bg-emerald-950/30 hover:bg-emerald-900/40 border border-emerald-500/30 rounded-xl text-left text-emerald-300 font-semibold sm:col-span-2">
                     📝 Daily Operator Logbook (Active Pilot Core) ⭐
                   </button>
                 </div>
@@ -147,7 +150,7 @@ export default function EcoTraceGlobalDashboard() {
                 </div>
               </div>
 
-              {/* [B] UTILITY & [C] STATUTORY */}
+              {/* [B] & [C] STATUTORY */}
               <div className="space-y-2">
                 <p className="font-bold text-blue-400 uppercase tracking-wider text-[10px]">[B] UTILITY & [C] STATUTORY</p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
@@ -160,7 +163,7 @@ export default function EcoTraceGlobalDashboard() {
                 </div>
               </div>
 
-              {/* [D] SUPPLY CHAIN & ESG (Phase 2 Roadmap) */}
+              {/* [D] SUPPLY CHAIN & ESG */}
               <div className="space-y-2">
                 <p className="font-bold text-purple-400 uppercase tracking-wider text-[10px]">[D] SUPPLY CHAIN & ESG (Phase 2 Roadmap)</p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
@@ -201,7 +204,6 @@ export default function EcoTraceGlobalDashboard() {
       {/* MAIN DASHBOARD CONTENT AREA */}
       <main className="max-w-5xl mx-auto px-4 py-8">
         
-        {/* 1. OVERVIEW MODULE */}
         {activeModule === 'overview' && (
           <div className="bg-slate-900 border border-slate-800 rounded-3xl p-8 shadow-2xl space-y-6">
             <span className="px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-semibold">
@@ -227,7 +229,6 @@ export default function EcoTraceGlobalDashboard() {
           </div>
         )}
 
-        {/* 2. DAILY OPERATOR LOGBOOK (Active Core Pilot Module) */}
         {activeModule === 'logs' && (
           <div className="bg-slate-900 border border-slate-800 rounded-3xl p-8 shadow-2xl space-y-6">
             <div className="flex justify-between items-start">
@@ -275,18 +276,16 @@ export default function EcoTraceGlobalDashboard() {
           </div>
         )}
 
-        {/* 3. WHATSAPP / SMS ALERT ENGINE */}
         {activeModule === 'alerts' && (
           <div className="bg-slate-900 border border-slate-800 rounded-3xl p-8 shadow-2xl space-y-4">
             <h2 className="text-xl font-bold text-white">WhatsApp / SMS Alert Engine</h2>
             <div className="bg-slate-950 border border-slate-800 rounded-2xl p-4 text-xs space-y-2">
               <p className="font-semibold text-emerald-400">Active Marathi Plain-Language Trigger:</p>
-              <p className="text-slate-300 font-marathi">"तुमच्या फॅक्टरीच्या CTO नूतनीकरणासाठी १५ दिवस उरले आहेत."</p>
+              <p className="text-slate-300">"तुमच्या फॅक्टरीच्या CTO नूतनीकरणासाठी १५ दिवस उरले आहेत."</p>
             </div>
           </div>
         )}
 
-        {/* 4. BATCH OCR */}
         {activeModule === 'ocr' && (
           <div className="bg-slate-900 border border-slate-800 rounded-3xl p-8 shadow-2xl space-y-4">
             <h2 className="text-xl font-bold text-white">Multi-File Batch OCR & CPCB Selector</h2>
@@ -297,7 +296,6 @@ export default function EcoTraceGlobalDashboard() {
           </div>
         )}
 
-        {/* 5. FORM RETURNS */}
         {activeModule === 'forms' && (
           <div className="bg-slate-900 border border-slate-800 rounded-3xl p-8 shadow-2xl space-y-4">
             <h2 className="text-xl font-bold text-white">Form 3, 4 & 5 Annual Returns Generator</h2>
@@ -318,16 +316,20 @@ export default function EcoTraceGlobalDashboard() {
           </div>
         )}
 
-        {/* 6. NOTICE DEFENSE MATRIX */}
         {activeModule === 'notice' && (
           <div className="bg-slate-900 border border-slate-800 rounded-3xl p-8 shadow-2xl space-y-4">
             <h2 className="text-xl font-bold text-white">Notice Defense Matrix</h2>
-            <input type="text" placeholder="Upload notice copy or enter reference..." className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white" />
-            <button className="bg-emerald-600 text-slate-950 font-semibold text-xs px-4 py-2 rounded-xl">Generate Defence Draft</button>
+            <input type="text" placeholder="Upload notice copy or enter reference..." value={noticeInput} onChange={(e) => setNoticeInput(e.target.value)} className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white" />
+            <button onClick={() => setNoticeDrafted(true)} className="bg-emerald-600 text-slate-950 font-semibold text-xs px-4 py-2 rounded-xl">Generate Defence Draft</button>
+            {noticeDrafted && (
+              <div className="bg-slate-950 border border-slate-800 rounded-xl p-4 text-xs space-y-2">
+                <p className="text-emerald-400 font-semibold">Defence Draft Ready for Legal Review</p>
+                <p className="text-slate-300 font-mono bg-slate-900 p-2 rounded">"Ref: MPCB Notice... As per daily log, ETP outlet pH was maintained at 7.2."</p>
+              </div>
+            )}
           </div>
         )}
 
-        {/* 7. DIGITAL VAULT */}
         {activeModule === 'vault' && (
           <div className="bg-slate-900 border border-slate-800 rounded-3xl p-8 shadow-2xl space-y-4">
             <h2 className="text-xl font-bold text-white">Tamper-Evident Digital Vault (Private Hash Chain)</h2>
