@@ -72,7 +72,7 @@ export default function EcoTraceDashboard() {
         const reportContent = `
 ========================================
 ECOTRACE INDIA PRIVATE LIMITED
-COMPLIANCE & AUDIT REPORT (FORM V READY)
+COMPLIANCE & AUDIT REPORT (REVIEW DRAFT)
 ========================================
 Company Name: ${factoryData.name}
 Location: ${factoryData.location}
@@ -162,7 +162,7 @@ Prepared for MPCB Flying Squad / Review
     return (
         <main style={{ minHeight: '100vh', backgroundColor: '#0b0f19', color: '#ffffff', fontFamily: 'sans-serif', position: 'relative' }}>
             
-            {/* Top Navigation Bar with Corrected Tagline */}
+            {/* Top Navigation Bar */}
             <header style={{ borderBottom: '1px solid #1f2937', padding: '16px 24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: '#111827', flexWrap: 'wrap', gap: '12px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
                     <button 
@@ -172,7 +172,7 @@ Prepared for MPCB Flying Squad / Review
                     </button>
                     <div>
                         <h1 style={{ fontSize: '16px', fontWeight: 'bold', color: '#10b981', margin: '0' }}>EcoTrace India Private Limited</h1>
-                        <p style={{ fontSize: '10px', color: '#9ca3af', margin: 0 }}>MPCB Statutory & dMRV Green Operating System v3.0.2 | Contact: 7378780745</p>
+                        <p style={{ fontSize: '10px', color: '#9ca3af', margin: 0 }}>MPCB Statutory & dMRV Green Operating System v3.0.4 | Contact: 7378780745</p>
                     </div>
                 </div>
                 
@@ -301,25 +301,39 @@ Prepared for MPCB Flying Squad / Review
                             
                             <div style={{ backgroundColor: '#111827', border: `1px solid ${isFactoryActive ? getCtoColor(ctoDaysLeft) : '#374151'}`, borderRadius: '12px', padding: '20px' }}>
                                 <h4 style={{ color: '#ef4444', margin: '0 0 6px 0', fontSize: '14px' }}>🚨 MPCB Statutory Tracking (CTO)</h4>
-                                <h3 style={{ margin: '0 0 6px 0', fontSize: '15px' }}>AUTO-GENERATED (Form V Ready)</h3>
+                                <h3 style={{ margin: '0 0 6px 0', fontSize: '15px' }}>Draft Ready for Review (Form 3 / Annual Return Draft)</h3>
                                 <p style={{ margin: 0, fontSize: '13px', fontWeight: 'bold', color: isFactoryActive ? getCtoColor(ctoDaysLeft) : '#9ca3af' }}>
                                     {isFactoryActive ? `CTO Valid: ${ctoDaysLeft} Days Left (${factoryData.ctoExpiryDate}) ${ctoDaysLeft <= 30 ? '⚠️ (Action Required)' : ''}` : 'Awaiting Factory Data'}
                                 </p>
                             </div>
 
+                            {/* G5 Corrected dMRV Carbon Card — Gates on isFactoryActive */}
                             <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '20px' }}>
                                 <h4 style={{ color: '#3b82f6', margin: '0 0 6px 0', fontSize: '14px' }}>📊 dMRV Carbon Emissions</h4>
-                                <h3 style={{ margin: '0 0 6px 0', fontSize: '15px' }}>Scope 1: 1.2 MT (Estimated / Awaiting Fuel Consumption Input)</h3>
+                                <h3 style={{ margin: '0 0 6px 0', fontSize: '15px' }}>
+                                    {isFactoryActive ? 'Scope 1: 1.2 MT (Estimated / Awaiting Fuel Consumption Input)' : 'Awaiting Factory Data'}
+                                </h3>
                                 <div style={{ margin: '6px 0 0 0', fontSize: '11px', color: '#9ca3af', display: 'flex', flexDirection: 'column', gap: '2px' }}>
-                                    <span>• Scope 2: Verified via CEA Grid Factors</span>
-                                    <span>• Scope 3: Estimated via Supply Chain Activity Logs</span>
+                                    {isFactoryActive ? (
+                                        <>
+                                            <span>• Scope 2: Verified via CEA Grid Factors</span>
+                                            <span>• Scope 3: Estimated via Supply Chain Activity Logs</span>
+                                        </>
+                                    ) : (
+                                        <span>• Please register unit to calculate dMRV metrics.</span>
+                                    )}
                                 </div>
                             </div>
 
+                            {/* Corrected Financial Subvention Card — Single Line Review Wording & G5 Gate */}
                             <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '20px' }}>
                                 <h4 style={{ color: '#eab308', margin: '0 0 6px 0', fontSize: '14px' }}>💰 Financial Subvention</h4>
-                                <h3 style={{ margin: '0 0 6px 0', fontSize: '15px' }}>Eligible for Working Capital Interest Rebate</h3>
-                                <p style={{ margin: 0, fontSize: '12px', color: '#9ca3af' }}>Eligible for Review (Subject to bank circulars)</p>
+                                <h3 style={{ margin: '0 0 6px 0', fontSize: '15px' }}>
+                                    {isFactoryActive ? 'Eligible for Working Capital Interest Rebate Review (Subject to bank circulars)' : 'Awaiting Factory Data'}
+                                </h3>
+                                <p style={{ margin: 0, fontSize: '12px', color: '#9ca3af' }}>
+                                    {isFactoryActive ? 'Eligible for Review (Subject to bank circulars)' : 'Please register unit to check eligibility.'}
+                                </p>
                             </div>
                         </div>
                     </div>
