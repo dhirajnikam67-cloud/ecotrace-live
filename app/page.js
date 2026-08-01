@@ -6,7 +6,6 @@ export default function EcoTraceDashboard() {
     const [activeModule, setActiveModule] = useState('onboard'); 
     const [isEditing, setIsEditing] = useState(false);
     
-    // Original OCR vs Manager Confirmed ट्रॅकिंगसाठी स्टेट
     const [editForm, setEditForm] = useState({ 
         originalElectricity: '1420', 
         unitsConsumed: '1450', 
@@ -17,7 +16,6 @@ export default function EcoTraceDashboard() {
     });
     const [batchFiles, setBatchFiles] = useState([]);
     
-    // फॅक्टरीचा मूळ डेटा
     const [factoryData, setFactoryData] = useState({
         name: "",
         location: "",
@@ -33,7 +31,6 @@ export default function EcoTraceDashboard() {
 
     const isFactoryActive = factoryData.name.trim() !== "";
 
-    // ऑनबोर्डिंग सबमिट लॉजिक
     const handleOnboardSubmit = (e) => {
         e.preventDefault();
         if (tempCompanyName.trim()) {
@@ -51,7 +48,6 @@ export default function EcoTraceDashboard() {
         }
     };
 
-    // CTO दिवस अचूक मोजण्याचे लॉजिक
     const calculateCtoDaysLeft = (expiryDate) => {
         if (!expiryDate) return 0;
         const today = new Date();
@@ -64,9 +60,9 @@ export default function EcoTraceDashboard() {
     const ctoDaysLeft = calculateCtoDaysLeft(factoryData.ctoExpiryDate);
 
     const getCtoColor = (days) => {
-        if (days <= 15) return '#ef4444'; // Red
-        if (days <= 30) return '#f59e0b'; // Yellow
-        return '#34d399';                // Green
+        if (days <= 15) return '#ef4444'; 
+        if (days <= 30) return '#f59e0b'; 
+        return '#34d399';                
     };
 
     const downloadTextFile = (filename, content) => {
@@ -172,7 +168,7 @@ Prepared for MPCB Flying Squad / Review
         setActiveHash(randomHash);
     };
 
-    // New Daily Log State (Section 2.4 - Active Pilot Core)
+    // Daily Log State with G5 Sample Tagging
     const [dailyLog, setDailyLog] = useState({ ph: '7.2', water: '1420', power: '3150', sludge: '0.45' });
     const [logSubmitted, setLogSubmitted] = useState(false);
 
@@ -227,7 +223,7 @@ Prepared for MPCB Flying Squad / Review
                 </div>
             </header>
 
-            {/* Professional Wide Global Navigation Drawer */}
+            {/* Global Command Center Drawer */}
             {isMenuOpen && (
                 <div style={{ position: 'absolute', top: '70px', left: 0, width: '100%', backgroundColor: '#111827', borderBottom: '2px solid #1f2937', zIndex: 100, padding: '24px', boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.5)' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', borderBottom: '1px solid #1f2937', paddingBottom: '10px' }}>
@@ -236,7 +232,6 @@ Prepared for MPCB Flying Squad / Review
                     </div>
 
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '16px' }}>
-                        
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                             <div style={{ fontSize: '11px', fontWeight: 'bold', color: '#10b981' }}>CORE PLATFORM</div>
                             <div style={{ padding: '8px', backgroundColor: '#1f2937', borderRadius: '6px', cursor: 'pointer', fontSize: '12px' }} onClick={() => { setActiveModule('mainDashboard'); setIsMenuOpen(false); }}>🏠 Main Enterprise Overview</div>
@@ -275,7 +270,6 @@ Prepared for MPCB Flying Squad / Review
                             <div style={{ padding: '6px 8px', backgroundColor: '#1f2937', borderRadius: '6px', cursor: 'pointer', fontSize: '12px' }} onClick={() => { setActiveModule('mcciGrants'); setIsMenuOpen(false); }}>• MCCI Privacy Shield & Grants</div>
                             <div style={{ padding: '6px 8px', backgroundColor: '#1f2937', borderRadius: '6px', cursor: 'pointer', fontSize: '12px', color: '#818cf8', fontWeight: 'bold' }} onClick={() => { setActiveModule('onboard'); setIsMenuOpen(false); }}>🏢 Multi-Tenant Client Onboarding</div>
                         </div>
-
                     </div>
                 </div>
             )}
@@ -283,10 +277,9 @@ Prepared for MPCB Flying Squad / Review
             {/* Main Content Area */}
             <div style={{ padding: '24px', maxWidth: '1100px', margin: '0 auto' }}>
                 
-                {/* Notice Banner if No Factory Onboarded */}
                 {!isFactoryActive && activeModule !== 'onboard' && (
                     <div style={{ marginBottom: '20px', padding: '20px', background: '#1f2937', borderRadius: '12px', border: '1px solid #f59e0b', textAlign: 'center' }}>
-                        <h3 style={{ color: '#f59e0b', margin: '0 0 8px 0', fontSize: '16px' }}>⚠️ No Industrial Unit Onboarded</h3>
+                        <h3 style={{ color: '#f59e0b', margin: '0 0 8px 0', fontSize: '16px' }}>⚠️ No Factory Onboarded — Please Register Your Unit</h3>
                         <p style={{ color: '#d1d5db', margin: '0 0 16px 0', fontSize: '13px' }}>Please register your factory details to activate live compliance tracking and dynamic reporting.</p>
                         <button 
                             onClick={() => setActiveModule('onboard')}
@@ -297,12 +290,12 @@ Prepared for MPCB Flying Squad / Review
                     </div>
                 )}
 
-                {/* Model 1 Safe Integration Panel */}
+                {/* G1 & G10 Corrected Panel: Human-in-the-Loop Advisory & Audit Mode */}
                 <div style={{ marginBottom: '20px', padding: '16px', background: '#111827', borderRadius: '12px', border: '1px solid #3b82f6' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '10px' }}>
                         <div>
-                            <h4 style={{ color: '#60a5fa', margin: '0 0 4px 0', fontSize: '14px' }}>Model 1: Intelligent Watchman & Legal Shield (Auto-Audit Active)</h4>
-                            <p style={{ color: '#9ca3af', margin: 0, fontSize: '11px' }}>Zero Machine Trip / Automated Advisory Mode (Human-in-the-Loop)</p>
+                            <h4 style={{ color: '#60a5fa', margin: '0 0 4px 0', fontSize: '14px' }}>Intelligent Watchman & Legal Shield (Internal Audit Active)</h4>
+                            <p style={{ color: '#9ca3af', margin: 0, fontSize: '11px' }}>Minimized Machine Trip Risk / Automated Advisory Mode (Human-in-the-Loop)</p>
                         </div>
                         <button 
                             onClick={runSafetyAudit}
@@ -357,12 +350,13 @@ Prepared for MPCB Flying Squad / Review
                     </div>
                 )}
 
-                {/* New Daily Operator Logbook Module (v3.0) */}
+                {/* Daily Operator Logbook Module with G1 / G5 Corrections */}
                 {activeModule === 'dailyLogbook' && (
                     <div style={{ backgroundColor: '#111827', border: '1px solid #059669', borderRadius: '12px', padding: '24px' }}>
                         <span style={{ backgroundColor: '#065f46', color: '#d1fae5', padding: '4px 10px', borderRadius: '6px', fontSize: '11px', fontWeight: 'bold' }}>PILOT CRITICAL CORE MODULE</span>
                         <h2 style={{ color: '#34d399', margin: '12px 0 6px 0', fontSize: '18px' }}>📝 दैनिक ऑपरेटर लॉगबुक (Daily Operator Logbook)</h2>
-                        <p style={{ color: '#9ca3af', fontSize: '13px', marginBottom: '20px' }}>Marathi-first, 60-second daily entry for plant chemist / ETP operator with server-time lock & GPS fallback.</p>
+                        <p style={{ color: '#9ca3af', fontSize: '13px', marginBottom: '8px' }}>Marathi-first, 60-second daily entry for plant chemist / ETP operator with server-time lock & GPS fallback.</p>
+                        <p style={{ color: '#f59e0b', fontSize: '11px', marginBottom: '20px' }}>ℹ️ Note: Default values shown below are for sample/demo illustration only (Estimated / Sample — Awaiting Real Data).</p>
 
                         {logSubmitted && (
                             <div style={{ backgroundColor: '#065f46', color: '#d1fae5', padding: '12px', borderRadius: '8px', marginBottom: '16px', fontSize: '12px', fontWeight: 'bold' }}>
@@ -372,31 +366,31 @@ Prepared for MPCB Flying Squad / Review
 
                         <form onSubmit={handleLogSubmit} style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '16px' }}>
                             <div>
-                                <label style={{ display: 'block', fontSize: '12px', color: '#9ca3af', marginBottom: '4px' }}>pH Level (ETP Outlet)</label>
+                                <label style={{ display: 'block', fontSize: '12px', color: '#9ca3af', mb: '4px' }}>pH Level (ETP Outlet)</label>
                                 <input type="number" step="0.1" value={dailyLog.ph} onChange={(e) => setDailyLog({...dailyLog, ph: e.target.value})} style={{ width: '100%', padding: '10px', backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '6px', color: 'white', fontSize: '13px' }} required />
                             </div>
                             <div>
-                                <label style={{ display: 'block', fontSize: '12px', color: '#9ca3af', marginBottom: '4px' }}>Water Meter Reading (KL)</label>
+                                <label style={{ display: 'block', fontSize: '12px', color: '#9ca3af', mb: '4px' }}>Water Meter Reading (KL)</label>
                                 <input type="number" value={dailyLog.water} onChange={(e) => setDailyLog({...dailyLog, water: e.target.value})} style={{ width: '100%', padding: '10px', backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '6px', color: 'white', fontSize: '13px' }} required />
                             </div>
                             <div>
-                                <label style={{ display: 'block', fontSize: '12px', color: '#9ca3af', marginBottom: '4px' }}>Power Meter Reading (kWh)</label>
+                                <label style={{ display: 'block', fontSize: '12px', color: '#9ca3af', mb: '4px' }}>Power Meter Reading (kWh)</label>
                                 <input type="number" value={dailyLog.power} onChange={(e) => setDailyLog({...dailyLog, power: e.target.value})} style={{ width: '100%', padding: '10px', backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '6px', color: 'white', fontSize: '13px' }} required />
                             </div>
                             <div>
-                                <label style={{ display: 'block', fontSize: '12px', color: '#9ca3af', marginBottom: '4px' }}>Sludge Generated (MT)</label>
+                                <label style={{ display: 'block', fontSize: '12px', color: '#9ca3af', mb: '4px' }}>Sludge Generated (MT)</label>
                                 <input type="number" step="0.01" value={dailyLog.sludge} onChange={(e) => setDailyLog({...dailyLog, sludge: e.target.value})} style={{ width: '100%', padding: '10px', backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '6px', color: 'white', fontSize: '13px' }} required />
                             </div>
                             <div style={{ gridColumn: '1 / -1' }}>
                                 <button type="submit" style={{ backgroundColor: '#059669', color: 'white', border: 'none', padding: '12px 20px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer', fontSize: '13px', width: '100%' }}>
-                                    Submit Daily Record (Server Time Locked & Immutable)
+                                    Submit Daily Record (Server-Time Locked / Cannot Be Back-Dated)
                                 </button>
                             </div>
                         </form>
                     </div>
                 )}
 
-                {/* New WhatsApp / SMS Alert Engine Module (v3.0) */}
+                {/* WhatsApp / SMS Alert Engine Module */}
                 {activeModule === 'alertsEngine' && (
                     <div style={{ backgroundColor: '#111827', border: '1px solid #3b82f6', borderRadius: '12px', padding: '24px' }}>
                         <span style={{ backgroundColor: '#1e40af', color: '#bfdbfe', padding: '4px 10px', borderRadius: '6px', fontSize: '11px', fontWeight: 'bold' }}>AUTOMATED TRIGGERS</span>
