@@ -58,13 +58,73 @@ export default function EcoTraceDashboard() {
         setTimeout(() => setLogSubmitted(false), 4000);
     };
 
+    const downloadTextFile = (filename, content) => {
+        const element = document.createElement("a");
+        const file = new Blob([content], {type: 'text/plain'});
+        element.href = URL.createObjectURL(file);
+        element.download = filename;
+        document.body.appendChild(element);
+        element.click();
+        document.body.removeChild(element);
+    };
+
+    const handleExportPdf = () => {
+        if (!isFactoryActive) {
+            alert('Please onboard a factory unit first.');
+            return;
+        }
+        const reportContent = `
+========================================
+ECOTRACE INDIA PRIVATE LIMITED
+COMPLIANCE & AUDIT REPORT (REVIEW DRAFT)
+========================================
+Company Name: ${factoryData.name}
+Location: ${factoryData.location}
+Discharge Limit: ${factoryData.dischargeLimit} Liters
+CTO Expiry Date: ${factoryData.ctoExpiryDate}
+CTO Days Left: ${ctoDaysLeft} Days
+Status: COMPLIANT & AUDIT READY
+
+----------------------------------------
+1. DISCREpANCY AUDIT TRAIL:
+- Power Usage: 1450 kWh [Audit: Corrected by Manager — Original OCR Read: 1420 kWh]
+
+2. DATA COMPLETENESS & RECORD INTEGRITY:
+- Basis: 26 confirmed daily entries out of 30-day period. 4 days not logged.
+- Record integrity: Private hash chain (tamper-evident). External anchoring not enabled.
+
+3. CPCB SCHEDULE CLASSIFICATION:
+- Classification: Cat 34.3 — Chemical sludge from waste water treatment
+- Note: Actual tonnage is maintained via plant manifest logs. Software provides legal classification, not calculation formulas.
+
+4. dMRV CARBON METHODOLOGY:
+- Emissions calculated as per CEA Baseline Database (Year 2025-26)
+- Structured per ISO 14064-1 standard (Scope 1, 2, 3)
+----------------------------------------
+LEGAL DISCLAIMER:
+EcoTrace India Private Limited is an independent compliance platform. It aggregates data supplied by the factory and prepares statutory formats. It does not certify compliance, calculate hazardous waste quantities, or transmit to government portals, or provide legal opinions. Physical safety protocols, hardware calibration and compliance adherence remain the responsibility of the factory management.
+========================================
+        `;
+        downloadTextFile(`${factoryData.name.replace(/\s+/g, '_')}_Compliance_Report.txt`, reportContent);
+    };
+
     return (
         <main style={{ minHeight: '100vh', backgroundColor: '#0b0f19', color: '#ffffff', fontFamily: 'sans-serif', padding: '16px' }}>
             
             {/* Header & Tagline */}
-            <header style={{ borderBottom: '1px solid #1f2937', paddingBottom: '12px', marginBottom: '16px' }}>
-                <h1 style={{ fontSize: '18px', fontWeight: 'bold', color: '#ffffff', margin: '0 0 4px 0' }}>EcoTrace India</h1>
-                <p style={{ fontSize: '12px', color: '#9ca3af', margin: 0 }}>MPCB compliance · daily records · carbon data — for MSMEs</p>
+            <header style={{ borderBottom: '1px solid #1f2937', paddingBottom: '12px', marginBottom: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '10px' }}>
+                <div>
+                    <h1 style={{ fontSize: '18px', fontWeight: 'bold', color: '#ffffff', margin: '0 0 4px 0' }}>EcoTrace India</h1>
+                    <p style={{ fontSize: '12px', color: '#9ca3af', margin: 0 }}>MPCB compliance · daily records · carbon data — for MSMEs</p>
+                </div>
+                {isFactoryActive && (
+                    <button 
+                        onClick={handleExportPdf}
+                        style={{ backgroundColor: '#059669', color: 'white', border: 'none', padding: '8px 14px', borderRadius: '6px', fontSize: '12px', fontWeight: 'bold', cursor: 'pointer' }}
+                    >
+                        Export Audit Report (.txt)
+                    </button>
+                )}
             </header>
 
             {/* Factory Status Banner */}
@@ -119,7 +179,6 @@ export default function EcoTraceDashboard() {
             {activeTab === 'live_core' && (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                     
-                    {/* Module 1 */}
                     <div style={{ backgroundColor: '#111827', border: '1px solid #374151', borderRadius: '12px', padding: '16px' }}>
                         <span style={{ backgroundColor: '#065f46', color: '#d1fae5', padding: '2px 6px', borderRadius: '4px', fontSize: '10px', fontWeight: 'bold' }}>LIVE</span>
                         <h3 style={{ color: '#818cf8', margin: '8px 0 8px 0', fontSize: '15px' }}>1. Multi-Tenant Client Onboarding & CTO Setup</h3>
@@ -132,21 +191,18 @@ export default function EcoTraceDashboard() {
                         </form>
                     </div>
 
-                    {/* Module 2 */}
                     <div style={{ backgroundColor: '#111827', border: '1px solid #374151', borderRadius: '12px', padding: '16px' }}>
                         <span style={{ backgroundColor: '#065f46', color: '#d1fae5', padding: '2px 6px', borderRadius: '4px', fontSize: '10px', fontWeight: 'bold' }}>LIVE</span>
                         <h4 style={{ color: '#34d399', margin: '8px 0 4px 0', fontSize: '14px' }}>2. Main Enterprise Overview</h4>
                         <p style={{ color: '#9ca3af', fontSize: '12px', margin: 0 }}>Aggregated compliance status across active unit parameters.</p>
                     </div>
 
-                    {/* Module 3 */}
                     <div style={{ backgroundColor: '#111827', border: '1px solid #374151', borderRadius: '12px', padding: '16px' }}>
                         <span style={{ backgroundColor: '#065f46', color: '#d1fae5', padding: '2px 6px', borderRadius: '4px', fontSize: '10px', fontWeight: 'bold' }}>LIVE</span>
                         <h4 style={{ color: '#34d399', margin: '8px 0 4px 0', fontSize: '14px' }}>3. Multi-File Batch OCR & dMRV Scan</h4>
                         <p style={{ color: '#9ca3af', fontSize: '12px', margin: 0 }}>Upload utility bills and assign official CPCB Schedule I categories.</p>
                     </div>
 
-                    {/* Module 4 */}
                     <div style={{ backgroundColor: '#111827', border: '1px solid #059669', borderRadius: '12px', padding: '16px' }}>
                         <span style={{ backgroundColor: '#065f46', color: '#d1fae5', padding: '2px 6px', borderRadius: '4px', fontSize: '10px', fontWeight: 'bold' }}>LIVE</span>
                         <h4 style={{ color: '#34d399', margin: '8px 0 4px 0', fontSize: '14px' }}>4. दैनिक ऑपरेटर लॉगबुक (Daily Operator Logbook)</h4>
@@ -161,35 +217,30 @@ export default function EcoTraceDashboard() {
                         </form>
                     </div>
 
-                    {/* Module 5 */}
                     <div style={{ backgroundColor: '#111827', border: '1px solid #374151', borderRadius: '12px', padding: '16px' }}>
                         <span style={{ backgroundColor: '#065f46', color: '#d1fae5', padding: '2px 6px', borderRadius: '4px', fontSize: '10px', fontWeight: 'bold' }}>LIVE</span>
                         <h4 style={{ color: '#ef4444', margin: '8px 0 4px 0', fontSize: '14px' }}>5. Flying Squad Audit Mode</h4>
                         <p style={{ color: '#9ca3af', fontSize: '12px', margin: 0 }}>1-click instant compliance dossier for surprise inspections.</p>
                     </div>
 
-                    {/* Module 6 */}
                     <div style={{ backgroundColor: '#111827', border: '1px solid #374151', borderRadius: '12px', padding: '16px' }}>
                         <span style={{ backgroundColor: '#065f46', color: '#d1fae5', padding: '2px 6px', borderRadius: '4px', fontSize: '10px', fontWeight: 'bold' }}>LIVE</span>
                         <h4 style={{ color: '#ef4444', margin: '8px 0 4px 0', fontSize: '14px' }}>6. Notice Defence Matrix & Draft Generator</h4>
                         <p style={{ color: '#9ca3af', fontSize: '12px', margin: 0 }}>Draft responses for review by legal counsel (Requires human review).</p>
                     </div>
 
-                    {/* Module 7 */}
                     <div style={{ backgroundColor: '#111827', border: '1px solid #374151', borderRadius: '12px', padding: '16px' }}>
                         <span style={{ backgroundColor: '#065f46', color: '#d1fae5', padding: '2px 6px', borderRadius: '4px', fontSize: '10px', fontWeight: 'bold' }}>LIVE</span>
                         <h4 style={{ color: '#3b82f6', margin: '8px 0 4px 0', fontSize: '14px' }}>7. Form 3, 4 & 5 Annual Returns Draft Generator</h4>
                         <p style={{ color: '#9ca3af', fontSize: '12px', margin: 0 }}>Automated statutory template assembly from daily logs.</p>
                     </div>
 
-                    {/* Module 8 */}
                     <div style={{ backgroundColor: '#111827', border: '1px solid #374151', borderRadius: '12px', padding: '16px' }}>
                         <span style={{ backgroundColor: '#065f46', color: '#d1fae5', padding: '2px 6px', borderRadius: '4px', fontSize: '10px', fontWeight: 'bold' }}>LIVE</span>
                         <h4 style={{ color: '#3b82f6', margin: '8px 0 4px 0', fontSize: '14px' }}>8. WhatsApp / SMS Alert Engine (Marathi Triggers)</h4>
                         <p style={{ color: '#34d399', fontSize: '12px', margin: '4px 0 0 0' }}>"तुमच्या फॅक्टरीच्या CTO नूतनीकरणासाठी १५ दिवस उरले आहेत."</p>
                     </div>
 
-                    {/* Module 9 */}
                     <div style={{ backgroundColor: '#111827', border: '1px solid #374151', borderRadius: '12px', padding: '16px' }}>
                         <span style={{ backgroundColor: '#065f46', color: '#d1fae5', padding: '2px 6px', borderRadius: '4px', fontSize: '10px', fontWeight: 'bold' }}>LIVE</span>
                         <h4 style={{ color: '#8b5cf6', margin: '8px 0 4px 0', fontSize: '14px' }}>9. Tamper-Evident Digital Vault</h4>
@@ -203,28 +254,24 @@ export default function EcoTraceDashboard() {
             {activeTab === 'reference' && (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                     
-                    {/* Module 10 */}
                     <div style={{ backgroundColor: '#111827', border: '1px solid #3b82f6', borderRadius: '12px', padding: '16px' }}>
                         <span style={{ backgroundColor: '#1e40af', color: '#bfdbfe', padding: '2px 6px', borderRadius: '4px', fontSize: '10px', fontWeight: 'bold' }}>REFERENCE CALCULATION</span>
                         <h4 style={{ color: '#60a5fa', margin: '8px 0 4px 0', fontSize: '14px' }}>10. ETP CAPEX & ROI Calculator</h4>
                         <p style={{ color: '#9ca3af', fontSize: '12px', margin: 0 }}>Real mathematical calculation based on user plant capacity inputs and benchmark costs.</p>
                     </div>
 
-                    {/* Module 11 */}
                     <div style={{ backgroundColor: '#111827', border: '1px solid #3b82f6', borderRadius: '12px', padding: '16px' }}>
                         <span style={{ backgroundColor: '#1e40af', color: '#bfdbfe', padding: '2px 6px', borderRadius: '4px', fontSize: '10px', fontWeight: 'bold' }}>REFERENCE CALCULATION</span>
                         <h4 style={{ color: '#60a5fa', margin: '8px 0 4px 0', fontSize: '14px' }}>11. B2B Green Passport & SEBI BRSR Core Template</h4>
                         <p style={{ color: '#9ca3af', fontSize: '12px', margin: 0 }}>Scope 1/2/3 carbon aggregation structured for supply-chain reporting.</p>
                     </div>
 
-                    {/* Module 12 */}
                     <div style={{ backgroundColor: '#111827', border: '1px solid #3b82f6', borderRadius: '12px', padding: '16px' }}>
                         <span style={{ backgroundColor: '#1e40af', color: '#bfdbfe', padding: '2px 6px', borderRadius: '4px', fontSize: '10px', fontWeight: 'bold' }}>REFERENCE CALCULATION</span>
                         <h4 style={{ color: '#60a5fa', margin: '8px 0 4px 0', fontSize: '14px' }}>12. E-Waste & Battery EPR Record Vault</h4>
                         <p style={{ color: '#9ca3af', fontSize: '12px', margin: 0 }}>Extended Producer Responsibility logbook and ledger calculations.</p>
                     </div>
 
-                    {/* Module 13 */}
                     <div style={{ backgroundColor: '#111827', border: '1px solid #3b82f6', borderRadius: '12px', padding: '16px' }}>
                         <span style={{ backgroundColor: '#1e40af', color: '#bfdbfe', padding: '2px 6px', borderRadius: '4px', fontSize: '10px', fontWeight: 'bold' }}>REFERENCE CALCULATION</span>
                         <h4 style={{ color: '#60a5fa', margin: '8px 0 4px 0', fontSize: '14px' }}>13. CTO Renewal Auto-Dossier Generator</h4>
@@ -261,7 +308,7 @@ export default function EcoTraceDashboard() {
 
             {/* Legal Disclaimer Footer */}
             <footer style={{ marginTop: '30px', borderTop: '1px solid #1f2937', padding: '16px 0', color: '#9ca3af', fontSize: '11px', lineHeight: '1.4' }}>
-                EcoTrace India Private Limited is an independent compliance platform. It aggregates data supplied by the factory and prepares statutory formats. It does not certify compliance, calculate hazardous waste quantities, transmit to government portals, or provide legal opinions. Physical safety protocols, hardware calibration and compliance adherence remain the responsibility of the factory management.
+                EcoTrace India Private Limited is an independent compliance platform. It aggregates data supplied by the factory and prepares statutory formats. It does not certify compliance, calculate hazardous waste quantities, or transmit to government portals, or provide legal opinions. Physical safety protocols, hardware calibration and compliance adherence remain the responsibility of the factory management.
             </footer>
 
         </main>
