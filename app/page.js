@@ -102,7 +102,7 @@ export default function EcoTraceDashboard() {
     const isFactoryActive = factoryData.name.trim() !== "";
     const [isDemoMode, setIsDemoMode] = useState(false);
 
-    // Per-Unit State Isolation
+    // Per-Unit State Isolation (Including Form states like dailyLog and sludge N/A)
     const [currentUnitId, setCurrentUnitId] = useState(null);
     const [unitsData, setUnitsData] = useState({});
     const [savedLogsHistory, setSavedLogsHistory] = useState([]);
@@ -110,20 +110,30 @@ export default function EcoTraceDashboard() {
     const [selectedCategory, setSelectedCategory] = useState("CPCB Cat 34.3 (Chemical Sludge)");
     const [ocrFiles, setOcrFiles] = useState([]);
     const [ocrStatusMessage, setOcrStatusMessage] = useState("");
+    
+    // Daily Log State
+    const [dailyLog, setDailyLog] = useState({ ph: '7.2', water: '1420', power: '3150', sludge: '0.45', fuelInput: '' });
+    const [isSludgeNotApplicable, setIsSludgeNotApplicable] = useState(false);
+    const [logSubmitted, setLogSubmitted] = useState(false);
+    const [validationWarning, setValidationWarning] = useState("");
 
-    const handleUnitSwitch = (newUnitId, newFactoryDetails, logs, demoState, category, files) => {
+    const handleUnitSwitch = (newUnitId, newFactoryDetails, logs, demoState, category, files, logState, sludgeNaState) => {
+        // Save current active unit snapshot safely before switching
         if (currentUnitId) {
             setUnitsData(prev => ({
                 ...prev,
-                [currentUnitId]: { factoryData, savedLogsHistory, isDemoMode, selectedCategory, ocrFiles }
+                [currentUnitId]: { factoryData, savedLogsHistory, isDemoMode, selectedCategory, ocrFiles, dailyLog, isSludgeNotApplicable }
             }));
         }
+        // Switch to new unit & restore its snapshot
         setCurrentUnitId(newUnitId);
         setIsDemoMode(demoState);
         setFactoryData(newFactoryDetails);
         setSavedLogsHistory(logs || []);
         setSelectedCategory(category || "CPCB Cat 34.3 (Chemical Sludge)");
         setOcrFiles(files || []);
+        setDailyLog(logState || { ph: '7.2', water: '1420', power: '3150', sludge: '0.45', fuelInput: '' });
+        setIsSludgeNotApplicable(sludgeNaState || false);
     };
 
     const loadDemoUnit = () => {
@@ -141,7 +151,7 @@ export default function EcoTraceDashboard() {
             power: '3150',
             sludge: '0.45'
         }));
-        handleUnitSwitch("DEMO-FACTORY", demoDetails, demoLogs, true, "CPCB Cat 34.3 (Chemical Sludge)", []);
+        handleUnitSwitch("DEMO-FACTORY", demoDetails, demoLogs, true, "CPCB Cat 34.3 (Chemical Sludge)", [], { ph: '7.2', water: '1420', power: '3150', sludge: '0.45', fuelInput: '' }, false);
         alert('Demo Unit loaded safely in isolated state with 15-day sample data.');
     };
 
@@ -163,8 +173,10 @@ export default function EcoTraceDashboard() {
             const existingLogs = isSameUnit ? savedLogsHistory : (existingUnit?.savedLogsHistory || []);
             const existingCategory = isSameUnit ? selectedCategory : (existingUnit?.selectedCategory || "CPCB Cat 34.3 (Chemical Sludge)");
             const existingFiles = isSameUnit ? ocrFiles : (existingUnit?.ocrFiles || []);
+            const existingLogState = isSameUnit ? dailyLog : (existingUnit?.dailyLog || { ph: '7.2', water: '1420', power: '3150', sludge: '0.45', fuelInput: '' });
+            const existingSludgeNa = isSameUnit ? isSludgeNotApplicable : (existingUnit?.isSludgeNotApplicable || false);
 
-            handleUnitSwitch(unitName, newDetails, existingLogs, false, existingCategory, existingFiles);
+            handleUnitSwitch(unitName, newDetails, existingLogs, false, existingCategory, existingFiles, existingLogState, existingSludgeNa);
             alert(`Factory Unit ${unitName} Onboarded / Switched Successfully (Live state protected)!`);
         } else {
             alert('Please enter a valid company name.');
@@ -197,14 +209,17 @@ export default function EcoTraceDashboard() {
         }
     }
 
-    // Daily Log & Carbon Engine
-    const [dailyLog, setDailyLog] = useState({ ph: '7.2', water: '1420', power: '3150', sludge: '0.45', fuelInput: '' });
-    const [isSludgeNotApplicable, setIsSludgeNotApplicable] = useState(false);
-    const [logSubmitted, setLogSubmitted] = useState(false);
-    const [validationWarning, setValidationWarning] = useState("");
-
     const handleLogChange = (field, val) => {
-        setDailyLog(prev => ({ ...prev, [field]: val }));
+        const updatedLog = { ...dailyLog, [field]: val };
+        setDailyLog(updatedLog);
+        
+        if (currentUnitId) {
+            setUnitsData(prev => ({
+                ...prev,
+                [currentUnitId]: { factoryData, savedLogsHistory, isDemoMode, selectedCategory, ocrFiles, dailyLog: updatedLog, isSludgeNotApplicable }
+            }));
+        }
+
         if (field === 'ph') {
             const phVal = parseFloat(val);
             if (phVal < 0 || phVal > 14) {
@@ -235,7 +250,7 @@ export default function EcoTraceDashboard() {
         if (currentUnitId) {
             setUnitsData(prev => ({
                 ...prev,
-                [currentUnitId]: { factoryData, savedLogsHistory, isDemoMode, selectedCategory, ocrFiles: updatedFiles }
+                [currentUnitId]: { factoryData, savedLogsHistory, isDemoMode, selectedCategory, ocrFiles: updatedFiles, dailyLog, isSludgeNotApplicable }
             }));
         }
     };
@@ -262,7 +277,7 @@ export default function EcoTraceDashboard() {
         if (currentUnitId) {
             setUnitsData(prev => ({
                 ...prev,
-                [currentUnitId]: { factoryData, savedLogsHistory: updatedHistory, isDemoMode, selectedCategory, ocrFiles }
+                [currentUnitId]: { factoryData, savedLogsHistory: updatedHistory, isDemoMode, selectedCategory, ocrFiles, dailyLog, isSludgeNotApplicable }
             }));
         }
 
@@ -435,7 +450,7 @@ EcoTrace India Private Limited is an independent compliance platform. It aggrega
                                 if (currentUnitId) {
                                     setUnitsData(prev => ({
                                         ...prev,
-                                        [currentUnitId]: { factoryData, savedLogsHistory, isDemoMode, selectedCategory: newCat, ocrFiles }
+                                        [currentUnitId]: { factoryData, savedLogsHistory, isDemoMode, selectedCategory: newCat, ocrFiles, dailyLog, isSludgeNotApplicable }
                                     }));
                                 }
                             }} 
@@ -456,7 +471,7 @@ EcoTrace India Private Limited is an independent compliance platform. It aggrega
                         )}
                     </div>
 
-                    {/* Module 4: Daily Logbook */}
+                    {/* Module 4: Daily Logbook with Per-Unit Form Isolation */}
                     <div style={{ backgroundColor: '#111827', border: '1px solid #059669', borderRadius: '12px', padding: '16px' }}>
                         <span style={{ backgroundColor: '#065f46', color: '#d1fae5', padding: '2px 6px', borderRadius: '4px', fontSize: '10px', fontWeight: 'bold' }}>LIVE MODULE 4</span>
                         <h4 style={{ color: '#34d399', margin: '8px 0 4px 0', fontSize: '14px' }}>4. दैनिक ऑपरेटर लॉगबुक (Daily Operator Logbook)</h4>
@@ -480,7 +495,20 @@ EcoTrace India Private Limited is an independent compliance platform. It aggrega
                                 <label style={{ fontSize: '10px', color: '#9ca3af' }}>Sludge MT</label>
                                 <input type="number" step="0.01" disabled={isSludgeNotApplicable} value={dailyLog.sludge} onChange={(e) => handleLogChange('sludge', e.target.value)} style={{ width: '100%', padding: '6px', backgroundColor: '#1f2937', color: 'white', border: '1px solid #374151', borderRadius: '4px', fontSize: '12px' }} />
                                 <label style={{ fontSize: '9px', color: '#9ca3af', display: 'block', marginTop: '2px' }}>
-                                    <input type="checkbox" checked={isSludgeNotApplicable} onChange={(e) => setIsSludgeNotApplicable(e.target.checked)} /> Not Applicable (N/A)
+                                    <input 
+                                        type="checkbox" 
+                                        checked={isSludgeNotApplicable} 
+                                        onChange={(e) => {
+                                            const naState = e.target.checked;
+                                            setIsSludgeNotApplicable(naState);
+                                            if (currentUnitId) {
+                                                setUnitsData(prev => ({
+                                                    ...prev,
+                                                    [currentUnitId]: { factoryData, savedLogsHistory, isDemoMode, selectedCategory, ocrFiles, dailyLog, isSludgeNotApplicable: naState }
+                                                }));
+                                            }
+                                        }} 
+                                    /> Not Applicable (N/A)
                                 </label>
                             </div>
                             <button type="submit" style={{ gridColumn: '1 / -1', backgroundColor: '#059669', color: 'white', border: 'none', padding: '8px', borderRadius: '4px', fontSize: '12px', fontWeight: 'bold', cursor: 'pointer' }}>Save & Lock Daily Record</button>
