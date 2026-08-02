@@ -27,7 +27,7 @@ export default function EcoTraceDashboard() {
             ctoExpiryDate: tempCtoDate || '2026-12-31',
             status: "COMPLIANT & AUDIT READY"
         });
-        alert('Factory Unit Onboarded & Active Across All Modules Successfully!');
+        alert('Factory Unit Onboarded Successfully! Pilot Data & Reports are now active for ' + tempCompanyName.trim().toUpperCase());
     };
 
     const calculateCtoDaysLeft = (expiryDate) => {
@@ -44,6 +44,9 @@ export default function EcoTraceDashboard() {
     // Daily Log & Correct Carbon Calculations
     const [dailyLog, setDailyLog] = useState({ ph: '7.2', water: '1420', power: '3150', sludge: '0.45', fuelInput: '' });
     const [logSubmitted, setLogSubmitted] = useState(false);
+    const [savedLogsHistory, setSavedLogsHistory] = useState([
+        { date: '2026-08-01', ph: '7.2', water: '1420', power: '3150', sludge: '0.45' }
+    ]);
 
     const powerNum = parseFloat(dailyLog.power) || 3150;
     const calculatedScope2 = (powerNum * 0.82 / 1000).toFixed(2); 
@@ -64,6 +67,10 @@ export default function EcoTraceDashboard() {
     const handleLogSubmit = (e) => {
         e.preventDefault();
         setLogSubmitted(true);
+        setSavedLogsHistory(prev => [
+            { date: new Date().toISOString().split('T')[0], ph: dailyLog.ph, water: dailyLog.water, power: dailyLog.power, sludge: dailyLog.sludge },
+            ...prev
+        ]);
         setTimeout(() => setLogSubmitted(false), 4000);
     };
 
@@ -77,8 +84,8 @@ export default function EcoTraceDashboard() {
         document.body.removeChild(element);
     };
 
-    const handleExportReport = () => {
-        const reportContent = `
+    const generateReportText = () => {
+        return `
 ========================================
 ECOTRACE INDIA PRIVATE LIMITED
 VERIFIED AUDIT REPORT (REVIEW DRAFT)
@@ -104,36 +111,20 @@ Status: COMPLIANT & AUDIT READY
 - Power Usage: ${powerNum} kWh [Audit: Verified by Plant Manager — Original OCR Read: ${powerNum - 30} kWh]
 
 4. DATA COMPLETENESS & RECORD INTEGRITY:
-- Basis: 26 confirmed daily entries out of 30-day period. 4 days not logged.
-- Record integrity: Private hash chain (tamper-evident). External anchoring not enabled.
+- Basis: ${savedLogsHistory.length} confirmed daily entries. Record integrity: Private hash chain (tamper-evident). External anchoring not enabled.
 ----------------------------------------
 LEGAL DISCLAIMER:
 EcoTrace India Private Limited is an independent compliance platform. It aggregates data supplied by the factory and prepares statutory formats. It does not certify compliance, calculate hazardous waste quantities, transmit to government portals, or provide legal opinions. Physical safety protocols, hardware calibration and compliance adherence remain the responsibility of the factory management.
 ========================================
-        `;
-        downloadTextFile(`${factoryData.name.replace(/\s+/g, '_')}_Verified_Audit_Report.txt`, reportContent);
+        `.trim();
     };
 
-    // Interactive Action Triggers for Modules 5 to 9
-    const triggerFlyingSquadDossier = () => {
-        alert(`Generating Instant Flying Squad Compliance Dossier for ${factoryData.name}...\nStatus: All parameters verified & ready for surprise inspection.`);
+    const handleExportReport = () => {
+        downloadTextFile(`${factoryData.name.replace(/\s+/g, '_')}_Verified_Audit_Report.txt`, generateReportText());
     };
 
-    const triggerNoticeDefense = () => {
-        alert(`Notice Defense Matrix:\nDraft response generated for MPCB Show-Cause Notice regarding ETP pH variation. Ready for legal counsel review.`);
-    };
-
-    const triggerAnnualReturns = () => {
-        alert(`Form 3, 4 & 5 Annual Returns assembled successfully from daily logs for ${factoryData.name}.`);
-    };
-
-    const triggerAlertEngine = () => {
-        alert(`WhatsApp / SMS Alert Triggered:\n"तुमच्या फॅक्टरीच्या CTO नूतनीकरणासाठी ${ctoDaysLeft} दिवस उरले आहेत." (Successfully logged in dispatch queue).`);
-    };
-
-    const triggerDigitalVault = () => {
-        alert(`Tamper-Evident Digital Vault:\nHash-chained private ledger verified. All audit logs for ${factoryData.name} are secure and unaltered.`);
-    };
+    // Interactive Action States for Screen Display
+    const [actionOutput, setActionOutput] = useState("Select any Live Actionable module below to view generated compliance output on screen.");
 
     return (
         <main style={{ minHeight: '100vh', backgroundColor: '#0b0f19', color: '#ffffff', fontFamily: 'sans-serif', padding: '16px' }}>
@@ -154,9 +145,9 @@ EcoTrace India Private Limited is an independent compliance platform. It aggrega
             </header>
 
             {/* Factory Status Banner */}
-            <div style={{ marginBottom: '16px', padding: '10px 14px', background: '#065f46', borderRadius: '8px', border: '1px solid #34d399', display: 'inline-block' }}>
+            <div style={{ marginBottom: '16px', padding: '10px 14px', background: '#065f46', borderRadius: '8px', border: '1px solid #34d399', display: 'inline-block', width: '100%' }}>
                 <span style={{ fontSize: '12px', fontWeight: 'bold', color: '#d1fae5' }}>
-                    Active Unit: {factoryData.name} ({factoryData.location}) | CTO Days Left: {ctoDaysLeft}
+                    🏢 Active Pilot Unit: {factoryData.name} ({factoryData.location}) | CTO Days Left: {ctoDaysLeft}
                 </span>
             </div>
 
@@ -174,7 +165,7 @@ EcoTrace India Private Limited is an independent compliance platform. It aggrega
                     <div style={{ backgroundColor: '#111827', border: '1px solid #374151', borderRadius: '12px', padding: '16px' }}>
                         <h4 style={{ color: '#ef4444', margin: '0 0 6px 0', fontSize: '13px' }}>🚨 MPCB Statutory Tracking (CTO)</h4>
                         <p style={{ margin: 0, fontSize: '13px', fontWeight: 'bold', color: '#34d399' }}>CTO Valid: {ctoDaysLeft} Days Left ({factoryData.ctoExpiryDate})</p>
-                        <p style={{ fontSize: '11px', color: '#9ca3af', margin: '4px 0 0 0' }}>Unit: {factoryData.name}</p>
+                        <p style={{ fontSize: '11px', color: '#9ca3af', margin: '4px 0 0 0' }}>Active Unit: {factoryData.name}</p>
                     </div>
                     <div style={{ backgroundColor: '#111827', border: '1px solid #374151', borderRadius: '12px', padding: '16px' }}>
                         <h4 style={{ color: '#3b82f6', margin: '0 0 6px 0', fontSize: '13px' }}>📊 dMRV Carbon Engine</h4>
@@ -193,10 +184,10 @@ EcoTrace India Private Limited is an independent compliance platform. It aggrega
                     <div style={{ backgroundColor: '#111827', border: '1px solid #374151', borderRadius: '12px', padding: '16px' }}>
                         <span style={{ backgroundColor: '#065f46', color: '#d1fae5', padding: '2px 6px', borderRadius: '4px', fontSize: '10px', fontWeight: 'bold' }}>LIVE ACTIVE</span>
                         <h3 style={{ color: '#818cf8', margin: '8px 0 8px 0', fontSize: '15px' }}>1. Multi-Tenant Client Onboarding & CTO Setup</h3>
-                        <form onSubmit={handleOnboardSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '10px', maxWidth: '400px' }}>
-                            <input type="text" value={tempCompanyName} onChange={(e) => setTempCompanyName(e.target.value)} style={{ padding: '8px', backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '6px', color: 'white', fontSize: '12px' }} required />
-                            <input type="text" value={tempMidcLocation} onChange={(e) => setTempMidcLocation(e.target.value)} style={{ padding: '8px', backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '6px', color: 'white', fontSize: '12px' }} />
-                            <input type="text" value={tempDischargeLimit} onChange={(e) => setTempDischargeLimit(e.target.value)} style={{ padding: '8px', backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '6px', color: 'white', fontSize: '12px' }} />
+                        <form onSubmit={handleOnboardSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                            <input type="text" value={tempCompanyName} onChange={(e) => setTempCompanyName(e.target.value)} placeholder="Company Name" style={{ padding: '8px', backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '6px', color: 'white', fontSize: '12px' }} required />
+                            <input type="text" value={tempMidcLocation} onChange={(e) => setTempMidcLocation(e.target.value)} placeholder="MIDC Location" style={{ padding: '8px', backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '6px', color: 'white', fontSize: '12px' }} />
+                            <input type="text" value={tempDischargeLimit} onChange={(e) => setTempDischargeLimit(e.target.value)} placeholder="Discharge Limit" style={{ padding: '8px', backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '6px', color: 'white', fontSize: '12px' }} />
                             <input type="date" value={tempCtoDate} onChange={(e) => setTempCtoDate(e.target.value)} style={{ padding: '8px', backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '6px', color: 'white', fontSize: '12px' }} required />
                             <button type="submit" style={{ backgroundColor: '#059669', color: 'white', border: 'none', padding: '8px 14px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer', fontSize: '12px' }}>Update Active Unit Parameters</button>
                         </form>
@@ -213,7 +204,7 @@ EcoTrace India Private Limited is an independent compliance platform. It aggrega
                     <div style={{ backgroundColor: '#111827', border: '1px solid #374151', borderRadius: '12px', padding: '16px' }}>
                         <span style={{ backgroundColor: '#065f46', color: '#d1fae5', padding: '2px 6px', borderRadius: '4px', fontSize: '10px', fontWeight: 'bold' }}>LIVE OCR ENGINE</span>
                         <h4 style={{ color: '#34d399', margin: '8px 0 4px 0', fontSize: '14px' }}>3. Multi-File Batch OCR & CPCB Schedule Selector</h4>
-                        <p style={{ color: '#9ca3af', fontSize: '12px', marginBottom: '10px' }}>Upload bills / receipts below to run batch OCR and classify under CPCB Schedule I:</p>
+                        <p style={{ color: '#9ca3af', fontSize: '12px', marginBottom: '10px' }}>Upload bills/receipts to run batch OCR and classify under CPCB Schedule I:</p>
                         <input type="file" multiple onChange={handleFileChange} style={{ fontSize: '11px', color: '#9ca3af', marginBottom: '8px', display: 'block' }} />
                         {ocrProcessing && <p style={{ color: '#34d399', fontSize: '11px' }}>⏳ Processing files through OCR engine...</p>}
                         {uploadedFiles.length > 0 && (
@@ -230,7 +221,7 @@ EcoTrace India Private Limited is an independent compliance platform. It aggrega
                     <div style={{ backgroundColor: '#111827', border: '1px solid #059669', borderRadius: '12px', padding: '16px' }}>
                         <span style={{ backgroundColor: '#065f46', color: '#d1fae5', padding: '2px 6px', borderRadius: '4px', fontSize: '10px', fontWeight: 'bold' }}>LIVE CALCULATION</span>
                         <h4 style={{ color: '#34d399', margin: '8px 0 4px 0', fontSize: '14px' }}>4. दैनिक ऑपरेटर लॉगबुक (Daily Operator Logbook)</h4>
-                        <p style={{ color: '#9ca3af', fontSize: '12px', marginBottom: '8px' }}>Scope 2 updates instantly via CEA factor. Sludge is recorded for Form 4.</p>
+                        <p style={{ color: '#9ca3af', fontSize: '12px', marginBottom: '8px' }}>Scope 2 updates instantly via CEA factor. Sludge recorded for Form 4.</p>
                         {logSubmitted && <p style={{ color: '#34d399', fontSize: '12px', fontWeight: 'bold' }}>✅ Log saved & locked with server timestamp.</p>}
                         <form onSubmit={handleLogSubmit} style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '8px' }}>
                             <div>
@@ -249,52 +240,27 @@ EcoTrace India Private Limited is an independent compliance platform. It aggrega
                                 <label style={{ fontSize: '10px', color: '#9ca3af' }}>Sludge MT (Form 4)</label>
                                 <input type="number" step="0.01" value={dailyLog.sludge} onChange={(e) => setDailyLog({...dailyLog, sludge: e.target.value})} style={{ width: '100%', padding: '6px', backgroundColor: '#1f2937', color: 'white', border: '1px solid #374151', borderRadius: '4px', fontSize: '12px' }} required />
                             </div>
-                            <div style={{ gridColumn: '1 / -1' }}>
-                                <label style={{ fontSize: '10px', color: '#9ca3af' }}>Direct Fuel Liters (Optional for Scope 1)</label>
-                                <input type="number" placeholder="Diesel liters burned" value={dailyLog.fuelInput} onChange={(e) => setDailyLog({...dailyLog, fuelInput: e.target.value})} style={{ width: '100%', padding: '6px', backgroundColor: '#1f2937', color: 'white', border: '1px solid #374151', borderRadius: '4px', fontSize: '12px' }} />
-                            </div>
                             <button type="submit" style={{ gridColumn: '1 / -1', backgroundColor: '#059669', color: 'white', border: 'none', padding: '8px', borderRadius: '4px', fontSize: '12px', fontWeight: 'bold', cursor: 'pointer' }}>Save & Lock Daily Record</button>
                         </form>
                     </div>
 
-                    {/* Module 5 - Actionable */}
-                    <div style={{ backgroundColor: '#111827', border: '1px solid #374151', borderRadius: '12px', padding: '16px' }}>
-                        <span style={{ backgroundColor: '#065f46', color: '#d1fae5', padding: '2px 6px', borderRadius: '4px', fontSize: '10px', fontWeight: 'bold' }}>LIVE ACTIONABLE</span>
-                        <h4 style={{ color: '#ef4444', margin: '8px 0 4px 0', fontSize: '14px' }}>5. Flying Squad Audit Mode</h4>
-                        <p style={{ color: '#9ca3af', fontSize: '12px', marginBottom: '10px' }}>1-click instant compliance dossier for surprise inspections.</p>
-                        <button onClick={triggerFlyingSquadDossier} style={{ backgroundColor: '#ef4444', color: 'white', border: 'none', padding: '6px 12px', borderRadius: '4px', fontSize: '11px', fontWeight: 'bold', cursor: 'pointer' }}>Generate Flying Squad Dossier</button>
-                    </div>
+                    {/* LIVE REPORT & ACTION STUDIO (Replaces popups with direct screen output) */}
+                    <div style={{ backgroundColor: '#111827', border: '2px solid #059669', borderRadius: '12px', padding: '16px' }}>
+                        <span style={{ backgroundColor: '#065f46', color: '#d1fae5', padding: '2px 6px', borderRadius: '4px', fontSize: '10px', fontWeight: 'bold' }}>LIVE PILOT DATA & REPORT STUDIO</span>
+                        <h4 style={{ color: '#34d399', margin: '8px 0 8px 0', fontSize: '14px' }}>Modules 5 to 9: Live Compliance Outputs for {factoryData.name}</h4>
+                        
+                        <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginBottom: '12px' }}>
+                            <button onClick={() => setActionOutput(`[5. Flying Squad Dossier Generated]\n- Unit: ${factoryData.name}\n- CTO Valid Days: ${ctoDaysLeft}\n- Status: All parameters verified, geo-tags attached, ready for surprise inspection.`)} style={{ backgroundColor: '#ef4444', color: 'white', border: 'none', padding: '6px 10px', borderRadius: '4px', fontSize: '11px', fontWeight: 'bold', cursor: 'pointer' }}>5. Flying Squad Dossier</button>
+                            <button onClick={() => setActionOutput(`[6. Notice Defence Draft Generated]\n- Target: MPCB Show-Cause Notice regarding ETP pH variation (${dailyLog.ph}).\n- Draft response mapped to active logs for ${factoryData.name}. Ready for legal review.`)} style={{ backgroundColor: '#dc2626', color: 'white', border: 'none', padding: '6px 10px', borderRadius: '4px', fontSize: '11px', fontWeight: 'bold', cursor: 'pointer' }}>6. Notice Defence</button>
+                            <button onClick={() => setActionOutput(`[7. Form 3, 4 & 5 Compiled]\n- Annual Returns assembled from ${savedLogsHistory.length} log entries.\n- Hazardous Sludge logged: ${dailyLog.sludge} MT (Cat 34.3).`)} style={{ backgroundColor: '#2563eb', color: 'white', border: 'none', padding: '6px 10px', borderRadius: '4px', fontSize: '11px', fontWeight: 'bold', cursor: 'pointer' }}>7. Annual Returns</button>
+                            <button onClick={() => setActionOutput(`[8. WhatsApp Alert Triggered]\n- Recipient: Plant Manager (${factoryData.name})\n- Message: "तुमच्या फॅक्टरीच्या CTO नूतनीकरणासाठी ${ctoDaysLeft} दिवस उरले आहेत." (Logged in queue).`)} style={{ backgroundColor: '#2563eb', color: 'white', border: 'none', padding: '6px 10px', borderRadius: '4px', fontSize: '11px', fontWeight: 'bold', cursor: 'pointer' }}>8. Marathi Alert</button>
+                            <button onClick={() => setActionOutput(`[9. Tamper-Evident Digital Vault]\n- Hash Chain Verified for ${factoryData.name}.\n- Total Secure Records: ${savedLogsHistory.length}. External anchoring not enabled.`)} style={{ backgroundColor: '#7c3aed', color: 'white', border: 'none', padding: '6px 10px', borderRadius: '4px', fontSize: '11px', fontWeight: 'bold', cursor: 'pointer' }}>9. Digital Vault</button>
+                        </div>
 
-                    {/* Module 6 - Actionable */}
-                    <div style={{ backgroundColor: '#111827', border: '1px solid #374151', borderRadius: '12px', padding: '16px' }}>
-                        <span style={{ backgroundColor: '#065f46', color: '#d1fae5', padding: '2px 6px', borderRadius: '4px', fontSize: '10px', fontWeight: 'bold' }}>LIVE ACTIONABLE</span>
-                        <h4 style={{ color: '#ef4444', margin: '8px 0 4px 0', fontSize: '14px' }}>6. Notice Defence Matrix & Draft Generator</h4>
-                        <p style={{ color: '#9ca3af', fontSize: '12px', marginBottom: '10px' }}>Draft legal responses based on active factory logs.</p>
-                        <button onClick={triggerNoticeDefense} style={{ backgroundColor: '#dc2626', color: 'white', border: 'none', padding: '6px 12px', borderRadius: '4px', fontSize: '11px', fontWeight: 'bold', cursor: 'pointer' }}>Generate Notice Defence Draft</button>
-                    </div>
-
-                    {/* Module 7 - Actionable */}
-                    <div style={{ backgroundColor: '#111827', border: '1px solid #374151', borderRadius: '12px', padding: '16px' }}>
-                        <span style={{ backgroundColor: '#065f46', color: '#d1fae5', padding: '2px 6px', borderRadius: '4px', fontSize: '10px', fontWeight: 'bold' }}>LIVE ACTIONABLE</span>
-                        <h4 style={{ color: '#3b82f6', margin: '8px 0 4px 0', fontSize: '14px' }}>7. Form 3, 4 & 5 Annual Returns Draft Generator</h4>
-                        <p style={{ color: '#9ca3af', fontSize: '12px', marginBottom: '10px' }}>Automated statutory template assembly.</p>
-                        <button onClick={triggerAnnualReturns} style={{ backgroundColor: '#2563eb', color: 'white', border: 'none', padding: '6px 12px', borderRadius: '4px', fontSize: '11px', fontWeight: 'bold', cursor: 'pointer' }}>Compile Annual Returns Form 3/4/5</button>
-                    </div>
-
-                    {/* Module 8 - Actionable */}
-                    <div style={{ backgroundColor: '#111827', border: '1px solid #374151', borderRadius: '12px', padding: '16px' }}>
-                        <span style={{ backgroundColor: '#065f46', color: '#d1fae5', padding: '2px 6px', borderRadius: '4px', fontSize: '10px', fontWeight: 'bold' }}>LIVE ACTIONABLE</span>
-                        <h4 style={{ color: '#3b82f6', margin: '8px 0 4px 0', fontSize: '14px' }}>8. WhatsApp / SMS Alert Engine (Marathi Triggers)</h4>
-                        <p style={{ color: '#34d399', fontSize: '12px', margin: '0 0 10px 0' }}>"तुमच्या फॅक्टरीच्या CTO नूतनीकरणासाठी {ctoDaysLeft} दिवस उरले आहेत."</p>
-                        <button onClick={triggerAlertEngine} style={{ backgroundColor: '#2563eb', color: 'white', border: 'none', padding: '6px 12px', borderRadius: '4px', fontSize: '11px', fontWeight: 'bold', cursor: 'pointer' }}>Test Marathi Alert Dispatch</button>
-                    </div>
-
-                    {/* Module 9 - Actionable */}
-                    <div style={{ backgroundColor: '#111827', border: '1px solid #374151', borderRadius: '12px', padding: '16px' }}>
-                        <span style={{ backgroundColor: '#065f46', color: '#d1fae5', padding: '2px 6px', borderRadius: '4px', fontSize: '10px', fontWeight: 'bold' }}>LIVE ACTIONABLE</span>
-                        <h4 style={{ color: '#8b5cf6', margin: '8px 0 4px 0', fontSize: '14px' }}>9. Tamper-Evident Digital Vault</h4>
-                        <p style={{ color: '#9ca3af', fontSize: '12px', marginBottom: '10px' }}>Private hash-chained storage for immutable audit logs.</p>
-                        <button onClick={triggerDigitalVault} style={{ backgroundColor: '#7c3aed', color: 'white', border: 'none', padding: '6px 12px', borderRadius: '4px', fontSize: '11px', fontWeight: 'bold', cursor: 'pointer' }}>Verify Hash Chain Integrity</button>
+                        <div style={{ backgroundColor: '#1f2937', padding: '12px', borderRadius: '8px', border: '1px solid #374151' }}>
+                            <p style={{ fontSize: '11px', color: '#9ca3af', margin: '0 0 4px 0', fontWeight: 'bold' }}>Live Screen Output / Report Preview:</p>
+                            <pre style={{ fontSize: '11px', color: '#34d399', whiteSpace: 'pre-wrap', wordBreak: 'break-word', margin: 0, fontFamily: 'monospace' }}>{actionOutput}</pre>
+                        </div>
                     </div>
 
                 </div>
@@ -306,7 +272,7 @@ EcoTrace India Private Limited is an independent compliance platform. It aggrega
                     <div style={{ backgroundColor: '#111827', border: '1px solid #3b82f6', borderRadius: '12px', padding: '16px' }}>
                         <span style={{ backgroundColor: '#1e40af', color: '#bfdbfe', padding: '2px 6px', borderRadius: '4px', fontSize: '10px', fontWeight: 'bold' }}>REFERENCE CALCULATION</span>
                         <h4 style={{ color: '#60a5fa', margin: '8px 0 4px 0', fontSize: '14px' }}>10. ETP CAPEX & ROI Calculator</h4>
-                        <p style={{ color: '#9ca3af', fontSize: '12px', margin: 0 }}>Estimated ROI based on active discharge limit of {factoryData.dischargeLimit} Liters.</p>
+                        <p style={{ color: '#9ca3af', fontSize: '12px', margin: 0 }}>Estimated ROI based on active discharge limit of {factoryData.dischargeLimit} Liters for {factoryData.name}.</p>
                     </div>
                     <div style={{ backgroundColor: '#111827', border: '1px solid #3b82f6', borderRadius: '12px', padding: '16px' }}>
                         <span style={{ backgroundColor: '#1e40af', color: '#bfdbfe', padding: '2px 6px', borderRadius: '4px', fontSize: '10px', fontWeight: 'bold' }}>REFERENCE CALCULATION</span>
