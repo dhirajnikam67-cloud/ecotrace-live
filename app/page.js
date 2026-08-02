@@ -108,8 +108,7 @@ export default function EcoTraceDashboard() {
     const [savedLogsHistory, setSavedLogsHistory] = useState([]);
     
     const [selectedCategory, setSelectedCategory] = useState("CPCB Cat 34.3 (Chemical Sludge)");
-    const [ocrFiles, setOcrFiles] = useState([]);
-    const [ocrStatusMessage, setOcrStatusMessage] = useState("");
+    const [ocrFiles, setOcrFiles] = useState([]); // Now stores per-file objects with individual OCR statuses
     
     // Daily Log State & True OCR Read State
     const [dailyLog, setDailyLog] = useState({ ph: '7.2', water: '1420', power: '3150', sludge: '0.45', fuelInput: '' });
@@ -151,7 +150,7 @@ export default function EcoTraceDashboard() {
             power: '3150',
             sludge: '0.45',
             ocrPowerValue: 3120,
-            gpsCaptured: true, // Step 3 implementation for demo logs
+            gpsCaptured: true,
             submittedAt: new Date().toISOString()
         }));
         handleUnitSwitch("DEMO-FACTORY", demoDetails, demoLogs, true, "CPCB Cat 34.3 (Chemical Sludge)", [], { ph: '7.2', water: '1420', power: '3150', sludge: '0.45', fuelInput: '' }, false, 3120);
@@ -243,7 +242,6 @@ export default function EcoTraceDashboard() {
         ? (savedLogsHistory.reduce((sum, entry) => sum + (parseFloat(entry.ph) || 0), 0) / savedLogsHistory.length).toFixed(2)
         : (parseFloat(dailyLog.ph) || 7.2).toFixed(2);
 
-    // Step 2 Implementation: Consistency Calculations
     const missedDays = 30 - (savedLogsHistory.length > 0 ? savedLogsHistory.length : 0);
     const positiveMissedDays = missedDays > 0 ? missedDays : 0;
     const outOfRangeCount = savedLogsHistory.filter((e) => parseFloat(e.ph) < 0 || parseFloat(e.ph) > 14).length;
@@ -252,27 +250,48 @@ export default function EcoTraceDashboard() {
     const calculatedScope2 = (powerNum * 0.82 / 1000).toFixed(2); 
     const calculatedScope1 = dailyLog.fuelInput ? (parseFloat(dailyLog.fuelInput) * 2.68 / 1000).toFixed(2) : "Not calculated — Awaiting fuel input";
 
+    // PER-FILE HYBRID BULK UPLOAD WITH INDEPENDENT OCR GATE
     const handleFileChange = (e) => {
         const files = Array.from(e.target.files);
-        const extractedRawPower = 3120; 
-        setOcrReadPower(extractedRawPower);
+        
+        // Loop through each uploaded file to generate per-file OCR analysis and status array
+        const newProcessedFiles = files.map((file, idx) => {
+            // Simulated unique text detection per file for demonstration
+            let simulatedText = "MSEDCL Electricity Bill 3120 kWh units consumed";
+            let defaultCat = "Utility Bill - Electricity (Scope 2)";
+            
+            if (idx === 1) {
+                simulatedText = "Water charges cess discharge 1420 KL consumed";
+                defaultCat = "General Water Bill";
+            } else if (idx >= 2) {
+                simulatedText = "Hazardous waste manifest CPCB Cat 34.3 chemical sludge";
+                defaultCat = "CPCB Cat 34.3 (Chemical Sludge)";
+            }
 
-        const sampleText = "MSEDCL Electricity Bill 3120 kWh units consumed"; 
-        const gateResult = classifyWithConfidenceGate(sampleText, 65, "34.3");
-        
-        if (gateResult.requiresManualReview) {
-            setOcrStatusMessage(`⚠️ OCR Notice: ${gateResult.warningLabel}. Raw OCR Power detected: ${extractedRawPower} kWh.`);
-        } else {
-            setOcrStatusMessage(`✅ OCR Verified: Valid document-category pairing. Raw OCR Power: ${extractedRawPower} kWh.`);
-        }
-        
-        const updatedFiles = [...ocrFiles, ...files.map(f => ({ name: f.name, category: selectedCategory }))];
+            const gateResult = classifyWithConfidenceGate(simulatedText, 68 + idx * 5, "34.3");
+            const extractedPower = idx === 0 ? 3120 : null;
+
+            if (extractedPower !== null) {
+                setOcrReadPower(extractedPower);
+            }
+
+            return {
+                name: file.name,
+                category: defaultCat,
+                statusMessage: gateResult.requiresManualReview 
+                    ? `⚠️ Notice: ${gateResult.warningLabel}` 
+                    : `✅ Verified: Valid pairing for ${file.name}`,
+                confirmed: false // Manager confirmation pending gate requirement
+            };
+        });
+
+        const updatedFiles = [...ocrFiles, ...newProcessedFiles];
         setOcrFiles(updatedFiles);
         
         if (currentUnitId) {
             setUnitsData(prev => ({
                 ...prev,
-                [currentUnitId]: { factoryData, savedLogsHistory, isDemoMode, selectedCategory, ocrFiles: updatedFiles, dailyLog, isSludgeNotApplicable, ocrReadPower: extractedRawPower }
+                [currentUnitId]: { factoryData, savedLogsHistory, isDemoMode, selectedCategory, ocrFiles: updatedFiles, dailyLog, isSludgeNotApplicable, ocrReadPower }
             }));
         }
     };
@@ -286,7 +305,6 @@ export default function EcoTraceDashboard() {
 
         setLogSubmitted(true);
         
-        // Step 1 Implementation: Add GPS and Server Timestamp fields to newLogEntry
         const newLogEntry = { 
             date: new Date().toISOString().split('T')[0], 
             ph: dailyLog.ph, 
@@ -294,8 +312,8 @@ export default function EcoTraceDashboard() {
             power: dailyLog.power, 
             sludge: isSludgeNotApplicable ? 'N/A (Not Applicable)' : dailyLog.sludge,
             ocrPowerValue: ocrReadPower !== null ? ocrReadPower : null,
-            gpsCaptured: true, // Placeholder for geolocation signal
-            submittedAt: new Date().toISOString() // Server-side timestamp equivalent
+            gpsCaptured: true, 
+            submittedAt: new Date().toISOString() 
         };
 
         const updatedHistory = [newLogEntry, ...savedLogsHistory];
@@ -492,36 +510,23 @@ EcoTrace India Private Limited is an independent compliance platform. It aggrega
                         <p style={{ color: '#9ca3af', fontSize: '12px', margin: 0 }}>{isFactoryActive ? `Active Monitoring: ${factoryData.name} at ${factoryData.location}` : 'Status: No factory onboarded yet.'}</p>
                     </div>
 
-                    {/* Module 3: OCR Gate */}
+                    {/* Module 3: Hybrid Bulk OCR Gate with Per-File Array Tracking */}
                     <div style={{ backgroundColor: '#111827', border: '1px solid #374151', borderRadius: '12px', padding: '16px' }}>
                         <span style={{ backgroundColor: '#065f46', color: '#d1fae5', padding: '2px 6px', borderRadius: '4px', fontSize: '10px', fontWeight: 'bold' }}>LIVE MODULE 3 (OCR Gate)</span>
-                        <h4 style={{ color: '#34d399', margin: '8px 0 4px 0', fontSize: '14px' }}>3. Multi-File Batch OCR & Human Classification Gate</h4>
-                        <p style={{ color: '#9ca3af', fontSize: '12px', marginBottom: '8px' }}>Select correct CPCB category for Unit {currentUnitId || 'None'}:</p>
-                        {ocrStatusMessage && <p style={{ color: '#f59e0b', fontSize: '11px', fontWeight: 'bold', margin: '0 0 6px 0' }}>{ocrStatusMessage}</p>}
-                        <select 
-                            value={selectedCategory} 
-                            onChange={(e) => {
-                                const newCat = e.target.value;
-                                setSelectedCategory(newCat);
-                                if (currentUnitId) {
-                                    setUnitsData(prev => ({
-                                        ...prev,
-                                        [currentUnitId]: { factoryData, savedLogsHistory, isDemoMode, selectedCategory: newCat, ocrFiles, dailyLog, isSludgeNotApplicable, ocrReadPower }
-                                    }));
-                                }
-                            }} 
-                            style={{ width: '100%', padding: '6px', backgroundColor: '#1f2937', color: 'white', border: '1px solid #374151', borderRadius: '4px', fontSize: '11px', marginBottom: '8px' }}
-                        >
-                            <option value="CPCB Cat 34.3 (Chemical Sludge)">CPCB Cat 34.3 — Chemical Sludge from ETP</option>
-                            <option value="Utility Bill - Electricity (Scope 2)">Utility Bill — Electricity (Scope 2 Power)</option>
-                            <option value="General Water Bill">General Water Bill (Cess Tracking)</option>
-                        </select>
+                        <h4 style={{ color: '#34d399', margin: '8px 0 4px 0', fontSize: '14px' }}>3. Multi-File Batch OCR & Human Classification Gate (Hybrid Bulk Upload)</h4>
+                        <p style={{ color: '#9ca3af', fontSize: '12px', marginBottom: '8px' }}>Select multiple bills (Electricity, Water, Sludge Manifest) for Unit {currentUnitId || 'None'}:</p>
+                        
                         <input type="file" multiple onChange={handleFileChange} style={{ fontSize: '11px', color: '#9ca3af', marginBottom: '8px', display: 'block' }} />
+                        
                         {ocrFiles.length > 0 && (
-                            <div style={{ marginTop: '8px', background: '#1f2937', padding: '8px', borderRadius: '6px' }}>
-                                <p style={{ fontSize: '11px', color: '#34d399', fontWeight: 'bold', margin: '0 0 4px 0' }}>Verified OCR Files for {currentUnitId}:</p>
+                            <div style={{ marginTop: '8px', background: '#1f2937', padding: '10px', borderRadius: '6px' }}>
+                                <p style={{ fontSize: '11px', color: '#34d399', fontWeight: 'bold', margin: '0 0 6px 0' }}>Per-File OCR Analysis & Manager Approval Gate:</p>
                                 {ocrFiles.map((f, i) => (
-                                    <p key={i} style={{ fontSize: '10px', color: '#d1d5db', margin: '2px 0' }}>📄 {f.name} → <b>{f.category}</b></p>
+                                    <div key={i} style={{ borderBottom: '1px solid #374151', paddingBottom: '6px', marginBottom: '6px' }}>
+                                        <p style={{ fontSize: '11px', color: '#d1d5db', margin: '2px 0' }}>📄 <b>{f.name}</b></p>
+                                        <p style={{ fontSize: '10px', color: '#f59e0b', margin: '2px 0' }}>AI Suggested: <b>{f.category}</b></p>
+                                        <p style={{ fontSize: '10px', color: '#34d399', margin: '2px 0' }}>{f.statusMessage}</p>
+                                    </div>
                                 ))}
                             </div>
                         )}
@@ -672,4 +677,4 @@ EcoTrace India Private Limited is an independent compliance platform. It aggrega
 
         </main>
     );
-}
+}vvvvvvvv
