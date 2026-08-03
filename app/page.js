@@ -1,5 +1,6 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { supabase } from '../supabaseClient';
 
 // ---------------------------------------------------------------------------
 // BACKEND VALIDATION & OCR CONFIDENCE GATE LOGIC
@@ -84,6 +85,41 @@ function preflightCheck(dailyLogEntries) {
 // ---------------------------------------------------------------------------
 
 export default function EcoTraceDashboard() {
+    // ---- Login/Session Logic ----
+    const [session, setSession] = useState(null);
+    const [authEmail, setAuthEmail] = useState('');
+    const [authPassword, setAuthPassword] = useState('');
+    const [authMode, setAuthMode] = useState('login');
+    const [authError, setAuthError] = useState('');
+
+    useEffect(() => {
+        supabase.auth.getSession().then(({ data: { session } }) => {
+            setSession(session);
+        });
+        const { data: authListener } = supabase.auth.onAuthStateChange((_event, session) => {
+            setSession(session);
+        });
+        return () => authListener.subscription.unsubscribe();
+    }, []);
+
+    const handleAuthSubmit = async (e) => {
+        e.preventDefault();
+        setAuthError('');
+        if (authMode === 'login') {
+            const { error } = await supabase.auth.signInWithPassword({ email: authEmail, password: authPassword });
+            if (error) setAuthError(error.message);
+        } else {
+            const { error } = await supabase.auth.signUp({ email: authEmail, password: authPassword });
+            if (error) setAuthError(error.message);
+            else setAuthError('Signup successful! You can now login.');
+        }
+    };
+
+    const handleLogout = async () => {
+        await supabase.auth.signOut();
+        setSession(null);
+    };
+
     const [activeTab, setActiveTab] = useState('overview');
     
     const [factoryData, setFactoryData] = useState({
@@ -420,6 +456,34 @@ EcoTrace India Private Limited is an independent compliance platform. It aggrega
 
     const [actionOutput, setActionOutput] = useState("Select any Live Actionable module below to view generated compliance output on screen.");
 
+    // ---- Login Screen (shown before any dashboard content if not authenticated) ----
+    if (!session) {
+        return (
+            <main style={{ minHeight: '100vh', backgroundColor: '#0b0f19', color: '#ffffff', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '16px' }}>
+                <div style={{ maxWidth: '360px', width: '100%', backgroundColor: '#111827', border: '1px solid #374151', borderRadius: '12px', padding: '24px' }}>
+                    <h2 style={{ marginBottom: '4px' }}>EcoTrace India</h2>
+                    <p style={{ color: '#9ca3af', fontSize: '13px', marginBottom: '20px' }}>
+                        {authMode === 'login' ? 'Factory Login' : 'New Factory Signup'}
+                    </p>
+                    <form onSubmit={handleAuthSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                        <input type="email" placeholder="Email" value={authEmail} onChange={(e) => setAuthEmail(e.target.value)} required
+                            style={{ padding: '8px', backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '6px', color: 'white' }} />
+                        <input type="password" placeholder="Password" value={authPassword} onChange={(e) => setAuthPassword(e.target.value)} required
+                            style={{ padding: '8px', backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '6px', color: 'white' }} />
+                        {authError && <p style={{ color: '#f59e0b', fontSize: '12px' }}>{authError}</p>}
+                        <button type="submit" style={{ backgroundColor: '#059669', color: 'white', border: 'none', padding: '10px', borderRadius: '6px', fontWeight: 'bold' }}>
+                            {authMode === 'login' ? 'Login' : 'Sign Up'}
+                        </button>
+                    </form>
+                    <button onClick={() => setAuthMode(authMode === 'login' ? 'signup' : 'login')}
+                        style={{ background: 'none', border: 'none', color: '#34d399', fontSize: '12px', marginTop: '12px', cursor: 'pointer' }}>
+                        {authMode === 'login' ? "New factory? Sign up" : "Already registered? Login"}
+                    </button>
+                </div>
+            </main>
+        );
+    }
+
     return (
         <main style={{ minHeight: '100vh', backgroundColor: '#0b0f19', color: '#ffffff', fontFamily: 'sans-serif', padding: '16px' }}>
             
@@ -442,6 +506,12 @@ EcoTrace India Private Limited is an independent compliance platform. It aggrega
                         style={{ backgroundColor: '#059669', color: 'white', border: 'none', padding: '8px 14px', borderRadius: '6px', fontSize: '12px', fontWeight: 'bold', cursor: 'pointer' }}
                     >
                         Export Verified Audit Report (.txt)
+                    </button>
+                    <button 
+                        onClick={handleLogout}
+                        style={{ backgroundColor: '#374151', color: 'white', border: 'none', padding: '8px 12px', borderRadius: '6px', fontSize: '11px', fontWeight: 'bold', cursor: 'pointer' }}
+                    >
+                        Logout ({session.user.email})
                     </button>
                 </div>
             </header>
