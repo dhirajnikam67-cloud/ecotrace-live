@@ -193,33 +193,48 @@ export default function EcoTraceDashboard() {
         alert('Demo Unit loaded safely in isolated state with 15-day sample data.');
     };
 
-    const handleOnboardSubmit = (e) => {
+    // ---- Step 1.1 (Pan-India backend migration): Onboarding now writes to Supabase ----
+    const handleOnboardSubmit = async (e) => {
         e.preventDefault();
-        if (tempCompanyName.trim()) {
-            const unitName = tempCompanyName.trim().toUpperCase();
-            const isSameUnit = currentUnitId === unitName;
-            const existingUnit = unitsData[unitName];
-
-            const newDetails = {
-                name: unitName,
-                location: tempMidcLocation ? tempMidcLocation.toUpperCase() + ' MIDC' : (isSameUnit ? factoryData.location : (existingUnit?.factoryData.location || 'MIDC CLUSTER')),
-                dischargeLimit: tempDischargeLimit || (isSameUnit ? factoryData.dischargeLimit : (existingUnit?.factoryData.dischargeLimit || '5000')),
-                ctoExpiryDate: tempCtoDate || (isSameUnit ? factoryData.ctoExpiryDate : (existingUnit?.factoryData.ctoExpiryDate || '2026-12-31')),
-                status: "DATA COMPLETE & FILING-READY"
-            };
-            
-            const existingLogs = isSameUnit ? savedLogsHistory : (existingUnit?.savedLogsHistory || []);
-            const existingCategory = isSameUnit ? selectedCategory : (existingUnit?.selectedCategory || "CPCB Cat 34.3 (Chemical Sludge)");
-            const existingFiles = isSameUnit ? ocrFiles : (existingUnit?.ocrFiles || []);
-            const existingLogState = isSameUnit ? dailyLog : (existingUnit?.dailyLog || { ph: '7.2', water: '1420', power: '3150', sludge: '0.45', fuelInput: '' });
-            const existingSludgeNa = isSameUnit ? isSludgeNotApplicable : (existingUnit?.isSludgeNotApplicable || false);
-            const existingOcrPower = isSameUnit ? ocrReadPower : (existingUnit?.ocrReadPower || null);
-
-            handleUnitSwitch(unitName, newDetails, existingLogs, false, existingCategory, existingFiles, existingLogState, existingSludgeNa, existingOcrPower);
-            alert(`Factory Unit ${unitName} Onboarded / Switched Successfully (Live state protected)!`);
-        } else {
+        if (!tempCompanyName.trim()) {
             alert('Please enter a valid company name.');
+            return;
         }
+
+        const unitName = tempCompanyName.trim().toUpperCase();
+        const dischargeLimitValue = tempDischargeLimit || '5000';
+        const ctoDateValue = tempCtoDate || '2026-12-31';
+        const locationValue = tempMidcLocation ? tempMidcLocation.toUpperCase() + ' MIDC' : 'MIDC CLUSTER';
+
+        // Supabase मध्ये थेट insert — owner_user_id आणि state सोबत
+        const { data, error } = await supabase
+            .from('factories')
+            .insert({
+                name: unitName,
+                plant_location: locationValue,
+                mpcb_water_consent_limit_liters: parseFloat(dischargeLimitValue),
+                owner_user_id: session.user.id,
+                state: 'Maharashtra', // सध्या डीफॉल्ट — पुढे राज्य-निवड फील्ड जोडू
+            })
+            .select()
+            .single();
+
+        if (error) {
+            alert('Error saving factory: ' + error.message);
+            return;
+        }
+
+        // नवीन factory चा खरा database ID currentUnitId म्हणून साठवा
+        setCurrentUnitId(data.id);
+        setFactoryData({
+            name: data.name,
+            location: data.plant_location,
+            dischargeLimit: String(data.mpcb_water_consent_limit_liters),
+            ctoExpiryDate: ctoDateValue,
+            status: "DATA COMPLETE & FILING-READY",
+        });
+
+        alert(`Factory Unit ${unitName} Onboarded Successfully (Saved to Database)!`);
     };
 
     const calculateCtoDaysLeft = (expiryDate) => {
