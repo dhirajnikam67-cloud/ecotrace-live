@@ -233,6 +233,7 @@ export default function EcoTraceDashboard() {
         alert('Demo Unit loaded safely in isolated state with 15-day sample data.');
     };
 
+    // ---- Step 1.1 + Pan-India location fix: Onboarding now writes to Supabase, using state_configs for the industrial-area term ----
     const handleOnboardSubmit = async (e) => {
         e.preventDefault();
         if (!tempCompanyName.trim()) {
@@ -243,7 +244,18 @@ export default function EcoTraceDashboard() {
         const unitName = tempCompanyName.trim().toUpperCase();
         const dischargeLimitValue = tempDischargeLimit || '5000';
         const ctoDateValue = tempCtoDate || '2026-12-31';
-        const locationValue = tempMidcLocation ? tempMidcLocation.toUpperCase() + ' MIDC' : 'MIDC CLUSTER';
+        const factoryState = 'Maharashtra';
+
+        const { data: stateConfig } = await supabase
+            .from('state_configs')
+            .select('industrial_area_term')
+            .eq('state', factoryState)
+            .maybeSingle();
+
+        const areaTerm = stateConfig?.industrial_area_term || 'Industrial Area';
+        const locationValue = tempMidcLocation
+            ? `${tempMidcLocation.toUpperCase()} ${areaTerm}`
+            : `${areaTerm} CLUSTER`;
 
         const { data, error } = await supabase
             .from('factories')
@@ -252,7 +264,7 @@ export default function EcoTraceDashboard() {
                 plant_location: locationValue,
                 mpcb_water_consent_limit_liters: parseFloat(dischargeLimitValue),
                 owner_user_id: session.user.id,
-                state: 'Maharashtra',
+                state: factoryState,
             })
             .select()
             .single();
