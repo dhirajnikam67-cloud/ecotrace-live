@@ -142,9 +142,49 @@ export default function EcoTraceDashboard() {
     const [currentUnitId, setCurrentUnitId] = useState(null);
     const [unitsData, setUnitsData] = useState({});
     const [savedLogsHistory, setSavedLogsHistory] = useState([]);
+    const [isFactoryLoading, setIsFactoryLoading] = useState(true);
+
+    // ---- Step 2.1 (Pan-India backend migration): auto-load this user's factory on login ----
+    useEffect(() => {
+        if (!session) {
+            setIsFactoryLoading(false);
+            return;
+        }
+
+        const loadFactory = async () => {
+            setIsFactoryLoading(true);
+            const { data, error } = await supabase
+                .from('factories')
+                .select('*')
+                .eq('owner_user_id', session.user.id)
+                .order('created_at', { ascending: false })
+                .limit(1)
+                .maybeSingle();
+
+            if (error) {
+                console.error('Error loading factory:', error.message);
+                setIsFactoryLoading(false);
+                return;
+            }
+
+            if (data) {
+                setCurrentUnitId(data.id);
+                setFactoryData({
+                    name: data.name,
+                    location: data.plant_location,
+                    dischargeLimit: String(data.mpcb_water_consent_limit_liters ?? '5000'),
+                    ctoExpiryDate: '2026-12-31',
+                    status: "DATA COMPLETE & FILING-READY",
+                });
+            }
+            setIsFactoryLoading(false);
+        };
+
+        loadFactory();
+    }, [session]);
     
     const [selectedCategory, setSelectedCategory] = useState("CPCB Cat 34.3 (Chemical Sludge)");
-    const [ocrFiles, setOcrFiles] = useState([]); // Now stores per-file objects with individual OCR statuses
+    const [ocrFiles, setOcrFiles] = useState([]);
     
     // Daily Log State & True OCR Read State
     const [dailyLog, setDailyLog] = useState({ ph: '7.2', water: '1420', power: '3150', sludge: '0.45', fuelInput: '' });
@@ -193,7 +233,6 @@ export default function EcoTraceDashboard() {
         alert('Demo Unit loaded safely in isolated state with 15-day sample data.');
     };
 
-    // ---- Step 1.1 (Pan-India backend migration): Onboarding now writes to Supabase ----
     const handleOnboardSubmit = async (e) => {
         e.preventDefault();
         if (!tempCompanyName.trim()) {
@@ -206,7 +245,6 @@ export default function EcoTraceDashboard() {
         const ctoDateValue = tempCtoDate || '2026-12-31';
         const locationValue = tempMidcLocation ? tempMidcLocation.toUpperCase() + ' MIDC' : 'MIDC CLUSTER';
 
-        // Supabase मध्ये थेट insert — owner_user_id आणि state सोबत
         const { data, error } = await supabase
             .from('factories')
             .insert({
@@ -214,7 +252,7 @@ export default function EcoTraceDashboard() {
                 plant_location: locationValue,
                 mpcb_water_consent_limit_liters: parseFloat(dischargeLimitValue),
                 owner_user_id: session.user.id,
-                state: 'Maharashtra', // सध्या डीफॉल्ट — पुढे राज्य-निवड फील्ड जोडू
+                state: 'Maharashtra',
             })
             .select()
             .single();
@@ -224,7 +262,6 @@ export default function EcoTraceDashboard() {
             return;
         }
 
-        // नवीन factory चा खरा database ID currentUnitId म्हणून साठवा
         setCurrentUnitId(data.id);
         setFactoryData({
             name: data.name,
@@ -301,13 +338,9 @@ export default function EcoTraceDashboard() {
     const calculatedScope2 = (powerNum * 0.82 / 1000).toFixed(2); 
     const calculatedScope1 = dailyLog.fuelInput ? (parseFloat(dailyLog.fuelInput) * 2.68 / 1000).toFixed(2) : "Not calculated — Awaiting fuel input";
 
-    // PER-FILE HYBRID BULK UPLOAD WITH INDEPENDENT OCR GATE
     const handleFileChange = (e) => {
         const files = Array.from(e.target.files);
-        
-        // Loop through each uploaded file to generate per-file OCR analysis and status array
         const newProcessedFiles = files.map((file, idx) => {
-            // Simulated unique text detection per file for demonstration
             let simulatedText = "MSEDCL Electricity Bill 3120 kWh units consumed";
             let defaultCat = "Utility Bill - Electricity (Scope 2)";
             
@@ -332,7 +365,7 @@ export default function EcoTraceDashboard() {
                 statusMessage: gateResult.requiresManualReview 
                     ? `⚠️ Notice: ${gateResult.warningLabel}` 
                     : `✅ Verified: Valid pairing for ${file.name}`,
-                confirmed: false // Manager confirmation pending gate requirement
+                confirmed: false
             };
         });
 
@@ -471,7 +504,6 @@ EcoTrace India Private Limited is an independent compliance platform. It aggrega
 
     const [actionOutput, setActionOutput] = useState("Select any Live Actionable module below to view generated compliance output on screen.");
 
-    // ---- Login Screen (shown before any dashboard content if not authenticated) ----
     if (!session) {
         return (
             <main style={{ minHeight: '100vh', backgroundColor: '#0b0f19', color: '#ffffff', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '16px' }}>
@@ -495,6 +527,14 @@ EcoTrace India Private Limited is an independent compliance platform. It aggrega
                         {authMode === 'login' ? "New factory? Sign up" : "Already registered? Login"}
                     </button>
                 </div>
+            </main>
+        );
+    }
+
+    if (isFactoryLoading) {
+        return (
+            <main style={{ minHeight: '100vh', backgroundColor: '#0b0f19', color: '#ffffff', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <p style={{ color: '#34d399', fontSize: '14px' }}>Loading factory profile from database...</p>
             </main>
         );
     }
