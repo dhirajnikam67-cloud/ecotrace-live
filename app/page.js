@@ -434,6 +434,9 @@ export default function EcoTraceDashboard() {
         }
 
         // स्टेप 3.1 — थेट daily_logs टेबलमध्ये insert
+        // NOTE (fix, Aug 2026): dailyLog.sludge is collected from the operator in MT, but the
+        // hazardous_waste_kg column is — as its name says — kg (matching factories.mpcb_hazardous_waste_limit_kg,
+        // also kg). Convert MT -> kg on the way in so the stored number means what the column says.
         const { data, error } = await supabase
             .from('daily_logs')
             .insert({
@@ -442,7 +445,7 @@ export default function EcoTraceDashboard() {
                 ph_level: parseFloat(dailyLog.ph),
                 water_discharge_liters: parseFloat(dailyLog.water),
                 electricity_kwh: parseFloat(dailyLog.power),
-                hazardous_waste_kg: isSludgeNotApplicable ? null : parseFloat(dailyLog.sludge),
+                hazardous_waste_kg: isSludgeNotApplicable ? null : parseFloat(dailyLog.sludge) * 1000,
                 ocr_power_reading: ocrReadPower !== null ? ocrReadPower : null,
                 gps_captured: true,
             })
@@ -462,7 +465,9 @@ export default function EcoTraceDashboard() {
             ph: String(data.ph_level),
             water: String(data.water_discharge_liters),
             power: String(data.electricity_kwh),
-            sludge: data.hazardous_waste_kg === null ? 'N/A (Not Applicable)' : String(data.hazardous_waste_kg),
+            // Convert kg back to MT here so history, completeness math, and reports keep
+            // working in the same MT unit the operator entered and sees on screen.
+            sludge: data.hazardous_waste_kg === null ? 'N/A (Not Applicable)' : String(data.hazardous_waste_kg / 1000),
             ocrPowerValue: data.ocr_power_reading,
             gpsCaptured: data.gps_captured,
             submittedAt: data.created_at,
