@@ -121,7 +121,15 @@ export default function EcoTraceDashboard() {
     };
 
     // ---- Step 4 (Pan-India expansion): load the list of states with a ready config for the onboarding dropdown ----
+    // FIX (Aug 2026): this used to run once on mount with `[]` deps — i.e. before login, before
+    // supabase had a session. state_configs' RLS policy only allows authenticated reads, so that
+    // early call silently returned nothing and never ran again, leaving only the Maharashtra
+    // fallback option visible even after adding more states. Now it (re)runs whenever `session`
+    // changes, so it fires again right after login succeeds.
     useEffect(() => {
+        if (!session) {
+            return;
+        }
         const loadStates = async () => {
             const { data, error } = await supabase
                 .from('state_configs')
@@ -136,7 +144,7 @@ export default function EcoTraceDashboard() {
             }
         };
         loadStates();
-    }, []);
+    }, [session]);
 
     const [activeTab, setActiveTab] = useState('overview');
     
