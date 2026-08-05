@@ -221,6 +221,8 @@ export default function EcoTraceDashboard() {
                         sludge: row.hazardous_waste_kg === null ? 'N/A (Not Applicable)' : String(row.hazardous_waste_kg / 1000),
                         ocrPowerValue: row.ocr_power_reading,
                         gpsCaptured: row.gps_captured,
+                        gpsLatitude: row.gps_latitude,
+                        gpsLongitude: row.gps_longitude,
                         submittedAt: row.created_at,
                     }));
                     setSavedLogsHistory(historyEntries);
@@ -487,6 +489,23 @@ export default function EcoTraceDashboard() {
         // NOTE (fix, Aug 2026): dailyLog.sludge is collected from the operator in MT, but the
         // hazardous_waste_kg column is — as its name says — kg (matching factories.mpcb_hazardous_waste_limit_kg,
         // also kg). Convert MT -> kg on the way in so the stored number means what the column says.
+
+        // ---- खरा GPS capture (Medium priority fix, Aug 2026): आधीचा `gps_captured: true` कायम hardcoded होता.
+        // आता प्रत्यक्ष navigator.geolocation.getCurrentPosition() वापरून खरे coordinates मिळवतो.
+        // 8 सेकंदांत उत्तर आलं नाही, browser ने परवानगी नाकारली, किंवा हे API उपलब्धच नसेल — तर gps_captured false राहील,
+        // ते खोटं "true" दाखवण्यापेक्षा जास्त प्रामाणिक आहे. ----
+        const capturedPosition = await new Promise((resolve) => {
+            if (!('geolocation' in navigator)) {
+                resolve(null);
+                return;
+            }
+            navigator.geolocation.getCurrentPosition(
+                (pos) => resolve({ lat: pos.coords.latitude, lng: pos.coords.longitude }),
+                () => resolve(null),
+                { timeout: 8000, maximumAge: 60000 }
+            );
+        });
+
         const { data, error } = await supabase
             .from('daily_logs')
             .insert({
@@ -497,7 +516,9 @@ export default function EcoTraceDashboard() {
                 electricity_kwh: parseFloat(dailyLog.power),
                 hazardous_waste_kg: isSludgeNotApplicable ? null : parseFloat(dailyLog.sludge) * 1000,
                 ocr_power_reading: ocrReadPower !== null ? ocrReadPower : null,
-                gps_captured: true,
+                gps_captured: capturedPosition !== null,
+                gps_latitude: capturedPosition ? capturedPosition.lat : null,
+                gps_longitude: capturedPosition ? capturedPosition.lng : null,
             })
             .select()
             .single();
@@ -505,6 +526,10 @@ export default function EcoTraceDashboard() {
         if (error) {
             alert('Error saving log: ' + error.message);
             return;
+        }
+
+        if (!capturedPosition) {
+            alert('Note: Location could not be captured (permission denied, unavailable, or timed out). Log saved without GPS tag.');
         }
 
         // स्टेप 3.2 — insert यशस्वी झाल्यावरच "saved & locked" दाखवा
@@ -520,6 +545,8 @@ export default function EcoTraceDashboard() {
             sludge: data.hazardous_waste_kg === null ? 'N/A (Not Applicable)' : String(data.hazardous_waste_kg / 1000),
             ocrPowerValue: data.ocr_power_reading,
             gpsCaptured: data.gps_captured,
+            gpsLatitude: data.gps_latitude,
+            gpsLongitude: data.gps_longitude,
             submittedAt: data.created_at,
         };
         setSavedLogsHistory(prev => [newLogEntry, ...prev]);
