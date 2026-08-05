@@ -82,6 +82,34 @@ function preflightCheck(dailyLogEntries) {
 
   return { completenessPct, flaggedEntries, blockGeneration, statusLabel };
 }
+
+// ---------------------------------------------------------------------------
+// TAMPER-EVIDENT HASH CHAIN (Module 9 — Digital Vault)
+// प्रत्येक daily_logs row चा hash = SHA-256(त्या entry चा canonical डेटा + आधीच्या entry चा hash).
+// यामुळे साखळी तयार होते — मध्येच कुठलीही जुनी नोंद बदलली, तर पुढच्या सगळ्या नोंदींचा hash जुळेनासा होतो.
+// ---------------------------------------------------------------------------
+function canonicalLogPayload(row) {
+    // Fixed key order + Number() normalization, जेणेकरून insert-वेळचा payload आणि
+    // नंतर DB मधून वाचलेला payload (जो numeric कॉलम्ससाठी string म्हणून येतो) सारखाच बनतो.
+    return JSON.stringify({
+        factory_id: row.factory_id,
+        log_date: row.log_date,
+        ph_level: Number(row.ph_level),
+        water_discharge_liters: Number(row.water_discharge_liters),
+        electricity_kwh: Number(row.electricity_kwh),
+        hazardous_waste_kg: row.hazardous_waste_kg === null || row.hazardous_waste_kg === undefined ? null : Number(row.hazardous_waste_kg),
+        ocr_power_reading: row.ocr_power_reading === null || row.ocr_power_reading === undefined ? null : Number(row.ocr_power_reading),
+        gps_captured: row.gps_captured,
+        gps_latitude: row.gps_latitude === null || row.gps_latitude === undefined ? null : Number(row.gps_latitude),
+        gps_longitude: row.gps_longitude === null || row.gps_longitude === undefined ? null : Number(row.gps_longitude),
+    });
+}
+
+async function sha256Hex(text) {
+    const data = new TextEncoder().encode(text);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+    return Array.from(new Uint8Array(hashBuffer)).map((b) => b.toString(16).padStart(2, '0')).join('');
+}
 // ---------------------------------------------------------------------------
 
 export default function EcoTraceDashboard() {
@@ -514,19 +542,39 @@ export default function EcoTraceDashboard() {
             );
         });
 
+        // ---- खरं hash-chaining (Medium priority fix, Aug 2026) — Module 9: आधीचं UI फक्त hardcoded
+        // "Secure, Immutable" मेसेज दाखवत होतं, प्रत्यक्ष हॅशिंग कुठेच होत नव्हतं. आता या unit ची शेवटची
+        // saved नोंद शोधून तिचा record_hash previous_hash म्हणून वापरतो, आणि याच entry चा canonical डेटा +
+        // previous_hash यांवरून SHA-256 record_hash तयार करून साखळीत जोडतो. ----
+        const { data: lastRow } = await supabase
+            .from('daily_logs')
+            .select('record_hash')
+            .eq('factory_id', currentUnitId)
+            .order('created_at', { ascending: false })
+            .limit(1)
+            .maybeSingle();
+        const previousHash = lastRow?.record_hash || 'GENESIS';
+
+        const newRecordFields = {
+            factory_id: currentUnitId,
+            log_date: new Date().toISOString().split('T')[0],
+            ph_level: parseFloat(dailyLog.ph),
+            water_discharge_liters: parseFloat(dailyLog.water),
+            electricity_kwh: parseFloat(dailyLog.power),
+            hazardous_waste_kg: isSludgeNotApplicable ? null : parseFloat(dailyLog.sludge) * 1000,
+            ocr_power_reading: ocrReadPower !== null ? ocrReadPower : null,
+            gps_captured: capturedPosition !== null,
+            gps_latitude: capturedPosition ? capturedPosition.lat : null,
+            gps_longitude: capturedPosition ? capturedPosition.lng : null,
+        };
+        const recordHash = await sha256Hex(canonicalLogPayload(newRecordFields) + '|' + previousHash);
+
         const { data, error } = await supabase
             .from('daily_logs')
             .insert({
-                factory_id: currentUnitId,
-                log_date: new Date().toISOString().split('T')[0],
-                ph_level: parseFloat(dailyLog.ph),
-                water_discharge_liters: parseFloat(dailyLog.water),
-                electricity_kwh: parseFloat(dailyLog.power),
-                hazardous_waste_kg: isSludgeNotApplicable ? null : parseFloat(dailyLog.sludge) * 1000,
-                ocr_power_reading: ocrReadPower !== null ? ocrReadPower : null,
-                gps_captured: capturedPosition !== null,
-                gps_latitude: capturedPosition ? capturedPosition.lat : null,
-                gps_longitude: capturedPosition ? capturedPosition.lng : null,
+                ...newRecordFields,
+                previous_hash: previousHash === 'GENESIS' ? null : previousHash,
+                record_hash: recordHash,
             })
             .select()
             .single();
@@ -571,6 +619,63 @@ export default function EcoTraceDashboard() {
         document.body.appendChild(element);
         element.click();
         document.body.removeChild(element);
+    };
+
+    // ---- खरं Module 9 verification (Aug 2026): factory च्या सगळ्या daily_logs नोंदी क्रमाने वाचून,
+    // प्रत्येकीचा hash नव्याने calculate करून DB मध्ये साठवलेल्या record_hash शी जुळतो का ते तपासतो,
+    // आणि previous_hash ने साखळी खरंच जोडलेली आहे का हेही तपासतो. hash-chain सुरू होण्याआधीच्या
+    // (record_hash NULL असलेल्या) जुन्या नोंदी वगळल्या जातात — त्या "legacy" धरल्या जातात. ----
+    const handleVerifyVault = async () => {
+        if (isDemoMode) {
+            setActionOutput(`[9. Digital Vault — Hash Chain Verification]\n⚠️ Demo Unit data is illustrative only and never written to the database — nothing to verify.`);
+            return;
+        }
+        if (!currentUnitId) {
+            setActionOutput(`[9. Digital Vault] No factory unit onboarded — nothing to verify.`);
+            return;
+        }
+
+        const { data: rows, error } = await supabase
+            .from('daily_logs')
+            .select('*')
+            .eq('factory_id', currentUnitId)
+            .order('created_at', { ascending: true });
+
+        if (error) {
+            setActionOutput(`[9. Digital Vault] Error reading vault records: ${error.message}`);
+            return;
+        }
+        if (!rows || rows.length === 0) {
+            setActionOutput(`[9. Digital Vault] No records saved yet for this unit.`);
+            return;
+        }
+
+        let previousHash = 'GENESIS';
+        let verifiedCount = 0;
+        let legacyCount = 0;
+        let brokenAtDate = null;
+
+        for (const row of rows) {
+            if (!row.record_hash) {
+                // hash-chaining जोडण्याआधीची जुनी नोंद — पडताळणीबाहेर, chain तिच्यामुळे तुटलेला दाखवला जात नाही
+                legacyCount += 1;
+                continue;
+            }
+            const expectedHash = await sha256Hex(canonicalLogPayload(row) + '|' + previousHash);
+            const storedPreviousHash = row.previous_hash || 'GENESIS';
+            if (storedPreviousHash !== previousHash || expectedHash !== row.record_hash) {
+                brokenAtDate = row.log_date;
+                break;
+            }
+            previousHash = row.record_hash;
+            verifiedCount += 1;
+        }
+
+        if (brokenAtDate) {
+            setActionOutput(`[9. Digital Vault — Hash Chain Verification]\n❌ TAMPER DETECTED — entry dated ${brokenAtDate} does not match its expected hash. This record (or an earlier one in the chain) was altered after being saved.\nUnit: ${factoryData.name}\nVerified before break: ${verifiedCount} record(s).`);
+        } else {
+            setActionOutput(`[9. Digital Vault — Hash Chain Verification]\n✅ Verified: ${verifiedCount} hash-chained record(s) form an unbroken chain — no tampering detected.${legacyCount > 0 ? `\n(${legacyCount} pre-chain legacy record(s) excluded from verification.)` : ''}\nUnit: ${factoryData.name}\nLatest chain hash: ${previousHash === 'GENESIS' ? 'N/A' : previousHash.slice(0, 16) + '...'}`);
+        }
     };
 
     const handleExportReport = () => {
@@ -882,7 +987,7 @@ EcoTrace India Private Limited is an independent compliance platform. It aggrega
                     <div style={{ backgroundColor: '#111827', border: '1px solid #374151', borderRadius: '12px', padding: '16px' }}>
                         <span style={{ backgroundColor: '#065f46', color: '#d1fae5', padding: '2px 6px', borderRadius: '4px', fontSize: '10px', fontWeight: 'bold' }}>LIVE MODULE 9</span>
                         <h4 style={{ color: '#8b5cf6', margin: '8px 0 4px 0', fontSize: '14px' }}>9. Tamper-Evident Digital Vault</h4>
-                        <button onClick={() => setActionOutput(`[9. Digital Vault — Hash Chain Verified]\n- Unit: ${isFactoryActive ? factoryData.name : 'Default Unit'}\n- Vault Record Status: Secure, Immutable, External anchoring disabled.`)} style={{ backgroundColor: '#7c3aed', color: 'white', border: 'none', padding: '6px 10px', borderRadius: '4px', fontSize: '11px', fontWeight: 'bold', cursor: 'pointer', marginTop: '6px' }}>Verify Vault Hash</button>
+                        <button onClick={handleVerifyVault} style={{ backgroundColor: '#7c3aed', color: 'white', border: 'none', padding: '6px 10px', borderRadius: '4px', fontSize: '11px', fontWeight: 'bold', cursor: 'pointer', marginTop: '6px' }}>Verify Vault Hash</button>
                     </div>
 
                     {/* Live Output Screen for Modules 5 to 9 */}
@@ -951,4 +1056,4 @@ EcoTrace India Private Limited is an independent compliance platform. It aggrega
 
         </main>
     );
-}
+}vv
