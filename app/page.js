@@ -173,7 +173,9 @@ export default function EcoTraceDashboard() {
                     name: data.name,
                     location: data.plant_location,
                     dischargeLimit: String(data.mpcb_water_consent_limit_liters ?? '5000'),
-                    ctoExpiryDate: '2026-12-31', // CTO date column not yet in schema — Step 1 follow-up
+                    // Step 3 (Pan-India backend migration): cto_expiry_date now lives in the DB —
+                    // fall back to the old hardcoded default only for factories onboarded before this column existed
+                    ctoExpiryDate: data.cto_expiry_date ?? '2026-12-31',
                     status: "DATA COMPLETE & FILING-READY",
                 });
 
@@ -295,6 +297,7 @@ export default function EcoTraceDashboard() {
                 mpcb_water_consent_limit_liters: parseFloat(dischargeLimitValue),
                 owner_user_id: session.user.id,
                 state: factoryState,
+                cto_expiry_date: ctoDateValue,
             }, { onConflict: 'owner_user_id' })
             .select()
             .single();
