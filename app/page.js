@@ -120,6 +120,24 @@ export default function EcoTraceDashboard() {
         setSession(null);
     };
 
+    // ---- Step 4 (Pan-India expansion): load the list of states with a ready config for the onboarding dropdown ----
+    useEffect(() => {
+        const loadStates = async () => {
+            const { data, error } = await supabase
+                .from('state_configs')
+                .select('state')
+                .order('state', { ascending: true });
+            if (error) {
+                console.error('Error loading state list:', error.message);
+                return;
+            }
+            if (data && data.length > 0) {
+                setAvailableStates(data.map((row) => row.state));
+            }
+        };
+        loadStates();
+    }, []);
+
     const [activeTab, setActiveTab] = useState('overview');
     
     const [factoryData, setFactoryData] = useState({
@@ -134,6 +152,9 @@ export default function EcoTraceDashboard() {
     const [tempMidcLocation, setTempMidcLocation] = useState('');
     const [tempDischargeLimit, setTempDischargeLimit] = useState('');
     const [tempCtoDate, setTempCtoDate] = useState('');
+    // Step 4 (Pan-India expansion): state selection for onboarding, options loaded from state_configs
+    const [tempFactoryState, setTempFactoryState] = useState('Maharashtra');
+    const [availableStates, setAvailableStates] = useState([]);
 
     const isFactoryActive = factoryData.name.trim() !== "";
     const [isDemoMode, setIsDemoMode] = useState(false);
@@ -273,7 +294,7 @@ export default function EcoTraceDashboard() {
         const unitName = tempCompanyName.trim().toUpperCase();
         const dischargeLimitValue = tempDischargeLimit || '5000';
         const ctoDateValue = tempCtoDate || '2026-12-31';
-        const factoryState = 'Maharashtra'; // सध्या डीफॉल्ट — पुढे राज्य-निवड फील्ड जोडू
+        const factoryState = tempFactoryState || 'Maharashtra'; // operator-selected — Step 4
 
         // हार्डकोडेड "MIDC" ऐवजी, त्या राज्याचा industrial-area-term state_configs मधून वाचा
         const { data: stateConfig } = await supabase
@@ -707,7 +728,14 @@ EcoTrace India Private Limited is an independent compliance platform. It aggrega
                         <h3 style={{ color: '#818cf8', margin: '8px 0 8px 0', fontSize: '15px' }}>1. Multi-Tenant Client Onboarding & CTO Setup</h3>
                         <form onSubmit={handleOnboardSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                             <input type="text" value={tempCompanyName} onChange={(e) => setTempCompanyName(e.target.value)} placeholder="Enter Company Name" style={{ padding: '8px', backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '6px', color: 'white', fontSize: '12px' }} required />
-                            <input type="text" value={tempMidcLocation} onChange={(e) => setTempMidcLocation(e.target.value)} placeholder="Enter MIDC Location (Optional if restoring)" style={{ padding: '8px', backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '6px', color: 'white', fontSize: '12px' }} />
+                            <select value={tempFactoryState} onChange={(e) => setTempFactoryState(e.target.value)} style={{ padding: '8px', backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '6px', color: 'white', fontSize: '12px' }}>
+                                {availableStates.length > 0 ? (
+                                    availableStates.map((st) => <option key={st} value={st}>{st}</option>)
+                                ) : (
+                                    <option value="Maharashtra">Maharashtra</option>
+                                )}
+                            </select>
+                            <input type="text" value={tempMidcLocation} onChange={(e) => setTempMidcLocation(e.target.value)} placeholder="Enter Industrial Area / Location (Optional if restoring)" style={{ padding: '8px', backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '6px', color: 'white', fontSize: '12px' }} />
                             <input type="text" value={tempDischargeLimit} onChange={(e) => setTempDischargeLimit(e.target.value)} placeholder="Discharge Limit (Liters)" style={{ padding: '8px', backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '6px', color: 'white', fontSize: '12px' }} />
                             <input type="date" value={tempCtoDate} onChange={(e) => setTempCtoDate(e.target.value)} style={{ padding: '8px', backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '6px', color: 'white', fontSize: '12px' }} />
                             <button type="submit" style={{ backgroundColor: '#059669', color: 'white', border: 'none', padding: '8px 14px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer', fontSize: '12px' }}>Register / Switch Unit (Live State Protected)</button>
