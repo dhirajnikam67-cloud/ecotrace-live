@@ -173,10 +173,11 @@ export default function EcoTraceDashboard() {
                     name: data.name,
                     location: data.plant_location,
                     dischargeLimit: String(data.mpcb_water_consent_limit_liters ?? '5000'),
-                    ctoExpiryDate: '2026-12-31',
+                    ctoExpiryDate: '2026-12-31', // CTO date column not yet in schema — Step 1 follow-up
                     status: "DATA COMPLETE & FILING-READY",
                 });
             }
+            // data नसेल तर काहीही बदलू नका — डीफॉल्ट "No factory onboarded" स्थितीच राहील
             setIsFactoryLoading(false);
         };
 
@@ -184,7 +185,7 @@ export default function EcoTraceDashboard() {
     }, [session]);
     
     const [selectedCategory, setSelectedCategory] = useState("CPCB Cat 34.3 (Chemical Sludge)");
-    const [ocrFiles, setOcrFiles] = useState([]);
+    const [ocrFiles, setOcrFiles] = useState([]); // Now stores per-file objects with individual OCR statuses
     
     // Daily Log State & True OCR Read State
     const [dailyLog, setDailyLog] = useState({ ph: '7.2', water: '1420', power: '3150', sludge: '0.45', fuelInput: '' });
@@ -244,8 +245,9 @@ export default function EcoTraceDashboard() {
         const unitName = tempCompanyName.trim().toUpperCase();
         const dischargeLimitValue = tempDischargeLimit || '5000';
         const ctoDateValue = tempCtoDate || '2026-12-31';
-        const factoryState = 'Maharashtra';
+        const factoryState = 'Maharashtra'; // सध्या डीफॉल्ट — पुढे राज्य-निवड फील्ड जोडू
 
+        // हार्डकोडेड "MIDC" ऐवजी, त्या राज्याचा industrial-area-term state_configs मधून वाचा
         const { data: stateConfig } = await supabase
             .from('state_configs')
             .select('industrial_area_term')
@@ -257,15 +259,17 @@ export default function EcoTraceDashboard() {
             ? `${tempMidcLocation.toUpperCase()} ${areaTerm}`
             : `${areaTerm} CLUSTER`;
 
+        // Supabase मध्ये upsert — जर या owner_user_id ची factory आधीच असेल तर ती UPDATE होईल,
+        // नवीन duplicate तयार होणार नाही (एका account ला एकच factory — database-level constraint सह)
         const { data, error } = await supabase
             .from('factories')
-            .insert({
+            .upsert({
                 name: unitName,
                 plant_location: locationValue,
                 mpcb_water_consent_limit_liters: parseFloat(dischargeLimitValue),
                 owner_user_id: session.user.id,
                 state: factoryState,
-            })
+            }, { onConflict: 'owner_user_id' })
             .select()
             .single();
 
@@ -274,6 +278,7 @@ export default function EcoTraceDashboard() {
             return;
         }
 
+        // नवीन factory चा खरा database ID currentUnitId म्हणून साठवा
         setCurrentUnitId(data.id);
         setFactoryData({
             name: data.name,
@@ -350,9 +355,13 @@ export default function EcoTraceDashboard() {
     const calculatedScope2 = (powerNum * 0.82 / 1000).toFixed(2); 
     const calculatedScope1 = dailyLog.fuelInput ? (parseFloat(dailyLog.fuelInput) * 2.68 / 1000).toFixed(2) : "Not calculated — Awaiting fuel input";
 
+    // PER-FILE HYBRID BULK UPLOAD WITH INDEPENDENT OCR GATE
     const handleFileChange = (e) => {
         const files = Array.from(e.target.files);
+        
+        // Loop through each uploaded file to generate per-file OCR analysis and status array
         const newProcessedFiles = files.map((file, idx) => {
+            // Simulated unique text detection per file for demonstration
             let simulatedText = "MSEDCL Electricity Bill 3120 kWh units consumed";
             let defaultCat = "Utility Bill - Electricity (Scope 2)";
             
@@ -377,7 +386,7 @@ export default function EcoTraceDashboard() {
                 statusMessage: gateResult.requiresManualReview 
                     ? `⚠️ Notice: ${gateResult.warningLabel}` 
                     : `✅ Verified: Valid pairing for ${file.name}`,
-                confirmed: false
+                confirmed: false // Manager confirmation pending gate requirement
             };
         });
 
@@ -516,6 +525,7 @@ EcoTrace India Private Limited is an independent compliance platform. It aggrega
 
     const [actionOutput, setActionOutput] = useState("Select any Live Actionable module below to view generated compliance output on screen.");
 
+    // ---- Login Screen (shown before any dashboard content if not authenticated) ----
     if (!session) {
         return (
             <main style={{ minHeight: '100vh', backgroundColor: '#0b0f19', color: '#ffffff', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '16px' }}>
@@ -539,14 +549,6 @@ EcoTrace India Private Limited is an independent compliance platform. It aggrega
                         {authMode === 'login' ? "New factory? Sign up" : "Already registered? Login"}
                     </button>
                 </div>
-            </main>
-        );
-    }
-
-    if (isFactoryLoading) {
-        return (
-            <main style={{ minHeight: '100vh', backgroundColor: '#0b0f19', color: '#ffffff', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <p style={{ color: '#34d399', fontSize: '14px' }}>Loading factory profile from database...</p>
             </main>
         );
     }
