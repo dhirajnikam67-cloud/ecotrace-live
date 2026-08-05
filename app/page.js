@@ -401,36 +401,74 @@ export default function EcoTraceDashboard() {
         }
     };
 
-    const handleLogSubmit = (e) => {
+    // ---- Step 3 (Pan-India backend migration): Daily Log now writes to Supabase (demo mode stays local — Step 5) ----
+    const handleLogSubmit = async (e) => {
         e.preventDefault();
         if (!dailyLog.ph || !dailyLog.water || !dailyLog.power || (!dailyLog.sludge && !isSludgeNotApplicable)) {
             alert('Error: All daily log fields (pH, Water, Power, and Sludge or N/A) are mandatory.');
             return;
         }
 
-        setLogSubmitted(true);
-        
-        const newLogEntry = { 
-            date: new Date().toISOString().split('T')[0], 
-            ph: dailyLog.ph, 
-            water: dailyLog.water, 
-            power: dailyLog.power, 
-            sludge: isSludgeNotApplicable ? 'N/A (Not Applicable)' : dailyLog.sludge,
-            ocrPowerValue: ocrReadPower !== null ? ocrReadPower : null,
-            gpsCaptured: true, 
-            submittedAt: new Date().toISOString() 
-        };
-
-        const updatedHistory = [newLogEntry, ...savedLogsHistory];
-        setSavedLogsHistory(updatedHistory);
-        setOcrReadPower(null);
-        
-        if (currentUnitId) {
-            setUnitsData(prev => ({
-                ...prev,
-                [currentUnitId]: { factoryData, savedLogsHistory: updatedHistory, isDemoMode, selectedCategory, ocrFiles, dailyLog, isSludgeNotApplicable, ocrReadPower: null }
-            }));
+        // ---- Demo mode: जुनंच state-based logic — database ला कधीच स्पर्श करत नाही ----
+        if (isDemoMode) {
+            setLogSubmitted(true);
+            const demoEntry = {
+                date: new Date().toISOString().split('T')[0],
+                ph: dailyLog.ph,
+                water: dailyLog.water,
+                power: dailyLog.power,
+                sludge: isSludgeNotApplicable ? 'N/A (Not Applicable)' : dailyLog.sludge,
+                ocrPowerValue: ocrReadPower !== null ? ocrReadPower : null,
+                gpsCaptured: true,
+                submittedAt: new Date().toISOString(),
+            };
+            setSavedLogsHistory(prev => [demoEntry, ...prev]);
+            setOcrReadPower(null);
+            setTimeout(() => setLogSubmitted(false), 4000);
+            return;
         }
+
+        if (!currentUnitId) {
+            alert('Please onboard a factory unit first.');
+            return;
+        }
+
+        // स्टेप 3.1 — थेट daily_logs टेबलमध्ये insert
+        const { data, error } = await supabase
+            .from('daily_logs')
+            .insert({
+                factory_id: currentUnitId,
+                log_date: new Date().toISOString().split('T')[0],
+                ph_level: parseFloat(dailyLog.ph),
+                water_discharge_liters: parseFloat(dailyLog.water),
+                electricity_kwh: parseFloat(dailyLog.power),
+                hazardous_waste_kg: isSludgeNotApplicable ? null : parseFloat(dailyLog.sludge),
+                ocr_power_reading: ocrReadPower !== null ? ocrReadPower : null,
+                gps_captured: true,
+            })
+            .select()
+            .single();
+
+        if (error) {
+            alert('Error saving log: ' + error.message);
+            return;
+        }
+
+        // स्टेप 3.2 — insert यशस्वी झाल्यावरच "saved & locked" दाखवा
+        setLogSubmitted(true);
+
+        const newLogEntry = {
+            date: data.log_date,
+            ph: String(data.ph_level),
+            water: String(data.water_discharge_liters),
+            power: String(data.electricity_kwh),
+            sludge: data.hazardous_waste_kg === null ? 'N/A (Not Applicable)' : String(data.hazardous_waste_kg),
+            ocrPowerValue: data.ocr_power_reading,
+            gpsCaptured: data.gps_captured,
+            submittedAt: data.created_at,
+        };
+        setSavedLogsHistory(prev => [newLogEntry, ...prev]);
+        setOcrReadPower(null);
 
         setTimeout(() => setLogSubmitted(false), 4000);
     };
