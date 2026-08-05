@@ -176,6 +176,32 @@ export default function EcoTraceDashboard() {
                     ctoExpiryDate: '2026-12-31', // CTO date column not yet in schema — Step 1 follow-up
                     status: "DATA COMPLETE & FILING-READY",
                 });
+
+                // ---- Step 4 (Pan-India backend migration): load this factory's saved daily_logs
+                // so completeness %, Scope 2, water totals, and pH average are computed from
+                // everything actually saved in the DB, not just the current browser session ----
+                const { data: logsData, error: logsError } = await supabase
+                    .from('daily_logs')
+                    .select('*')
+                    .eq('factory_id', data.id)
+                    .order('log_date', { ascending: false });
+
+                if (logsError) {
+                    console.error('Error loading daily log history:', logsError.message);
+                } else if (logsData) {
+                    const historyEntries = logsData.map((row) => ({
+                        date: row.log_date,
+                        ph: String(row.ph_level ?? ''),
+                        water: String(row.water_discharge_liters ?? ''),
+                        power: String(row.electricity_kwh ?? ''),
+                        // hazardous_waste_kg is stored in kg (Step 1 fix) — convert back to MT for display/history math
+                        sludge: row.hazardous_waste_kg === null ? 'N/A (Not Applicable)' : String(row.hazardous_waste_kg / 1000),
+                        ocrPowerValue: row.ocr_power_reading,
+                        gpsCaptured: row.gps_captured,
+                        submittedAt: row.created_at,
+                    }));
+                    setSavedLogsHistory(historyEntries);
+                }
             }
             // data नसेल तर काहीही बदलू नका — डीफॉल्ट "No factory onboarded" स्थितीच राहील
             setIsFactoryLoading(false);
