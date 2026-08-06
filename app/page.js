@@ -1505,7 +1505,7 @@ export default function EcoTraceDashboard() {
                 ) : (
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                         <div style={{ backgroundColor: '#111827', border: '1px solid #374151', borderRadius: '12px', padding: '16px' }}>
-                            <h4 style={{ color: '#818cf8', margin: '0 0 8px 0', fontSize: '14px' }}>नवीन Supplier ला जोडणी-विनंती पाठवा</h4>
+                            <h4 style={{ color: '#e5e7eb', margin: '0 0 8px 0', fontSize: '14px' }}>नवीन Supplier ला जोडणी-विनंती पाठवा</h4>
                             <p style={{ color: '#9ca3af', fontSize: '11px', marginBottom: '8px' }}>Factory कडून मिळालेला "Unit ID / Compliance ID" इथे टाका — तो त्यांना approve करावा लागेल.</p>
                             <form onSubmit={handleRequestConnection} style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
                                 <input type="text" value={requestFactoryId} onChange={(e) => setRequestFactoryId(e.target.value)} placeholder="Factory Unit ID paste करा"
@@ -1515,7 +1515,7 @@ export default function EcoTraceDashboard() {
                         </div>
 
                         <div>
-                            <h4 style={{ color: '#34d399', margin: '0 0 8px 0', fontSize: '14px' }}>तुमचे Suppliers ({buyerConnections.length})</h4>
+                            <h4 style={{ color: '#e5e7eb', margin: '0 0 8px 0', fontSize: '14px' }}>तुमचे Suppliers ({buyerConnections.length})</h4>
                             {buyerConnections.length === 0 && <p style={{ color: '#9ca3af', fontSize: '12px' }}>अजून कुठलीही विनंती पाठवलेली नाही.</p>}
                             {buyerConnections.map((conn) => {
                                 const summary = buyerSummaries[conn.factory_id];
@@ -1591,7 +1591,7 @@ export default function EcoTraceDashboard() {
                     </button>
                     <button
                         onClick={() => setViewMode('buyer')}
-                        style={{ backgroundColor: '#4338ca', color: 'white', border: 'none', padding: '8px 12px', borderRadius: '6px', fontSize: '11px', fontWeight: 'bold', cursor: 'pointer' }}
+                        style={{ backgroundColor: '#1f2937', color: 'white', border: '1px solid #374151', padding: '8px 12px', borderRadius: '6px', fontSize: '11px', fontWeight: 'bold', cursor: 'pointer' }}
                     >
                         {t('buyerPortal')}
                     </button>
@@ -1635,7 +1635,7 @@ export default function EcoTraceDashboard() {
                                 <p style={{ margin: 0, fontSize: '13px', fontWeight: 'bold', color: ctoDaysLeft < 30 ? '#ef4444' : '#34d399' }}>CTO Valid: {ctoDaysLeft} Days Left ({factoryData.ctoExpiryDate})</p>
                             </div>
                             <div style={{ backgroundColor: '#111827', border: '1px solid #374151', borderRadius: '12px', padding: '16px' }}>
-                                <h4 style={{ color: '#3b82f6', margin: '0 0 6px 0', fontSize: '13px' }}>📊 dMRV Carbon Engine</h4>
+                                <h4 style={{ color: '#e5e7eb', margin: '0 0 6px 0', fontSize: '13px' }}>📊 dMRV Carbon Engine</h4>
                                 <p style={{ margin: 0, fontSize: '12px', color: '#d1d5db' }}>Scope 2 (Grid Power): {calculatedScope2} MT CO2e</p>
                                 <p style={{ fontSize: '10px', color: '#34d399', margin: '4px 0 0 0' }}>Emissions calculated as per CEA Baseline Database (Year 2025-26)</p>
                             </div>
@@ -1650,8 +1650,8 @@ export default function EcoTraceDashboard() {
                     
                     {/* Module 1: Onboarding */}
                     <div style={{ backgroundColor: '#111827', border: '1px solid #374151', borderRadius: '12px', padding: '16px' }}>
-                        <span style={{ backgroundColor: '#065f46', color: '#d1fae5', padding: '2px 6px', borderRadius: '4px', fontSize: '10px', fontWeight: 'bold' }}>LIVE MODULE 1</span>
-                        <h3 style={{ color: '#818cf8', margin: '8px 0 8px 0', fontSize: '15px' }}>{t('m1Title')}</h3>
+                        <span style={{ backgroundColor: '#1f2937', color: '#9ca3af', padding: '2px 6px', borderRadius: '4px', fontSize: '10px', fontWeight: 'bold' }}>LIVE MODULE 1</span>
+                        <h3 style={{ color: '#e5e7eb', margin: '8px 0 8px 0', fontSize: '15px' }}>{t('m1Title')}</h3>
                         {isFactoryActive && !isEditingFactory ? (
                             <div>
                                 <div style={{ backgroundColor: '#1f2937', border: '1px solid #065f46', borderRadius: '8px', padding: '12px', marginBottom: '10px' }}>
@@ -1700,15 +1700,15 @@ export default function EcoTraceDashboard() {
 
                     {/* Module 2: Enterprise Overview */}
                     <div style={{ backgroundColor: '#111827', border: '1px solid #374151', borderRadius: '12px', padding: '16px' }}>
-                        <span style={{ backgroundColor: '#065f46', color: '#d1fae5', padding: '2px 6px', borderRadius: '4px', fontSize: '10px', fontWeight: 'bold' }}>LIVE MODULE 2</span>
-                        <h4 style={{ color: '#34d399', margin: '8px 0 4px 0', fontSize: '14px' }}>2. Main Enterprise Overview</h4>
+                        <span style={{ backgroundColor: '#1f2937', color: '#9ca3af', padding: '2px 6px', borderRadius: '4px', fontSize: '10px', fontWeight: 'bold' }}>LIVE MODULE 2</span>
+                        <h4 style={{ color: '#e5e7eb', margin: '8px 0 4px 0', fontSize: '14px' }}>2. Main Enterprise Overview</h4>
                         <p style={{ color: '#9ca3af', fontSize: '12px', margin: 0 }}>{isFactoryActive ? `Active Monitoring: ${factoryData.name} at ${factoryData.location}` : 'Status: No factory onboarded yet.'}</p>
                     </div>
 
                     {/* Module 3: Hybrid Bulk OCR Gate with Per-File Array Tracking */}
                     <div style={{ backgroundColor: '#111827', border: '1px solid #374151', borderRadius: '12px', padding: '16px' }}>
-                        <span style={{ backgroundColor: '#065f46', color: '#d1fae5', padding: '2px 6px', borderRadius: '4px', fontSize: '10px', fontWeight: 'bold' }}>LIVE MODULE 3 (OCR Gate)</span>
-                        <h4 style={{ color: '#34d399', margin: '8px 0 4px 0', fontSize: '14px' }}>3. Multi-File Batch OCR & Human Classification Gate (Hybrid Bulk Upload)</h4>
+                        <span style={{ backgroundColor: '#1f2937', color: '#9ca3af', padding: '2px 6px', borderRadius: '4px', fontSize: '10px', fontWeight: 'bold' }}>LIVE MODULE 3 (OCR Gate)</span>
+                        <h4 style={{ color: '#e5e7eb', margin: '8px 0 4px 0', fontSize: '14px' }}>3. Multi-File Batch OCR & Human Classification Gate (Hybrid Bulk Upload)</h4>
                         <p style={{ color: '#9ca3af', fontSize: '12px', marginBottom: '8px' }}>Select multiple bills (Electricity, Water, Sludge Manifest) for Unit {currentUnitId || 'None'}:</p>
                         
                         <input type="file" multiple onChange={handleFileChange} style={{ fontSize: '11px', color: '#9ca3af', marginBottom: '8px', display: 'block' }} />
@@ -1729,7 +1729,7 @@ export default function EcoTraceDashboard() {
 
                     {/* Module 4: Daily Logbook with Per-Unit Form Isolation */}
                     <div style={{ backgroundColor: '#111827', border: '1px solid #059669', borderRadius: '12px', padding: '16px' }}>
-                        <span style={{ backgroundColor: '#065f46', color: '#d1fae5', padding: '2px 6px', borderRadius: '4px', fontSize: '10px', fontWeight: 'bold' }}>LIVE MODULE 4</span>
+                        <span style={{ backgroundColor: '#1f2937', color: '#9ca3af', padding: '2px 6px', borderRadius: '4px', fontSize: '10px', fontWeight: 'bold' }}>LIVE MODULE 4</span>
                         <h4 style={{ color: '#34d399', margin: '8px 0 4px 0', fontSize: '14px' }}>{t('m4Title')}</h4>
                         {validationWarning && <p style={{ color: '#f59e0b', fontSize: '11px', fontWeight: 'bold', margin: '0 0 6px 0' }}>{validationWarning}</p>}
                         {logSubmitted && <p style={{ color: '#34d399', fontSize: '12px', fontWeight: 'bold' }}>✅ Log saved & locked for Unit: {currentUnitId}</p>}
@@ -1812,44 +1812,44 @@ export default function EcoTraceDashboard() {
 
                     {/* Module 5: Flying Squad Audit Mode */}
                     <div style={{ backgroundColor: '#111827', border: '1px solid #374151', borderRadius: '12px', padding: '16px' }}>
-                        <span style={{ backgroundColor: '#065f46', color: '#d1fae5', padding: '2px 6px', borderRadius: '4px', fontSize: '10px', fontWeight: 'bold' }}>LIVE MODULE 5</span>
-                        <h4 style={{ color: '#ef4444', margin: '8px 0 4px 0', fontSize: '14px' }}>5. Flying Squad Audit Mode</h4>
-                        <button onClick={() => setActionOutput(`[5. Flying Squad Dossier]\n- Unit: ${isFactoryActive ? factoryData.name : 'Not Onboarded'}\n- CTO Days: ${ctoDaysLeft}\n- Status: Verified & Ready.`)} style={{ backgroundColor: '#ef4444', color: 'white', border: 'none', padding: '6px 10px', borderRadius: '4px', fontSize: '11px', fontWeight: 'bold', cursor: 'pointer', marginTop: '6px' }}>Generate Dossier</button>
+                        <span style={{ backgroundColor: '#1f2937', color: '#9ca3af', padding: '2px 6px', borderRadius: '4px', fontSize: '10px', fontWeight: 'bold' }}>LIVE MODULE 5</span>
+                        <h4 style={{ color: '#e5e7eb', margin: '8px 0 4px 0', fontSize: '14px' }}>5. Flying Squad Audit Mode</h4>
+                        <button onClick={() => setActionOutput(`[5. Flying Squad Dossier]\n- Unit: ${isFactoryActive ? factoryData.name : 'Not Onboarded'}\n- CTO Days: ${ctoDaysLeft}\n- Status: Verified & Ready.`)} style={{ backgroundColor: '#1f2937', color: 'white', border: '1px solid #374151', padding: '6px 10px', borderRadius: '4px', fontSize: '11px', fontWeight: 'bold', cursor: 'pointer', marginTop: '6px' }}>Generate Dossier</button>
                     </div>
 
                     {/* Module 6: Notice Defence Matrix */}
                     <div style={{ backgroundColor: '#111827', border: '1px solid #374151', borderRadius: '12px', padding: '16px' }}>
-                        <span style={{ backgroundColor: '#065f46', color: '#d1fae5', padding: '2px 6px', borderRadius: '4px', fontSize: '10px', fontWeight: 'bold' }}>LIVE MODULE 6</span>
-                        <h4 style={{ color: '#ef4444', margin: '8px 0 4px 0', fontSize: '14px' }}>6. Notice Defence Matrix & Draft Generator</h4>
-                        <button onClick={() => setActionOutput(`[6. Notice Defence]\n- Target: MPCB Show-Cause Notice regarding ETP pH variation (${dailyLog.ph}).\n- Unit: ${isFactoryActive ? factoryData.name : 'Pending'}.`)} style={{ backgroundColor: '#dc2626', color: 'white', border: 'none', padding: '6px 10px', borderRadius: '4px', fontSize: '11px', fontWeight: 'bold', cursor: 'pointer', marginTop: '6px' }}>Generate Notice Defence</button>
+                        <span style={{ backgroundColor: '#1f2937', color: '#9ca3af', padding: '2px 6px', borderRadius: '4px', fontSize: '10px', fontWeight: 'bold' }}>LIVE MODULE 6</span>
+                        <h4 style={{ color: '#e5e7eb', margin: '8px 0 4px 0', fontSize: '14px' }}>6. Notice Defence Matrix & Draft Generator</h4>
+                        <button onClick={() => setActionOutput(`[6. Notice Defence]\n- Target: MPCB Show-Cause Notice regarding ETP pH variation (${dailyLog.ph}).\n- Unit: ${isFactoryActive ? factoryData.name : 'Pending'}.`)} style={{ backgroundColor: '#1f2937', color: 'white', border: '1px solid #374151', padding: '6px 10px', borderRadius: '4px', fontSize: '11px', fontWeight: 'bold', cursor: 'pointer', marginTop: '6px' }}>Generate Notice Defence</button>
                     </div>
 
                     {/* Module 7: Annual Returns */}
                     <div style={{ backgroundColor: '#111827', border: '1px solid #374151', borderRadius: '12px', padding: '16px' }}>
-                        <span style={{ backgroundColor: '#065f46', color: '#d1fae5', padding: '2px 6px', borderRadius: '4px', fontSize: '10px', fontWeight: 'bold' }}>LIVE MODULE 7</span>
-                        <h4 style={{ color: '#3b82f6', margin: '8px 0 4px 0', fontSize: '14px' }}>7. Form 3, 4 & 5 Annual Returns Draft Generator</h4>
-                        <button onClick={() => setActionOutput(`[7. Form 3, 4 & 5]\n- Returns compiled for ${isFactoryActive ? factoryData.name.toLowerCase() : 'demo unit'}.\n- Sludge: ${isSludgeNotApplicable ? 'N/A' : dailyLog.sludge + ' MT'} (${selectedCategory}).`)} style={{ backgroundColor: '#2563eb', color: 'white', border: 'none', padding: '6px 10px', borderRadius: '4px', fontSize: '11px', fontWeight: 'bold', cursor: 'pointer', marginTop: '6px' }}>Compile Returns</button>
+                        <span style={{ backgroundColor: '#1f2937', color: '#9ca3af', padding: '2px 6px', borderRadius: '4px', fontSize: '10px', fontWeight: 'bold' }}>LIVE MODULE 7</span>
+                        <h4 style={{ color: '#e5e7eb', margin: '8px 0 4px 0', fontSize: '14px' }}>7. Form 3, 4 & 5 Annual Returns Draft Generator</h4>
+                        <button onClick={() => setActionOutput(`[7. Form 3, 4 & 5]\n- Returns compiled for ${isFactoryActive ? factoryData.name.toLowerCase() : 'demo unit'}.\n- Sludge: ${isSludgeNotApplicable ? 'N/A' : dailyLog.sludge + ' MT'} (${selectedCategory}).`)} style={{ backgroundColor: '#1f2937', color: 'white', border: '1px solid #374151', padding: '6px 10px', borderRadius: '4px', fontSize: '11px', fontWeight: 'bold', cursor: 'pointer', marginTop: '6px' }}>Compile Returns</button>
                     </div>
 
                     {/* Module 8: WhatsApp / SMS Alert Engine */}
                     <div style={{ backgroundColor: '#111827', border: '1px solid #374151', borderRadius: '12px', padding: '16px' }}>
-                        <span style={{ backgroundColor: '#065f46', color: '#d1fae5', padding: '2px 6px', borderRadius: '4px', fontSize: '10px', fontWeight: 'bold' }}>LIVE MODULE 8</span>
-                        <h4 style={{ color: '#3b82f6', margin: '8px 0 4px 0', fontSize: '14px' }}>8. WhatsApp / SMS Alert Engine (Marathi Triggers)</h4>
-                        <button onClick={() => setActionOutput(`[8. Marathi Alert Sent]\n- Message: "तुमच्या फॅक्टरीच्या CTO नूतनीकरणासाठी ${ctoDaysLeft} दिवस उरले आहेत."`)} style={{ backgroundColor: '#2563eb', color: 'white', border: 'none', padding: '6px 10px', borderRadius: '4px', fontSize: '11px', fontWeight: 'bold', cursor: 'pointer', marginTop: '6px' }}>Test Marathi Alert</button>
+                        <span style={{ backgroundColor: '#1f2937', color: '#9ca3af', padding: '2px 6px', borderRadius: '4px', fontSize: '10px', fontWeight: 'bold' }}>LIVE MODULE 8</span>
+                        <h4 style={{ color: '#e5e7eb', margin: '8px 0 4px 0', fontSize: '14px' }}>8. WhatsApp / SMS Alert Engine (Marathi Triggers)</h4>
+                        <button onClick={() => setActionOutput(`[8. Marathi Alert Sent]\n- Message: "तुमच्या फॅक्टरीच्या CTO नूतनीकरणासाठी ${ctoDaysLeft} दिवस उरले आहेत."`)} style={{ backgroundColor: '#1f2937', color: 'white', border: '1px solid #374151', padding: '6px 10px', borderRadius: '4px', fontSize: '11px', fontWeight: 'bold', cursor: 'pointer', marginTop: '6px' }}>Test Marathi Alert</button>
                     </div>
 
                     {/* Module 9: Tamper-Evident Digital Vault */}
                     <div style={{ backgroundColor: '#111827', border: '1px solid #374151', borderRadius: '12px', padding: '16px' }}>
-                        <span style={{ backgroundColor: '#065f46', color: '#d1fae5', padding: '2px 6px', borderRadius: '4px', fontSize: '10px', fontWeight: 'bold' }}>LIVE MODULE 9</span>
-                        <h4 style={{ color: '#8b5cf6', margin: '8px 0 4px 0', fontSize: '14px' }}>9. Tamper-Evident Digital Vault</h4>
-                        <button onClick={handleVerifyVault} style={{ backgroundColor: '#7c3aed', color: 'white', border: 'none', padding: '6px 10px', borderRadius: '4px', fontSize: '11px', fontWeight: 'bold', cursor: 'pointer', marginTop: '6px' }}>Verify Vault Hash</button>
+                        <span style={{ backgroundColor: '#1f2937', color: '#9ca3af', padding: '2px 6px', borderRadius: '4px', fontSize: '10px', fontWeight: 'bold' }}>LIVE MODULE 9</span>
+                        <h4 style={{ color: '#e5e7eb', margin: '8px 0 4px 0', fontSize: '14px' }}>9. Tamper-Evident Digital Vault</h4>
+                        <button onClick={handleVerifyVault} style={{ backgroundColor: '#1f2937', color: 'white', border: '1px solid #374151', padding: '6px 10px', borderRadius: '4px', fontSize: '11px', fontWeight: 'bold', cursor: 'pointer', marginTop: '6px' }}>Verify Vault Hash</button>
                     </div>
 
                     {/* Enterprise Aggregation Tier: Buyer connection requests for this factory */}
                     {isFactoryActive && (
-                        <div style={{ backgroundColor: '#111827', border: '1px solid #4338ca', borderRadius: '12px', padding: '16px' }}>
-                            <span style={{ backgroundColor: '#3730a3', color: '#e0e7ff', padding: '2px 6px', borderRadius: '4px', fontSize: '10px', fontWeight: 'bold' }}>ENTERPRISE AGGREGATION TIER</span>
-                            <h4 style={{ color: '#818cf8', margin: '8px 0 4px 0', fontSize: '14px' }}>Buyer Connection Requests</h4>
+                        <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '16px' }}>
+                            <span style={{ backgroundColor: '#1f2937', color: '#9ca3af', padding: '2px 6px', borderRadius: '4px', fontSize: '10px', fontWeight: 'bold' }}>ENTERPRISE AGGREGATION TIER</span>
+                            <h4 style={{ color: '#e5e7eb', margin: '8px 0 4px 0', fontSize: '14px' }}>Buyer Connection Requests</h4>
                             <p style={{ color: '#9ca3af', fontSize: '11px', marginBottom: '8px' }}>तुमचा Unit ID buyer ला द्या (वरच्या पट्टीत दिसतो) — त्यांनी विनंती पाठवली की इथे दिसेल.</p>
                             {factoryConnectionRequests.length === 0 && <p style={{ color: '#9ca3af', fontSize: '12px' }}>अजून कुठलीही विनंती आलेली नाही.</p>}
                             {factoryConnectionRequests.map((req) => (
@@ -1882,24 +1882,24 @@ export default function EcoTraceDashboard() {
             {/* Tab 3: Reference Modules */}
             {activeTab === 'reference' && (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                    <div style={{ backgroundColor: '#111827', border: '1px solid #3b82f6', borderRadius: '12px', padding: '16px' }}>
-                        <span style={{ backgroundColor: '#1e40af', color: '#bfdbfe', padding: '2px 6px', borderRadius: '4px', fontSize: '10px', fontWeight: 'bold' }}>REFERENCE MODULE 10</span>
-                        <h4 style={{ color: '#60a5fa', margin: '8px 0 4px 0', fontSize: '14px' }}>10. ETP CAPEX & ROI Calculator</h4>
+                    <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '16px' }}>
+                        <span style={{ backgroundColor: '#1f2937', color: '#9ca3af', padding: '2px 6px', borderRadius: '4px', fontSize: '10px', fontWeight: 'bold' }}>REFERENCE MODULE 10</span>
+                        <h4 style={{ color: '#e5e7eb', margin: '8px 0 4px 0', fontSize: '14px' }}>10. ETP CAPEX & ROI Calculator</h4>
                         <p style={{ color: '#9ca3af', fontSize: '12px', margin: 0 }}>Estimated ROI based on discharge limit of {factoryData.dischargeLimit || '5000'} Liters.</p>
                     </div>
-                    <div style={{ backgroundColor: '#111827', border: '1px solid #3b82f6', borderRadius: '12px', padding: '16px' }}>
-                        <span style={{ backgroundColor: '#1e40af', color: '#bfdbfe', padding: '2px 6px', borderRadius: '4px', fontSize: '10px', fontWeight: 'bold' }}>REFERENCE MODULE 11</span>
-                        <h4 style={{ color: '#60a5fa', margin: '8px 0 4px 0', fontSize: '14px' }}>11. B2B Green Passport & SEBI BRSR Core Template</h4>
+                    <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '16px' }}>
+                        <span style={{ backgroundColor: '#1f2937', color: '#9ca3af', padding: '2px 6px', borderRadius: '4px', fontSize: '10px', fontWeight: 'bold' }}>REFERENCE MODULE 11</span>
+                        <h4 style={{ color: '#e5e7eb', margin: '8px 0 4px 0', fontSize: '14px' }}>11. B2B Green Passport & SEBI BRSR Core Template</h4>
                         <p style={{ color: '#9ca3af', fontSize: '12px', margin: 0 }}>Scope 2 carbon output: {calculatedScope2} MT CO2e.</p>
                     </div>
-                    <div style={{ backgroundColor: '#111827', border: '1px solid #3b82f6', borderRadius: '12px', padding: '16px' }}>
-                        <span style={{ backgroundColor: '#1e40af', color: '#bfdbfe', padding: '2px 6px', borderRadius: '4px', fontSize: '10px', fontWeight: 'bold' }}>REFERENCE MODULE 12</span>
-                        <h4 style={{ color: '#60a5fa', margin: '8px 0 4px 0', fontSize: '14px' }}>12. E-Waste & Battery EPR Record Vault</h4>
+                    <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '16px' }}>
+                        <span style={{ backgroundColor: '#1f2937', color: '#9ca3af', padding: '2px 6px', borderRadius: '4px', fontSize: '10px', fontWeight: 'bold' }}>REFERENCE MODULE 12</span>
+                        <h4 style={{ color: '#e5e7eb', margin: '8px 0 4px 0', fontSize: '14px' }}>12. E-Waste & Battery EPR Record Vault</h4>
                         <p style={{ color: '#9ca3af', fontSize: '12px', margin: 0 }}>Active ledger calculations for hazardous byproduct tracking.</p>
                     </div>
-                    <div style={{ backgroundColor: '#111827', border: '1px solid #3b82f6', borderRadius: '12px', padding: '16px' }}>
-                        <span style={{ backgroundColor: '#1e40af', color: '#bfdbfe', padding: '2px 6px', borderRadius: '4px', fontSize: '10px', fontWeight: 'bold' }}>REFERENCE MODULE 13</span>
-                        <h4 style={{ color: '#60a5fa', margin: '8px 0 4px 0', fontSize: '14px' }}>13. CTO Renewal Auto-Dossier Generator</h4>
+                    <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '16px' }}>
+                        <span style={{ backgroundColor: '#1f2937', color: '#9ca3af', padding: '2px 6px', borderRadius: '4px', fontSize: '10px', fontWeight: 'bold' }}>REFERENCE MODULE 13</span>
+                        <h4 style={{ color: '#e5e7eb', margin: '8px 0 4px 0', fontSize: '14px' }}>13. CTO Renewal Auto-Dossier Generator</h4>
                         <p style={{ color: '#9ca3af', fontSize: '12px', margin: 0 }}>Auto-compiles renewal packet for {factoryData.name || 'Registered Unit'}.</p>
                     </div>
                 </div>
@@ -1916,9 +1916,9 @@ export default function EcoTraceDashboard() {
                         { title: "18. MCCI Privacy Shield & Govt Grants", desc: "Regional enterprise grant matching and secure data pooling." },
                         { title: "19. Macro-Level Green Industrial Corridor", desc: "Regional multi-factory aggregate emissions monitoring." }
                     ].map((mod, idx) => (
-                        <div key={idx} style={{ backgroundColor: '#111827', border: '1px solid #f59e0b', borderRadius: '12px', padding: '16px' }}>
-                            <span style={{ backgroundColor: '#b45309', color: '#fef3c7', padding: '2px 6px', borderRadius: '4px', fontSize: '10px', fontWeight: 'bold' }}>ROADMAP MODULE {idx + 14}</span>
-                            <h4 style={{ color: '#f59e0b', margin: '8px 0 4px 0', fontSize: '14px' }}>{mod.title}</h4>
+                        <div key={idx} style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '16px' }}>
+                            <span style={{ backgroundColor: '#1f2937', color: '#9ca3af', padding: '2px 6px', borderRadius: '4px', fontSize: '10px', fontWeight: 'bold' }}>ROADMAP MODULE {idx + 14}</span>
+                            <h4 style={{ color: '#e5e7eb', margin: '8px 0 4px 0', fontSize: '14px' }}>{mod.title}</h4>
                             <p style={{ color: '#9ca3af', fontSize: '12px', marginBottom: '12px' }}>{mod.desc}</p>
                             <button onClick={() => alert(`Request recorded for: ${mod.title}. Our team will prioritize this based on your factory feedback.`)} style={{ backgroundColor: '#374151', color: '#f3f4f6', border: 'none', padding: '6px 12px', borderRadius: '4px', fontSize: '11px', fontWeight: 'bold', cursor: 'pointer' }}>
                                 Request Early Access / Priority Build
