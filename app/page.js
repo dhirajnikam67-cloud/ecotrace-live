@@ -444,26 +444,53 @@ export default function EcoTraceDashboard() {
     const calculatedScope1 = dailyLog.fuelInput ? (parseFloat(dailyLog.fuelInput) * 2.68 / 1000).toFixed(2) : "Not calculated — Awaiting fuel input";
 
     // PER-FILE HYBRID BULK UPLOAD WITH INDEPENDENT OCR GATE
-    const handleFileChange = (e) => {
+    // ---- खरा OCR engine (Aug 2026 fix): आधीचा rule-based simulated classifier बदलून, आता प्रत्येक
+    // फाईल /api/ocr (server-side, Google Cloud Vision) कडे पाठवतो आणि खरा मजकूर + confidence मिळवतो. ----
+    const handleFileChange = async (e) => {
         const files = Array.from(e.target.files);
-        
-        // Loop through each uploaded file to generate per-file OCR analysis and status array
-        const newProcessedFiles = files.map((file, idx) => {
-            // Simulated unique text detection per file for demonstration
-            let simulatedText = "MSEDCL Electricity Bill 3120 kWh units consumed";
-            let defaultCat = "Utility Bill - Electricity (Scope 2)";
-            
-            if (idx === 1) {
-                simulatedText = "Water charges cess discharge 1420 KL consumed";
-                defaultCat = "General Water Bill";
-            } else if (idx >= 2) {
-                simulatedText = "Hazardous waste manifest CPCB Cat 34.3 chemical sludge";
-                defaultCat = "CPCB Cat 34.3 (Chemical Sludge)";
+        if (files.length === 0) return;
+
+        // Loop through each uploaded file, send it to the server-side OCR route, and build per-file status
+        const newProcessedFiles = await Promise.all(files.map(async (file) => {
+            let ocrText = '';
+            let ocrConfidencePct = 0;
+            let ocrErrorMessage = null;
+
+            try {
+                const formData = new FormData();
+                formData.append('file', file);
+                const res = await fetch('/api/ocr', { method: 'POST', body: formData });
+                const body = await res.json();
+                if (!res.ok) {
+                    ocrErrorMessage = body.error || `OCR request failed (${res.status})`;
+                } else {
+                    ocrText = body.text || '';
+                    ocrConfidencePct = body.confidencePct || 0;
+                }
+            } catch (err) {
+                ocrErrorMessage = 'Could not reach OCR service: ' + err.message;
             }
 
-            const gateResult = classifyWithConfidenceGate(simulatedText, 68 + idx * 5, "34.3");
-            const extractedPower = idx === 0 ? 3120 : null;
+            if (ocrErrorMessage) {
+                return {
+                    name: file.name,
+                    category: 'OCR Failed',
+                    statusMessage: `⚠️ OCR Error: ${ocrErrorMessage} — classify manually.`,
+                    confirmed: false,
+                };
+            }
 
+            const { type: documentType } = detectDocumentType(ocrText);
+            let defaultCat = 'Unclassified Document — needs manual category';
+            if (documentType === 'utility_bill') defaultCat = 'Utility Bill - Electricity (Scope 2)';
+            else if (documentType === 'water_bill') defaultCat = 'General Water Bill';
+            else if (documentType === 'waste_manifest') defaultCat = 'CPCB Cat 34.3 (Chemical Sludge)';
+
+            const gateResult = classifyWithConfidenceGate(ocrText, ocrConfidencePct, '34.3');
+
+            // Utility bill असेल तर मजकुरातून प्रत्यक्ष kWh रीडिंग शोधायचा प्रयत्न — जुन्या hardcoded 3120 ऐवजी
+            const powerMatch = ocrText.match(/(\d+(?:\.\d+)?)\s*k?wh/i);
+            const extractedPower = documentType === 'utility_bill' && powerMatch ? parseFloat(powerMatch[1]) : null;
             if (extractedPower !== null) {
                 setOcrReadPower(extractedPower);
             }
@@ -471,12 +498,12 @@ export default function EcoTraceDashboard() {
             return {
                 name: file.name,
                 category: defaultCat,
-                statusMessage: gateResult.requiresManualReview 
-                    ? `⚠️ Notice: ${gateResult.warningLabel}` 
+                statusMessage: gateResult.requiresManualReview
+                    ? `⚠️ Notice: ${gateResult.warningLabel}`
                     : `✅ Verified: Valid pairing for ${file.name}`,
                 confirmed: false // Manager confirmation pending gate requirement
             };
-        });
+        }));
 
         const updatedFiles = [...ocrFiles, ...newProcessedFiles];
         setOcrFiles(updatedFiles);
