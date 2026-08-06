@@ -110,6 +110,35 @@ const TRANSLATIONS = {
         updatePasswordButton: 'Update Password',
         termsLink: 'Terms of Service',
         privacyLink: 'Privacy Policy',
+        selectLanguageMenu: 'Select Language',
+        buyerPortalTitle: '🏢 EcoTrace Enterprise Buyer Portal',
+        buyerPortalTagline: "Your MSME suppliers' compliance status in one place",
+        backToFactory: '← Back to Factory Dashboard',
+        loadingText: 'Loading...',
+        buyerRegisterTitle: 'Register as Enterprise Buyer',
+        buyerRegisterDesc: 'One-time registration — you can then connect with multiple suppliers.',
+        companyNameReq: 'Company Name *',
+        gstinOptional: 'GSTIN / CIN (optional)',
+        industryOptional: 'Industry (optional)',
+        contactEmailOptional: 'Contact Email (optional)',
+        contactPhoneOptional: 'Contact Phone (optional)',
+        registerAsBuyer: 'Register as Buyer',
+        sendConnectionRequestTitle: 'Send a connection request to a new supplier',
+        sendConnectionRequestDesc: 'Enter the "Unit ID / Compliance ID" you got from the factory — they will need to approve it.',
+        factoryUnitIdPlaceholder: 'Paste Factory Unit ID',
+        sendRequestButton: 'Send Request',
+        yourSuppliersTitle: 'Your Suppliers',
+        noRequestsSentYet: 'No requests sent yet.',
+        factoryIdLabel: 'Factory ID',
+        completenessLast30: 'Completeness (last 30 days)',
+        daysLoggedLabel: 'days logged',
+        avgPhLabel: 'Avg pH',
+        totalWaterLabel: 'Total Water',
+        lastLogLabel: 'Last log',
+        downloadGreenPassport: '📄 Download Green Passport (PDF)',
+        summaryLoadingText: 'Summary loading...',
+        waitingApproval: 'Waiting for factory approval.',
+        requestRejectedRevoked: 'This request was rejected/revoked.',
     },
     mr: {
         appTitle: 'EcoTrace India',
@@ -170,6 +199,35 @@ const TRANSLATIONS = {
         updatePasswordButton: 'पासवर्ड अपडेट करा',
         termsLink: 'अटी व शर्ती',
         privacyLink: 'गोपनीयता धोरण',
+        selectLanguageMenu: 'भाषा निवडा',
+        buyerPortalTitle: '🏢 EcoTrace Enterprise Buyer Portal',
+        buyerPortalTagline: 'तुमच्या MSME suppliers चा compliance status एकाच जागी',
+        backToFactory: '← Factory Dashboard कडे परत',
+        loadingText: 'Loading...',
+        buyerRegisterTitle: 'Enterprise Buyer म्हणून नोंदणी करा',
+        buyerRegisterDesc: 'ही नोंदणी एकदाच — नंतर तुम्ही अनेक suppliers ना जोडू शकता.',
+        companyNameReq: 'Company Name *',
+        gstinOptional: 'GSTIN / CIN (ऐच्छिक)',
+        industryOptional: 'Industry (ऐच्छिक)',
+        contactEmailOptional: 'Contact Email (ऐच्छिक)',
+        contactPhoneOptional: 'Contact Phone (ऐच्छिक)',
+        registerAsBuyer: 'Buyer म्हणून नोंदणी करा',
+        sendConnectionRequestTitle: 'नवीन Supplier ला जोडणी-विनंती पाठवा',
+        sendConnectionRequestDesc: 'Factory कडून मिळालेला "Unit ID / Compliance ID" इथे टाका — तो त्यांना approve करावा लागेल.',
+        factoryUnitIdPlaceholder: 'Factory Unit ID paste करा',
+        sendRequestButton: 'विनंती पाठवा',
+        yourSuppliersTitle: 'तुमचे Suppliers',
+        noRequestsSentYet: 'अजून कुठलीही विनंती पाठवलेली नाही.',
+        factoryIdLabel: 'Factory ID',
+        completenessLast30: 'Completeness (गेल्या ३० दिवसांतील)',
+        daysLoggedLabel: 'दिवसांची नोंद',
+        avgPhLabel: 'सरासरी pH',
+        totalWaterLabel: 'एकूण पाणी',
+        lastLogLabel: 'शेवटची नोंद',
+        downloadGreenPassport: '📄 Green Passport डाउनलोड करा (PDF)',
+        summaryLoadingText: 'Summary लोड होतोय...',
+        waitingApproval: 'Factory च्या approval ची वाट बघतोय.',
+        requestRejectedRevoked: 'ही विनंती नाकारली/रद्द केली गेली आहे.',
     },
     hi: {
         appTitle: 'EcoTrace India',
@@ -230,6 +288,35 @@ const TRANSLATIONS = {
         updatePasswordButton: 'पासवर्ड अपडेट करें',
         termsLink: 'नियम व शर्तें',
         privacyLink: 'गोपनीयता नीति',
+        selectLanguageMenu: 'भाषा चुनें',
+        buyerPortalTitle: '🏢 EcoTrace Enterprise Buyer Portal',
+        buyerPortalTagline: 'आपके MSME suppliers का compliance status एक ही जगह',
+        backToFactory: '← Factory Dashboard पर वापस',
+        loadingText: 'Loading...',
+        buyerRegisterTitle: 'Enterprise Buyer के रूप में रजिस्टर करें',
+        buyerRegisterDesc: 'यह रजिस्ट्रेशन एक बार का है — बाद में आप कई suppliers से जुड़ सकते हैं।',
+        companyNameReq: 'Company Name *',
+        gstinOptional: 'GSTIN / CIN (वैकल्पिक)',
+        industryOptional: 'Industry (वैकल्पिक)',
+        contactEmailOptional: 'Contact Email (वैकल्पिक)',
+        contactPhoneOptional: 'Contact Phone (वैकल्पिक)',
+        registerAsBuyer: 'Buyer के रूप में रजिस्टर करें',
+        sendConnectionRequestTitle: 'नए Supplier को जुड़ाव-विनंती भेजें',
+        sendConnectionRequestDesc: 'Factory से मिला "Unit ID / Compliance ID" यहाँ डालें — उन्हें approve करना होगा।',
+        factoryUnitIdPlaceholder: 'Factory Unit ID paste करें',
+        sendRequestButton: 'विनंती भेजें',
+        yourSuppliersTitle: 'आपके Suppliers',
+        noRequestsSentYet: 'अभी तक कोई विनंती नहीं भेजी गई।',
+        factoryIdLabel: 'Factory ID',
+        completenessLast30: 'Completeness (पिछले ३० दिनों की)',
+        daysLoggedLabel: 'दिन दर्ज',
+        avgPhLabel: 'औसत pH',
+        totalWaterLabel: 'कुल पानी',
+        lastLogLabel: 'आख़िरी एंट्री',
+        downloadGreenPassport: '📄 Green Passport डाउनलोड करें (PDF)',
+        summaryLoadingText: 'Summary लोड हो रहा है...',
+        waitingApproval: 'Factory के approval का इंतज़ार है।',
+        requestRejectedRevoked: 'यह विनंती अस्वीकृत/रद्द कर दी गई है।',
     },
 };
 
@@ -485,6 +572,7 @@ export default function EcoTraceDashboard() {
     // already असेल तर "locked" सारांश दाखवतो, फक्त स्पष्ट "Edit" दाबल्यावरच फॉर्म उघडतो.
     const [isEditingFactory, setIsEditingFactory] = useState(false);
     const [showMoreMenu, setShowMoreMenu] = useState(false);
+    const [showLanguageMenu, setShowLanguageMenu] = useState(false);
     const [showHelp, setShowHelp] = useState(false);
 
     // ---- Multi-language support (Aug 2026) ----
@@ -501,32 +589,40 @@ export default function EcoTraceDashboard() {
         }
     };
 
-    // ---- FIX (Aug 2026, round 9): आधीचा native <select> Android/Chrome वर पूर्ण-स्क्रीन picker
-    // म्हणून उघडायचा — "unprofessional" वाटायचं. आता एक compact, स्वतः-styled ३-बटणांचा गट
-    // (segmented control) वापरतो, जो कधीच स्क्रीन व्यापत नाही, आणि login page + header दोन्हीकडे
-    // तोच वापरतो जेणेकरून दिसणं सुसंगत राहील. ----
+    // ---- FIX (Aug 2026, round 10): "EN | मर | हि" हे संक्षेप एकत्र दाखवणं CA/CS सारख्या
+    // professional audience साठी अपुरं/casual वाटलं. आता Notion/Stripe सारखं — एकच compact
+    // बटण ("🌐 सध्याची भाषा ⌄"), क्लिक केल्यावर पूर्ण नावांची (English/मराठी/हिंदी) व्यवस्थित
+    // यादी उघडते — तीच ⋮ More मेनूसारखीच पद्धत, सुसंगत दिसण्यासाठी. ----
+    const LANGUAGE_NATIVE_NAMES = { en: 'English', mr: 'मराठी', hi: 'हिंदी' };
     const renderLanguagePicker = () => (
-        <div style={{ display: 'inline-flex', backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '7px', padding: '2px', gap: '2px' }}>
-            {[['en', 'EN'], ['mr', 'मर'], ['hi', 'हि']].map(([code, label]) => (
-                <button
-                    key={code}
-                    type="button"
-                    onClick={() => handleLanguageChange(code)}
-                    title={t('selectLanguage')}
-                    style={{
-                        backgroundColor: language === code ? '#059669' : 'transparent',
-                        color: language === code ? 'white' : '#9ca3af',
-                        border: 'none',
-                        borderRadius: '5px',
-                        padding: '5px 9px',
-                        fontSize: '11px',
-                        fontWeight: 'bold',
-                        cursor: 'pointer',
-                    }}
-                >
-                    {label}
-                </button>
-            ))}
+        <div style={{ position: 'relative' }}>
+            <button
+                type="button"
+                onClick={() => setShowLanguageMenu(!showLanguageMenu)}
+                title={t('selectLanguageMenu')}
+                style={{ backgroundColor: '#1f2937', color: '#d1d5db', border: '1px solid #374151', borderRadius: '7px', padding: '7px 10px', fontSize: '11px', fontWeight: 'bold', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '5px' }}
+            >
+                🌐 {LANGUAGE_NATIVE_NAMES[language]} <span style={{ fontSize: '9px', opacity: 0.7 }}>▾</span>
+            </button>
+            {showLanguageMenu && (
+                <div style={{ position: 'absolute', top: '38px', left: 0, backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '10px', boxShadow: '0 8px 24px rgba(0,0,0,0.5)', padding: '6px', zIndex: 60, minWidth: '150px' }}>
+                    {Object.entries(LANGUAGE_NATIVE_NAMES).map(([code, name]) => (
+                        <button
+                            key={code}
+                            type="button"
+                            onClick={() => { handleLanguageChange(code); setShowLanguageMenu(false); }}
+                            style={{
+                                display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%',
+                                textAlign: 'left', backgroundColor: language === code ? '#1f2937' : 'transparent',
+                                color: language === code ? '#34d399' : '#d1d5db', border: 'none', borderRadius: '6px',
+                                padding: '8px 10px', fontSize: '12px', fontWeight: language === code ? 'bold' : 'normal', cursor: 'pointer',
+                            }}
+                        >
+                            {name} {language === code && '✓'}
+                        </button>
+                    ))}
+                </div>
+            )}
         </div>
     );
     // Step 4 (Pan-India expansion): state selection for onboarding, options loaded from state_configs
@@ -1719,78 +1815,79 @@ export default function EcoTraceDashboard() {
             <main style={{ minHeight: '100vh', backgroundColor: '#0b0f19', color: '#ffffff', fontFamily: 'sans-serif', padding: '16px' }}>
                 <header style={{ borderBottom: '1px solid #1f2937', paddingBottom: '12px', marginBottom: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '10px' }}>
                     <div>
-                        <h1 style={{ fontSize: '18px', fontWeight: 'bold', color: '#ffffff', margin: '0 0 4px 0' }}>🏢 EcoTrace Enterprise Buyer Portal</h1>
-                        <p style={{ fontSize: '12px', color: '#9ca3af', margin: 0 }}>तुमच्या MSME suppliers चा compliance status एकाच जागी</p>
+                        <h1 style={{ fontSize: '18px', fontWeight: 'bold', color: '#ffffff', margin: '0 0 4px 0' }}>{t('buyerPortalTitle')}</h1>
+                        <p style={{ fontSize: '12px', color: '#9ca3af', margin: 0 }}>{t('buyerPortalTagline')}</p>
                     </div>
-                    <div style={{ display: 'flex', gap: '8px' }}>
-                        <button onClick={() => setViewMode('factory')} style={{ backgroundColor: '#059669', color: 'white', border: 'none', padding: '8px 12px', borderRadius: '6px', fontSize: '11px', fontWeight: 'bold', cursor: 'pointer' }}>← Factory Dashboard कडे परत</button>
-                        <button onClick={handleLogout} style={{ backgroundColor: '#374151', color: 'white', border: 'none', padding: '8px 12px', borderRadius: '6px', fontSize: '11px', fontWeight: 'bold', cursor: 'pointer' }}>Logout ({session.user.email})</button>
+                    <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                        {renderLanguagePicker()}
+                        <button onClick={() => setViewMode('factory')} style={{ backgroundColor: '#059669', color: 'white', border: 'none', padding: '8px 12px', borderRadius: '6px', fontSize: '11px', fontWeight: 'bold', cursor: 'pointer' }}>{t('backToFactory')}</button>
+                        <button onClick={handleLogout} style={{ backgroundColor: '#374151', color: 'white', border: 'none', padding: '8px 12px', borderRadius: '6px', fontSize: '11px', fontWeight: 'bold', cursor: 'pointer' }}>{t('logout')} ({session.user.email})</button>
                     </div>
                 </header>
 
                 {isBuyerLoading ? (
-                    <p style={{ color: '#9ca3af', fontSize: '13px' }}>Loading...</p>
+                    <p style={{ color: '#9ca3af', fontSize: '13px' }}>{t('loadingText')}</p>
                 ) : !buyerData ? (
                     <div style={{ maxWidth: '420px', backgroundColor: '#111827', border: '1px solid #374151', borderRadius: '12px', padding: '20px' }}>
-                        <h3 style={{ fontSize: '15px', color: 'white', margin: '0 0 4px 0' }}>Enterprise Buyer म्हणून नोंदणी करा</h3>
-                        <p style={{ color: '#9ca3af', fontSize: '12px', marginBottom: '14px' }}>ही नोंदणी एकदाच — नंतर तुम्ही अनेक suppliers ना जोडू शकता.</p>
+                        <h3 style={{ fontSize: '15px', color: 'white', margin: '0 0 4px 0' }}>{t('buyerRegisterTitle')}</h3>
+                        <p style={{ color: '#9ca3af', fontSize: '12px', marginBottom: '14px' }}>{t('buyerRegisterDesc')}</p>
                         <form onSubmit={handleBuyerSignup} style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                            <input type="text" value={tempBuyerCompanyName} onChange={(e) => setTempBuyerCompanyName(e.target.value)} placeholder="Company Name *" required
+                            <input type="text" value={tempBuyerCompanyName} onChange={(e) => setTempBuyerCompanyName(e.target.value)} placeholder={t('companyNameReq')} required
                                 style={{ padding: '8px', backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '6px', color: 'white', fontSize: '12px' }} />
-                            <input type="text" value={tempBuyerGstin} onChange={(e) => setTempBuyerGstin(e.target.value)} placeholder="GSTIN / CIN (optional)"
+                            <input type="text" value={tempBuyerGstin} onChange={(e) => setTempBuyerGstin(e.target.value)} placeholder={t('gstinOptional')}
                                 style={{ padding: '8px', backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '6px', color: 'white', fontSize: '12px' }} />
-                            <input type="text" value={tempBuyerIndustry} onChange={(e) => setTempBuyerIndustry(e.target.value)} placeholder="Industry (optional)"
+                            <input type="text" value={tempBuyerIndustry} onChange={(e) => setTempBuyerIndustry(e.target.value)} placeholder={t('industryOptional')}
                                 style={{ padding: '8px', backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '6px', color: 'white', fontSize: '12px' }} />
-                            <input type="email" value={tempBuyerEmail} onChange={(e) => setTempBuyerEmail(e.target.value)} placeholder="Contact Email (optional)"
+                            <input type="email" value={tempBuyerEmail} onChange={(e) => setTempBuyerEmail(e.target.value)} placeholder={t('contactEmailOptional')}
                                 style={{ padding: '8px', backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '6px', color: 'white', fontSize: '12px' }} />
-                            <input type="text" value={tempBuyerPhone} onChange={(e) => setTempBuyerPhone(e.target.value)} placeholder="Contact Phone (optional)"
+                            <input type="text" value={tempBuyerPhone} onChange={(e) => setTempBuyerPhone(e.target.value)} placeholder={t('contactPhoneOptional')}
                                 style={{ padding: '8px', backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '6px', color: 'white', fontSize: '12px' }} />
-                            <button type="submit" style={{ backgroundColor: '#4338ca', color: 'white', border: 'none', padding: '8px 14px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer', fontSize: '12px' }}>Register as Buyer</button>
+                            <button type="submit" style={{ backgroundColor: '#4338ca', color: 'white', border: 'none', padding: '8px 14px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer', fontSize: '12px' }}>{t('registerAsBuyer')}</button>
                         </form>
                     </div>
                 ) : (
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                         <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '16px', boxShadow: '0 1px 3px rgba(0,0,0,0.3)' }}>
-                            <h4 style={{ color: '#e5e7eb', margin: '0 0 8px 0', fontSize: '14px' }}>नवीन Supplier ला जोडणी-विनंती पाठवा</h4>
-                            <p style={{ color: '#9ca3af', fontSize: '11px', marginBottom: '8px' }}>Factory कडून मिळालेला "Unit ID / Compliance ID" इथे टाका — तो त्यांना approve करावा लागेल.</p>
+                            <h4 style={{ color: '#e5e7eb', margin: '0 0 8px 0', fontSize: '14px' }}>{t('sendConnectionRequestTitle')}</h4>
+                            <p style={{ color: '#9ca3af', fontSize: '11px', marginBottom: '8px' }}>{t('sendConnectionRequestDesc')}</p>
                             <form onSubmit={handleRequestConnection} style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-                                <input type="text" value={requestFactoryId} onChange={(e) => setRequestFactoryId(e.target.value)} placeholder="Factory Unit ID paste करा"
+                                <input type="text" value={requestFactoryId} onChange={(e) => setRequestFactoryId(e.target.value)} placeholder={t('factoryUnitIdPlaceholder')}
                                     style={{ flex: 1, minWidth: '220px', padding: '8px', backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '6px', color: 'white', fontSize: '12px' }} required />
-                                <button type="submit" style={{ backgroundColor: '#4338ca', color: 'white', border: 'none', padding: '8px 14px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer', fontSize: '12px' }}>विनंती पाठवा</button>
+                                <button type="submit" style={{ backgroundColor: '#4338ca', color: 'white', border: 'none', padding: '8px 14px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer', fontSize: '12px' }}>{t('sendRequestButton')}</button>
                             </form>
                         </div>
 
                         <div>
-                            <h4 style={{ color: '#e5e7eb', margin: '0 0 8px 0', fontSize: '14px' }}>तुमचे Suppliers ({buyerConnections.length})</h4>
-                            {buyerConnections.length === 0 && <p style={{ color: '#9ca3af', fontSize: '12px' }}>अजून कुठलीही विनंती पाठवलेली नाही.</p>}
+                            <h4 style={{ color: '#e5e7eb', margin: '0 0 8px 0', fontSize: '14px' }}>{t('yourSuppliersTitle')} ({buyerConnections.length})</h4>
+                            {buyerConnections.length === 0 && <p style={{ color: '#9ca3af', fontSize: '12px' }}>{t('noRequestsSentYet')}</p>}
                             {buyerConnections.map((conn) => {
                                 const summary = buyerSummaries[conn.factory_id];
                                 const statusColor = conn.status === 'approved' ? '#34d399' : conn.status === 'pending' ? '#f59e0b' : '#ef4444';
                                 return (
                                     <div key={conn.id} style={{ backgroundColor: '#111827', border: `1px solid ${statusColor}`, borderRadius: '12px', padding: '16px', marginBottom: '12px' }}>
                                         <p style={{ margin: '0 0 4px 0', fontSize: '12px', color: statusColor, fontWeight: 'bold', textTransform: 'uppercase' }}>{conn.status}</p>
-                                        <p style={{ margin: '0 0 8px 0', fontSize: '11px', color: '#9ca3af' }}>Factory ID: {conn.factory_id}</p>
+                                        <p style={{ margin: '0 0 8px 0', fontSize: '11px', color: '#9ca3af' }}>{t('factoryIdLabel')}: {conn.factory_id}</p>
                                         {conn.status === 'approved' && summary ? (
                                             <div style={{ fontSize: '12px', color: '#d1d5db', lineHeight: '1.6' }}>
                                                 <p style={{ margin: 0, fontWeight: 'bold', color: 'white' }}>{summary.factory_name} — {summary.plant_location} ({summary.state})</p>
-                                                <p style={{ margin: 0 }}>CTO Expiry: {summary.cto_expiry_date || 'N/A'}</p>
-                                                <p style={{ margin: 0 }}>Completeness (last 30 days): {summary.completeness_pct}% ({summary.logged_days_last_30} days logged)</p>
-                                                <p style={{ margin: 0 }}>Avg pH: {summary.avg_ph ?? 'N/A'} | Total Water: {summary.total_water_liters} L</p>
+                                                <p style={{ margin: 0 }}>{t('ctoExpiryLabel')}: {summary.cto_expiry_date || 'N/A'}</p>
+                                                <p style={{ margin: 0 }}>{t('completenessLast30')}: {summary.completeness_pct}% ({summary.logged_days_last_30} {t('daysLoggedLabel')})</p>
+                                                <p style={{ margin: 0 }}>{t('avgPhLabel')}: {summary.avg_ph ?? 'N/A'} | {t('totalWaterLabel')}: {summary.total_water_liters} L</p>
                                                 <p style={{ margin: 0 }}>Scope 1: {summary.scope1_tco2e > 0 ? `${summary.scope1_tco2e} tCO2e` : 'No combustion logged'} | Scope 2: {summary.scope2_tco2e} tCO2e</p>
-                                                <p style={{ margin: '0 0 10px 0' }}>Last log: {summary.last_log_date || 'N/A'}</p>
+                                                <p style={{ margin: '0 0 10px 0' }}>{t('lastLogLabel')}: {summary.last_log_date || 'N/A'}</p>
                                                 <button
                                                     onClick={() => handleDownloadGreenPassport(conn, summary)}
                                                     style={{ backgroundColor: '#065f46', color: 'white', border: 'none', padding: '6px 12px', borderRadius: '4px', fontSize: '11px', fontWeight: 'bold', cursor: 'pointer' }}
                                                 >
-                                                    📄 Download Green Passport (PDF)
+                                                    {t('downloadGreenPassport')}
                                                 </button>
                                             </div>
                                         ) : conn.status === 'approved' ? (
-                                            <p style={{ fontSize: '11px', color: '#9ca3af' }}>Summary loading...</p>
+                                            <p style={{ fontSize: '11px', color: '#9ca3af' }}>{t('summaryLoadingText')}</p>
                                         ) : conn.status === 'pending' ? (
-                                            <p style={{ fontSize: '11px', color: '#9ca3af' }}>Factory च्या approval ची वाट बघतोय.</p>
+                                            <p style={{ fontSize: '11px', color: '#9ca3af' }}>{t('waitingApproval')}</p>
                                         ) : (
-                                            <p style={{ fontSize: '11px', color: '#9ca3af' }}>ही विनंती नाकारली/रद्द केली गेली आहे.</p>
+                                            <p style={{ fontSize: '11px', color: '#9ca3af' }}>{t('requestRejectedRevoked')}</p>
                                         )}
                                     </div>
                                 );
