@@ -873,6 +873,120 @@ export default function EcoTraceDashboard() {
         fetchFactoryConnectionRequests(currentUnitId);
     };
 
+    // ---- jsPDF ला CDN वरून एकदाच लोड करतो (npm install/package.json बदल न करता — repo GitHub UI ने बदलली जातेय, तिथे साधं राहावं म्हणून) ----
+    const loadJsPDF = () => {
+        return new Promise((resolve, reject) => {
+            if (window.jspdf && window.jspdf.jsPDF) {
+                resolve(window.jspdf.jsPDF);
+                return;
+            }
+            const existingScript = document.getElementById('jspdf-cdn-script');
+            if (existingScript) {
+                existingScript.addEventListener('load', () => resolve(window.jspdf.jsPDF));
+                existingScript.addEventListener('error', reject);
+                return;
+            }
+            const script = document.createElement('script');
+            script.id = 'jspdf-cdn-script';
+            script.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
+            script.onload = () => resolve(window.jspdf.jsPDF);
+            script.onerror = reject;
+            document.body.appendChild(script);
+        });
+    };
+
+    // ---- Enterprise Aggregation Tier: buyer साठी professional "Green Passport" PDF ----
+    // buyer ला फक्त curated summary दिसतो (component मध्ये आधीच approved-connection गेट आहे) —
+    // हा PDF त्याच summary डेटा वरून बनतो, कधीच raw daily_logs वापरत नाही.
+    const handleDownloadGreenPassport = async (conn, summary) => {
+        if (!summary) {
+            alert('Summary अजून तयार नाही — थोडं थांबून पुन्हा प्रयत्न करा.');
+            return;
+        }
+        let jsPDF;
+        try {
+            jsPDF = await loadJsPDF();
+        } catch (err) {
+            alert('PDF library लोड होऊ शकली नाही. इंटरनेट कनेक्शन तपासा.');
+            return;
+        }
+
+        const doc = new jsPDF({ unit: 'pt', format: 'a4' });
+        const pageWidth = doc.internal.pageSize.getWidth();
+        const marginX = 48;
+        let y = 56;
+
+        const addLine = (text, opts = {}) => {
+            const { size = 10, bold = false, color = [40, 40, 40], gapAfter = 16 } = opts;
+            doc.setFont('helvetica', bold ? 'bold' : 'normal');
+            doc.setFontSize(size);
+            doc.setTextColor(...color);
+            doc.text(text, marginX, y);
+            y += gapAfter;
+        };
+        const addDivider = () => {
+            doc.setDrawColor(200, 200, 200);
+            doc.line(marginX, y, pageWidth - marginX, y);
+            y += 18;
+        };
+
+        // Header
+        doc.setFillColor(6, 95, 70);
+        doc.rect(0, 0, pageWidth, 70, 'F');
+        doc.setTextColor(255, 255, 255);
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(18);
+        doc.text('EcoTrace India — Green Passport', marginX, 32);
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(10);
+        doc.text('Supplier ESG & Compliance Summary — for Buyer Value-Chain (BRSR) Reporting', marginX, 50);
+        y = 100;
+
+        addLine(`Generated: ${new Date().toISOString()}`, { size: 9, color: [110, 110, 110], gapAfter: 20 });
+
+        addLine('1. Supplier Details', { size: 12, bold: true, color: [6, 95, 70], gapAfter: 18 });
+        addLine(`Factory: ${summary.factory_name}`, { bold: true, gapAfter: 15 });
+        addLine(`Location: ${summary.plant_location}, ${summary.state}`, { gapAfter: 15 });
+        addLine(`CTO Expiry Date: ${summary.cto_expiry_date || 'N/A'}`, { gapAfter: 15 });
+        addLine(`Factory Unit ID: ${conn.factory_id}`, { size: 8, color: [130, 130, 130], gapAfter: 20 });
+        addDivider();
+
+        addLine('2. Data Completeness', { size: 12, bold: true, color: [6, 95, 70], gapAfter: 18 });
+        addLine(`Logged Days (last 30 days): ${summary.logged_days_last_30} / 30`, { gapAfter: 15 });
+        addLine(`Completeness: ${summary.completeness_pct}%`, { gapAfter: 15 });
+        addLine(`Last Log Date: ${summary.last_log_date || 'N/A'}`, { gapAfter: 20 });
+        addDivider();
+
+        addLine('3. Environmental Summary (last 30 days)', { size: 12, bold: true, color: [6, 95, 70], gapAfter: 18 });
+        addLine(`Average ETP Effluent pH: ${summary.avg_ph ?? 'N/A'}`, { gapAfter: 15 });
+        addLine(`Total Water Discharge: ${summary.total_water_liters} Liters`, { gapAfter: 15 });
+        addLine(`Total Electricity Consumption: ${summary.total_electricity_kwh} kWh`, { gapAfter: 15 });
+        addLine(`Scope 2 Emissions (Grid Power, CEA Baseline): ${summary.scope2_tco2e} tCO2e`, { gapAfter: 15 });
+        addLine(`Scope 1 (Direct Combustion): Not yet available — requires fuel-input data`, { size: 9, color: [150, 100, 20], gapAfter: 20 });
+        addDivider();
+
+        addLine('4. Connection & Consent Record', { size: 12, bold: true, color: [6, 95, 70], gapAfter: 18 });
+        addLine(`Buyer Access Status: ${conn.status.toUpperCase()}`, { gapAfter: 15 });
+        addLine(`Requested: ${new Date(conn.requested_at).toISOString().split('T')[0]}`, { gapAfter: 15 });
+        addLine(`Approved: ${conn.responded_at ? new Date(conn.responded_at).toISOString().split('T')[0] : 'N/A'}`, { gapAfter: 20 });
+        addDivider();
+
+        addLine('5. Disclaimer', { size: 12, bold: true, color: [6, 95, 70], gapAfter: 16 });
+        const disclaimer = 'EcoTrace India Private Limited is an independent compliance platform. It aggregates data supplied by the factory and prepares statutory formats. It does not certify compliance, calculate hazardous waste quantities, transmit to government portals, or provide legal opinions. This summary is derived from factory-submitted operational data and has not been independently assured (no ISO 27001 / third-party assurance claimed). Scope 2 emissions use location-based CEA grid factors only; market-based (REC/green tariff) dual reporting is not yet included.';
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(8.5);
+        doc.setTextColor(90, 90, 90);
+        const wrapped = doc.splitTextToSize(disclaimer, pageWidth - marginX * 2);
+        doc.text(wrapped, marginX, y);
+        y += wrapped.length * 11 + 10;
+
+        doc.setFontSize(8);
+        doc.setTextColor(150, 150, 150);
+        doc.text('EcoTrace India | Project Lead: D. S. Nikam | 7378780745 | dhiraj@ectotraceindia.com', marginX, 800);
+
+        doc.save(`${summary.factory_name.replace(/\s+/g, '_')}_Green_Passport.pdf`);
+    };
+
     const handleExportReport = () => {
         if (!isFactoryActive) {
             alert('Please onboard a factory unit or load the Demo Unit first.');
@@ -1044,7 +1158,13 @@ EcoTrace India Private Limited is an independent compliance platform. It aggrega
                                                 <p style={{ margin: 0 }}>CTO Expiry: {summary.cto_expiry_date || 'N/A'}</p>
                                                 <p style={{ margin: 0 }}>Completeness (last 30 days): {summary.completeness_pct}% ({summary.logged_days_last_30} days logged)</p>
                                                 <p style={{ margin: 0 }}>Avg pH: {summary.avg_ph ?? 'N/A'} | Total Water: {summary.total_water_liters} L | Scope 2: {summary.scope2_tco2e} tCO2e</p>
-                                                <p style={{ margin: 0 }}>Last log: {summary.last_log_date || 'N/A'}</p>
+                                                <p style={{ margin: '0 0 10px 0' }}>Last log: {summary.last_log_date || 'N/A'}</p>
+                                                <button
+                                                    onClick={() => handleDownloadGreenPassport(conn, summary)}
+                                                    style={{ backgroundColor: '#065f46', color: 'white', border: 'none', padding: '6px 12px', borderRadius: '4px', fontSize: '11px', fontWeight: 'bold', cursor: 'pointer' }}
+                                                >
+                                                    📄 Download Green Passport (PDF)
+                                                </button>
                                             </div>
                                         ) : conn.status === 'approved' ? (
                                             <p style={{ fontSize: '11px', color: '#9ca3af' }}>Summary loading...</p>
