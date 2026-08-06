@@ -124,6 +124,20 @@ export default function EcoTraceDashboard() {
     const [authMode, setAuthMode] = useState('login');
     const [authError, setAuthError] = useState('');
 
+    // ---- Enterprise Aggregation Tier (Aug 2026) — Buyer Portal state ----
+    const [viewMode, setViewMode] = useState('factory'); // 'factory' | 'buyer'
+    const [buyerData, setBuyerData] = useState(null);
+    const [isBuyerLoading, setIsBuyerLoading] = useState(true);
+    const [tempBuyerCompanyName, setTempBuyerCompanyName] = useState('');
+    const [tempBuyerGstin, setTempBuyerGstin] = useState('');
+    const [tempBuyerIndustry, setTempBuyerIndustry] = useState('');
+    const [tempBuyerEmail, setTempBuyerEmail] = useState('');
+    const [tempBuyerPhone, setTempBuyerPhone] = useState('');
+    const [buyerConnections, setBuyerConnections] = useState([]);
+    const [buyerSummaries, setBuyerSummaries] = useState({}); // factory_id -> summary row
+    const [requestFactoryId, setRequestFactoryId] = useState('');
+    const [factoryConnectionRequests, setFactoryConnectionRequests] = useState([]);
+
     useEffect(() => {
         supabase.auth.getSession().then(({ data: { session } }) => {
             setSession(session);
@@ -274,6 +288,43 @@ export default function EcoTraceDashboard() {
 
         loadFactory();
     }, [session]);
+
+    // ---- Enterprise Aggregation Tier: login झाल्यावर हा user कुणाचा buyer म्हणून नोंदलेला आहे का ते बघतो ----
+    useEffect(() => {
+        if (!session) {
+            setIsBuyerLoading(false);
+            return;
+        }
+        const loadBuyer = async () => {
+            setIsBuyerLoading(true);
+            const { data, error } = await supabase
+                .from('buyer_accounts')
+                .select('*')
+                .eq('owner_user_id', session.user.id)
+                .maybeSingle();
+            if (error) {
+                console.error('Error loading buyer account:', error.message);
+            } else if (data) {
+                setBuyerData(data);
+            }
+            setIsBuyerLoading(false);
+        };
+        loadBuyer();
+    }, [session]);
+
+    // buyer account सापडलं की त्याच्या connections + approved summaries आपोआप आणतो
+    useEffect(() => {
+        if (buyerData) {
+            fetchBuyerConnections(buyerData.id);
+        }
+    }, [buyerData]);
+
+    // factory unit ठरलं की त्या factory कडे आलेल्या buyer विनंत्या आपोआप आणतो
+    useEffect(() => {
+        if (currentUnitId) {
+            fetchFactoryConnectionRequests(currentUnitId);
+        }
+    }, [currentUnitId]);
     
     const [selectedCategory, setSelectedCategory] = useState("CPCB Cat 34.3 (Chemical Sludge)");
     const [ocrFiles, setOcrFiles] = useState([]); // Now stores per-file objects with individual OCR statuses
@@ -728,6 +779,100 @@ export default function EcoTraceDashboard() {
         }
     };
 
+    // ==========================================================================
+    // Enterprise Aggregation Tier (Aug 2026) — Buyer Portal handlers
+    // तत्त्व: buyer विनंती पाठवतो (pending), factory owner approve/revoke करतो.
+    // Approved झाल्यावरच buyer ला summary (RPC function द्वारे) दिसतो — raw daily_logs कधीच नाही.
+    // ==========================================================================
+    const handleBuyerSignup = async (e) => {
+        e.preventDefault();
+        if (!tempBuyerCompanyName.trim()) {
+            alert('Please enter your company name.');
+            return;
+        }
+        const { data, error } = await supabase
+            .from('buyer_accounts')
+            .insert({
+                owner_user_id: session.user.id,
+                company_name: tempBuyerCompanyName.trim(),
+                gstin_or_cin: tempBuyerGstin.trim() || null,
+                industry: tempBuyerIndustry.trim() || null,
+                contact_email: tempBuyerEmail.trim() || null,
+                contact_phone: tempBuyerPhone.trim() || null,
+            })
+            .select()
+            .single();
+        if (error) {
+            alert('Error creating buyer account: ' + error.message);
+            return;
+        }
+        setBuyerData(data);
+    };
+
+    const fetchBuyerConnections = async (buyerId) => {
+        const { data, error } = await supabase
+            .from('buyer_connections')
+            .select('*')
+            .eq('buyer_id', buyerId)
+            .order('requested_at', { ascending: false });
+        if (error) {
+            console.error('Error loading buyer connections:', error.message);
+            return;
+        }
+        setBuyerConnections(data || []);
+
+        // Approved connections साठी summary आणा (RPC आतच access तपासतो)
+        const approved = (data || []).filter((c) => c.status === 'approved');
+        const summaries = {};
+        await Promise.all(approved.map(async (conn) => {
+            const { data: summaryRows, error: summaryError } = await supabase
+                .rpc('get_buyer_factory_summary', { p_factory_id: conn.factory_id });
+            if (!summaryError && summaryRows && summaryRows.length > 0) {
+                summaries[conn.factory_id] = summaryRows[0];
+            }
+        }));
+        setBuyerSummaries(summaries);
+    };
+
+    const handleRequestConnection = async (e) => {
+        e.preventDefault();
+        if (!requestFactoryId.trim() || !buyerData) return;
+        const { error } = await supabase
+            .from('buyer_connections')
+            .insert({ buyer_id: buyerData.id, factory_id: requestFactoryId.trim(), status: 'pending' });
+        if (error) {
+            alert('Error sending request: ' + error.message + ' (तपासा — Factory ID बरोबर टाकलाय का?)');
+            return;
+        }
+        setRequestFactoryId('');
+        fetchBuyerConnections(buyerData.id);
+    };
+
+    const fetchFactoryConnectionRequests = async (factoryId) => {
+        const { data, error } = await supabase
+            .from('buyer_connections')
+            .select('*, buyer_accounts(company_name, industry, contact_email)')
+            .eq('factory_id', factoryId)
+            .order('requested_at', { ascending: false });
+        if (error) {
+            console.error('Error loading connection requests:', error.message);
+            return;
+        }
+        setFactoryConnectionRequests(data || []);
+    };
+
+    const handleRespondConnection = async (connectionId, newStatus) => {
+        const { error } = await supabase
+            .from('buyer_connections')
+            .update({ status: newStatus, responded_at: new Date().toISOString() })
+            .eq('id', connectionId);
+        if (error) {
+            alert('Error updating request: ' + error.message);
+            return;
+        }
+        fetchFactoryConnectionRequests(currentUnitId);
+    };
+
     const handleExportReport = () => {
         if (!isFactoryActive) {
             alert('Please onboard a factory unit or load the Demo Unit first.');
@@ -836,6 +981,88 @@ EcoTrace India Private Limited is an independent compliance platform. It aggrega
         );
     }
 
+    // ---- Enterprise Buyer Portal (Aug 2026) — factory dashboard पासून पूर्णपणे वेगळा view ----
+    if (viewMode === 'buyer') {
+        return (
+            <main style={{ minHeight: '100vh', backgroundColor: '#0b0f19', color: '#ffffff', fontFamily: 'sans-serif', padding: '16px' }}>
+                <header style={{ borderBottom: '1px solid #1f2937', paddingBottom: '12px', marginBottom: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '10px' }}>
+                    <div>
+                        <h1 style={{ fontSize: '18px', fontWeight: 'bold', color: '#ffffff', margin: '0 0 4px 0' }}>🏢 EcoTrace Enterprise Buyer Portal</h1>
+                        <p style={{ fontSize: '12px', color: '#9ca3af', margin: 0 }}>तुमच्या MSME suppliers चा compliance status एकाच जागी</p>
+                    </div>
+                    <div style={{ display: 'flex', gap: '8px' }}>
+                        <button onClick={() => setViewMode('factory')} style={{ backgroundColor: '#059669', color: 'white', border: 'none', padding: '8px 12px', borderRadius: '6px', fontSize: '11px', fontWeight: 'bold', cursor: 'pointer' }}>← Factory Dashboard कडे परत</button>
+                        <button onClick={handleLogout} style={{ backgroundColor: '#374151', color: 'white', border: 'none', padding: '8px 12px', borderRadius: '6px', fontSize: '11px', fontWeight: 'bold', cursor: 'pointer' }}>Logout ({session.user.email})</button>
+                    </div>
+                </header>
+
+                {isBuyerLoading ? (
+                    <p style={{ color: '#9ca3af', fontSize: '13px' }}>Loading...</p>
+                ) : !buyerData ? (
+                    <div style={{ maxWidth: '420px', backgroundColor: '#111827', border: '1px solid #374151', borderRadius: '12px', padding: '20px' }}>
+                        <h3 style={{ fontSize: '15px', color: 'white', margin: '0 0 4px 0' }}>Enterprise Buyer म्हणून नोंदणी करा</h3>
+                        <p style={{ color: '#9ca3af', fontSize: '12px', marginBottom: '14px' }}>ही नोंदणी एकदाच — नंतर तुम्ही अनेक suppliers ना जोडू शकता.</p>
+                        <form onSubmit={handleBuyerSignup} style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                            <input type="text" value={tempBuyerCompanyName} onChange={(e) => setTempBuyerCompanyName(e.target.value)} placeholder="Company Name *" required
+                                style={{ padding: '8px', backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '6px', color: 'white', fontSize: '12px' }} />
+                            <input type="text" value={tempBuyerGstin} onChange={(e) => setTempBuyerGstin(e.target.value)} placeholder="GSTIN / CIN (optional)"
+                                style={{ padding: '8px', backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '6px', color: 'white', fontSize: '12px' }} />
+                            <input type="text" value={tempBuyerIndustry} onChange={(e) => setTempBuyerIndustry(e.target.value)} placeholder="Industry (optional)"
+                                style={{ padding: '8px', backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '6px', color: 'white', fontSize: '12px' }} />
+                            <input type="email" value={tempBuyerEmail} onChange={(e) => setTempBuyerEmail(e.target.value)} placeholder="Contact Email (optional)"
+                                style={{ padding: '8px', backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '6px', color: 'white', fontSize: '12px' }} />
+                            <input type="text" value={tempBuyerPhone} onChange={(e) => setTempBuyerPhone(e.target.value)} placeholder="Contact Phone (optional)"
+                                style={{ padding: '8px', backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '6px', color: 'white', fontSize: '12px' }} />
+                            <button type="submit" style={{ backgroundColor: '#4338ca', color: 'white', border: 'none', padding: '8px 14px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer', fontSize: '12px' }}>Register as Buyer</button>
+                        </form>
+                    </div>
+                ) : (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                        <div style={{ backgroundColor: '#111827', border: '1px solid #374151', borderRadius: '12px', padding: '16px' }}>
+                            <h4 style={{ color: '#818cf8', margin: '0 0 8px 0', fontSize: '14px' }}>नवीन Supplier ला जोडणी-विनंती पाठवा</h4>
+                            <p style={{ color: '#9ca3af', fontSize: '11px', marginBottom: '8px' }}>Factory कडून मिळालेला "Unit ID / Compliance ID" इथे टाका — तो त्यांना approve करावा लागेल.</p>
+                            <form onSubmit={handleRequestConnection} style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                                <input type="text" value={requestFactoryId} onChange={(e) => setRequestFactoryId(e.target.value)} placeholder="Factory Unit ID paste करा"
+                                    style={{ flex: 1, minWidth: '220px', padding: '8px', backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '6px', color: 'white', fontSize: '12px' }} required />
+                                <button type="submit" style={{ backgroundColor: '#4338ca', color: 'white', border: 'none', padding: '8px 14px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer', fontSize: '12px' }}>विनंती पाठवा</button>
+                            </form>
+                        </div>
+
+                        <div>
+                            <h4 style={{ color: '#34d399', margin: '0 0 8px 0', fontSize: '14px' }}>तुमचे Suppliers ({buyerConnections.length})</h4>
+                            {buyerConnections.length === 0 && <p style={{ color: '#9ca3af', fontSize: '12px' }}>अजून कुठलीही विनंती पाठवलेली नाही.</p>}
+                            {buyerConnections.map((conn) => {
+                                const summary = buyerSummaries[conn.factory_id];
+                                const statusColor = conn.status === 'approved' ? '#34d399' : conn.status === 'pending' ? '#f59e0b' : '#ef4444';
+                                return (
+                                    <div key={conn.id} style={{ backgroundColor: '#111827', border: `1px solid ${statusColor}`, borderRadius: '12px', padding: '16px', marginBottom: '12px' }}>
+                                        <p style={{ margin: '0 0 4px 0', fontSize: '12px', color: statusColor, fontWeight: 'bold', textTransform: 'uppercase' }}>{conn.status}</p>
+                                        <p style={{ margin: '0 0 8px 0', fontSize: '11px', color: '#9ca3af' }}>Factory ID: {conn.factory_id}</p>
+                                        {conn.status === 'approved' && summary ? (
+                                            <div style={{ fontSize: '12px', color: '#d1d5db', lineHeight: '1.6' }}>
+                                                <p style={{ margin: 0, fontWeight: 'bold', color: 'white' }}>{summary.factory_name} — {summary.plant_location} ({summary.state})</p>
+                                                <p style={{ margin: 0 }}>CTO Expiry: {summary.cto_expiry_date || 'N/A'}</p>
+                                                <p style={{ margin: 0 }}>Completeness (last 30 days): {summary.completeness_pct}% ({summary.logged_days_last_30} days logged)</p>
+                                                <p style={{ margin: 0 }}>Avg pH: {summary.avg_ph ?? 'N/A'} | Total Water: {summary.total_water_liters} L | Scope 2: {summary.scope2_tco2e} tCO2e</p>
+                                                <p style={{ margin: 0 }}>Last log: {summary.last_log_date || 'N/A'}</p>
+                                            </div>
+                                        ) : conn.status === 'approved' ? (
+                                            <p style={{ fontSize: '11px', color: '#9ca3af' }}>Summary loading...</p>
+                                        ) : conn.status === 'pending' ? (
+                                            <p style={{ fontSize: '11px', color: '#9ca3af' }}>Factory च्या approval ची वाट बघतोय.</p>
+                                        ) : (
+                                            <p style={{ fontSize: '11px', color: '#9ca3af' }}>ही विनंती नाकारली/रद्द केली गेली आहे.</p>
+                                        )}
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    </div>
+                )}
+            </main>
+        );
+    }
+
     return (
         <main style={{ minHeight: '100vh', backgroundColor: '#0b0f19', color: '#ffffff', fontFamily: 'sans-serif', padding: '16px' }}>
             
@@ -858,6 +1085,12 @@ EcoTrace India Private Limited is an independent compliance platform. It aggrega
                         style={{ backgroundColor: '#059669', color: 'white', border: 'none', padding: '8px 14px', borderRadius: '6px', fontSize: '12px', fontWeight: 'bold', cursor: 'pointer' }}
                     >
                         Export Verified Audit Report (.txt)
+                    </button>
+                    <button
+                        onClick={() => setViewMode('buyer')}
+                        style={{ backgroundColor: '#4338ca', color: 'white', border: 'none', padding: '8px 12px', borderRadius: '6px', fontSize: '11px', fontWeight: 'bold', cursor: 'pointer' }}
+                    >
+                        🏢 Enterprise Buyer Portal
                     </button>
                     <button 
                         onClick={handleLogout}
@@ -1039,6 +1272,31 @@ EcoTrace India Private Limited is an independent compliance platform. It aggrega
                         <h4 style={{ color: '#8b5cf6', margin: '8px 0 4px 0', fontSize: '14px' }}>9. Tamper-Evident Digital Vault</h4>
                         <button onClick={handleVerifyVault} style={{ backgroundColor: '#7c3aed', color: 'white', border: 'none', padding: '6px 10px', borderRadius: '4px', fontSize: '11px', fontWeight: 'bold', cursor: 'pointer', marginTop: '6px' }}>Verify Vault Hash</button>
                     </div>
+
+                    {/* Enterprise Aggregation Tier: Buyer connection requests for this factory */}
+                    {isFactoryActive && (
+                        <div style={{ backgroundColor: '#111827', border: '1px solid #4338ca', borderRadius: '12px', padding: '16px' }}>
+                            <span style={{ backgroundColor: '#3730a3', color: '#e0e7ff', padding: '2px 6px', borderRadius: '4px', fontSize: '10px', fontWeight: 'bold' }}>ENTERPRISE AGGREGATION TIER</span>
+                            <h4 style={{ color: '#818cf8', margin: '8px 0 4px 0', fontSize: '14px' }}>Buyer Connection Requests</h4>
+                            <p style={{ color: '#9ca3af', fontSize: '11px', marginBottom: '8px' }}>तुमचा Unit ID buyer ला द्या (वरच्या पट्टीत दिसतो) — त्यांनी विनंती पाठवली की इथे दिसेल.</p>
+                            {factoryConnectionRequests.length === 0 && <p style={{ color: '#9ca3af', fontSize: '12px' }}>अजून कुठलीही विनंती आलेली नाही.</p>}
+                            {factoryConnectionRequests.map((req) => (
+                                <div key={req.id} style={{ borderTop: '1px solid #374151', paddingTop: '8px', marginTop: '8px' }}>
+                                    <p style={{ margin: '0 0 2px 0', fontSize: '12px', color: 'white', fontWeight: 'bold' }}>{req.buyer_accounts?.company_name || 'Unknown Buyer'}</p>
+                                    <p style={{ margin: '0 0 6px 0', fontSize: '10px', color: '#9ca3af' }}>{req.buyer_accounts?.industry || ''} {req.buyer_accounts?.contact_email ? `· ${req.buyer_accounts.contact_email}` : ''} — Status: <b style={{ color: req.status === 'approved' ? '#34d399' : req.status === 'pending' ? '#f59e0b' : '#ef4444' }}>{req.status}</b></p>
+                                    {req.status === 'pending' && (
+                                        <div style={{ display: 'flex', gap: '8px' }}>
+                                            <button onClick={() => handleRespondConnection(req.id, 'approved')} style={{ backgroundColor: '#059669', color: 'white', border: 'none', padding: '5px 10px', borderRadius: '4px', fontSize: '10px', fontWeight: 'bold', cursor: 'pointer' }}>Approve</button>
+                                            <button onClick={() => handleRespondConnection(req.id, 'rejected')} style={{ backgroundColor: '#dc2626', color: 'white', border: 'none', padding: '5px 10px', borderRadius: '4px', fontSize: '10px', fontWeight: 'bold', cursor: 'pointer' }}>Reject</button>
+                                        </div>
+                                    )}
+                                    {req.status === 'approved' && (
+                                        <button onClick={() => handleRespondConnection(req.id, 'revoked')} style={{ backgroundColor: '#7c2d12', color: 'white', border: 'none', padding: '5px 10px', borderRadius: '4px', fontSize: '10px', fontWeight: 'bold', cursor: 'pointer' }}>Revoke Access</button>
+                                    )}
+                                </div>
+                            ))}
+                        </div>
+                    )}
 
                     {/* Live Output Screen for Modules 5 to 9 */}
                     <div style={{ backgroundColor: '#111827', border: '2px solid #059669', borderRadius: '12px', padding: '16px' }}>
