@@ -168,8 +168,8 @@ const TRANSLATIONS = {
         newPasswordPlaceholder: 'नवीन पासवर्ड',
         confirmPasswordPlaceholder: 'नवीन पासवर्ड पुन्हा टाका',
         updatePasswordButton: 'पासवर्ड अपडेट करा',
-        termsLink: 'Terms of Service',
-        privacyLink: 'Privacy Policy',
+        termsLink: 'अटी व शर्ती',
+        privacyLink: 'गोपनीयता धोरण',
     },
     hi: {
         appTitle: 'EcoTrace India',
@@ -228,8 +228,8 @@ const TRANSLATIONS = {
         newPasswordPlaceholder: 'नया पासवर्ड',
         confirmPasswordPlaceholder: 'नया पासवर्ड दोबारा डालें',
         updatePasswordButton: 'पासवर्ड अपडेट करें',
-        termsLink: 'Terms of Service',
-        privacyLink: 'Privacy Policy',
+        termsLink: 'नियम व शर्तें',
+        privacyLink: 'गोपनीयता नीति',
     },
 };
 
@@ -498,6 +498,35 @@ export default function EcoTraceDashboard() {
             if (error) console.error('Error saving language preference:', error.message);
         }
     };
+
+    // ---- FIX (Aug 2026, round 9): आधीचा native <select> Android/Chrome वर पूर्ण-स्क्रीन picker
+    // म्हणून उघडायचा — "unprofessional" वाटायचं. आता एक compact, स्वतः-styled ३-बटणांचा गट
+    // (segmented control) वापरतो, जो कधीच स्क्रीन व्यापत नाही, आणि login page + header दोन्हीकडे
+    // तोच वापरतो जेणेकरून दिसणं सुसंगत राहील. ----
+    const renderLanguagePicker = () => (
+        <div style={{ display: 'inline-flex', backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '7px', padding: '2px', gap: '2px' }}>
+            {[['en', 'EN'], ['mr', 'मर'], ['hi', 'हि']].map(([code, label]) => (
+                <button
+                    key={code}
+                    type="button"
+                    onClick={() => handleLanguageChange(code)}
+                    title={t('selectLanguage')}
+                    style={{
+                        backgroundColor: language === code ? '#059669' : 'transparent',
+                        color: language === code ? 'white' : '#9ca3af',
+                        border: 'none',
+                        borderRadius: '5px',
+                        padding: '5px 9px',
+                        fontSize: '11px',
+                        fontWeight: 'bold',
+                        cursor: 'pointer',
+                    }}
+                >
+                    {label}
+                </button>
+            ))}
+        </div>
+    );
     // Step 4 (Pan-India expansion): state selection for onboarding, options loaded from state_configs
     const [tempFactoryState, setTempFactoryState] = useState('Maharashtra');
     const [availableStates, setAvailableStates] = useState([]);
@@ -1611,16 +1640,7 @@ export default function EcoTraceDashboard() {
                 <div style={{ maxWidth: '380px', width: '100%', backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '14px', padding: '28px', boxShadow: '0 20px 40px rgba(0,0,0,0.35)' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '4px' }}>
                         <h2 style={{ margin: 0, fontSize: '20px', letterSpacing: '-0.02em' }}>{t('appTitle')}</h2>
-                        <select
-                            value={language}
-                            onChange={(e) => setLanguage(e.target.value)}
-                            title={t('selectLanguage')}
-                            style={{ backgroundColor: '#1f2937', color: '#d1d5db', border: '1px solid #374151', borderRadius: '6px', padding: '5px 6px', fontSize: '11px', cursor: 'pointer' }}
-                        >
-                            <option value="en">🌐 EN</option>
-                            <option value="mr">🌐 मर</option>
-                            <option value="hi">🌐 हि</option>
-                        </select>
+                        {renderLanguagePicker()}
                     </div>
 
                     {showForgotPassword ? (
@@ -1791,16 +1811,7 @@ export default function EcoTraceDashboard() {
                     <p style={{ fontSize: '11px', color: '#34d399', margin: 0 }}>Project Lead: D. S. Nikam | 📞 7378780745 | ✉️ dhiraj@ectotraceindia.com</p>
                 </div>
                 <div style={{ display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap' }}>
-                    <select
-                        value={language}
-                        onChange={(e) => handleLanguageChange(e.target.value)}
-                        title={t('languageLabel')}
-                        style={{ backgroundColor: '#1f2937', color: 'white', border: '1px solid #374151', borderRadius: '6px', padding: '7px 8px', fontSize: '11px', fontWeight: 'bold', cursor: 'pointer' }}
-                    >
-                        <option value="en">🌐 English</option>
-                        <option value="mr">🌐 मराठी</option>
-                        <option value="hi">🌐 हिंदी</option>
-                    </select>
+                    {renderLanguagePicker()}
                     <button 
                         onClick={loadDemoUnit}
                         style={{ backgroundColor: '#f59e0b', color: 'white', border: 'none', padding: '8px 12px', borderRadius: '6px', fontSize: '11px', fontWeight: 'bold', cursor: 'pointer' }}
