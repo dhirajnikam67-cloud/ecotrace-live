@@ -1000,7 +1000,11 @@ export default function EcoTraceDashboard() {
         addLine(`Total Water Discharge: ${summary.total_water_liters} Liters`, { gapAfter: 15 });
         addLine(`Total Electricity Consumption: ${summary.total_electricity_kwh} kWh`, { gapAfter: 15 });
         addLine(`Scope 2 Emissions (Grid Power, CEA Baseline): ${summary.scope2_tco2e} tCO2e`, { gapAfter: 15 });
-        addLine(`Scope 1 (Direct Combustion): Not yet available — requires fuel-input data`, { size: 9, color: [150, 100, 20], gapAfter: 20 });
+        if (summary.scope1_tco2e && summary.scope1_tco2e > 0) {
+            addLine(`Scope 1 Emissions (Direct Combustion): ${summary.scope1_tco2e} tCO2e`, { gapAfter: 20 });
+        } else {
+            addLine(`Scope 1 Emissions (Direct Combustion): No fuel combustion logged in this period`, { size: 9, color: [150, 100, 20], gapAfter: 20 });
+        }
         addDivider();
 
         addLine('4. Connection & Consent Record', { size: 12, bold: true, color: [6, 95, 70], gapAfter: 18 });
@@ -1195,7 +1199,8 @@ EcoTrace India Private Limited is an independent compliance platform. It aggrega
                                                 <p style={{ margin: 0, fontWeight: 'bold', color: 'white' }}>{summary.factory_name} — {summary.plant_location} ({summary.state})</p>
                                                 <p style={{ margin: 0 }}>CTO Expiry: {summary.cto_expiry_date || 'N/A'}</p>
                                                 <p style={{ margin: 0 }}>Completeness (last 30 days): {summary.completeness_pct}% ({summary.logged_days_last_30} days logged)</p>
-                                                <p style={{ margin: 0 }}>Avg pH: {summary.avg_ph ?? 'N/A'} | Total Water: {summary.total_water_liters} L | Scope 2: {summary.scope2_tco2e} tCO2e</p>
+                                                <p style={{ margin: 0 }}>Avg pH: {summary.avg_ph ?? 'N/A'} | Total Water: {summary.total_water_liters} L</p>
+                                                <p style={{ margin: 0 }}>Scope 1: {summary.scope1_tco2e > 0 ? `${summary.scope1_tco2e} tCO2e` : 'No combustion logged'} | Scope 2: {summary.scope2_tco2e} tCO2e</p>
                                                 <p style={{ margin: '0 0 10px 0' }}>Last log: {summary.last_log_date || 'N/A'}</p>
                                                 <button
                                                     onClick={() => handleDownloadGreenPassport(conn, summary)}
