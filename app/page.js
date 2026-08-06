@@ -35,6 +35,14 @@ const FUEL_EMISSION_FACTORS = {
     coal: { label: 'Coal (kg)', unit: 'kg', factor: 2.275, isEstimate: true, source: 'GHG Protocol stationary-combustion example (bituminous) — Indian coal grade varies, verify locally' },
 };
 
+// ---------------------------------------------------------------------------
+// SCOPE 2 — All-India fallback grid emission factor (Aug 2026 fix)
+// आधी सगळ्या राज्यांसाठी hardcoded 0.82 वापरलं जायचं. आता प्रत्येक factory च्या राज्यानुसार
+// state_configs मधला प्रादेशिक (Western/Southern/इ.) grid factor वापरतो — तो सापडला नाही तरच
+// (उदा. अजून config नसलेलं नवीन राज्य) हा All-India सरासरी (CEA V21.0, FY 2024-25) fallback म्हणून वापरतो.
+// ---------------------------------------------------------------------------
+const ALL_INDIA_GRID_FACTOR = 0.7117;
+
 function detectDocumentType(ocrText) {
   const text = ocrText.toLowerCase();
   let best = { type: "unknown", matchScore: 0 };
@@ -214,7 +222,8 @@ export default function EcoTraceDashboard() {
         location: "",
         dischargeLimit: "",
         ctoExpiryDate: "",
-        status: "PENDING ONBOARDING"
+        status: "PENDING ONBOARDING",
+        gridEmissionFactor: ALL_INDIA_GRID_FACTOR,
     });
 
     const [tempCompanyName, setTempCompanyName] = useState('');
@@ -259,6 +268,21 @@ export default function EcoTraceDashboard() {
 
             if (data) {
                 setCurrentUnitId(data.id);
+
+                // ---- Scope 2 fix (Aug 2026): factory च्या राज्याचा प्रादेशिक grid emission factor
+                // state_configs मधून आणतो — सापडला नाही तर All-India fallback वापरतो ----
+                let gridFactor = ALL_INDIA_GRID_FACTOR;
+                if (data.state) {
+                    const { data: stateConfigRow } = await supabase
+                        .from('state_configs')
+                        .select('grid_emission_factor_kgco2_per_kwh')
+                        .eq('state', data.state)
+                        .maybeSingle();
+                    if (stateConfigRow?.grid_emission_factor_kgco2_per_kwh) {
+                        gridFactor = Number(stateConfigRow.grid_emission_factor_kgco2_per_kwh);
+                    }
+                }
+
                 setFactoryData({
                     name: data.name,
                     location: data.plant_location,
@@ -267,6 +291,7 @@ export default function EcoTraceDashboard() {
                     // fall back to the old hardcoded default only for factories onboarded before this column existed
                     ctoExpiryDate: data.cto_expiry_date ?? '2026-12-31',
                     status: "DATA COMPLETE & FILING-READY",
+                    gridEmissionFactor: gridFactor,
                 });
 
                 // ---- Step 4 (Pan-India backend migration): load this factory's saved daily_logs
@@ -345,7 +370,7 @@ export default function EcoTraceDashboard() {
     const [ocrFiles, setOcrFiles] = useState([]); // Now stores per-file objects with individual OCR statuses
     
     // Daily Log State & True OCR Read State
-    const [dailyLog, setDailyLog] = useState({ ph: '7.2', water: '1420', power: '3150', sludge: '0.45', fuelInput: '', fuelType: 'none' });
+    const [dailyLog, setDailyLog] = useState({ ph: '7.2', water: '1420', power: '3150', sludge: '0.45', fuelEntries: [{ type: 'none', amount: '' }] });
     const [ocrReadPower, setOcrReadPower] = useState(null); 
     const [isSludgeNotApplicable, setIsSludgeNotApplicable] = useState(false);
     const [logSubmitted, setLogSubmitted] = useState(false);
@@ -364,7 +389,7 @@ export default function EcoTraceDashboard() {
         setSavedLogsHistory(logs || []);
         setSelectedCategory(category || "CPCB Cat 34.3 (Chemical Sludge)");
         setOcrFiles(files || []);
-        setDailyLog(logState || { ph: '7.2', water: '1420', power: '3150', sludge: '0.45', fuelInput: '', fuelType: 'none' });
+        setDailyLog(logState || { ph: '7.2', water: '1420', power: '3150', sludge: '0.45', fuelEntries: [{ type: 'none', amount: '' }] });
         setIsSludgeNotApplicable(sludgeNaState || false);
         setOcrReadPower(ocrPower !== undefined ? ocrPower : null);
     };
@@ -387,7 +412,7 @@ export default function EcoTraceDashboard() {
             gpsCaptured: true,
             submittedAt: new Date().toISOString()
         }));
-        handleUnitSwitch("DEMO-FACTORY", demoDetails, demoLogs, true, "CPCB Cat 34.3 (Chemical Sludge)", [], { ph: '7.2', water: '1420', power: '3150', sludge: '0.45', fuelInput: '', fuelType: 'none' }, false, 3120);
+        handleUnitSwitch("DEMO-FACTORY", demoDetails, demoLogs, true, "CPCB Cat 34.3 (Chemical Sludge)", [], { ph: '7.2', water: '1420', power: '3150', sludge: '0.45', fuelEntries: [{ type: 'none', amount: '' }] }, false, 3120);
         alert('Demo Unit loaded safely in isolated state with 15-day sample data.');
     };
 
@@ -404,14 +429,17 @@ export default function EcoTraceDashboard() {
         const ctoDateValue = tempCtoDate || '2026-12-31';
         const factoryState = tempFactoryState || 'Maharashtra'; // operator-selected — Step 4
 
-        // हार्डकोडेड "MIDC" ऐवजी, त्या राज्याचा industrial-area-term state_configs मधून वाचा
+        // हार्डकोडेड "MIDC" ऐवजी, त्या राज्याचा industrial-area-term + grid emission factor state_configs मधून वाचा
         const { data: stateConfig } = await supabase
             .from('state_configs')
-            .select('industrial_area_term')
+            .select('industrial_area_term, grid_emission_factor_kgco2_per_kwh')
             .eq('state', factoryState)
             .maybeSingle();
 
         const areaTerm = stateConfig?.industrial_area_term || 'Industrial Area';
+        const onboardGridFactor = stateConfig?.grid_emission_factor_kgco2_per_kwh
+            ? Number(stateConfig.grid_emission_factor_kgco2_per_kwh)
+            : ALL_INDIA_GRID_FACTOR;
         const locationValue = tempMidcLocation
             ? `${tempMidcLocation.toUpperCase()} ${areaTerm}`
             : `${areaTerm} CLUSTER`;
@@ -444,6 +472,7 @@ export default function EcoTraceDashboard() {
             dischargeLimit: String(data.mpcb_water_consent_limit_liters),
             ctoExpiryDate: ctoDateValue,
             status: "DATA COMPLETE & FILING-READY",
+            gridEmissionFactor: onboardGridFactor,
         });
 
         alert(`Factory Unit ${unitName} Onboarded Successfully (Saved to Database)!`);
@@ -496,6 +525,30 @@ export default function EcoTraceDashboard() {
         }
     };
 
+    // ---- Multi-fuel Scope 1 (Aug 2026 fix): एका दिवसात Diesel genset + LPG boiler सारखे अनेक
+    // इंधन-स्रोत असू शकतात — त्यामुळे fuelEntries ही यादी आहे, एक इंधन नाही ----
+    const syncFuelEntries = (updatedEntries) => {
+        const updatedLog = { ...dailyLog, fuelEntries: updatedEntries };
+        setDailyLog(updatedLog);
+        if (currentUnitId) {
+            setUnitsData(prev => ({
+                ...prev,
+                [currentUnitId]: { factoryData, savedLogsHistory, isDemoMode, selectedCategory, ocrFiles, dailyLog: updatedLog, isSludgeNotApplicable, ocrReadPower }
+            }));
+        }
+    };
+    const handleFuelEntryChange = (index, field, value) => {
+        const updated = dailyLog.fuelEntries.map((fe, i) => (i === index ? { ...fe, [field]: value } : fe));
+        syncFuelEntries(updated);
+    };
+    const addFuelEntry = () => {
+        syncFuelEntries([...dailyLog.fuelEntries, { type: 'none', amount: '' }]);
+    };
+    const removeFuelEntry = (index) => {
+        const updated = dailyLog.fuelEntries.filter((_, i) => i !== index);
+        syncFuelEntries(updated.length > 0 ? updated : [{ type: 'none', amount: '' }]);
+    };
+
     const powerNum = parseFloat(dailyLog.power) || 3150;
     const totalWaterNum = savedLogsHistory.length > 0 
         ? savedLogsHistory.reduce((sum, entry) => sum + (parseFloat(entry.water) || 0), 0) 
@@ -513,13 +566,22 @@ export default function EcoTraceDashboard() {
     const outOfRangeCount = savedLogsHistory.filter((e) => parseFloat(e.ph) < 0 || parseFloat(e.ph) > 14).length;
     const gpsCapturedCount = savedLogsHistory.filter((e) => e.gpsCaptured).length;
 
-    const calculatedScope2 = (powerNum * 0.82 / 1000).toFixed(2); 
-    // FIX (Aug 2026): पूर्वी सगळ्या इंधनांसाठी एकच hardcoded 2.68 factor वापरला जायचा — आता
-    // प्रत्यक्ष निवडलेल्या इंधन-प्रकारानुसार योग्य (sourced) emission factor वापरतो.
-    const selectedFuelInfo = FUEL_EMISSION_FACTORS[dailyLog.fuelType] || FUEL_EMISSION_FACTORS.none;
-    const calculatedScope1 = dailyLog.fuelType === 'none'
+    // FIX (Aug 2026): पूर्वी सगळ्या राज्यांसाठी एकच hardcoded 0.82 factor वापरला जायचा — आता
+    // factory च्या राज्याचा प्रादेशिक grid emission factor (state_configs मधून, factory load/onboarding
+    // वेळी आणलेला) वापरतो; तो सापडला नाही तर All-India fallback आपोआप वापरला जातो.
+    const calculatedScope2 = (powerNum * factoryData.gridEmissionFactor / 1000).toFixed(2); 
+    // FIX (Aug 2026, round 2): पूर्वी एका दिवसासाठी फक्त एकच इंधन-प्रकार निवडता यायचा — पण एखादी
+    // फॅक्टरी एकाच वेळी Diesel genset + LPG boiler वापरत असू शकते. आता dailyLog.fuelEntries ही
+    // यादी आहे — प्रत्येक नोंदीचा emission बेरीज करून एकत्रित Scope 1 दाखवतो.
+    const validFuelEntries = (dailyLog.fuelEntries || []).filter((fe) => fe.type !== 'none' && fe.amount);
+    const hasAnyEstimateFuel = validFuelEntries.some((fe) => FUEL_EMISSION_FACTORS[fe.type]?.isEstimate);
+    const scope1Total = validFuelEntries.reduce((sum, fe) => {
+        const info = FUEL_EMISSION_FACTORS[fe.type] || FUEL_EMISSION_FACTORS.none;
+        return sum + (parseFloat(fe.amount) || 0) * info.factor;
+    }, 0) / 1000;
+    const calculatedScope1 = validFuelEntries.length === 0
         ? "N/A — No Combustion Source Declared"
-        : (dailyLog.fuelInput ? ((parseFloat(dailyLog.fuelInput) * selectedFuelInfo.factor) / 1000).toFixed(2) + (selectedFuelInfo.isEstimate ? ' tCO2e (approximate factor — verify with consultant)' : ' tCO2e') : "Not calculated — Awaiting fuel input");
+        : scope1Total.toFixed(2) + (hasAnyEstimateFuel ? ' tCO2e (includes an approximate factor — verify with consultant)' : ' tCO2e');
 
     // PER-FILE HYBRID BULK UPLOAD WITH INDEPENDENT OCR GATE
     // ---- खरा OCR engine (Aug 2026 fix): आधीचा rule-based simulated classifier बदलून, आता प्रत्येक
@@ -699,8 +761,13 @@ export default function EcoTraceDashboard() {
             gps_longitude: capturedPosition ? capturedPosition.lng : null,
             // Scope 1 fields — मुद्दाम canonicalLogPayload च्या hash-payload मध्ये समाविष्ट नाहीत
             // (ते फक्त ठराविक fields वाचतं), त्यामुळे जुन्या साखळीबद्ध नोंदींवर परिणाम होत नाही.
-            fuel_type: dailyLog.fuelType === 'none' ? null : dailyLog.fuelType,
-            fuel_input: dailyLog.fuelType === 'none' ? null : (parseFloat(dailyLog.fuelInput) || null),
+            // Multi-fuel (Aug 2026, round 2): आता fuel_entries (JSONB array) साठवतो — जुने
+            // single fuel_type/fuel_input कॉलम्स backward-compat साठी null ठेवतो (नवीन नोंदींसाठी).
+            fuel_type: null,
+            fuel_input: null,
+            fuel_entries: (dailyLog.fuelEntries || [])
+                .filter((fe) => fe.type !== 'none' && fe.amount)
+                .map((fe) => ({ type: fe.type, amount: parseFloat(fe.amount) || 0 })),
         };
         const recordHash = await sha256Hex(canonicalLogPayload(newRecordFields) + '|' + previousHash);
 
@@ -1009,7 +1076,7 @@ export default function EcoTraceDashboard() {
         addLine(`Average ETP Effluent pH: ${summary.avg_ph ?? 'N/A'}`, { gapAfter: 15 });
         addLine(`Total Water Discharge: ${summary.total_water_liters} Liters`, { gapAfter: 15 });
         addLine(`Total Electricity Consumption: ${summary.total_electricity_kwh} kWh`, { gapAfter: 15 });
-        addLine(`Scope 2 Emissions (Grid Power, CEA Baseline): ${summary.scope2_tco2e} tCO2e`, { gapAfter: 15 });
+        addLine(`Scope 2 Emissions (Regional Grid Factor): ${summary.scope2_tco2e} tCO2e (factor: ${summary.grid_factor_used} kg CO2/kWh)`, { gapAfter: 15 });
         if (summary.scope1_tco2e && summary.scope1_tco2e > 0) {
             addLine(`Scope 1 Emissions (Direct Combustion): ${summary.scope1_tco2e} tCO2e`, { gapAfter: 20 });
         } else {
@@ -1087,7 +1154,7 @@ Status: ${preflight.statusLabel}
 
 ----------------------------------------
 1. CARBON EMISSIONS (dMRV ENGINE):
-- Scope 2 (Grid Power): ${calculatedScope2} MT CO2e (Calculated via CEA Baseline Database 2025-26 on ${powerNum} kWh)
+- Scope 2 (Grid Power): ${calculatedScope2} MT CO2e (Grid factor: ${factoryData.gridEmissionFactor} kg CO2/kWh on ${powerNum} kWh)
 - Scope 1 (Direct Combustion): ${calculatedScope1}
 
 2. WATER CESS & ETP MONITORING (Form 3 Input):
@@ -1407,34 +1474,36 @@ EcoTrace India Private Limited is an independent compliance platform. It aggrega
                                     /> Not Applicable (N/A)
                                 </label>
                             </div>
-                            <div>
-                                <label style={{ fontSize: '10px', color: '#9ca3af' }}>Fuel Type (Scope 1)</label>
-                                <select
-                                    value={dailyLog.fuelType}
-                                    onChange={(e) => {
-                                        const newType = e.target.value;
-                                        const updatedLog = { ...dailyLog, fuelType: newType, fuelInput: newType === 'none' ? '' : dailyLog.fuelInput };
-                                        setDailyLog(updatedLog);
-                                        if (currentUnitId) {
-                                            setUnitsData(prev => ({
-                                                ...prev,
-                                                [currentUnitId]: { factoryData, savedLogsHistory, isDemoMode, selectedCategory, ocrFiles, dailyLog: updatedLog, isSludgeNotApplicable, ocrReadPower }
-                                            }));
-                                        }
-                                    }}
-                                    style={{ width: '100%', padding: '6px', backgroundColor: '#1f2937', color: 'white', border: '1px solid #374151', borderRadius: '4px', fontSize: '12px' }}
-                                >
-                                    {Object.entries(FUEL_EMISSION_FACTORS).map(([key, info]) => (
-                                        <option key={key} value={key}>{info.label}{info.isEstimate ? ' *' : ''}</option>
-                                    ))}
-                                </select>
-                            </div>
-                            <div>
-                                <label style={{ fontSize: '10px', color: '#9ca3af' }}>Fuel Input {dailyLog.fuelType !== 'none' ? `(${FUEL_EMISSION_FACTORS[dailyLog.fuelType].unit})` : ''}</label>
-                                <input type="number" step="0.1" disabled={dailyLog.fuelType === 'none'} value={dailyLog.fuelInput} onChange={(e) => handleLogChange('fuelInput', e.target.value)} style={{ width: '100%', padding: '6px', backgroundColor: '#1f2937', color: 'white', border: '1px solid #374151', borderRadius: '4px', fontSize: '12px' }} />
-                                {FUEL_EMISSION_FACTORS[dailyLog.fuelType]?.isEstimate && (
-                                    <p style={{ fontSize: '8px', color: '#f59e0b', margin: '2px 0 0 0' }}>* Approximate factor — verify with EHS consultant before statutory filing.</p>
+                            <div style={{ gridColumn: '1 / -1' }}>
+                                <label style={{ fontSize: '10px', color: '#9ca3af' }}>Fuel Sources (Scope 1) — एकाच दिवशी अनेक इंधन-स्रोत जोडता येतील</label>
+                                {dailyLog.fuelEntries.map((fe, idx) => (
+                                    <div key={idx} style={{ display: 'flex', gap: '6px', marginTop: '4px', alignItems: 'flex-start' }}>
+                                        <select
+                                            value={fe.type}
+                                            onChange={(e) => handleFuelEntryChange(idx, 'type', e.target.value)}
+                                            style={{ flex: 1, padding: '6px', backgroundColor: '#1f2937', color: 'white', border: '1px solid #374151', borderRadius: '4px', fontSize: '11px' }}
+                                        >
+                                            {Object.entries(FUEL_EMISSION_FACTORS).map(([key, info]) => (
+                                                <option key={key} value={key}>{info.label}{info.isEstimate ? ' *' : ''}</option>
+                                            ))}
+                                        </select>
+                                        <input
+                                            type="number" step="0.1"
+                                            disabled={fe.type === 'none'}
+                                            placeholder={fe.type !== 'none' ? FUEL_EMISSION_FACTORS[fe.type].unit : ''}
+                                            value={fe.amount}
+                                            onChange={(e) => handleFuelEntryChange(idx, 'amount', e.target.value)}
+                                            style={{ width: '90px', padding: '6px', backgroundColor: '#1f2937', color: 'white', border: '1px solid #374151', borderRadius: '4px', fontSize: '11px' }}
+                                        />
+                                        {dailyLog.fuelEntries.length > 1 && (
+                                            <button type="button" onClick={() => removeFuelEntry(idx)} style={{ backgroundColor: '#7f1d1d', color: 'white', border: 'none', borderRadius: '4px', padding: '6px 9px', fontSize: '11px', cursor: 'pointer' }}>✕</button>
+                                        )}
+                                    </div>
+                                ))}
+                                {dailyLog.fuelEntries.some((fe) => FUEL_EMISSION_FACTORS[fe.type]?.isEstimate) && (
+                                    <p style={{ fontSize: '8px', color: '#f59e0b', margin: '4px 0 0 0' }}>* Approximate factor — verify with EHS consultant before statutory filing.</p>
                                 )}
+                                <button type="button" onClick={addFuelEntry} style={{ marginTop: '6px', backgroundColor: '#374151', color: '#d1d5db', border: '1px dashed #6b7280', borderRadius: '4px', padding: '5px 10px', fontSize: '10px', cursor: 'pointer' }}>+ Add Another Fuel Source</button>
                             </div>
                             <button type="submit" style={{ gridColumn: '1 / -1', backgroundColor: '#059669', color: 'white', border: 'none', padding: '8px', borderRadius: '4px', fontSize: '12px', fontWeight: 'bold', cursor: 'pointer' }}>Save & Lock Daily Record</button>
                         </form>
