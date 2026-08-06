@@ -484,6 +484,8 @@ export default function EcoTraceDashboard() {
     // दिसायचा (जरी वरच्या पट्टीत खरा साठलेला डेटा दिसत असला तरी) — गोंधळ व्हायचा. आता factory
     // already असेल तर "locked" सारांश दाखवतो, फक्त स्पष्ट "Edit" दाबल्यावरच फॉर्म उघडतो.
     const [isEditingFactory, setIsEditingFactory] = useState(false);
+    const [showMoreMenu, setShowMoreMenu] = useState(false);
+    const [showHelp, setShowHelp] = useState(false);
 
     // ---- Multi-language support (Aug 2026) ----
     const [language, setLanguage] = useState('en');
@@ -1803,57 +1805,63 @@ export default function EcoTraceDashboard() {
     return (
         <main style={{ minHeight: '100vh', backgroundColor: '#0b0f19', color: '#ffffff', fontFamily: 'sans-serif', padding: '16px' }}>
             
-            {/* Header */}
-            <header style={{ borderBottom: '1px solid #1f2937', paddingBottom: '12px', marginBottom: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '10px' }}>
-                <div>
-                    <h1 style={{ fontSize: '18px', fontWeight: 'bold', color: '#ffffff', margin: '0 0 4px 0' }}>{t('appTitle')} {isDemoMode && '⚡ [DEMO MODE ACTIVE]'}</h1>
-                    <p style={{ fontSize: '12px', color: '#9ca3af', margin: '0 0 4px 0' }}>{t('tagline')}</p>
-                    <p style={{ fontSize: '11px', color: '#34d399', margin: 0 }}>Project Lead: D. S. Nikam | 📞 7378780745 | ✉️ dhiraj@ectotraceindia.com</p>
-                </div>
-                <div style={{ display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap' }}>
+            {/* Header — redesigned (Aug 2026): एकच मुख्य कृती (Export) कायम दिसते, बाकी सगळं ⋮ More मध्ये */}
+            <header style={{ borderBottom: '1px solid #1f2937', paddingBottom: '14px', marginBottom: '18px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '10px' }}>
+                <h1 style={{ fontSize: '17px', fontWeight: 'bold', color: '#ffffff', margin: 0, letterSpacing: '-0.01em' }}>
+                    {t('appTitle')} {isDemoMode && <span style={{ color: '#f59e0b', fontSize: '11px', fontWeight: 'bold' }}>⚡ DEMO</span>}
+                </h1>
+                <div style={{ display: 'flex', gap: '8px', alignItems: 'center', position: 'relative' }}>
                     {renderLanguagePicker()}
                     <button 
-                        onClick={loadDemoUnit}
-                        style={{ backgroundColor: '#f59e0b', color: 'white', border: 'none', padding: '8px 12px', borderRadius: '6px', fontSize: '11px', fontWeight: 'bold', cursor: 'pointer' }}
-                    >
-                        {t('loadDemo')}
-                    </button>
-                    <button 
                         onClick={handleExportReport}
-                        style={{ backgroundColor: '#059669', color: 'white', border: 'none', padding: '8px 14px', borderRadius: '6px', fontSize: '12px', fontWeight: 'bold', cursor: 'pointer' }}
+                        style={{ backgroundColor: '#059669', color: 'white', border: 'none', padding: '9px 16px', borderRadius: '7px', fontSize: '12px', fontWeight: 'bold', cursor: 'pointer' }}
                     >
                         {t('exportReport')}
                     </button>
-                    <button 
-                        onClick={handleExportCSV}
-                        style={{ backgroundColor: '#1f2937', color: 'white', border: '1px solid #374151', padding: '8px 12px', borderRadius: '6px', fontSize: '11px', fontWeight: 'bold', cursor: 'pointer' }}
-                    >
-                        📊 CSV
-                    </button>
                     <button
-                        onClick={() => setViewMode('buyer')}
-                        style={{ backgroundColor: '#1f2937', color: 'white', border: '1px solid #374151', padding: '8px 12px', borderRadius: '6px', fontSize: '11px', fontWeight: 'bold', cursor: 'pointer' }}
+                        onClick={() => setShowMoreMenu(!showMoreMenu)}
+                        style={{ backgroundColor: '#1f2937', color: 'white', border: '1px solid #374151', padding: '9px 12px', borderRadius: '7px', fontSize: '13px', fontWeight: 'bold', cursor: 'pointer', lineHeight: 1 }}
                     >
-                        {t('buyerPortal')}
+                        ⋮
                     </button>
-                    <button 
-                        onClick={handleLogout}
-                        style={{ backgroundColor: '#374151', color: 'white', border: 'none', padding: '8px 12px', borderRadius: '6px', fontSize: '11px', fontWeight: 'bold', cursor: 'pointer' }}
-                    >
-                        {t('logout')} ({session.user.email})
-                    </button>
+                    {showMoreMenu && (
+                        <div style={{ position: 'absolute', top: '44px', right: 0, backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '10px', boxShadow: '0 8px 24px rgba(0,0,0,0.5)', padding: '6px', zIndex: 50, minWidth: '220px', display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                            <button onClick={() => { loadDemoUnit(); setShowMoreMenu(false); }} style={{ textAlign: 'left', backgroundColor: 'transparent', color: '#d1d5db', border: 'none', padding: '9px 10px', borderRadius: '6px', fontSize: '12px', cursor: 'pointer' }}>⚡ {t('loadDemo').replace('⚡ ', '')}</button>
+                            <button onClick={() => { handleExportCSV(); setShowMoreMenu(false); }} style={{ textAlign: 'left', backgroundColor: 'transparent', color: '#d1d5db', border: 'none', padding: '9px 10px', borderRadius: '6px', fontSize: '12px', cursor: 'pointer' }}>📊 CSV Export</button>
+                            <button onClick={() => { setViewMode('buyer'); setShowMoreMenu(false); }} style={{ textAlign: 'left', backgroundColor: 'transparent', color: '#d1d5db', border: 'none', padding: '9px 10px', borderRadius: '6px', fontSize: '12px', cursor: 'pointer' }}>{t('buyerPortal')}</button>
+                            <button onClick={() => { setShowHelp(true); setShowMoreMenu(false); }} style={{ textAlign: 'left', backgroundColor: 'transparent', color: '#d1d5db', border: 'none', padding: '9px 10px', borderRadius: '6px', fontSize: '12px', cursor: 'pointer' }}>❓ Help & Support</button>
+                            <div style={{ borderTop: '1px solid #1f2937', margin: '4px 0' }} />
+                            <button onClick={() => { handleLogout(); setShowMoreMenu(false); }} style={{ textAlign: 'left', backgroundColor: 'transparent', color: '#f87171', border: 'none', padding: '9px 10px', borderRadius: '6px', fontSize: '12px', cursor: 'pointer' }}>{t('logout')}</button>
+                        </div>
+                    )}
                 </div>
             </header>
 
-            {/* Status Banner */}
-            <div style={{ marginBottom: '16px', padding: '10px 14px', background: ctoBannerBg, borderRadius: '8px', border: `1px solid ${ctoBannerBorder}`, display: 'inline-block', width: '100%' }}>
-                <span style={{ fontSize: '12px', fontWeight: 'bold', color: ctoTextColor }}>
-                    {isFactoryActive ? `🏢 ${t('activeUnit')}: ${factoryData.name} (${factoryData.location}) | ${t('unitId')}: ${currentUnitId} | ${t('ctoDaysLeft')}: ${ctoDaysLeft}` : `⚠️ ${t('noFactory')}`}
-                </span>
+            {/* Help & Support panel */}
+            {showHelp && (
+                <div style={{ marginBottom: '16px', padding: '14px', backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '10px', fontSize: '12px', color: '#9ca3af', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span>Project Lead: D. S. Nikam | 📞 7378780745 | ✉️ dhiraj@ectotraceindia.com | {session.user.email}</span>
+                    <button onClick={() => setShowHelp(false)} style={{ background: 'none', border: 'none', color: '#6b7280', fontSize: '16px', cursor: 'pointer', padding: '0 4px' }}>✕</button>
+                </div>
+            )}
+
+            {/* Status row — compact badge ऐवजी आधीचा भरगच्च banner (Aug 2026 redesign) */}
+            <div style={{ marginBottom: '18px', display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
+                {isFactoryActive ? (
+                    <>
+                        <span style={{ fontSize: '13px', fontWeight: 'bold', color: 'white' }}>🏢 {factoryData.name}</span>
+                        <span style={{ fontSize: '11px', color: '#6b7280' }}>{factoryData.location}</span>
+                        <span style={{ backgroundColor: ctoBannerBg, border: `1px solid ${ctoBannerBorder}`, color: ctoTextColor, fontSize: '11px', fontWeight: 'bold', padding: '3px 9px', borderRadius: '999px' }}>
+                            {t('ctoDaysLeft')}: {ctoDaysLeft}d
+                        </span>
+                    </>
+                ) : (
+                    <span style={{ fontSize: '12px', color: '#f59e0b' }}>⚠️ {t('noFactory')}</span>
+                )}
             </div>
 
             {/* Navigation Tabs */}
-            <nav style={{ display: 'flex', gap: '16px', borderBottom: '1px solid #1f2937', marginBottom: '20px', overflowX: 'auto', paddingBottom: '8px' }}>
+            <nav style={{ display: 'flex', gap: '20px', borderBottom: '1px solid #1f2937', marginBottom: '22px', overflowX: 'auto', paddingBottom: '10px' }}>
                 <button onClick={() => setActiveTab('overview')} style={{ background: 'none', border: 'none', color: activeTab === 'overview' ? '#34d399' : '#9ca3af', fontWeight: 'bold', fontSize: '13px', cursor: 'pointer' }}>{t('tabOverview')}</button>
                 <button onClick={() => setActiveTab('live_core')} style={{ background: 'none', border: 'none', color: activeTab === 'live_core' ? '#34d399' : '#9ca3af', fontWeight: 'bold', fontSize: '13px', cursor: 'pointer' }}>{t('tabLiveCore')}</button>
                 <button onClick={() => setActiveTab('reference')} style={{ background: 'none', border: 'none', color: activeTab === 'reference' ? '#34d399' : '#9ca3af', fontWeight: 'bold', fontSize: '13px', cursor: 'pointer' }}>{t('tabReference')}</button>
@@ -1866,15 +1874,11 @@ export default function EcoTraceDashboard() {
                     {!isFactoryActive ? (
                         <div style={{ backgroundColor: '#111827', border: '1px solid #374151', borderRadius: '12px', padding: '20px', marginBottom: '20px' }}>
                             <h3 style={{ fontSize: '15px', color: 'white', margin: '0 0 8px 0' }}>Start here</h3>
-                            <p style={{ color: '#9ca3af', fontSize: '13px', marginBottom: '12px' }}>Register your unit in Live Core Module 1 or click "Load Demo Unit" above for instant sales presentation.</p>
+                            <p style={{ color: '#9ca3af', fontSize: '13px', marginBottom: '12px' }}>Register your unit in Live Core Module 1 or click "Load Demo Unit" (⋮ menu) for instant sales presentation.</p>
                             <button onClick={() => setActiveTab('live_core')} style={{ backgroundColor: '#10b981', color: 'white', border: 'none', padding: '8px 14px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer', fontSize: '12px' }}>Go to Onboarding</button>
                         </div>
                     ) : (
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '16px' }}>
-                            <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '16px', boxShadow: '0 1px 3px rgba(0,0,0,0.3)' }}>
-                                <h4 style={{ color: '#ef4444', margin: '0 0 6px 0', fontSize: '13px' }}>🚨 MPCB Statutory Tracking (CTO)</h4>
-                                <p style={{ margin: 0, fontSize: '13px', fontWeight: 'bold', color: ctoDaysLeft < 30 ? '#ef4444' : '#34d399' }}>CTO Valid: {ctoDaysLeft} Days Left ({factoryData.ctoExpiryDate})</p>
-                            </div>
                             <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '16px', boxShadow: '0 1px 3px rgba(0,0,0,0.3)' }}>
                                 <h4 style={{ color: '#e5e7eb', margin: '0 0 6px 0', fontSize: '13px' }}>📊 dMRV Carbon Engine</h4>
                                 <p style={{ margin: 0, fontSize: '12px', color: '#d1d5db' }}>Scope 2 (Grid Power): {calculatedScope2} MT CO2e</p>
