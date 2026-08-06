@@ -1241,7 +1241,7 @@ export default function EcoTraceDashboard() {
         y = 100;
 
         if (isDemoMode) {
-            addLine('⚠️ DEMO DATA — Sample Illustration, Not for Filing', { size: 10, bold: true, color: [180, 83, 9], gapAfter: 18 });
+            addLine('[DEMO DATA] — Sample Illustration, Not for Filing', { size: 10, bold: true, color: [180, 83, 9], gapAfter: 18 });
         }
         addLine(`Generated: ${new Date().toISOString()} | Version: CEA 2025-26`, { size: 9, color: [110, 110, 110], gapAfter: 20 });
 
@@ -1287,7 +1287,7 @@ export default function EcoTraceDashboard() {
 
         doc.setFontSize(8);
         doc.setTextColor(150, 150, 150);
-        doc.text('EcoTrace India | Project Lead: D. S. Nikam | 7378780745 | dhiraj@ectotraceindia.com', marginX, 800);
+        doc.text('EcoTrace India | Project Lead: D. S. Nikam | 7378780745 | dhiraj@ectotraceindia.com', marginX, Math.min(y + 15, 800));
 
         doc.save(`${factoryData.name.replace(/\s+/g, '_')}_Verified_Audit_Report.pdf`);
     };
