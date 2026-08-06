@@ -383,6 +383,26 @@ export default function EcoTraceDashboard() {
             fetchFactoryConnectionRequests(currentUnitId);
         }
     }, [currentUnitId]);
+
+    // ---- FIX (Aug 2026, round 5): आधी operator पूर्ण फॉर्म भरून "Save & Lock" दाबल्यावरच
+    // कळायचं की आजची नोंद आधीच झालीये — वेळ वाया जायचा. आता factory उघडताक्षणीच तपासतो. ----
+    const [todayLogLockedAt, setTodayLogLockedAt] = useState(null);
+    const checkTodayLogStatus = async (factoryId) => {
+        const { data } = await supabase
+            .from('daily_logs')
+            .select('created_at')
+            .eq('factory_id', factoryId)
+            .eq('log_date', getISTDateString())
+            .limit(1);
+        setTodayLogLockedAt(data && data.length > 0 ? data[0].created_at : null);
+    };
+    useEffect(() => {
+        if (currentUnitId && !isDemoMode) {
+            checkTodayLogStatus(currentUnitId);
+        } else {
+            setTodayLogLockedAt(null);
+        }
+    }, [currentUnitId, isDemoMode]);
     
     const [selectedCategory, setSelectedCategory] = useState("CPCB Cat 34.3 (Chemical Sludge)");
     const [ocrFiles, setOcrFiles] = useState([]); // Now stores per-file objects with individual OCR statuses
@@ -393,6 +413,7 @@ export default function EcoTraceDashboard() {
     const [isSludgeNotApplicable, setIsSludgeNotApplicable] = useState(false);
     const [logSubmitted, setLogSubmitted] = useState(false);
     const [validationWarning, setValidationWarning] = useState("");
+
 
     const handleUnitSwitch = (newUnitId, newFactoryDetails, logs, demoState, category, files, logState, sludgeNaState, ocrPower) => {
         if (currentUnitId) {
@@ -811,6 +832,7 @@ export default function EcoTraceDashboard() {
 
         // स्टेप 3.2 — insert यशस्वी झाल्यावरच "saved & locked" दाखवा
         setLogSubmitted(true);
+        setTodayLogLockedAt(data.created_at);
 
         const newLogEntry = {
             date: data.log_date,
@@ -1490,6 +1512,13 @@ EcoTrace India Private Limited is an independent compliance platform. It aggrega
                         {validationWarning && <p style={{ color: '#f59e0b', fontSize: '11px', fontWeight: 'bold', margin: '0 0 6px 0' }}>{validationWarning}</p>}
                         {logSubmitted && <p style={{ color: '#34d399', fontSize: '12px', fontWeight: 'bold' }}>✅ Log saved & locked for Unit: {currentUnitId}</p>}
                         
+                        {todayLogLockedAt && !isDemoMode ? (
+                            <div style={{ backgroundColor: '#1f2937', border: '1px solid #065f46', borderRadius: '8px', padding: '14px' }}>
+                                <p style={{ margin: '0 0 4px 0', fontSize: '13px', color: '#34d399', fontWeight: 'bold' }}>✅ आजची नोंद आधीच झाली आहे — लॉक झालेली आहे</p>
+                                <p style={{ margin: 0, fontSize: '11px', color: '#9ca3af' }}>Locked at: {new Date(todayLogLockedAt).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })} IST</p>
+                                <p style={{ margin: '6px 0 0 0', fontSize: '11px', color: '#9ca3af' }}>उद्या भारतीय वेळेनुसार रात्री १२ नंतर नवीन नोंद उपलब्ध होईल.</p>
+                            </div>
+                        ) : (
                         <form onSubmit={handleLogSubmit} style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '8px' }}>
                             <div>
                                 <label style={{ fontSize: '10px', color: '#9ca3af' }}>pH Level (Mandatory)</label>
@@ -1556,6 +1585,7 @@ EcoTrace India Private Limited is an independent compliance platform. It aggrega
                             </div>
                             <button type="submit" style={{ gridColumn: '1 / -1', backgroundColor: '#059669', color: 'white', border: 'none', padding: '8px', borderRadius: '4px', fontSize: '12px', fontWeight: 'bold', cursor: 'pointer' }}>Save & Lock Daily Record</button>
                         </form>
+                        )}
                     </div>
 
                     {/* Module 5: Flying Squad Audit Mode */}
