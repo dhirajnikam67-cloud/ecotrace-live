@@ -861,10 +861,24 @@ export default function EcoTraceDashboard() {
     const handleRequestConnection = async (e) => {
         e.preventDefault();
         if (!requestFactoryId.trim() || !buyerData) return;
+        const factoryIdTrimmed = requestFactoryId.trim();
         const { error } = await supabase
             .from('buyer_connections')
-            .insert({ buyer_id: buyerData.id, factory_id: requestFactoryId.trim(), status: 'pending' });
-        if (error) {
+            .insert({ buyer_id: buyerData.id, factory_id: factoryIdTrimmed, status: 'pending' });
+
+        if (error && error.code === '23505') {
+            // ---- FIX (Aug 2026): याआधी या buyer-factory जोडीसाठी विनंती अस्तित्वात आहे
+            // (उदा. आधी revoke/reject झालेली) — नवीन insert ऐवजी तीच row परत 'pending' करतो ----
+            const { error: updateError } = await supabase
+                .from('buyer_connections')
+                .update({ status: 'pending', responded_at: null })
+                .eq('buyer_id', buyerData.id)
+                .eq('factory_id', factoryIdTrimmed);
+            if (updateError) {
+                alert('Error re-sending request: ' + updateError.message);
+                return;
+            }
+        } else if (error) {
             alert('Error sending request: ' + error.message + ' (तपासा — Factory ID बरोबर टाकलाय का?)');
             return;
         }
