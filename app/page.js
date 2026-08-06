@@ -115,6 +115,18 @@ function preflightCheck(dailyLogEntries) {
 // प्रत्येक daily_logs row चा hash = SHA-256(त्या entry चा canonical डेटा + आधीच्या entry चा hash).
 // यामुळे साखळी तयार होते — मध्येच कुठलीही जुनी नोंद बदलली, तर पुढच्या सगळ्या नोंदींचा hash जुळेनासा होतो.
 // ---------------------------------------------------------------------------
+// ---------------------------------------------------------------------------
+// FIX (Aug 2026, round 4): "आजची तारीख" आधी new Date().toISOString() (UTC) वरून काढली जायची —
+// भारत UTC+5:30 असल्याने त्यामुळे नवीन दिवस रात्री १२ ऐवजी पहाटे ५:३० वाजता सुरू व्हायचा
+// (उदा. रात्री १:०० वाजताची नोंद अजूनही "काल" धरली जायची). आता IST प्रमाणे खरी तारीख काढतो,
+// जेणेकरून "एका दिवसाला एकच नोंद" चा lock बरोबर मध्यरात्रीलाच उघडेल.
+// ---------------------------------------------------------------------------
+function getISTDateString() {
+    const IST_OFFSET_MS = 5.5 * 60 * 60 * 1000;
+    const istTime = new Date(Date.now() + IST_OFFSET_MS);
+    return istTime.toISOString().split('T')[0];
+}
+
 function canonicalLogPayload(row) {
     // Fixed key order + Number() normalization, जेणेकरून insert-वेळचा payload आणि
     // नंतर DB मधून वाचलेला payload (जो numeric कॉलम्ससाठी string म्हणून येतो) सारखाच बनतो.
@@ -224,12 +236,17 @@ export default function EcoTraceDashboard() {
         ctoExpiryDate: "",
         status: "PENDING ONBOARDING",
         gridEmissionFactor: ALL_INDIA_GRID_FACTOR,
+        state: "",
     });
 
     const [tempCompanyName, setTempCompanyName] = useState('');
     const [tempMidcLocation, setTempMidcLocation] = useState('');
     const [tempDischargeLimit, setTempDischargeLimit] = useState('');
     const [tempCtoDate, setTempCtoDate] = useState('');
+    // FIX (Aug 2026, round 4): एकदा factory registered झाली की Module 1 चा फॉर्म आपोआप रिकामाच
+    // दिसायचा (जरी वरच्या पट्टीत खरा साठलेला डेटा दिसत असला तरी) — गोंधळ व्हायचा. आता factory
+    // already असेल तर "locked" सारांश दाखवतो, फक्त स्पष्ट "Edit" दाबल्यावरच फॉर्म उघडतो.
+    const [isEditingFactory, setIsEditingFactory] = useState(false);
     // Step 4 (Pan-India expansion): state selection for onboarding, options loaded from state_configs
     const [tempFactoryState, setTempFactoryState] = useState('Maharashtra');
     const [availableStates, setAvailableStates] = useState([]);
@@ -292,6 +309,7 @@ export default function EcoTraceDashboard() {
                     ctoExpiryDate: data.cto_expiry_date ?? '2026-12-31',
                     status: "DATA COMPLETE & FILING-READY",
                     gridEmissionFactor: gridFactor,
+                    state: data.state || '',
                 });
 
                 // ---- Step 4 (Pan-India backend migration): load this factory's saved daily_logs
@@ -473,6 +491,7 @@ export default function EcoTraceDashboard() {
             ctoExpiryDate: ctoDateValue,
             status: "DATA COMPLETE & FILING-READY",
             gridEmissionFactor: onboardGridFactor,
+            state: factoryState,
         });
 
         alert(`Factory Unit ${unitName} Onboarded Successfully (Saved to Database)!`);
@@ -668,7 +687,7 @@ export default function EcoTraceDashboard() {
         if (isDemoMode) {
             setLogSubmitted(true);
             const demoEntry = {
-                date: new Date().toISOString().split('T')[0],
+                date: getISTDateString(),
                 ph: dailyLog.ph,
                 water: dailyLog.water,
                 power: dailyLog.power,
@@ -696,7 +715,7 @@ export default function EcoTraceDashboard() {
         // तो error दुर्लक्षित होऊन lock निकामी व्हायचं (म्हणूनच वरच्या डुप्लिकेट नोंदी तयार झाल्या).
         // आता .limit(1) + array-length तपासणी वापरतो, जी कितीही जुन्या नोंदी असल्या तरी बरोबर चालते;
         // आणि query मध्येच error आली तर (उदा. नेटवर्क अडचण) सुरक्षिततेसाठी insert थांबवतो.
-        const todayDateStr = new Date().toISOString().split('T')[0];
+        const todayDateStr = getISTDateString();
         const { data: existingTodayLogs, error: existingCheckError } = await supabase
             .from('daily_logs')
             .select('id')
@@ -750,7 +769,7 @@ export default function EcoTraceDashboard() {
 
         const newRecordFields = {
             factory_id: currentUnitId,
-            log_date: new Date().toISOString().split('T')[0],
+            log_date: getISTDateString(),
             ph_level: parseFloat(dailyLog.ph),
             water_discharge_liters: parseFloat(dailyLog.water),
             electricity_kwh: parseFloat(dailyLog.power),
@@ -1389,20 +1408,50 @@ EcoTrace India Private Limited is an independent compliance platform. It aggrega
                     <div style={{ backgroundColor: '#111827', border: '1px solid #374151', borderRadius: '12px', padding: '16px' }}>
                         <span style={{ backgroundColor: '#065f46', color: '#d1fae5', padding: '2px 6px', borderRadius: '4px', fontSize: '10px', fontWeight: 'bold' }}>LIVE MODULE 1</span>
                         <h3 style={{ color: '#818cf8', margin: '8px 0 8px 0', fontSize: '15px' }}>1. Multi-Tenant Client Onboarding & CTO Setup</h3>
-                        <form onSubmit={handleOnboardSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                            <input type="text" value={tempCompanyName} onChange={(e) => setTempCompanyName(e.target.value)} placeholder="Enter Company Name" style={{ padding: '8px', backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '6px', color: 'white', fontSize: '12px' }} required />
-                            <select value={tempFactoryState} onChange={(e) => setTempFactoryState(e.target.value)} style={{ padding: '8px', backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '6px', color: 'white', fontSize: '12px' }}>
-                                {availableStates.length > 0 ? (
-                                    availableStates.map((st) => <option key={st} value={st}>{st}</option>)
-                                ) : (
-                                    <option value="Maharashtra">Maharashtra</option>
-                                )}
-                            </select>
-                            <input type="text" value={tempMidcLocation} onChange={(e) => setTempMidcLocation(e.target.value)} placeholder="Enter Industrial Area / Location (Optional if restoring)" style={{ padding: '8px', backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '6px', color: 'white', fontSize: '12px' }} />
-                            <input type="text" value={tempDischargeLimit} onChange={(e) => setTempDischargeLimit(e.target.value)} placeholder="Discharge Limit (Liters)" style={{ padding: '8px', backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '6px', color: 'white', fontSize: '12px' }} />
-                            <input type="date" value={tempCtoDate} onChange={(e) => setTempCtoDate(e.target.value)} style={{ padding: '8px', backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '6px', color: 'white', fontSize: '12px' }} />
-                            <button type="submit" style={{ backgroundColor: '#059669', color: 'white', border: 'none', padding: '8px 14px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer', fontSize: '12px' }}>Register / Switch Unit (Live State Protected)</button>
-                        </form>
+                        {isFactoryActive && !isEditingFactory ? (
+                            <div>
+                                <div style={{ backgroundColor: '#1f2937', border: '1px solid #065f46', borderRadius: '8px', padding: '12px', marginBottom: '10px' }}>
+                                    <p style={{ margin: '0 0 4px 0', fontSize: '11px', color: '#34d399', fontWeight: 'bold' }}>✅ REGISTERED & LOCKED</p>
+                                    <p style={{ margin: '0 0 2px 0', fontSize: '13px', color: 'white', fontWeight: 'bold' }}>{factoryData.name}</p>
+                                    <p style={{ margin: '0 0 2px 0', fontSize: '11px', color: '#9ca3af' }}>{factoryData.location} · {factoryData.state}</p>
+                                    <p style={{ margin: '0 0 2px 0', fontSize: '11px', color: '#9ca3af' }}>Discharge Limit: {factoryData.dischargeLimit} L | CTO Expiry: {factoryData.ctoExpiryDate}</p>
+                                </div>
+                                <button
+                                    onClick={() => {
+                                        // Edit मोड मध्ये गेल्यावर सध्याचा साठलेला डेटा फॉर्ममध्ये आधीच भरून दाखवतो
+                                        setTempCompanyName(factoryData.name);
+                                        setTempFactoryState(factoryData.state || 'Maharashtra');
+                                        setTempMidcLocation(factoryData.location || '');
+                                        setTempDischargeLimit(factoryData.dischargeLimit || '');
+                                        setTempCtoDate(factoryData.ctoExpiryDate || '');
+                                        setIsEditingFactory(true);
+                                    }}
+                                    style={{ backgroundColor: '#374151', color: '#d1d5db', border: '1px solid #6b7280', padding: '6px 12px', borderRadius: '6px', fontSize: '11px', fontWeight: 'bold', cursor: 'pointer' }}
+                                >
+                                    ✏️ Edit Details
+                                </button>
+                            </div>
+                        ) : (
+                            <form onSubmit={(e) => { handleOnboardSubmit(e); setIsEditingFactory(false); }} style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                                <input type="text" value={tempCompanyName} onChange={(e) => setTempCompanyName(e.target.value)} placeholder="Enter Company Name" style={{ padding: '8px', backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '6px', color: 'white', fontSize: '12px' }} required />
+                                <select value={tempFactoryState} onChange={(e) => setTempFactoryState(e.target.value)} style={{ padding: '8px', backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '6px', color: 'white', fontSize: '12px' }}>
+                                    {availableStates.length > 0 ? (
+                                        availableStates.map((st) => <option key={st} value={st}>{st}</option>)
+                                    ) : (
+                                        <option value="Maharashtra">Maharashtra</option>
+                                    )}
+                                </select>
+                                <input type="text" value={tempMidcLocation} onChange={(e) => setTempMidcLocation(e.target.value)} placeholder="Enter Industrial Area / Location (Optional if restoring)" style={{ padding: '8px', backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '6px', color: 'white', fontSize: '12px' }} />
+                                <input type="text" value={tempDischargeLimit} onChange={(e) => setTempDischargeLimit(e.target.value)} placeholder="Discharge Limit (Liters)" style={{ padding: '8px', backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '6px', color: 'white', fontSize: '12px' }} />
+                                <input type="date" value={tempCtoDate} onChange={(e) => setTempCtoDate(e.target.value)} style={{ padding: '8px', backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '6px', color: 'white', fontSize: '12px' }} />
+                                <div style={{ display: 'flex', gap: '8px' }}>
+                                    <button type="submit" style={{ backgroundColor: '#059669', color: 'white', border: 'none', padding: '8px 14px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer', fontSize: '12px' }}>Register / Switch Unit (Live State Protected)</button>
+                                    {isFactoryActive && (
+                                        <button type="button" onClick={() => setIsEditingFactory(false)} style={{ backgroundColor: '#374151', color: '#d1d5db', border: 'none', padding: '8px 14px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer', fontSize: '12px' }}>Cancel</button>
+                                    )}
+                                </div>
+                            </form>
+                        )}
                     </div>
 
                     {/* Module 2: Enterprise Overview */}
