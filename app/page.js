@@ -89,6 +89,15 @@ const TRANSLATIONS = {
         addFuel: '+ Add Another Fuel Source',
         saveLock: 'Save & Lock Daily Record',
         languageLabel: 'Language',
+        factoryLogin: 'Factory Login',
+        newFactorySignup: 'New Factory Signup',
+        emailPlaceholder: 'Email',
+        passwordPlaceholder: 'Password',
+        loginButton: 'Login',
+        signupButton: 'Sign Up',
+        newFactoryLink: 'New factory? Sign up',
+        alreadyRegisteredLink: 'Already registered? Login',
+        selectLanguage: 'Select your language',
     },
     mr: {
         appTitle: 'EcoTrace India',
@@ -128,6 +137,15 @@ const TRANSLATIONS = {
         addFuel: '+ आणखी इंधन-स्रोत जोडा',
         saveLock: 'सेव्ह करा व लॉक करा',
         languageLabel: 'भाषा',
+        factoryLogin: 'Factory Login',
+        newFactorySignup: 'नवीन Factory नोंदणी',
+        emailPlaceholder: 'Email',
+        passwordPlaceholder: 'Password',
+        loginButton: 'Login',
+        signupButton: 'नोंदणी करा (Sign Up)',
+        newFactoryLink: 'नवीन factory? नोंदणी करा',
+        alreadyRegisteredLink: 'आधीच नोंदणी आहे? Login करा',
+        selectLanguage: 'तुमची भाषा निवडा',
     },
     hi: {
         appTitle: 'EcoTrace India',
@@ -167,6 +185,15 @@ const TRANSLATIONS = {
         addFuel: '+ एक और ईंधन-स्रोत जोड़ें',
         saveLock: 'सेव करें व लॉक करें',
         languageLabel: 'भाषा',
+        factoryLogin: 'Factory Login',
+        newFactorySignup: 'नई Factory रजिस्ट्रेशन',
+        emailPlaceholder: 'Email',
+        passwordPlaceholder: 'Password',
+        loginButton: 'Login',
+        signupButton: 'रजिस्टर करें (Sign Up)',
+        newFactoryLink: 'नई factory? रजिस्टर करें',
+        alreadyRegisteredLink: 'पहले से रजिस्टर्ड? Login करें',
+        selectLanguage: 'अपनी भाषा चुनें',
     },
 };
 
@@ -1443,24 +1470,36 @@ export default function EcoTraceDashboard() {
     if (!session) {
         return (
             <main style={{ minHeight: '100vh', backgroundColor: '#0b0f19', color: '#ffffff', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '16px' }}>
-                <div style={{ maxWidth: '360px', width: '100%', backgroundColor: '#111827', border: '1px solid #374151', borderRadius: '12px', padding: '24px' }}>
-                    <h2 style={{ marginBottom: '4px' }}>EcoTrace India</h2>
-                    <p style={{ color: '#9ca3af', fontSize: '13px', marginBottom: '20px' }}>
-                        {authMode === 'login' ? 'Factory Login' : 'New Factory Signup'}
+                <div style={{ maxWidth: '380px', width: '100%', backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '14px', padding: '28px', boxShadow: '0 20px 40px rgba(0,0,0,0.35)' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '4px' }}>
+                        <h2 style={{ margin: 0, fontSize: '20px', letterSpacing: '-0.02em' }}>{t('appTitle')}</h2>
+                        <select
+                            value={language}
+                            onChange={(e) => setLanguage(e.target.value)}
+                            title={t('selectLanguage')}
+                            style={{ backgroundColor: '#1f2937', color: '#d1d5db', border: '1px solid #374151', borderRadius: '6px', padding: '5px 6px', fontSize: '11px', cursor: 'pointer' }}
+                        >
+                            <option value="en">🌐 EN</option>
+                            <option value="mr">🌐 मर</option>
+                            <option value="hi">🌐 हि</option>
+                        </select>
+                    </div>
+                    <p style={{ color: '#6b7280', fontSize: '13px', marginBottom: '22px' }}>
+                        {authMode === 'login' ? t('factoryLogin') : t('newFactorySignup')}
                     </p>
-                    <form onSubmit={handleAuthSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                        <input type="email" placeholder="Email" value={authEmail} onChange={(e) => setAuthEmail(e.target.value)} required
-                            style={{ padding: '8px', backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '6px', color: 'white' }} />
-                        <input type="password" placeholder="Password" value={authPassword} onChange={(e) => setAuthPassword(e.target.value)} required
-                            style={{ padding: '8px', backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '6px', color: 'white' }} />
+                    <form onSubmit={handleAuthSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                        <input type="email" placeholder={t('emailPlaceholder')} value={authEmail} onChange={(e) => setAuthEmail(e.target.value)} required
+                            style={{ padding: '10px', backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '8px', color: 'white', fontSize: '13px' }} />
+                        <input type="password" placeholder={t('passwordPlaceholder')} value={authPassword} onChange={(e) => setAuthPassword(e.target.value)} required
+                            style={{ padding: '10px', backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '8px', color: 'white', fontSize: '13px' }} />
                         {authError && <p style={{ color: '#f59e0b', fontSize: '12px' }}>{authError}</p>}
-                        <button type="submit" style={{ backgroundColor: '#059669', color: 'white', border: 'none', padding: '10px', borderRadius: '6px', fontWeight: 'bold' }}>
-                            {authMode === 'login' ? 'Login' : 'Sign Up'}
+                        <button type="submit" style={{ backgroundColor: '#059669', color: 'white', border: 'none', padding: '11px', borderRadius: '8px', fontWeight: 'bold', fontSize: '13px', cursor: 'pointer' }}>
+                            {authMode === 'login' ? t('loginButton') : t('signupButton')}
                         </button>
                     </form>
                     <button onClick={() => setAuthMode(authMode === 'login' ? 'signup' : 'login')}
-                        style={{ background: 'none', border: 'none', color: '#34d399', fontSize: '12px', marginTop: '12px', cursor: 'pointer' }}>
-                        {authMode === 'login' ? "New factory? Sign up" : "Already registered? Login"}
+                        style={{ background: 'none', border: 'none', color: '#34d399', fontSize: '12px', marginTop: '14px', cursor: 'pointer' }}>
+                        {authMode === 'login' ? t('newFactoryLink') : t('alreadyRegisteredLink')}
                     </button>
                 </div>
             </main>
@@ -1504,7 +1543,7 @@ export default function EcoTraceDashboard() {
                     </div>
                 ) : (
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                        <div style={{ backgroundColor: '#111827', border: '1px solid #374151', borderRadius: '12px', padding: '16px' }}>
+                        <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '16px', boxShadow: '0 1px 3px rgba(0,0,0,0.3)' }}>
                             <h4 style={{ color: '#e5e7eb', margin: '0 0 8px 0', fontSize: '14px' }}>नवीन Supplier ला जोडणी-विनंती पाठवा</h4>
                             <p style={{ color: '#9ca3af', fontSize: '11px', marginBottom: '8px' }}>Factory कडून मिळालेला "Unit ID / Compliance ID" इथे टाका — तो त्यांना approve करावा लागेल.</p>
                             <form onSubmit={handleRequestConnection} style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
@@ -1630,11 +1669,11 @@ export default function EcoTraceDashboard() {
                         </div>
                     ) : (
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '16px' }}>
-                            <div style={{ backgroundColor: '#111827', border: '1px solid #374151', borderRadius: '12px', padding: '16px' }}>
+                            <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '16px', boxShadow: '0 1px 3px rgba(0,0,0,0.3)' }}>
                                 <h4 style={{ color: '#ef4444', margin: '0 0 6px 0', fontSize: '13px' }}>🚨 MPCB Statutory Tracking (CTO)</h4>
                                 <p style={{ margin: 0, fontSize: '13px', fontWeight: 'bold', color: ctoDaysLeft < 30 ? '#ef4444' : '#34d399' }}>CTO Valid: {ctoDaysLeft} Days Left ({factoryData.ctoExpiryDate})</p>
                             </div>
-                            <div style={{ backgroundColor: '#111827', border: '1px solid #374151', borderRadius: '12px', padding: '16px' }}>
+                            <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '16px', boxShadow: '0 1px 3px rgba(0,0,0,0.3)' }}>
                                 <h4 style={{ color: '#e5e7eb', margin: '0 0 6px 0', fontSize: '13px' }}>📊 dMRV Carbon Engine</h4>
                                 <p style={{ margin: 0, fontSize: '12px', color: '#d1d5db' }}>Scope 2 (Grid Power): {calculatedScope2} MT CO2e</p>
                                 <p style={{ fontSize: '10px', color: '#34d399', margin: '4px 0 0 0' }}>Emissions calculated as per CEA Baseline Database (Year 2025-26)</p>
@@ -1649,7 +1688,7 @@ export default function EcoTraceDashboard() {
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                     
                     {/* Module 1: Onboarding */}
-                    <div style={{ backgroundColor: '#111827', border: '1px solid #374151', borderRadius: '12px', padding: '16px' }}>
+                    <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '16px', boxShadow: '0 1px 3px rgba(0,0,0,0.3)' }}>
                         <span style={{ backgroundColor: '#1f2937', color: '#9ca3af', padding: '2px 6px', borderRadius: '4px', fontSize: '10px', fontWeight: 'bold' }}>LIVE MODULE 1</span>
                         <h3 style={{ color: '#e5e7eb', margin: '8px 0 8px 0', fontSize: '15px' }}>{t('m1Title')}</h3>
                         {isFactoryActive && !isEditingFactory ? (
@@ -1699,14 +1738,14 @@ export default function EcoTraceDashboard() {
                     </div>
 
                     {/* Module 2: Enterprise Overview */}
-                    <div style={{ backgroundColor: '#111827', border: '1px solid #374151', borderRadius: '12px', padding: '16px' }}>
+                    <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '16px', boxShadow: '0 1px 3px rgba(0,0,0,0.3)' }}>
                         <span style={{ backgroundColor: '#1f2937', color: '#9ca3af', padding: '2px 6px', borderRadius: '4px', fontSize: '10px', fontWeight: 'bold' }}>LIVE MODULE 2</span>
                         <h4 style={{ color: '#e5e7eb', margin: '8px 0 4px 0', fontSize: '14px' }}>2. Main Enterprise Overview</h4>
                         <p style={{ color: '#9ca3af', fontSize: '12px', margin: 0 }}>{isFactoryActive ? `Active Monitoring: ${factoryData.name} at ${factoryData.location}` : 'Status: No factory onboarded yet.'}</p>
                     </div>
 
                     {/* Module 3: Hybrid Bulk OCR Gate with Per-File Array Tracking */}
-                    <div style={{ backgroundColor: '#111827', border: '1px solid #374151', borderRadius: '12px', padding: '16px' }}>
+                    <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '16px', boxShadow: '0 1px 3px rgba(0,0,0,0.3)' }}>
                         <span style={{ backgroundColor: '#1f2937', color: '#9ca3af', padding: '2px 6px', borderRadius: '4px', fontSize: '10px', fontWeight: 'bold' }}>LIVE MODULE 3 (OCR Gate)</span>
                         <h4 style={{ color: '#e5e7eb', margin: '8px 0 4px 0', fontSize: '14px' }}>3. Multi-File Batch OCR & Human Classification Gate (Hybrid Bulk Upload)</h4>
                         <p style={{ color: '#9ca3af', fontSize: '12px', marginBottom: '8px' }}>Select multiple bills (Electricity, Water, Sludge Manifest) for Unit {currentUnitId || 'None'}:</p>
@@ -1811,35 +1850,35 @@ export default function EcoTraceDashboard() {
                     </div>
 
                     {/* Module 5: Flying Squad Audit Mode */}
-                    <div style={{ backgroundColor: '#111827', border: '1px solid #374151', borderRadius: '12px', padding: '16px' }}>
+                    <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '16px', boxShadow: '0 1px 3px rgba(0,0,0,0.3)' }}>
                         <span style={{ backgroundColor: '#1f2937', color: '#9ca3af', padding: '2px 6px', borderRadius: '4px', fontSize: '10px', fontWeight: 'bold' }}>LIVE MODULE 5</span>
                         <h4 style={{ color: '#e5e7eb', margin: '8px 0 4px 0', fontSize: '14px' }}>5. Flying Squad Audit Mode</h4>
                         <button onClick={() => setActionOutput(`[5. Flying Squad Dossier]\n- Unit: ${isFactoryActive ? factoryData.name : 'Not Onboarded'}\n- CTO Days: ${ctoDaysLeft}\n- Status: Verified & Ready.`)} style={{ backgroundColor: '#1f2937', color: 'white', border: '1px solid #374151', padding: '6px 10px', borderRadius: '4px', fontSize: '11px', fontWeight: 'bold', cursor: 'pointer', marginTop: '6px' }}>Generate Dossier</button>
                     </div>
 
                     {/* Module 6: Notice Defence Matrix */}
-                    <div style={{ backgroundColor: '#111827', border: '1px solid #374151', borderRadius: '12px', padding: '16px' }}>
+                    <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '16px', boxShadow: '0 1px 3px rgba(0,0,0,0.3)' }}>
                         <span style={{ backgroundColor: '#1f2937', color: '#9ca3af', padding: '2px 6px', borderRadius: '4px', fontSize: '10px', fontWeight: 'bold' }}>LIVE MODULE 6</span>
                         <h4 style={{ color: '#e5e7eb', margin: '8px 0 4px 0', fontSize: '14px' }}>6. Notice Defence Matrix & Draft Generator</h4>
                         <button onClick={() => setActionOutput(`[6. Notice Defence]\n- Target: MPCB Show-Cause Notice regarding ETP pH variation (${dailyLog.ph}).\n- Unit: ${isFactoryActive ? factoryData.name : 'Pending'}.`)} style={{ backgroundColor: '#1f2937', color: 'white', border: '1px solid #374151', padding: '6px 10px', borderRadius: '4px', fontSize: '11px', fontWeight: 'bold', cursor: 'pointer', marginTop: '6px' }}>Generate Notice Defence</button>
                     </div>
 
                     {/* Module 7: Annual Returns */}
-                    <div style={{ backgroundColor: '#111827', border: '1px solid #374151', borderRadius: '12px', padding: '16px' }}>
+                    <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '16px', boxShadow: '0 1px 3px rgba(0,0,0,0.3)' }}>
                         <span style={{ backgroundColor: '#1f2937', color: '#9ca3af', padding: '2px 6px', borderRadius: '4px', fontSize: '10px', fontWeight: 'bold' }}>LIVE MODULE 7</span>
                         <h4 style={{ color: '#e5e7eb', margin: '8px 0 4px 0', fontSize: '14px' }}>7. Form 3, 4 & 5 Annual Returns Draft Generator</h4>
                         <button onClick={() => setActionOutput(`[7. Form 3, 4 & 5]\n- Returns compiled for ${isFactoryActive ? factoryData.name.toLowerCase() : 'demo unit'}.\n- Sludge: ${isSludgeNotApplicable ? 'N/A' : dailyLog.sludge + ' MT'} (${selectedCategory}).`)} style={{ backgroundColor: '#1f2937', color: 'white', border: '1px solid #374151', padding: '6px 10px', borderRadius: '4px', fontSize: '11px', fontWeight: 'bold', cursor: 'pointer', marginTop: '6px' }}>Compile Returns</button>
                     </div>
 
                     {/* Module 8: WhatsApp / SMS Alert Engine */}
-                    <div style={{ backgroundColor: '#111827', border: '1px solid #374151', borderRadius: '12px', padding: '16px' }}>
+                    <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '16px', boxShadow: '0 1px 3px rgba(0,0,0,0.3)' }}>
                         <span style={{ backgroundColor: '#1f2937', color: '#9ca3af', padding: '2px 6px', borderRadius: '4px', fontSize: '10px', fontWeight: 'bold' }}>LIVE MODULE 8</span>
                         <h4 style={{ color: '#e5e7eb', margin: '8px 0 4px 0', fontSize: '14px' }}>8. WhatsApp / SMS Alert Engine (Marathi Triggers)</h4>
                         <button onClick={() => setActionOutput(`[8. Marathi Alert Sent]\n- Message: "तुमच्या फॅक्टरीच्या CTO नूतनीकरणासाठी ${ctoDaysLeft} दिवस उरले आहेत."`)} style={{ backgroundColor: '#1f2937', color: 'white', border: '1px solid #374151', padding: '6px 10px', borderRadius: '4px', fontSize: '11px', fontWeight: 'bold', cursor: 'pointer', marginTop: '6px' }}>Test Marathi Alert</button>
                     </div>
 
                     {/* Module 9: Tamper-Evident Digital Vault */}
-                    <div style={{ backgroundColor: '#111827', border: '1px solid #374151', borderRadius: '12px', padding: '16px' }}>
+                    <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '16px', boxShadow: '0 1px 3px rgba(0,0,0,0.3)' }}>
                         <span style={{ backgroundColor: '#1f2937', color: '#9ca3af', padding: '2px 6px', borderRadius: '4px', fontSize: '10px', fontWeight: 'bold' }}>LIVE MODULE 9</span>
                         <h4 style={{ color: '#e5e7eb', margin: '8px 0 4px 0', fontSize: '14px' }}>9. Tamper-Evident Digital Vault</h4>
                         <button onClick={handleVerifyVault} style={{ backgroundColor: '#1f2937', color: 'white', border: '1px solid #374151', padding: '6px 10px', borderRadius: '4px', fontSize: '11px', fontWeight: 'bold', cursor: 'pointer', marginTop: '6px' }}>Verify Vault Hash</button>
