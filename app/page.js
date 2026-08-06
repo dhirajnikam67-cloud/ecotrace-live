@@ -139,6 +139,26 @@ const TRANSLATIONS = {
         summaryLoadingText: 'Summary loading...',
         waitingApproval: 'Waiting for factory approval.',
         requestRejectedRevoked: 'This request was rejected/revoked.',
+        m2Title: '2. Main Enterprise Overview',
+        m3Title: '3. Multi-File Batch OCR & Human Classification Gate (Hybrid Bulk Upload)',
+        m3Desc: 'Select multiple bills (Electricity, Water, Sludge Manifest) for Unit',
+        m5Title: '5. Flying Squad Audit Mode',
+        generateDossier: 'Generate Dossier',
+        m6Title: '6. Notice Defence Matrix & Draft Generator',
+        generateNoticeDefence: 'Generate Notice Defence',
+        m7Title: '7. Form 3, 4 & 5 Annual Returns Draft Generator',
+        compileReturns: 'Compile Returns',
+        m8Title: '8. WhatsApp / SMS Alert Engine',
+        testAlertButton: 'Test Alert',
+        m9Title: '9. Tamper-Evident Digital Vault',
+        verifyVaultHashButton: 'Verify Vault Hash',
+        buyerConnectionRequestsTitle: 'Buyer Connection Requests',
+        buyerConnectionRequestsDesc: 'Share your Unit ID with buyers (shown in the status bar above) — their requests will appear here.',
+        noRequestsReceivedYet: 'No requests received yet.',
+        approveButton: 'Approve',
+        rejectButton: 'Reject',
+        revokeAccessButton: 'Revoke Access',
+        ctoRenewalAlertMsg: 'Your factory\'s CTO renewal is due in {days} days.',
     },
     mr: {
         appTitle: 'EcoTrace India',
@@ -228,6 +248,26 @@ const TRANSLATIONS = {
         summaryLoadingText: 'Summary लोड होतोय...',
         waitingApproval: 'Factory च्या approval ची वाट बघतोय.',
         requestRejectedRevoked: 'ही विनंती नाकारली/रद्द केली गेली आहे.',
+        m2Title: '2. Main Enterprise Overview',
+        m3Title: '3. Multi-File Batch OCR & Human Classification Gate (Hybrid Bulk Upload)',
+        m3Desc: 'खालील Unit साठी अनेक बिलं (वीज, पाणी, Sludge Manifest) निवडा',
+        m5Title: '5. Flying Squad Audit Mode',
+        generateDossier: 'Dossier तयार करा',
+        m6Title: '6. Notice Defence Matrix & Draft Generator',
+        generateNoticeDefence: 'Notice Defence तयार करा',
+        m7Title: '7. Form 3, 4 & 5 Annual Returns Draft Generator',
+        compileReturns: 'Returns तयार करा',
+        m8Title: '8. WhatsApp / SMS Alert Engine',
+        testAlertButton: 'Alert टेस्ट करा',
+        m9Title: '9. Tamper-Evident Digital Vault',
+        verifyVaultHashButton: 'Vault Hash तपासा',
+        buyerConnectionRequestsTitle: 'Buyer Connection Requests',
+        buyerConnectionRequestsDesc: 'तुमचा Unit ID buyer ला द्या (वरच्या पट्टीत दिसतो) — त्यांनी विनंती पाठवली की इथे दिसेल.',
+        noRequestsReceivedYet: 'अजून कुठलीही विनंती आलेली नाही.',
+        approveButton: 'मंजूर करा',
+        rejectButton: 'नाकारा',
+        revokeAccessButton: 'Access रद्द करा',
+        ctoRenewalAlertMsg: 'तुमच्या फॅक्टरीच्या CTO नूतनीकरणासाठी {days} दिवस उरले आहेत.',
     },
     hi: {
         appTitle: 'EcoTrace India',
@@ -317,6 +357,26 @@ const TRANSLATIONS = {
         summaryLoadingText: 'Summary लोड हो रहा है...',
         waitingApproval: 'Factory के approval का इंतज़ार है।',
         requestRejectedRevoked: 'यह विनंती अस्वीकृत/रद्द कर दी गई है।',
+        m2Title: '2. Main Enterprise Overview',
+        m3Title: '3. Multi-File Batch OCR & Human Classification Gate (Hybrid Bulk Upload)',
+        m3Desc: 'इस Unit के लिए कई बिल (बिजली, पानी, Sludge Manifest) चुनें',
+        m5Title: '5. Flying Squad Audit Mode',
+        generateDossier: 'Dossier बनाएं',
+        m6Title: '6. Notice Defence Matrix & Draft Generator',
+        generateNoticeDefence: 'Notice Defence बनाएं',
+        m7Title: '7. Form 3, 4 & 5 Annual Returns Draft Generator',
+        compileReturns: 'Returns तैयार करें',
+        m8Title: '8. WhatsApp / SMS Alert Engine',
+        testAlertButton: 'Alert टेस्ट करें',
+        m9Title: '9. Tamper-Evident Digital Vault',
+        verifyVaultHashButton: 'Vault Hash जांचें',
+        buyerConnectionRequestsTitle: 'Buyer Connection Requests',
+        buyerConnectionRequestsDesc: 'अपना Unit ID buyer को दें (ऊपर status bar में दिखता है) — उनकी विनंती यहां दिखेगी।',
+        noRequestsReceivedYet: 'अभी तक कोई विनंती नहीं आई।',
+        approveButton: 'स्वीकृत करें',
+        rejectButton: 'अस्वीकार करें',
+        revokeAccessButton: 'Access रद्द करें',
+        ctoRenewalAlertMsg: 'आपकी फैक्ट्री के CTO नवीनीकरण के लिए {days} दिन शेष हैं।',
     },
 };
 
@@ -2043,15 +2103,15 @@ export default function EcoTraceDashboard() {
                     {/* Module 2: Enterprise Overview */}
                     <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '16px', boxShadow: '0 1px 3px rgba(0,0,0,0.3)' }}>
                         <span style={{ backgroundColor: '#1f2937', color: '#9ca3af', padding: '2px 6px', borderRadius: '4px', fontSize: '10px', fontWeight: 'bold' }}>LIVE MODULE 2</span>
-                        <h4 style={{ color: '#e5e7eb', margin: '8px 0 4px 0', fontSize: '14px' }}>2. Main Enterprise Overview</h4>
+                        <h4 style={{ color: '#e5e7eb', margin: '8px 0 4px 0', fontSize: '14px' }}>{t('m2Title')}</h4>
                         <p style={{ color: '#9ca3af', fontSize: '12px', margin: 0 }}>{isFactoryActive ? `Active Monitoring: ${factoryData.name} at ${factoryData.location}` : 'Status: No factory onboarded yet.'}</p>
                     </div>
 
                     {/* Module 3: Hybrid Bulk OCR Gate with Per-File Array Tracking */}
                     <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '16px', boxShadow: '0 1px 3px rgba(0,0,0,0.3)' }}>
                         <span style={{ backgroundColor: '#1f2937', color: '#9ca3af', padding: '2px 6px', borderRadius: '4px', fontSize: '10px', fontWeight: 'bold' }}>LIVE MODULE 3 (OCR Gate)</span>
-                        <h4 style={{ color: '#e5e7eb', margin: '8px 0 4px 0', fontSize: '14px' }}>3. Multi-File Batch OCR & Human Classification Gate (Hybrid Bulk Upload)</h4>
-                        <p style={{ color: '#9ca3af', fontSize: '12px', marginBottom: '8px' }}>Select multiple bills (Electricity, Water, Sludge Manifest) for Unit {currentUnitId || 'None'}:</p>
+                        <h4 style={{ color: '#e5e7eb', margin: '8px 0 4px 0', fontSize: '14px' }}>{t('m3Title')}</h4>
+                        <p style={{ color: '#9ca3af', fontSize: '12px', marginBottom: '8px' }}>{t('m3Desc')} {currentUnitId || 'None'}:</p>
                         
                         <input type="file" multiple onChange={handleFileChange} style={{ fontSize: '11px', color: '#9ca3af', marginBottom: '8px', display: 'block' }} />
                         
@@ -2155,57 +2215,57 @@ export default function EcoTraceDashboard() {
                     {/* Module 5: Flying Squad Audit Mode */}
                     <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '16px', boxShadow: '0 1px 3px rgba(0,0,0,0.3)' }}>
                         <span style={{ backgroundColor: '#1f2937', color: '#9ca3af', padding: '2px 6px', borderRadius: '4px', fontSize: '10px', fontWeight: 'bold' }}>LIVE MODULE 5</span>
-                        <h4 style={{ color: '#e5e7eb', margin: '8px 0 4px 0', fontSize: '14px' }}>5. Flying Squad Audit Mode</h4>
-                        <button onClick={() => setActionOutput(`[5. Flying Squad Dossier]\n- Unit: ${isFactoryActive ? factoryData.name : 'Not Onboarded'}\n- CTO Days: ${ctoDaysLeft}\n- Status: Verified & Ready.`)} style={{ backgroundColor: '#1f2937', color: 'white', border: '1px solid #374151', padding: '6px 10px', borderRadius: '4px', fontSize: '11px', fontWeight: 'bold', cursor: 'pointer', marginTop: '6px' }}>Generate Dossier</button>
+                        <h4 style={{ color: '#e5e7eb', margin: '8px 0 4px 0', fontSize: '14px' }}>{t('m5Title')}</h4>
+                        <button onClick={() => setActionOutput(`[5. Flying Squad Dossier]\n- Unit: ${isFactoryActive ? factoryData.name : 'Not Onboarded'}\n- CTO Days: ${ctoDaysLeft}\n- Status: Verified & Ready.`)} style={{ backgroundColor: '#1f2937', color: 'white', border: '1px solid #374151', padding: '6px 10px', borderRadius: '4px', fontSize: '11px', fontWeight: 'bold', cursor: 'pointer', marginTop: '6px' }}>{t('generateDossier')}</button>
                     </div>
 
                     {/* Module 6: Notice Defence Matrix */}
                     <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '16px', boxShadow: '0 1px 3px rgba(0,0,0,0.3)' }}>
                         <span style={{ backgroundColor: '#1f2937', color: '#9ca3af', padding: '2px 6px', borderRadius: '4px', fontSize: '10px', fontWeight: 'bold' }}>LIVE MODULE 6</span>
-                        <h4 style={{ color: '#e5e7eb', margin: '8px 0 4px 0', fontSize: '14px' }}>6. Notice Defence Matrix & Draft Generator</h4>
-                        <button onClick={() => setActionOutput(`[6. Notice Defence]\n- Target: MPCB Show-Cause Notice regarding ETP pH variation (${dailyLog.ph}).\n- Unit: ${isFactoryActive ? factoryData.name : 'Pending'}.`)} style={{ backgroundColor: '#1f2937', color: 'white', border: '1px solid #374151', padding: '6px 10px', borderRadius: '4px', fontSize: '11px', fontWeight: 'bold', cursor: 'pointer', marginTop: '6px' }}>Generate Notice Defence</button>
+                        <h4 style={{ color: '#e5e7eb', margin: '8px 0 4px 0', fontSize: '14px' }}>{t('m6Title')}</h4>
+                        <button onClick={() => setActionOutput(`[6. Notice Defence]\n- Target: MPCB Show-Cause Notice regarding ETP pH variation (${dailyLog.ph}).\n- Unit: ${isFactoryActive ? factoryData.name : 'Pending'}.`)} style={{ backgroundColor: '#1f2937', color: 'white', border: '1px solid #374151', padding: '6px 10px', borderRadius: '4px', fontSize: '11px', fontWeight: 'bold', cursor: 'pointer', marginTop: '6px' }}>{t('generateNoticeDefence')}</button>
                     </div>
 
                     {/* Module 7: Annual Returns */}
                     <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '16px', boxShadow: '0 1px 3px rgba(0,0,0,0.3)' }}>
                         <span style={{ backgroundColor: '#1f2937', color: '#9ca3af', padding: '2px 6px', borderRadius: '4px', fontSize: '10px', fontWeight: 'bold' }}>LIVE MODULE 7</span>
-                        <h4 style={{ color: '#e5e7eb', margin: '8px 0 4px 0', fontSize: '14px' }}>7. Form 3, 4 & 5 Annual Returns Draft Generator</h4>
-                        <button onClick={() => setActionOutput(`[7. Form 3, 4 & 5]\n- Returns compiled for ${isFactoryActive ? factoryData.name.toLowerCase() : 'demo unit'}.\n- Sludge: ${isSludgeNotApplicable ? 'N/A' : dailyLog.sludge + ' MT'} (${selectedCategory}).`)} style={{ backgroundColor: '#1f2937', color: 'white', border: '1px solid #374151', padding: '6px 10px', borderRadius: '4px', fontSize: '11px', fontWeight: 'bold', cursor: 'pointer', marginTop: '6px' }}>Compile Returns</button>
+                        <h4 style={{ color: '#e5e7eb', margin: '8px 0 4px 0', fontSize: '14px' }}>{t('m7Title')}</h4>
+                        <button onClick={() => setActionOutput(`[7. Form 3, 4 & 5]\n- Returns compiled for ${isFactoryActive ? factoryData.name.toLowerCase() : 'demo unit'}.\n- Sludge: ${isSludgeNotApplicable ? 'N/A' : dailyLog.sludge + ' MT'} (${selectedCategory}).`)} style={{ backgroundColor: '#1f2937', color: 'white', border: '1px solid #374151', padding: '6px 10px', borderRadius: '4px', fontSize: '11px', fontWeight: 'bold', cursor: 'pointer', marginTop: '6px' }}>{t('compileReturns')}</button>
                     </div>
 
                     {/* Module 8: WhatsApp / SMS Alert Engine */}
                     <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '16px', boxShadow: '0 1px 3px rgba(0,0,0,0.3)' }}>
                         <span style={{ backgroundColor: '#1f2937', color: '#9ca3af', padding: '2px 6px', borderRadius: '4px', fontSize: '10px', fontWeight: 'bold' }}>LIVE MODULE 8</span>
-                        <h4 style={{ color: '#e5e7eb', margin: '8px 0 4px 0', fontSize: '14px' }}>8. WhatsApp / SMS Alert Engine (Marathi Triggers)</h4>
-                        <button onClick={() => setActionOutput(`[8. Marathi Alert Sent]\n- Message: "तुमच्या फॅक्टरीच्या CTO नूतनीकरणासाठी ${ctoDaysLeft} दिवस उरले आहेत."`)} style={{ backgroundColor: '#1f2937', color: 'white', border: '1px solid #374151', padding: '6px 10px', borderRadius: '4px', fontSize: '11px', fontWeight: 'bold', cursor: 'pointer', marginTop: '6px' }}>Test Marathi Alert</button>
+                        <h4 style={{ color: '#e5e7eb', margin: '8px 0 4px 0', fontSize: '14px' }}>{t('m8Title')}</h4>
+                        <button onClick={() => setActionOutput(`[8. Alert Sent]\n- Message: "${t('ctoRenewalAlertMsg').replace('{days}', ctoDaysLeft)}"`)} style={{ backgroundColor: '#1f2937', color: 'white', border: '1px solid #374151', padding: '6px 10px', borderRadius: '4px', fontSize: '11px', fontWeight: 'bold', cursor: 'pointer', marginTop: '6px' }}>{t('testAlertButton')}</button>
                     </div>
 
                     {/* Module 9: Tamper-Evident Digital Vault */}
                     <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '16px', boxShadow: '0 1px 3px rgba(0,0,0,0.3)' }}>
                         <span style={{ backgroundColor: '#1f2937', color: '#9ca3af', padding: '2px 6px', borderRadius: '4px', fontSize: '10px', fontWeight: 'bold' }}>LIVE MODULE 9</span>
-                        <h4 style={{ color: '#e5e7eb', margin: '8px 0 4px 0', fontSize: '14px' }}>9. Tamper-Evident Digital Vault</h4>
-                        <button onClick={handleVerifyVault} style={{ backgroundColor: '#1f2937', color: 'white', border: '1px solid #374151', padding: '6px 10px', borderRadius: '4px', fontSize: '11px', fontWeight: 'bold', cursor: 'pointer', marginTop: '6px' }}>Verify Vault Hash</button>
+                        <h4 style={{ color: '#e5e7eb', margin: '8px 0 4px 0', fontSize: '14px' }}>{t('m9Title')}</h4>
+                        <button onClick={handleVerifyVault} style={{ backgroundColor: '#1f2937', color: 'white', border: '1px solid #374151', padding: '6px 10px', borderRadius: '4px', fontSize: '11px', fontWeight: 'bold', cursor: 'pointer', marginTop: '6px' }}>{t('verifyVaultHashButton')}</button>
                     </div>
 
                     {/* Enterprise Aggregation Tier: Buyer connection requests for this factory */}
                     {isFactoryActive && (
                         <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '16px' }}>
                             <span style={{ backgroundColor: '#1f2937', color: '#9ca3af', padding: '2px 6px', borderRadius: '4px', fontSize: '10px', fontWeight: 'bold' }}>ENTERPRISE AGGREGATION TIER</span>
-                            <h4 style={{ color: '#e5e7eb', margin: '8px 0 4px 0', fontSize: '14px' }}>Buyer Connection Requests</h4>
-                            <p style={{ color: '#9ca3af', fontSize: '11px', marginBottom: '8px' }}>तुमचा Unit ID buyer ला द्या (वरच्या पट्टीत दिसतो) — त्यांनी विनंती पाठवली की इथे दिसेल.</p>
-                            {factoryConnectionRequests.length === 0 && <p style={{ color: '#9ca3af', fontSize: '12px' }}>अजून कुठलीही विनंती आलेली नाही.</p>}
+                            <h4 style={{ color: '#e5e7eb', margin: '8px 0 4px 0', fontSize: '14px' }}>{t('buyerConnectionRequestsTitle')}</h4>
+                            <p style={{ color: '#9ca3af', fontSize: '11px', marginBottom: '8px' }}>{t('buyerConnectionRequestsDesc')}</p>
+                            {factoryConnectionRequests.length === 0 && <p style={{ color: '#9ca3af', fontSize: '12px' }}>{t('noRequestsReceivedYet')}</p>}
                             {factoryConnectionRequests.map((req) => (
                                 <div key={req.id} style={{ borderTop: '1px solid #374151', paddingTop: '8px', marginTop: '8px' }}>
                                     <p style={{ margin: '0 0 2px 0', fontSize: '12px', color: 'white', fontWeight: 'bold' }}>{req.buyer_accounts?.company_name || 'Unknown Buyer'}</p>
                                     <p style={{ margin: '0 0 6px 0', fontSize: '10px', color: '#9ca3af' }}>{req.buyer_accounts?.industry || ''} {req.buyer_accounts?.contact_email ? `· ${req.buyer_accounts.contact_email}` : ''} — Status: <b style={{ color: req.status === 'approved' ? '#34d399' : req.status === 'pending' ? '#f59e0b' : '#ef4444' }}>{req.status}</b></p>
                                     {req.status === 'pending' && (
                                         <div style={{ display: 'flex', gap: '8px' }}>
-                                            <button onClick={() => handleRespondConnection(req.id, 'approved')} style={{ backgroundColor: '#059669', color: 'white', border: 'none', padding: '5px 10px', borderRadius: '4px', fontSize: '10px', fontWeight: 'bold', cursor: 'pointer' }}>Approve</button>
-                                            <button onClick={() => handleRespondConnection(req.id, 'rejected')} style={{ backgroundColor: '#dc2626', color: 'white', border: 'none', padding: '5px 10px', borderRadius: '4px', fontSize: '10px', fontWeight: 'bold', cursor: 'pointer' }}>Reject</button>
+                                            <button onClick={() => handleRespondConnection(req.id, 'approved')} style={{ backgroundColor: '#059669', color: 'white', border: 'none', padding: '5px 10px', borderRadius: '4px', fontSize: '10px', fontWeight: 'bold', cursor: 'pointer' }}>{t('approveButton')}</button>
+                                            <button onClick={() => handleRespondConnection(req.id, 'rejected')} style={{ backgroundColor: '#dc2626', color: 'white', border: 'none', padding: '5px 10px', borderRadius: '4px', fontSize: '10px', fontWeight: 'bold', cursor: 'pointer' }}>{t('rejectButton')}</button>
                                         </div>
                                     )}
                                     {req.status === 'approved' && (
-                                        <button onClick={() => handleRespondConnection(req.id, 'revoked')} style={{ backgroundColor: '#7c2d12', color: 'white', border: 'none', padding: '5px 10px', borderRadius: '4px', fontSize: '10px', fontWeight: 'bold', cursor: 'pointer' }}>Revoke Access</button>
+                                        <button onClick={() => handleRespondConnection(req.id, 'revoked')} style={{ backgroundColor: '#7c2d12', color: 'white', border: 'none', padding: '5px 10px', borderRadius: '4px', fontSize: '10px', fontWeight: 'bold', cursor: 'pointer' }}>{t('revokeAccessButton')}</button>
                                     )}
                                 </div>
                             ))}
