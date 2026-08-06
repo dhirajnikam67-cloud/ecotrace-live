@@ -479,8 +479,13 @@ export default function EcoTraceDashboard() {
         const onboardGridFactor = stateConfig?.grid_emission_factor_kgco2_per_kwh
             ? Number(stateConfig.grid_emission_factor_kgco2_per_kwh)
             : ALL_INDIA_GRID_FACTOR;
-        const locationValue = tempMidcLocation
-            ? `${tempMidcLocation.toUpperCase()} ${areaTerm}`
+        // FIX (Aug 2026, round 6): Edit मोडमध्ये हा रकाना आधीच साठलेल्या location ने भरलेला असतो
+        // (उदा. "PUNE MIDC") — जर तो आधीच areaTerm ने संपत असेल, तर तो पुन्हा जोडायचा नाही
+        // (नाहीतर "PUNE MIDC MIDC" असं दुप्पट होतं).
+        const trimmedInput = tempMidcLocation.trim().toUpperCase();
+        const alreadyHasAreaTerm = trimmedInput.endsWith(areaTerm.toUpperCase());
+        const locationValue = trimmedInput
+            ? (alreadyHasAreaTerm ? trimmedInput : `${trimmedInput} ${areaTerm}`)
             : `${areaTerm} CLUSTER`;
 
         // Supabase मध्ये upsert — जर या owner_user_id ची factory आधीच असेल तर ती UPDATE होईल,
