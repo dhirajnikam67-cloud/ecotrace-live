@@ -98,6 +98,18 @@ const TRANSLATIONS = {
         newFactoryLink: 'New factory? Sign up',
         alreadyRegisteredLink: 'Already registered? Login',
         selectLanguage: 'Select your language',
+        forgotPassword: 'Forgot password?',
+        resetPasswordTitle: 'Reset your password',
+        resetPasswordDesc: "Enter your email and we'll send you a password reset link.",
+        sendResetLink: 'Send Reset Link',
+        resetLinkSentMsg: 'Reset link sent — please check your email.',
+        backToLogin: 'Back to login',
+        setNewPasswordTitle: 'Set a new password',
+        newPasswordPlaceholder: 'New password',
+        confirmPasswordPlaceholder: 'Confirm new password',
+        updatePasswordButton: 'Update Password',
+        termsLink: 'Terms of Service',
+        privacyLink: 'Privacy Policy',
     },
     mr: {
         appTitle: 'EcoTrace India',
@@ -146,6 +158,18 @@ const TRANSLATIONS = {
         newFactoryLink: 'नवीन factory? नोंदणी करा',
         alreadyRegisteredLink: 'आधीच नोंदणी आहे? Login करा',
         selectLanguage: 'तुमची भाषा निवडा',
+        forgotPassword: 'पासवर्ड विसरलात?',
+        resetPasswordTitle: 'पासवर्ड परत मिळवा',
+        resetPasswordDesc: 'तुमचा email टाका — आम्ही पासवर्ड reset करण्याची लिंक पाठवू.',
+        sendResetLink: 'Reset Link पाठवा',
+        resetLinkSentMsg: 'Reset link पाठवली — कृपया तुमचा email तपासा.',
+        backToLogin: 'Login कडे परत जा',
+        setNewPasswordTitle: 'नवीन पासवर्ड सेट करा',
+        newPasswordPlaceholder: 'नवीन पासवर्ड',
+        confirmPasswordPlaceholder: 'नवीन पासवर्ड पुन्हा टाका',
+        updatePasswordButton: 'पासवर्ड अपडेट करा',
+        termsLink: 'Terms of Service',
+        privacyLink: 'Privacy Policy',
     },
     hi: {
         appTitle: 'EcoTrace India',
@@ -194,6 +218,18 @@ const TRANSLATIONS = {
         newFactoryLink: 'नई factory? रजिस्टर करें',
         alreadyRegisteredLink: 'पहले से रजिस्टर्ड? Login करें',
         selectLanguage: 'अपनी भाषा चुनें',
+        forgotPassword: 'पासवर्ड भूल गए?',
+        resetPasswordTitle: 'पासवर्ड रीसेट करें',
+        resetPasswordDesc: 'अपना email डालें — हम पासवर्ड रीसेट लिंक भेजेंगे।',
+        sendResetLink: 'Reset Link भेजें',
+        resetLinkSentMsg: 'Reset link भेज दी गई — कृपया अपना email देखें।',
+        backToLogin: 'Login पर वापस जाएं',
+        setNewPasswordTitle: 'नया पासवर्ड सेट करें',
+        newPasswordPlaceholder: 'नया पासवर्ड',
+        confirmPasswordPlaceholder: 'नया पासवर्ड दोबारा डालें',
+        updatePasswordButton: 'पासवर्ड अपडेट करें',
+        termsLink: 'Terms of Service',
+        privacyLink: 'Privacy Policy',
     },
 };
 
@@ -327,12 +363,23 @@ export default function EcoTraceDashboard() {
     const [requestFactoryId, setRequestFactoryId] = useState('');
     const [factoryConnectionRequests, setFactoryConnectionRequests] = useState([]);
 
+    const [isPasswordRecovery, setIsPasswordRecovery] = useState(false);
+    const [showForgotPassword, setShowForgotPassword] = useState(false);
+    const [forgotPasswordSent, setForgotPasswordSent] = useState(false);
+    const [newPassword, setNewPassword] = useState('');
+    const [newPasswordConfirm, setNewPasswordConfirm] = useState('');
+
     useEffect(() => {
         supabase.auth.getSession().then(({ data: { session } }) => {
             setSession(session);
         });
-        const { data: authListener } = supabase.auth.onAuthStateChange((_event, session) => {
+        const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
             setSession(session);
+            // ---- Forgot Password (Aug 2026): Supabase ने पाठवलेल्या reset-link वर क्लिक केल्यावर
+            // हा event येतो — तेव्हा "Set New Password" फॉर्म दाखवायला हा flag वापरतो ----
+            if (event === 'PASSWORD_RECOVERY') {
+                setIsPasswordRecovery(true);
+            }
         });
         return () => authListener.subscription.unsubscribe();
     }, []);
@@ -347,6 +394,42 @@ export default function EcoTraceDashboard() {
             const { error } = await supabase.auth.signUp({ email: authEmail, password: authPassword });
             if (error) setAuthError(error.message);
             else setAuthError('Signup successful! You can now login.');
+        }
+    };
+
+    // ---- Forgot Password (Aug 2026) ----
+    const handleForgotPasswordSubmit = async (e) => {
+        e.preventDefault();
+        setAuthError('');
+        const { error } = await supabase.auth.resetPasswordForEmail(authEmail, {
+            redirectTo: typeof window !== 'undefined' ? window.location.origin : undefined,
+        });
+        if (error) {
+            setAuthError(error.message);
+        } else {
+            setForgotPasswordSent(true);
+        }
+    };
+
+    const handleSetNewPassword = async (e) => {
+        e.preventDefault();
+        setAuthError('');
+        if (newPassword !== newPasswordConfirm) {
+            setAuthError('पासवर्ड जुळत नाहीत / Passwords do not match.');
+            return;
+        }
+        if (newPassword.length < 6) {
+            setAuthError('पासवर्ड किमान ६ अक्षरांचा हवा / Password must be at least 6 characters.');
+            return;
+        }
+        const { error } = await supabase.auth.updateUser({ password: newPassword });
+        if (error) {
+            setAuthError(error.message);
+        } else {
+            setIsPasswordRecovery(false);
+            setNewPassword('');
+            setNewPasswordConfirm('');
+            alert('पासवर्ड बदलला — आता नव्या पासवर्डने login करा / Password updated — please log in with your new password.');
         }
     };
 
@@ -1343,6 +1426,38 @@ export default function EcoTraceDashboard() {
     // ---- FIX (Aug 2026, round 8): आधी हा report फक्त plain .txt म्हणून डाउनलोड व्हायचा —
     // आता Buyer Green Passport सारखाच professional, formatted PDF तयार करतो (तोच jsPDF setup,
     // loadJsPDF() वापरून — CDN वरून, कुठलाही npm/package.json बदल न करता). ----
+    // ---- CSV Export (Aug 2026): factory manager ला स्वतःच्या रेकॉर्डसाठी raw daily_logs
+    // Excel/Sheets मध्ये उघडता यावी यासाठी — PDF पेक्षा वेगळं, कच्चा डेटा हवा असतो तेव्हा ----
+    const handleExportCSV = () => {
+        if (savedLogsHistory.length === 0) {
+            alert('अजून कुठलेही daily logs नाहीत / No daily logs to export yet.');
+            return;
+        }
+        const headers = ['Date', 'pH', 'Water (KL)', 'Power (kWh)', 'Sludge (MT)', 'OCR Power Reading', 'GPS Captured', 'GPS Latitude', 'GPS Longitude', 'Submitted At'];
+        const rows = savedLogsHistory.map((entry) => [
+            entry.date,
+            entry.ph,
+            entry.water,
+            entry.power,
+            entry.sludge,
+            entry.ocrPowerValue ?? '',
+            entry.gpsCaptured ? 'Yes' : 'No',
+            entry.gpsLatitude ?? '',
+            entry.gpsLongitude ?? '',
+            entry.submittedAt ?? '',
+        ]);
+        const csvContent = [headers, ...rows]
+            .map((row) => row.map((cell) => `"${String(cell).replace(/"/g, '""')}"`).join(','))
+            .join('\n');
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = `${factoryData.name.replace(/\s+/g, '_')}_Daily_Logs.csv`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
+
     const handleExportReport = async () => {
         if (!isFactoryActive) {
             alert('Please onboard a factory unit or load the Demo Unit first.');
@@ -1467,6 +1582,29 @@ export default function EcoTraceDashboard() {
     const [actionOutput, setActionOutput] = useState("Select any Live Actionable module below to view generated compliance output on screen.");
 
     // ---- Login Screen (shown before any dashboard content if not authenticated) ----
+    // ---- Forgot Password (Aug 2026): reset-link वर क्लिक करून इथे आल्यावर, session असूनही
+    // आधी नवीन पासवर्ड सेट करायला लावतो — थेट dashboard वर जाऊ देत नाही ----
+    if (isPasswordRecovery) {
+        return (
+            <main style={{ minHeight: '100vh', backgroundColor: '#0b0f19', color: '#ffffff', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '16px' }}>
+                <div style={{ maxWidth: '380px', width: '100%', backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '14px', padding: '28px', boxShadow: '0 20px 40px rgba(0,0,0,0.35)' }}>
+                    <h2 style={{ margin: '0 0 4px 0', fontSize: '18px' }}>{t('setNewPasswordTitle')}</h2>
+                    <p style={{ color: '#6b7280', fontSize: '12px', marginBottom: '18px' }}>{t('appTitle')}</p>
+                    <form onSubmit={handleSetNewPassword} style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                        <input type="password" placeholder={t('newPasswordPlaceholder')} value={newPassword} onChange={(e) => setNewPassword(e.target.value)} required
+                            style={{ padding: '10px', backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '8px', color: 'white', fontSize: '13px' }} />
+                        <input type="password" placeholder={t('confirmPasswordPlaceholder')} value={newPasswordConfirm} onChange={(e) => setNewPasswordConfirm(e.target.value)} required
+                            style={{ padding: '10px', backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '8px', color: 'white', fontSize: '13px' }} />
+                        {authError && <p style={{ color: '#f59e0b', fontSize: '12px' }}>{authError}</p>}
+                        <button type="submit" style={{ backgroundColor: '#059669', color: 'white', border: 'none', padding: '11px', borderRadius: '8px', fontWeight: 'bold', fontSize: '13px', cursor: 'pointer' }}>
+                            {t('updatePasswordButton')}
+                        </button>
+                    </form>
+                </div>
+            </main>
+        );
+    }
+
     if (!session) {
         return (
             <main style={{ minHeight: '100vh', backgroundColor: '#0b0f19', color: '#ffffff', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '16px' }}>
@@ -1484,23 +1622,70 @@ export default function EcoTraceDashboard() {
                             <option value="hi">🌐 हि</option>
                         </select>
                     </div>
-                    <p style={{ color: '#6b7280', fontSize: '13px', marginBottom: '22px' }}>
-                        {authMode === 'login' ? t('factoryLogin') : t('newFactorySignup')}
+
+                    {showForgotPassword ? (
+                        <>
+                            <p style={{ color: '#6b7280', fontSize: '13px', margin: '0 0 4px 0' }}>{t('resetPasswordTitle')}</p>
+                            {forgotPasswordSent ? (
+                                <div>
+                                    <p style={{ color: '#34d399', fontSize: '13px', marginTop: '16px' }}>{t('resetLinkSentMsg')}</p>
+                                    <button onClick={() => { setShowForgotPassword(false); setForgotPasswordSent(false); }}
+                                        style={{ background: 'none', border: 'none', color: '#34d399', fontSize: '12px', marginTop: '10px', cursor: 'pointer' }}>
+                                        {t('backToLogin')}
+                                    </button>
+                                </div>
+                            ) : (
+                                <>
+                                    <p style={{ color: '#6b7280', fontSize: '12px', marginBottom: '18px' }}>{t('resetPasswordDesc')}</p>
+                                    <form onSubmit={handleForgotPasswordSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                                        <input type="email" placeholder={t('emailPlaceholder')} value={authEmail} onChange={(e) => setAuthEmail(e.target.value)} required
+                                            style={{ padding: '10px', backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '8px', color: 'white', fontSize: '13px' }} />
+                                        {authError && <p style={{ color: '#f59e0b', fontSize: '12px' }}>{authError}</p>}
+                                        <button type="submit" style={{ backgroundColor: '#059669', color: 'white', border: 'none', padding: '11px', borderRadius: '8px', fontWeight: 'bold', fontSize: '13px', cursor: 'pointer' }}>
+                                            {t('sendResetLink')}
+                                        </button>
+                                    </form>
+                                    <button onClick={() => setShowForgotPassword(false)}
+                                        style={{ background: 'none', border: 'none', color: '#9ca3af', fontSize: '12px', marginTop: '14px', cursor: 'pointer' }}>
+                                        {t('backToLogin')}
+                                    </button>
+                                </>
+                            )}
+                        </>
+                    ) : (
+                        <>
+                            <p style={{ color: '#6b7280', fontSize: '13px', marginBottom: '22px' }}>
+                                {authMode === 'login' ? t('factoryLogin') : t('newFactorySignup')}
+                            </p>
+                            <form onSubmit={handleAuthSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                                <input type="email" placeholder={t('emailPlaceholder')} value={authEmail} onChange={(e) => setAuthEmail(e.target.value)} required
+                                    style={{ padding: '10px', backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '8px', color: 'white', fontSize: '13px' }} />
+                                <input type="password" placeholder={t('passwordPlaceholder')} value={authPassword} onChange={(e) => setAuthPassword(e.target.value)} required
+                                    style={{ padding: '10px', backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '8px', color: 'white', fontSize: '13px' }} />
+                                {authError && <p style={{ color: '#f59e0b', fontSize: '12px' }}>{authError}</p>}
+                                <button type="submit" style={{ backgroundColor: '#059669', color: 'white', border: 'none', padding: '11px', borderRadius: '8px', fontWeight: 'bold', fontSize: '13px', cursor: 'pointer' }}>
+                                    {authMode === 'login' ? t('loginButton') : t('signupButton')}
+                                </button>
+                            </form>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '14px' }}>
+                                <button onClick={() => setAuthMode(authMode === 'login' ? 'signup' : 'login')}
+                                    style={{ background: 'none', border: 'none', color: '#34d399', fontSize: '12px', cursor: 'pointer', padding: 0 }}>
+                                    {authMode === 'login' ? t('newFactoryLink') : t('alreadyRegisteredLink')}
+                                </button>
+                                {authMode === 'login' && (
+                                    <button onClick={() => setShowForgotPassword(true)}
+                                        style={{ background: 'none', border: 'none', color: '#9ca3af', fontSize: '12px', cursor: 'pointer', padding: 0 }}>
+                                        {t('forgotPassword')}
+                                    </button>
+                                )}
+                            </div>
+                        </>
+                    )}
+                    <p style={{ textAlign: 'center', fontSize: '10px', color: '#4b5563', marginTop: '20px' }}>
+                        <a href="/terms" style={{ color: '#6b7280', textDecoration: 'underline' }}>{t('termsLink')}</a>
+                        {' · '}
+                        <a href="/privacy" style={{ color: '#6b7280', textDecoration: 'underline' }}>{t('privacyLink')}</a>
                     </p>
-                    <form onSubmit={handleAuthSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                        <input type="email" placeholder={t('emailPlaceholder')} value={authEmail} onChange={(e) => setAuthEmail(e.target.value)} required
-                            style={{ padding: '10px', backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '8px', color: 'white', fontSize: '13px' }} />
-                        <input type="password" placeholder={t('passwordPlaceholder')} value={authPassword} onChange={(e) => setAuthPassword(e.target.value)} required
-                            style={{ padding: '10px', backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '8px', color: 'white', fontSize: '13px' }} />
-                        {authError && <p style={{ color: '#f59e0b', fontSize: '12px' }}>{authError}</p>}
-                        <button type="submit" style={{ backgroundColor: '#059669', color: 'white', border: 'none', padding: '11px', borderRadius: '8px', fontWeight: 'bold', fontSize: '13px', cursor: 'pointer' }}>
-                            {authMode === 'login' ? t('loginButton') : t('signupButton')}
-                        </button>
-                    </form>
-                    <button onClick={() => setAuthMode(authMode === 'login' ? 'signup' : 'login')}
-                        style={{ background: 'none', border: 'none', color: '#34d399', fontSize: '12px', marginTop: '14px', cursor: 'pointer' }}>
-                        {authMode === 'login' ? t('newFactoryLink') : t('alreadyRegisteredLink')}
-                    </button>
                 </div>
             </main>
         );
@@ -1627,6 +1812,12 @@ export default function EcoTraceDashboard() {
                         style={{ backgroundColor: '#059669', color: 'white', border: 'none', padding: '8px 14px', borderRadius: '6px', fontSize: '12px', fontWeight: 'bold', cursor: 'pointer' }}
                     >
                         {t('exportReport')}
+                    </button>
+                    <button 
+                        onClick={handleExportCSV}
+                        style={{ backgroundColor: '#1f2937', color: 'white', border: '1px solid #374151', padding: '8px 12px', borderRadius: '6px', fontSize: '11px', fontWeight: 'bold', cursor: 'pointer' }}
+                    >
+                        📊 CSV
                     </button>
                     <button
                         onClick={() => setViewMode('buyer')}
@@ -1971,6 +2162,11 @@ export default function EcoTraceDashboard() {
             <footer style={{ marginTop: '30px', borderTop: '1px solid #1f2937', padding: '16px 0', color: '#9ca3af', fontSize: '11px', lineHeight: '1.4' }}>
                 <p style={{ margin: '0 0 6px 0', color: '#ffffff', fontWeight: 'bold' }}>EcoTrace India | Project by D. S. Nikam | Contact: 7378780745 | Email: dhiraj@ectotraceindia.com</p>
                 EcoTrace India Private Limited is an independent compliance platform. It aggregates data supplied by the factory and prepares statutory formats. It does not certify compliance, calculate hazardous waste quantities, transmit to government portals, or provide legal opinions. Physical safety protocols, hardware calibration and compliance adherence remain the responsibility of the factory management.
+                <p style={{ margin: '8px 0 0 0' }}>
+                    <a href="/terms" style={{ color: '#6b7280', textDecoration: 'underline' }}>{t('termsLink')}</a>
+                    {' · '}
+                    <a href="/privacy" style={{ color: '#6b7280', textDecoration: 'underline' }}>{t('privacyLink')}</a>
+                </p>
             </footer>
 
         </main>
