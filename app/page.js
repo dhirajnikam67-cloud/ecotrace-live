@@ -434,9 +434,15 @@ export default function EcoTraceDashboard() {
     };
 
     const loadDemoUnit = () => {
+        // FIX (Aug 2026, round 7): Demo Unit मध्ये gridEmissionFactor/state हे नवीन fields
+        // नव्हतेच — त्यामुळे Scope 2 calculation मध्ये NaN यायचा (हे प्रमुख sales-demo tool
+        // असल्याने ही गंभीर चूक होती). आता खरा Maharashtra grid factor + state जोडला, आणि
+        // Scope 1 चं multi-fuel फीचर दाखवायला डीफॉल्ट इंधन-नमुनाही जोडला.
         const demoDetails = {
             name: "DEMO-FACTORY (MSME SAMPLE)",
             location: "PUNE MIDC",
+            state: "Maharashtra",
+            gridEmissionFactor: 0.8900, // Western regional grid — Maharashtra/Gujarat (CEA V21.0, FY24-25)
             dischargeLimit: "5000",
             ctoExpiryDate: "2026-10-15",
             status: "DATA COMPLETE & FILING-READY (DEMO MODE)"
@@ -449,9 +455,19 @@ export default function EcoTraceDashboard() {
             sludge: '0.45',
             ocrPowerValue: 3120,
             gpsCaptured: true,
+            gpsLatitude: 18.6017 + (i * 0.0001),
+            gpsLongitude: 73.9105 + (i * 0.0001),
             submittedAt: new Date().toISOString()
         }));
-        handleUnitSwitch("DEMO-FACTORY", demoDetails, demoLogs, true, "CPCB Cat 34.3 (Chemical Sludge)", [], { ph: '7.2', water: '1420', power: '3150', sludge: '0.45', fuelEntries: [{ type: 'none', amount: '' }] }, false, 3120);
+        // डीफॉल्ट दैनिक फॉर्म — multi-fuel Scope 1 चं उदाहरण दाखवायला Diesel + LPG दोन्ही
+        const demoDailyLog = {
+            ph: '7.2', water: '1420', power: '3150', sludge: '0.45',
+            fuelEntries: [
+                { type: 'diesel', amount: '300' },
+                { type: 'lpg', amount: '150' },
+            ],
+        };
+        handleUnitSwitch("DEMO-FACTORY", demoDetails, demoLogs, true, "CPCB Cat 34.3 (Chemical Sludge)", [], demoDailyLog, false, 3120);
         alert('Demo Unit loaded safely in isolated state with 15-day sample data.');
     };
 
