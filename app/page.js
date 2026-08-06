@@ -1168,7 +1168,10 @@ export default function EcoTraceDashboard() {
         doc.save(`${summary.factory_name.replace(/\s+/g, '_')}_Green_Passport.pdf`);
     };
 
-    const handleExportReport = () => {
+    // ---- FIX (Aug 2026, round 8): आधी हा report फक्त plain .txt म्हणून डाउनलोड व्हायचा —
+    // आता Buyer Green Passport सारखाच professional, formatted PDF तयार करतो (तोच jsPDF setup,
+    // loadJsPDF() वापरून — CDN वरून, कुठलाही npm/package.json बदल न करता). ----
+    const handleExportReport = async () => {
         if (!isFactoryActive) {
             alert('Please onboard a factory unit or load the Demo Unit first.');
             return;
@@ -1180,10 +1183,6 @@ export default function EcoTraceDashboard() {
             return;
         }
 
-        const watermarkHeader = isDemoMode 
-            ? "⚠️ [DEMO DATA — Sample Illustration, Not for Filing]\n" 
-            : "";
-
         const latestRecordedEntry = savedLogsHistory.length > 0 ? savedLogsHistory[0] : null;
         const activeOcrPower = latestRecordedEntry?.ocrPowerValue !== undefined && latestRecordedEntry?.ocrPowerValue !== null 
             ? latestRecordedEntry.ocrPowerValue 
@@ -1192,7 +1191,7 @@ export default function EcoTraceDashboard() {
         let powerDiscrepancyText;
         if (activeOcrPower !== null) {
             if (powerNum !== activeOcrPower) {
-                powerDiscrepancyText = `Verified by Plant Manager — Original OCR Read: ${activeOcrPower} kWh (Reconciled difference: ${Math.abs(powerNum - activeOcrPower)} kWh)`;
+                powerDiscrepancyText = `Verified by Plant Manager — Original OCR Read: ${activeOcrPower} kWh (Reconciled diff: ${Math.abs(powerNum - activeOcrPower)} kWh)`;
             } else {
                 powerDiscrepancyText = `Verified by Plant Manager — OCR Read Matches Confirmed Value (${powerNum} kWh)`;
             }
@@ -1200,50 +1199,97 @@ export default function EcoTraceDashboard() {
             powerDiscrepancyText = `No OCR source — Manual entry (Confirmed: ${powerNum} kWh)`;
         }
 
-        const reportContent = `
-${watermarkHeader}========================================
-ECOTRACE INDIA PRIVATE LIMITED
-VERIFIED AUDIT REPORT (REVIEW DRAFT)
-Generated On: ${new Date().toISOString()} | Version: CEA 2025-26
-Project Led By: D. S. Nikam | Contact: 7378780745 | dhiraj@ectotraceindia.com
-========================================
-Company Name: ${factoryData.name} (${isDemoMode ? 'DEMO MODE' : 'PRODUCTION'})
-Location: ${factoryData.location}
-Discharge Limit: ${factoryData.dischargeLimit} Liters
-CTO Expiry Date: ${factoryData.ctoExpiryDate}
-CTO Days Left: ${ctoDaysLeft} Days
-Status: ${preflight.statusLabel}
+        let jsPDF;
+        try {
+            jsPDF = await loadJsPDF();
+        } catch (err) {
+            alert('PDF library लोड होऊ शकली नाही. इंटरनेट कनेक्शन तपासा.');
+            return;
+        }
 
-----------------------------------------
-1. CARBON EMISSIONS (dMRV ENGINE):
-- Scope 2 (Grid Power): ${calculatedScope2} MT CO2e (Grid factor: ${factoryData.gridEmissionFactor} kg CO2/kWh on ${powerNum} kWh)
-- Scope 1 (Direct Combustion): ${calculatedScope1}
+        const doc = new jsPDF({ unit: 'pt', format: 'a4' });
+        const pageWidth = doc.internal.pageSize.getWidth();
+        const marginX = 48;
+        let y = 56;
 
-2. WATER CESS & ETP MONITORING (Form 3 Input):
-- Total Water Consumption Recorded: ${totalWaterNum} KL (Aggregated across active log entries)
-- ETP Treated Effluent pH True Average: ${truePhAverage} (Calculated across ${savedLogsHistory.length > 0 ? savedLogsHistory.length : 1} entries within 0 - 14 legal limits)
-- Discharge Compliance: Within permissible limit of ${factoryData.dischargeLimit} Liters
+        const addLine = (text, opts = {}) => {
+            const { size = 10, bold = false, color = [40, 40, 40], gapAfter = 15 } = opts;
+            doc.setFont('helvetica', bold ? 'bold' : 'normal');
+            doc.setFontSize(size);
+            doc.setTextColor(...color);
+            const wrapped = doc.splitTextToSize(text, pageWidth - marginX * 2);
+            doc.text(wrapped, marginX, y);
+            y += wrapped.length * (size * 1.25) + (gapAfter - size);
+        };
+        const addSectionHeading = (text) => addLine(text, { size: 12, bold: true, color: [6, 95, 70], gapAfter: 18 });
+        const addDivider = () => {
+            doc.setDrawColor(200, 200, 200);
+            doc.line(marginX, y, pageWidth - marginX, y);
+            y += 18;
+        };
 
-3. WASTE CATEGORY & FORM 4 LOGS:
-- Sludge Generated: ${isSludgeNotApplicable ? 'N/A (No Hazardous Waste)' : dailyLog.sludge + ' MT'}
-- CPCB Schedule Classification: ${selectedCategory}
+        // Header banner
+        doc.setFillColor(6, 95, 70);
+        doc.rect(0, 0, pageWidth, 70, 'F');
+        doc.setTextColor(255, 255, 255);
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(18);
+        doc.text('EcoTrace India — Verified Audit Report', marginX, 32);
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(10);
+        doc.text('Review Draft — MPCB Statutory Compliance & Carbon Data', marginX, 50);
+        y = 100;
 
-4. DISCREPANCY AUDIT TRAIL (OCR vs Manager-Confirmed):
-- Power Usage: ${powerNum} kWh [Audit: ${powerDiscrepancyText}]
-- Water Consumption: ${dailyLog.water} KL [Audit: Verified against meter reading — No discrepancy]
+        if (isDemoMode) {
+            addLine('⚠️ DEMO DATA — Sample Illustration, Not for Filing', { size: 10, bold: true, color: [180, 83, 9], gapAfter: 18 });
+        }
+        addLine(`Generated: ${new Date().toISOString()} | Version: CEA 2025-26`, { size: 9, color: [110, 110, 110], gapAfter: 20 });
 
-5. DATA COMPLETENESS & CONSISTENCY RECORD:
-- Basis: ${savedLogsHistory.length} confirmed daily entries (Completeness: ${preflight.completenessPct}%).
-- Consistency metrics: ${positiveMissedDays} days missed out of 30, ${outOfRangeCount} out-of-range pH entries detected, ${gpsCapturedCount}/${savedLogsHistory.length || 1} entries successfully GPS-tagged.
+        addSectionHeading('1. Company Details');
+        addLine(`Company Name: ${factoryData.name} (${isDemoMode ? 'DEMO MODE' : 'PRODUCTION'})`, { bold: true, gapAfter: 15 });
+        addLine(`Location: ${factoryData.location}`, { gapAfter: 15 });
+        addLine(`Discharge Limit: ${factoryData.dischargeLimit} Liters | CTO Expiry: ${factoryData.ctoExpiryDate} (${ctoDaysLeft} days left)`, { gapAfter: 15 });
+        addLine(`Status: ${preflight.statusLabel}`, { bold: true, gapAfter: 20 });
+        addDivider();
 
-6. RECORD INTEGRITY & DIGITAL VAULT:
-- Record integrity: Private hash chain (tamper-evident). Server timestamp enforced. External anchoring not enabled.
+        addSectionHeading('2. Carbon Emissions (dMRV Engine)');
+        addLine(`Scope 2 (Grid Power): ${calculatedScope2} MT CO2e — Grid factor: ${factoryData.gridEmissionFactor} kg CO2/kWh on ${powerNum} kWh`, { gapAfter: 15 });
+        addLine(`Scope 1 (Direct Combustion): ${calculatedScope1}`, { gapAfter: 20 });
+        addDivider();
 
-7. LEGAL DISCLAIMER:
-EcoTrace India Private Limited is an independent compliance platform. It aggregates data supplied by the factory and prepares statutory formats. It does not certify compliance, calculate hazardous waste quantities, transmit to government portals, or provide legal opinions. Physical safety protocols, hardware calibration and compliance adherence remain the responsibility of the factory management.
-========================================
-        `.trim();
-        downloadTextFile(`${factoryData.name.replace(/\s+/g, '_')}_Verified_Audit_Report.txt`, reportContent);
+        addSectionHeading('3. Water Cess & ETP Monitoring (Form 3 Input)');
+        addLine(`Total Water Consumption Recorded: ${totalWaterNum} KL (Aggregated across active log entries)`, { gapAfter: 15 });
+        addLine(`ETP Treated Effluent pH True Average: ${truePhAverage} (Across ${savedLogsHistory.length > 0 ? savedLogsHistory.length : 1} entries, within 0-14 legal limits)`, { gapAfter: 15 });
+        addLine(`Discharge Compliance: Within permissible limit of ${factoryData.dischargeLimit} Liters`, { gapAfter: 20 });
+        addDivider();
+
+        addSectionHeading('4. Waste Category & Form 4 Logs');
+        addLine(`Sludge Generated: ${isSludgeNotApplicable ? 'N/A (No Hazardous Waste)' : dailyLog.sludge + ' MT'}`, { gapAfter: 15 });
+        addLine(`CPCB Schedule Classification: ${selectedCategory}`, { gapAfter: 20 });
+        addDivider();
+
+        addSectionHeading('5. Discrepancy Audit Trail (OCR vs Manager-Confirmed)');
+        addLine(`Power Usage: ${powerNum} kWh — ${powerDiscrepancyText}`, { gapAfter: 15 });
+        addLine(`Water Consumption: ${dailyLog.water} KL — Verified against meter reading, no discrepancy`, { gapAfter: 20 });
+        addDivider();
+
+        addSectionHeading('6. Data Completeness & Consistency Record');
+        addLine(`Basis: ${savedLogsHistory.length} confirmed daily entries (Completeness: ${preflight.completenessPct}%)`, { gapAfter: 15 });
+        addLine(`Consistency: ${positiveMissedDays} days missed out of 30, ${outOfRangeCount} out-of-range pH entries, ${gpsCapturedCount}/${savedLogsHistory.length || 1} entries GPS-tagged`, { gapAfter: 20 });
+        addDivider();
+
+        addSectionHeading('7. Record Integrity & Digital Vault');
+        addLine('Private hash chain (tamper-evident). Server timestamp enforced. External anchoring not enabled.', { gapAfter: 20 });
+        addDivider();
+
+        addSectionHeading('8. Legal Disclaimer');
+        addLine('EcoTrace India Private Limited is an independent compliance platform. It aggregates data supplied by the factory and prepares statutory formats. It does not certify compliance, calculate hazardous waste quantities, transmit to government portals, or provide legal opinions. Physical safety protocols, hardware calibration and compliance adherence remain the responsibility of the factory management.', { size: 8.5, color: [90, 90, 90], gapAfter: 10 });
+
+        doc.setFontSize(8);
+        doc.setTextColor(150, 150, 150);
+        doc.text('EcoTrace India | Project Lead: D. S. Nikam | 7378780745 | dhiraj@ectotraceindia.com', marginX, 800);
+
+        doc.save(`${factoryData.name.replace(/\s+/g, '_')}_Verified_Audit_Report.pdf`);
     };
 
     const [actionOutput, setActionOutput] = useState("Select any Live Actionable module below to view generated compliance output on screen.");
@@ -1386,7 +1432,7 @@ EcoTrace India Private Limited is an independent compliance platform. It aggrega
                         onClick={handleExportReport}
                         style={{ backgroundColor: '#059669', color: 'white', border: 'none', padding: '8px 14px', borderRadius: '6px', fontSize: '12px', fontWeight: 'bold', cursor: 'pointer' }}
                     >
-                        Export Verified Audit Report (.txt)
+                        Export Verified Audit Report (.pdf)
                     </button>
                     <button
                         onClick={() => setViewMode('buyer')}
