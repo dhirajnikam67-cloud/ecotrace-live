@@ -629,15 +629,25 @@ export default function EcoTraceDashboard() {
         // ---- खरं "एका दिवसाला एकच नोंद" lock (Aug 2026 fix) — आधी "Save & Lock Daily Record" असं
         // म्हणायचं, पण प्रत्यक्षात तोच दिवस पुन्हा-पुन्हा सेव्ह करता येत होता, ज्यामुळे completeness %
         // चुकीचा दिसायचा. आता insert करण्याआधी आजच्या तारखेची नोंद आधीच आहे का तपासतो. ----
+        // FIX (Aug 2026, round 2): .maybeSingle() फक्त 0 किंवा 1 row अपेक्षित असतं तेव्हाच काम करतं —
+        // आधीपासूनच त्या दिवसासाठी 2+ नोंदी असल्यास ते error देतं, आणि आपण फक्त `data` वाचत असल्याने
+        // तो error दुर्लक्षित होऊन lock निकामी व्हायचं (म्हणूनच वरच्या डुप्लिकेट नोंदी तयार झाल्या).
+        // आता .limit(1) + array-length तपासणी वापरतो, जी कितीही जुन्या नोंदी असल्या तरी बरोबर चालते;
+        // आणि query मध्येच error आली तर (उदा. नेटवर्क अडचण) सुरक्षिततेसाठी insert थांबवतो.
         const todayDateStr = new Date().toISOString().split('T')[0];
-        const { data: existingTodayLog } = await supabase
+        const { data: existingTodayLogs, error: existingCheckError } = await supabase
             .from('daily_logs')
             .select('id')
             .eq('factory_id', currentUnitId)
             .eq('log_date', todayDateStr)
-            .maybeSingle();
+            .limit(1);
 
-        if (existingTodayLog) {
+        if (existingCheckError) {
+            alert('आजची नोंद आधी सेव्ह झाली आहे का हे तपासता आलं नाही (' + existingCheckError.message + '). कृपया पुन्हा प्रयत्न करा.');
+            return;
+        }
+
+        if (existingTodayLogs && existingTodayLogs.length > 0) {
             alert('आजची नोंद आधीच सेव्ह व लॉक झाली आहे — एका दिवसासाठी फक्त एकदाच नोंद करता येते.');
             return;
         }
