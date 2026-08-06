@@ -20,6 +20,21 @@ const VALID_DOCUMENT_TO_CATEGORY = {
 const OCR_CONFIDENCE_THRESHOLD = 70;
 const MINIMUM_COMPLETENESS_PCT = 50;
 
+// ---------------------------------------------------------------------------
+// SCOPE 1 (Direct Combustion) — fuel-wise emission factors (Aug 2026)
+// Diesel आणि LPG चे आकडे GHG Protocol च्या स्वतःच्या calculation tools/documentation वरून
+// पडताळलेले (sourced) आहेत. Furnace Oil व Coal साठी नेमका grade/quality-specific आकडा
+// GHG Protocol च्या cross-sector tool मध्ये थेट सापडला नाही — म्हणून ते `isEstimate: true`
+// असे चिन्हांकित आहेत; अंतिम statutory filing आधी EHS consultant कडून पडताळून घ्यावेत.
+// ---------------------------------------------------------------------------
+const FUEL_EMISSION_FACTORS = {
+    none: { label: 'No Combustion Source (N/A)', unit: '', factor: 0, isEstimate: false },
+    diesel: { label: 'Diesel / HSD (Liters)', unit: 'Liters', factor: 2.6533, isEstimate: false, source: 'GHG Protocol Stationary Combustion Tool' },
+    lpg: { label: 'LPG (kg)', unit: 'kg', factor: 2.983, isEstimate: false, source: 'GHG Protocol Cross-Sector Emission Factors Tool' },
+    furnace_oil: { label: 'Furnace Oil (Liters)', unit: 'Liters', factor: 3.17, isEstimate: true, source: 'Industry-standard approximate value — verify with EHS consultant/CPCB guidance' },
+    coal: { label: 'Coal (kg)', unit: 'kg', factor: 2.275, isEstimate: true, source: 'GHG Protocol stationary-combustion example (bituminous) — Indian coal grade varies, verify locally' },
+};
+
 function detectDocumentType(ocrText) {
   const text = ocrText.toLowerCase();
   let best = { type: "unknown", matchScore: 0 };
@@ -330,7 +345,7 @@ export default function EcoTraceDashboard() {
     const [ocrFiles, setOcrFiles] = useState([]); // Now stores per-file objects with individual OCR statuses
     
     // Daily Log State & True OCR Read State
-    const [dailyLog, setDailyLog] = useState({ ph: '7.2', water: '1420', power: '3150', sludge: '0.45', fuelInput: '' });
+    const [dailyLog, setDailyLog] = useState({ ph: '7.2', water: '1420', power: '3150', sludge: '0.45', fuelInput: '', fuelType: 'none' });
     const [ocrReadPower, setOcrReadPower] = useState(null); 
     const [isSludgeNotApplicable, setIsSludgeNotApplicable] = useState(false);
     const [logSubmitted, setLogSubmitted] = useState(false);
@@ -349,7 +364,7 @@ export default function EcoTraceDashboard() {
         setSavedLogsHistory(logs || []);
         setSelectedCategory(category || "CPCB Cat 34.3 (Chemical Sludge)");
         setOcrFiles(files || []);
-        setDailyLog(logState || { ph: '7.2', water: '1420', power: '3150', sludge: '0.45', fuelInput: '' });
+        setDailyLog(logState || { ph: '7.2', water: '1420', power: '3150', sludge: '0.45', fuelInput: '', fuelType: 'none' });
         setIsSludgeNotApplicable(sludgeNaState || false);
         setOcrReadPower(ocrPower !== undefined ? ocrPower : null);
     };
@@ -372,7 +387,7 @@ export default function EcoTraceDashboard() {
             gpsCaptured: true,
             submittedAt: new Date().toISOString()
         }));
-        handleUnitSwitch("DEMO-FACTORY", demoDetails, demoLogs, true, "CPCB Cat 34.3 (Chemical Sludge)", [], { ph: '7.2', water: '1420', power: '3150', sludge: '0.45', fuelInput: '' }, false, 3120);
+        handleUnitSwitch("DEMO-FACTORY", demoDetails, demoLogs, true, "CPCB Cat 34.3 (Chemical Sludge)", [], { ph: '7.2', water: '1420', power: '3150', sludge: '0.45', fuelInput: '', fuelType: 'none' }, false, 3120);
         alert('Demo Unit loaded safely in isolated state with 15-day sample data.');
     };
 
@@ -499,7 +514,12 @@ export default function EcoTraceDashboard() {
     const gpsCapturedCount = savedLogsHistory.filter((e) => e.gpsCaptured).length;
 
     const calculatedScope2 = (powerNum * 0.82 / 1000).toFixed(2); 
-    const calculatedScope1 = dailyLog.fuelInput ? (parseFloat(dailyLog.fuelInput) * 2.68 / 1000).toFixed(2) : "Not calculated — Awaiting fuel input";
+    // FIX (Aug 2026): पूर्वी सगळ्या इंधनांसाठी एकच hardcoded 2.68 factor वापरला जायचा — आता
+    // प्रत्यक्ष निवडलेल्या इंधन-प्रकारानुसार योग्य (sourced) emission factor वापरतो.
+    const selectedFuelInfo = FUEL_EMISSION_FACTORS[dailyLog.fuelType] || FUEL_EMISSION_FACTORS.none;
+    const calculatedScope1 = dailyLog.fuelType === 'none'
+        ? "N/A — No Combustion Source Declared"
+        : (dailyLog.fuelInput ? ((parseFloat(dailyLog.fuelInput) * selectedFuelInfo.factor) / 1000).toFixed(2) + (selectedFuelInfo.isEstimate ? ' tCO2e (approximate factor — verify with consultant)' : ' tCO2e') : "Not calculated — Awaiting fuel input");
 
     // PER-FILE HYBRID BULK UPLOAD WITH INDEPENDENT OCR GATE
     // ---- खरा OCR engine (Aug 2026 fix): आधीचा rule-based simulated classifier बदलून, आता प्रत्येक
@@ -667,6 +687,10 @@ export default function EcoTraceDashboard() {
             gps_captured: capturedPosition !== null,
             gps_latitude: capturedPosition ? capturedPosition.lat : null,
             gps_longitude: capturedPosition ? capturedPosition.lng : null,
+            // Scope 1 fields — मुद्दाम canonicalLogPayload च्या hash-payload मध्ये समाविष्ट नाहीत
+            // (ते फक्त ठराविक fields वाचतं), त्यामुळे जुन्या साखळीबद्ध नोंदींवर परिणाम होत नाही.
+            fuel_type: dailyLog.fuelType === 'none' ? null : dailyLog.fuelType,
+            fuel_input: dailyLog.fuelType === 'none' ? null : (parseFloat(dailyLog.fuelInput) || null),
         };
         const recordHash = await sha256Hex(canonicalLogPayload(newRecordFields) + '|' + previousHash);
 
@@ -1353,6 +1377,35 @@ EcoTrace India Private Limited is an independent compliance platform. It aggrega
                                         }} 
                                     /> Not Applicable (N/A)
                                 </label>
+                            </div>
+                            <div>
+                                <label style={{ fontSize: '10px', color: '#9ca3af' }}>Fuel Type (Scope 1)</label>
+                                <select
+                                    value={dailyLog.fuelType}
+                                    onChange={(e) => {
+                                        const newType = e.target.value;
+                                        const updatedLog = { ...dailyLog, fuelType: newType, fuelInput: newType === 'none' ? '' : dailyLog.fuelInput };
+                                        setDailyLog(updatedLog);
+                                        if (currentUnitId) {
+                                            setUnitsData(prev => ({
+                                                ...prev,
+                                                [currentUnitId]: { factoryData, savedLogsHistory, isDemoMode, selectedCategory, ocrFiles, dailyLog: updatedLog, isSludgeNotApplicable, ocrReadPower }
+                                            }));
+                                        }
+                                    }}
+                                    style={{ width: '100%', padding: '6px', backgroundColor: '#1f2937', color: 'white', border: '1px solid #374151', borderRadius: '4px', fontSize: '12px' }}
+                                >
+                                    {Object.entries(FUEL_EMISSION_FACTORS).map(([key, info]) => (
+                                        <option key={key} value={key}>{info.label}{info.isEstimate ? ' *' : ''}</option>
+                                    ))}
+                                </select>
+                            </div>
+                            <div>
+                                <label style={{ fontSize: '10px', color: '#9ca3af' }}>Fuel Input {dailyLog.fuelType !== 'none' ? `(${FUEL_EMISSION_FACTORS[dailyLog.fuelType].unit})` : ''}</label>
+                                <input type="number" step="0.1" disabled={dailyLog.fuelType === 'none'} value={dailyLog.fuelInput} onChange={(e) => handleLogChange('fuelInput', e.target.value)} style={{ width: '100%', padding: '6px', backgroundColor: '#1f2937', color: 'white', border: '1px solid #374151', borderRadius: '4px', fontSize: '12px' }} />
+                                {FUEL_EMISSION_FACTORS[dailyLog.fuelType]?.isEstimate && (
+                                    <p style={{ fontSize: '8px', color: '#f59e0b', margin: '2px 0 0 0' }}>* Approximate factor — verify with EHS consultant before statutory filing.</p>
+                                )}
                             </div>
                             <button type="submit" style={{ gridColumn: '1 / -1', backgroundColor: '#059669', color: 'white', border: 'none', padding: '8px', borderRadius: '4px', fontSize: '12px', fontWeight: 'bold', cursor: 'pointer' }}>Save & Lock Daily Record</button>
                         </form>
