@@ -64,8 +64,12 @@ function classifyWithConfidenceGate(ocrText, ocrEngineConfidence, suggestedCateg
 }
 
 function preflightCheck(dailyLogEntries) {
-  const totalDays = 30; 
-  const loggedDays = dailyLogEntries.length > 0 ? dailyLogEntries.length : 0;
+  const totalDays = 30;
+  // FIX (Aug 2026): पूर्वी हे एकूण नोंदींची संख्या (dailyLogEntries.length) मोजत होतं — म्हणजे
+  // एकाच दिवसासाठी दोनदा सेव्ह केलं तरी 2 "logged days" धरले जायचे. आता वेगळ्या (unique) log_date
+  // मोजतो, जे प्रत्यक्ष अर्थाशी जुळतं.
+  const uniqueLoggedDates = new Set(dailyLogEntries.map((e) => e.date));
+  const loggedDays = uniqueLoggedDates.size;
   const completenessPct = totalDays > 0 ? Math.round((loggedDays / totalDays) * 100) : 0;
   
   const flaggedEntries = dailyLogEntries.filter((e) => parseFloat(e.ph) < 0 || parseFloat(e.ph) > 14 || parseFloat(e.power) < 0 || parseFloat(e.water) < 0);
@@ -80,7 +84,7 @@ function preflightCheck(dailyLogEntries) {
     statusLabel = `Partial Data — ${completenessPct}% Complete`;
   }
 
-  return { completenessPct, flaggedEntries, blockGeneration, statusLabel };
+  return { completenessPct, flaggedEntries, blockGeneration, statusLabel, loggedDays };
 }
 
 // ---------------------------------------------------------------------------
@@ -435,7 +439,10 @@ export default function EcoTraceDashboard() {
         ? (savedLogsHistory.reduce((sum, entry) => sum + (parseFloat(entry.ph) || 0), 0) / savedLogsHistory.length).toFixed(2)
         : (parseFloat(dailyLog.ph) || 7.2).toFixed(2);
 
-    const missedDays = 30 - (savedLogsHistory.length > 0 ? savedLogsHistory.length : 0);
+    // FIX (Aug 2026): पूर्वी savedLogsHistory.length (एकूण नोंदी) वापरत होतं — आता preflightCheck सारखाच
+    // unique log_date count वापरतो, म्हणजे रिपोर्टमधले आकडे आणि completeness % परस्परविरोधी दाखवणार नाहीत.
+    const uniqueLoggedDaysCount = new Set(savedLogsHistory.map((e) => e.date)).size;
+    const missedDays = 30 - uniqueLoggedDaysCount;
     const positiveMissedDays = missedDays > 0 ? missedDays : 0;
     const outOfRangeCount = savedLogsHistory.filter((e) => parseFloat(e.ph) < 0 || parseFloat(e.ph) > 14).length;
     const gpsCapturedCount = savedLogsHistory.filter((e) => e.gpsCaptured).length;
@@ -545,6 +552,22 @@ export default function EcoTraceDashboard() {
 
         if (!currentUnitId) {
             alert('Please onboard a factory unit first.');
+            return;
+        }
+
+        // ---- खरं "एका दिवसाला एकच नोंद" lock (Aug 2026 fix) — आधी "Save & Lock Daily Record" असं
+        // म्हणायचं, पण प्रत्यक्षात तोच दिवस पुन्हा-पुन्हा सेव्ह करता येत होता, ज्यामुळे completeness %
+        // चुकीचा दिसायचा. आता insert करण्याआधी आजच्या तारखेची नोंद आधीच आहे का तपासतो. ----
+        const todayDateStr = new Date().toISOString().split('T')[0];
+        const { data: existingTodayLog } = await supabase
+            .from('daily_logs')
+            .select('id')
+            .eq('factory_id', currentUnitId)
+            .eq('log_date', todayDateStr)
+            .maybeSingle();
+
+        if (existingTodayLog) {
+            alert('आजची नोंद आधीच सेव्ह व लॉक झाली आहे — एका दिवसासाठी फक्त एकदाच नोंद करता येते.');
             return;
         }
 
