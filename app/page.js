@@ -43,6 +43,133 @@ const FUEL_EMISSION_FACTORS = {
 // ---------------------------------------------------------------------------
 const ALL_INDIA_GRID_FACTOR = 0.7117;
 
+// ---------------------------------------------------------------------------
+// MULTI-LANGUAGE SUPPORT (Aug 2026) — factory managers across states (Maharashtra,
+// Gujarat, Karnataka, Tamil Nadu, इ.) may not all be comfortable in Marathi.
+// v1 scope: Header, Status Banner, Tabs, Module 1 (Onboarding), Module 4 (Daily
+// Logbook) — the screens an operator uses every day. Reference/Roadmap/Buyer Portal
+// modules stay English-only for now; can extend later if pilot feedback wants it.
+// ---------------------------------------------------------------------------
+const TRANSLATIONS = {
+    en: {
+        appTitle: 'EcoTrace India',
+        tagline: 'MPCB compliance · daily records · carbon data — for MSMEs',
+        loadDemo: '⚡ Load Demo Unit (Sales Mode)',
+        exportReport: 'Export Verified Audit Report (.pdf)',
+        buyerPortal: '🏢 Enterprise Buyer Portal',
+        logout: 'Logout',
+        activeUnit: 'Active Unit',
+        unitId: 'Unit ID',
+        ctoDaysLeft: 'CTO Days Left',
+        noFactory: 'No factory onboarded — register below or click "Load Demo Unit"',
+        tabOverview: 'Overview',
+        tabLiveCore: 'Live Core (9)',
+        tabReference: 'Reference Modules (4)',
+        tabRoadmap: 'Roadmap (6)',
+        m1Title: '1. Multi-Tenant Client Onboarding & CTO Setup',
+        registeredLocked: '✅ REGISTERED & LOCKED',
+        editDetails: '✏️ Edit Details',
+        cancel: 'Cancel',
+        companyNamePlaceholder: 'Enter Company Name',
+        industrialAreaPlaceholder: 'Enter Industrial Area / Location (Optional if restoring)',
+        dischargeLimitPlaceholder: 'Discharge Limit (Liters)',
+        registerButton: 'Register / Switch Unit (Live State Protected)',
+        dischargeLimitLabel: 'Discharge Limit',
+        ctoExpiryLabel: 'CTO Expiry',
+        m4Title: '4. Daily Operator Logbook',
+        alreadyLockedTitle: '✅ Today\'s entry is already saved & locked',
+        lockedAt: 'Locked at',
+        newEntryMidnight: 'A new entry will be available after midnight (IST).',
+        phLabel: 'pH Level (Mandatory)',
+        waterLabel: 'Water KL (Mandatory)',
+        powerLabel: 'Power kWh (Mandatory)',
+        sludgeLabel: 'Sludge MT',
+        notApplicable: 'Not Applicable (N/A)',
+        fuelSourcesLabel: 'Fuel Sources (Scope 1) — multiple fuel sources can be added for the same day',
+        addFuel: '+ Add Another Fuel Source',
+        saveLock: 'Save & Lock Daily Record',
+        languageLabel: 'Language',
+    },
+    mr: {
+        appTitle: 'EcoTrace India',
+        tagline: 'MPCB compliance · daily records · carbon data — MSMEs साठी',
+        loadDemo: '⚡ Load Demo Unit (Sales Mode)',
+        exportReport: 'Export Verified Audit Report (.pdf)',
+        buyerPortal: '🏢 Enterprise Buyer Portal',
+        logout: 'Logout',
+        activeUnit: 'सक्रिय Unit',
+        unitId: 'Unit ID',
+        ctoDaysLeft: 'CTO Days Left',
+        noFactory: 'अजून कुठलीही factory नोंदवलेली नाही — खाली नोंदणी करा किंवा "Load Demo Unit" दाबा',
+        tabOverview: 'Overview',
+        tabLiveCore: 'Live Core (9)',
+        tabReference: 'Reference Modules (4)',
+        tabRoadmap: 'Roadmap (6)',
+        m1Title: '1. Multi-Tenant Client Onboarding & CTO Setup',
+        registeredLocked: '✅ नोंदणी झाली — लॉक',
+        editDetails: '✏️ माहिती बदला (Edit)',
+        cancel: 'रद्द करा',
+        companyNamePlaceholder: 'कंपनीचं नाव टाका',
+        industrialAreaPlaceholder: 'Industrial Area / ठिकाण टाका (restoring असेल तर ऐच्छिक)',
+        dischargeLimitPlaceholder: 'Discharge Limit (Liters)',
+        registerButton: 'नोंदणी करा / Unit बदला',
+        dischargeLimitLabel: 'Discharge Limit',
+        ctoExpiryLabel: 'CTO Expiry',
+        m4Title: '4. दैनिक ऑपरेटर लॉगबुक (Daily Operator Logbook)',
+        alreadyLockedTitle: '✅ आजची नोंद आधीच सेव्ह व लॉक झाली आहे',
+        lockedAt: 'लॉक झाली',
+        newEntryMidnight: 'भारतीय वेळेनुसार (IST) रात्री १२ नंतर नवीन नोंद उपलब्ध होईल.',
+        phLabel: 'pH Level (आवश्यक)',
+        waterLabel: 'Water KL (आवश्यक)',
+        powerLabel: 'Power kWh (आवश्यक)',
+        sludgeLabel: 'Sludge MT',
+        notApplicable: 'लागू नाही (N/A)',
+        fuelSourcesLabel: 'इंधन-स्रोत (Scope 1) — एकाच दिवशी अनेक इंधन-स्रोत जोडता येतील',
+        addFuel: '+ आणखी इंधन-स्रोत जोडा',
+        saveLock: 'सेव्ह करा व लॉक करा',
+        languageLabel: 'भाषा',
+    },
+    hi: {
+        appTitle: 'EcoTrace India',
+        tagline: 'MPCB अनुपालन · दैनिक रिकॉर्ड · कार्बन डेटा — MSMEs के लिए',
+        loadDemo: '⚡ Load Demo Unit (Sales Mode)',
+        exportReport: 'Export Verified Audit Report (.pdf)',
+        buyerPortal: '🏢 Enterprise Buyer Portal',
+        logout: 'Logout',
+        activeUnit: 'सक्रिय यूनिट',
+        unitId: 'यूनिट ID',
+        ctoDaysLeft: 'CTO के दिन शेष',
+        noFactory: 'अभी तक कोई फैक्ट्री दर्ज नहीं — नीचे रजिस्टर करें या "Load Demo Unit" दबाएँ',
+        tabOverview: 'Overview',
+        tabLiveCore: 'Live Core (9)',
+        tabReference: 'Reference Modules (4)',
+        tabRoadmap: 'Roadmap (6)',
+        m1Title: '1. Multi-Tenant Client Onboarding & CTO Setup',
+        registeredLocked: '✅ पंजीकृत — लॉक्ड',
+        editDetails: '✏️ विवरण बदलें (Edit)',
+        cancel: 'रद्द करें',
+        companyNamePlaceholder: 'कंपनी का नाम दर्ज करें',
+        industrialAreaPlaceholder: 'Industrial Area / स्थान दर्ज करें (restoring हो तो वैकल्पिक)',
+        dischargeLimitPlaceholder: 'Discharge Limit (Liters)',
+        registerButton: 'रजिस्टर करें / यूनिट बदलें',
+        dischargeLimitLabel: 'Discharge Limit',
+        ctoExpiryLabel: 'CTO Expiry',
+        m4Title: '4. दैनिक ऑपरेटर लॉगबुक (Daily Operator Logbook)',
+        alreadyLockedTitle: '✅ आज की एंट्री पहले ही सेव और लॉक हो चुकी है',
+        lockedAt: 'लॉक हुई',
+        newEntryMidnight: 'भारतीय समय (IST) के अनुसार रात 12 बजे के बाद नई एंट्री उपलब्ध होगी।',
+        phLabel: 'pH Level (अनिवार्य)',
+        waterLabel: 'Water KL (अनिवार्य)',
+        powerLabel: 'Power kWh (अनिवार्य)',
+        sludgeLabel: 'Sludge MT',
+        notApplicable: 'लागू नहीं (N/A)',
+        fuelSourcesLabel: 'ईंधन-स्रोत (Scope 1) — एक ही दिन में कई ईंधन-स्रोत जोड़े जा सकते हैं',
+        addFuel: '+ एक और ईंधन-स्रोत जोड़ें',
+        saveLock: 'सेव करें व लॉक करें',
+        languageLabel: 'भाषा',
+    },
+};
+
 function detectDocumentType(ocrText) {
   const text = ocrText.toLowerCase();
   let best = { type: "unknown", matchScore: 0 };
@@ -247,6 +374,20 @@ export default function EcoTraceDashboard() {
     // दिसायचा (जरी वरच्या पट्टीत खरा साठलेला डेटा दिसत असला तरी) — गोंधळ व्हायचा. आता factory
     // already असेल तर "locked" सारांश दाखवतो, फक्त स्पष्ट "Edit" दाबल्यावरच फॉर्म उघडतो.
     const [isEditingFactory, setIsEditingFactory] = useState(false);
+
+    // ---- Multi-language support (Aug 2026) ----
+    const [language, setLanguage] = useState('en');
+    const t = (key) => TRANSLATIONS[language]?.[key] || TRANSLATIONS.en[key] || key;
+    const handleLanguageChange = async (newLang) => {
+        setLanguage(newLang);
+        if (currentUnitId && !isDemoMode) {
+            const { error } = await supabase
+                .from('factories')
+                .update({ preferred_language: newLang })
+                .eq('id', currentUnitId);
+            if (error) console.error('Error saving language preference:', error.message);
+        }
+    };
     // Step 4 (Pan-India expansion): state selection for onboarding, options loaded from state_configs
     const [tempFactoryState, setTempFactoryState] = useState('Maharashtra');
     const [availableStates, setAvailableStates] = useState([]);
@@ -311,6 +452,10 @@ export default function EcoTraceDashboard() {
                     gridEmissionFactor: gridFactor,
                     state: data.state || '',
                 });
+                // साठलेली भाषा-निवड लागू करतो (Multi-language, Aug 2026)
+                if (data.preferred_language) {
+                    setLanguage(data.preferred_language);
+                }
 
                 // ---- Step 4 (Pan-India backend migration): load this factory's saved daily_logs
                 // so completeness %, Scope 2, water totals, and pH average are computed from
@@ -1417,34 +1562,44 @@ export default function EcoTraceDashboard() {
             {/* Header */}
             <header style={{ borderBottom: '1px solid #1f2937', paddingBottom: '12px', marginBottom: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '10px' }}>
                 <div>
-                    <h1 style={{ fontSize: '18px', fontWeight: 'bold', color: '#ffffff', margin: '0 0 4px 0' }}>EcoTrace India {isDemoMode && '⚡ [DEMO MODE ACTIVE]'}</h1>
-                    <p style={{ fontSize: '12px', color: '#9ca3af', margin: '0 0 4px 0' }}>MPCB compliance · daily records · carbon data — for MSMEs</p>
+                    <h1 style={{ fontSize: '18px', fontWeight: 'bold', color: '#ffffff', margin: '0 0 4px 0' }}>{t('appTitle')} {isDemoMode && '⚡ [DEMO MODE ACTIVE]'}</h1>
+                    <p style={{ fontSize: '12px', color: '#9ca3af', margin: '0 0 4px 0' }}>{t('tagline')}</p>
                     <p style={{ fontSize: '11px', color: '#34d399', margin: 0 }}>Project Lead: D. S. Nikam | 📞 7378780745 | ✉️ dhiraj@ectotraceindia.com</p>
                 </div>
-                <div style={{ display: 'flex', gap: '8px' }}>
+                <div style={{ display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap' }}>
+                    <select
+                        value={language}
+                        onChange={(e) => handleLanguageChange(e.target.value)}
+                        title={t('languageLabel')}
+                        style={{ backgroundColor: '#1f2937', color: 'white', border: '1px solid #374151', borderRadius: '6px', padding: '7px 8px', fontSize: '11px', fontWeight: 'bold', cursor: 'pointer' }}
+                    >
+                        <option value="en">🌐 English</option>
+                        <option value="mr">🌐 मराठी</option>
+                        <option value="hi">🌐 हिंदी</option>
+                    </select>
                     <button 
                         onClick={loadDemoUnit}
                         style={{ backgroundColor: '#f59e0b', color: 'white', border: 'none', padding: '8px 12px', borderRadius: '6px', fontSize: '11px', fontWeight: 'bold', cursor: 'pointer' }}
                     >
-                        ⚡ Load Demo Unit (Sales Mode)
+                        {t('loadDemo')}
                     </button>
                     <button 
                         onClick={handleExportReport}
                         style={{ backgroundColor: '#059669', color: 'white', border: 'none', padding: '8px 14px', borderRadius: '6px', fontSize: '12px', fontWeight: 'bold', cursor: 'pointer' }}
                     >
-                        Export Verified Audit Report (.pdf)
+                        {t('exportReport')}
                     </button>
                     <button
                         onClick={() => setViewMode('buyer')}
                         style={{ backgroundColor: '#4338ca', color: 'white', border: 'none', padding: '8px 12px', borderRadius: '6px', fontSize: '11px', fontWeight: 'bold', cursor: 'pointer' }}
                     >
-                        🏢 Enterprise Buyer Portal
+                        {t('buyerPortal')}
                     </button>
                     <button 
                         onClick={handleLogout}
                         style={{ backgroundColor: '#374151', color: 'white', border: 'none', padding: '8px 12px', borderRadius: '6px', fontSize: '11px', fontWeight: 'bold', cursor: 'pointer' }}
                     >
-                        Logout ({session.user.email})
+                        {t('logout')} ({session.user.email})
                     </button>
                 </div>
             </header>
@@ -1452,16 +1607,16 @@ export default function EcoTraceDashboard() {
             {/* Status Banner */}
             <div style={{ marginBottom: '16px', padding: '10px 14px', background: ctoBannerBg, borderRadius: '8px', border: `1px solid ${ctoBannerBorder}`, display: 'inline-block', width: '100%' }}>
                 <span style={{ fontSize: '12px', fontWeight: 'bold', color: ctoTextColor }}>
-                    {isFactoryActive ? `🏢 Active Unit: ${factoryData.name} (${factoryData.location}) | Unit ID: ${currentUnitId} | CTO Days Left: ${ctoDaysLeft}` : '⚠️ No factory onboarded — register below or click "Load Demo Unit"'}
+                    {isFactoryActive ? `🏢 ${t('activeUnit')}: ${factoryData.name} (${factoryData.location}) | ${t('unitId')}: ${currentUnitId} | ${t('ctoDaysLeft')}: ${ctoDaysLeft}` : `⚠️ ${t('noFactory')}`}
                 </span>
             </div>
 
             {/* Navigation Tabs */}
             <nav style={{ display: 'flex', gap: '16px', borderBottom: '1px solid #1f2937', marginBottom: '20px', overflowX: 'auto', paddingBottom: '8px' }}>
-                <button onClick={() => setActiveTab('overview')} style={{ background: 'none', border: 'none', color: activeTab === 'overview' ? '#34d399' : '#9ca3af', fontWeight: 'bold', fontSize: '13px', cursor: 'pointer' }}>Overview</button>
-                <button onClick={() => setActiveTab('live_core')} style={{ background: 'none', border: 'none', color: activeTab === 'live_core' ? '#34d399' : '#9ca3af', fontWeight: 'bold', fontSize: '13px', cursor: 'pointer' }}>Live Core (9)</button>
-                <button onClick={() => setActiveTab('reference')} style={{ background: 'none', border: 'none', color: activeTab === 'reference' ? '#34d399' : '#9ca3af', fontWeight: 'bold', fontSize: '13px', cursor: 'pointer' }}>Reference Modules (4)</button>
-                <button onClick={() => setActiveTab('roadmap')} style={{ background: 'none', border: 'none', color: activeTab === 'roadmap' ? '#34d399' : '#9ca3af', fontWeight: 'bold', fontSize: '13px', cursor: 'pointer' }}>Roadmap (6)</button>
+                <button onClick={() => setActiveTab('overview')} style={{ background: 'none', border: 'none', color: activeTab === 'overview' ? '#34d399' : '#9ca3af', fontWeight: 'bold', fontSize: '13px', cursor: 'pointer' }}>{t('tabOverview')}</button>
+                <button onClick={() => setActiveTab('live_core')} style={{ background: 'none', border: 'none', color: activeTab === 'live_core' ? '#34d399' : '#9ca3af', fontWeight: 'bold', fontSize: '13px', cursor: 'pointer' }}>{t('tabLiveCore')}</button>
+                <button onClick={() => setActiveTab('reference')} style={{ background: 'none', border: 'none', color: activeTab === 'reference' ? '#34d399' : '#9ca3af', fontWeight: 'bold', fontSize: '13px', cursor: 'pointer' }}>{t('tabReference')}</button>
+                <button onClick={() => setActiveTab('roadmap')} style={{ background: 'none', border: 'none', color: activeTab === 'roadmap' ? '#34d399' : '#9ca3af', fontWeight: 'bold', fontSize: '13px', cursor: 'pointer' }}>{t('tabRoadmap')}</button>
             </nav>
 
             {/* Tab 1: Overview */}
@@ -1496,14 +1651,14 @@ export default function EcoTraceDashboard() {
                     {/* Module 1: Onboarding */}
                     <div style={{ backgroundColor: '#111827', border: '1px solid #374151', borderRadius: '12px', padding: '16px' }}>
                         <span style={{ backgroundColor: '#065f46', color: '#d1fae5', padding: '2px 6px', borderRadius: '4px', fontSize: '10px', fontWeight: 'bold' }}>LIVE MODULE 1</span>
-                        <h3 style={{ color: '#818cf8', margin: '8px 0 8px 0', fontSize: '15px' }}>1. Multi-Tenant Client Onboarding & CTO Setup</h3>
+                        <h3 style={{ color: '#818cf8', margin: '8px 0 8px 0', fontSize: '15px' }}>{t('m1Title')}</h3>
                         {isFactoryActive && !isEditingFactory ? (
                             <div>
                                 <div style={{ backgroundColor: '#1f2937', border: '1px solid #065f46', borderRadius: '8px', padding: '12px', marginBottom: '10px' }}>
-                                    <p style={{ margin: '0 0 4px 0', fontSize: '11px', color: '#34d399', fontWeight: 'bold' }}>✅ REGISTERED & LOCKED</p>
+                                    <p style={{ margin: '0 0 4px 0', fontSize: '11px', color: '#34d399', fontWeight: 'bold' }}>{t('registeredLocked')}</p>
                                     <p style={{ margin: '0 0 2px 0', fontSize: '13px', color: 'white', fontWeight: 'bold' }}>{factoryData.name}</p>
                                     <p style={{ margin: '0 0 2px 0', fontSize: '11px', color: '#9ca3af' }}>{factoryData.location} · {factoryData.state}</p>
-                                    <p style={{ margin: '0 0 2px 0', fontSize: '11px', color: '#9ca3af' }}>Discharge Limit: {factoryData.dischargeLimit} L | CTO Expiry: {factoryData.ctoExpiryDate}</p>
+                                    <p style={{ margin: '0 0 2px 0', fontSize: '11px', color: '#9ca3af' }}>{t('dischargeLimitLabel')}: {factoryData.dischargeLimit} L | {t('ctoExpiryLabel')}: {factoryData.ctoExpiryDate}</p>
                                 </div>
                                 <button
                                     onClick={() => {
@@ -1517,12 +1672,12 @@ export default function EcoTraceDashboard() {
                                     }}
                                     style={{ backgroundColor: '#374151', color: '#d1d5db', border: '1px solid #6b7280', padding: '6px 12px', borderRadius: '6px', fontSize: '11px', fontWeight: 'bold', cursor: 'pointer' }}
                                 >
-                                    ✏️ Edit Details
+                                    {t('editDetails')}
                                 </button>
                             </div>
                         ) : (
                             <form onSubmit={(e) => { handleOnboardSubmit(e); setIsEditingFactory(false); }} style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                                <input type="text" value={tempCompanyName} onChange={(e) => setTempCompanyName(e.target.value)} placeholder="Enter Company Name" style={{ padding: '8px', backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '6px', color: 'white', fontSize: '12px' }} required />
+                                <input type="text" value={tempCompanyName} onChange={(e) => setTempCompanyName(e.target.value)} placeholder={t('companyNamePlaceholder')} style={{ padding: '8px', backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '6px', color: 'white', fontSize: '12px' }} required />
                                 <select value={tempFactoryState} onChange={(e) => setTempFactoryState(e.target.value)} style={{ padding: '8px', backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '6px', color: 'white', fontSize: '12px' }}>
                                     {availableStates.length > 0 ? (
                                         availableStates.map((st) => <option key={st} value={st}>{st}</option>)
@@ -1530,13 +1685,13 @@ export default function EcoTraceDashboard() {
                                         <option value="Maharashtra">Maharashtra</option>
                                     )}
                                 </select>
-                                <input type="text" value={tempMidcLocation} onChange={(e) => setTempMidcLocation(e.target.value)} placeholder="Enter Industrial Area / Location (Optional if restoring)" style={{ padding: '8px', backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '6px', color: 'white', fontSize: '12px' }} />
-                                <input type="text" value={tempDischargeLimit} onChange={(e) => setTempDischargeLimit(e.target.value)} placeholder="Discharge Limit (Liters)" style={{ padding: '8px', backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '6px', color: 'white', fontSize: '12px' }} />
+                                <input type="text" value={tempMidcLocation} onChange={(e) => setTempMidcLocation(e.target.value)} placeholder={t('industrialAreaPlaceholder')} style={{ padding: '8px', backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '6px', color: 'white', fontSize: '12px' }} />
+                                <input type="text" value={tempDischargeLimit} onChange={(e) => setTempDischargeLimit(e.target.value)} placeholder={t('dischargeLimitPlaceholder')} style={{ padding: '8px', backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '6px', color: 'white', fontSize: '12px' }} />
                                 <input type="date" value={tempCtoDate} onChange={(e) => setTempCtoDate(e.target.value)} style={{ padding: '8px', backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '6px', color: 'white', fontSize: '12px' }} />
                                 <div style={{ display: 'flex', gap: '8px' }}>
-                                    <button type="submit" style={{ backgroundColor: '#059669', color: 'white', border: 'none', padding: '8px 14px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer', fontSize: '12px' }}>Register / Switch Unit (Live State Protected)</button>
+                                    <button type="submit" style={{ backgroundColor: '#059669', color: 'white', border: 'none', padding: '8px 14px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer', fontSize: '12px' }}>{t('registerButton')}</button>
                                     {isFactoryActive && (
-                                        <button type="button" onClick={() => setIsEditingFactory(false)} style={{ backgroundColor: '#374151', color: '#d1d5db', border: 'none', padding: '8px 14px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer', fontSize: '12px' }}>Cancel</button>
+                                        <button type="button" onClick={() => setIsEditingFactory(false)} style={{ backgroundColor: '#374151', color: '#d1d5db', border: 'none', padding: '8px 14px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer', fontSize: '12px' }}>{t('cancel')}</button>
                                     )}
                                 </div>
                             </form>
@@ -1575,32 +1730,32 @@ export default function EcoTraceDashboard() {
                     {/* Module 4: Daily Logbook with Per-Unit Form Isolation */}
                     <div style={{ backgroundColor: '#111827', border: '1px solid #059669', borderRadius: '12px', padding: '16px' }}>
                         <span style={{ backgroundColor: '#065f46', color: '#d1fae5', padding: '2px 6px', borderRadius: '4px', fontSize: '10px', fontWeight: 'bold' }}>LIVE MODULE 4</span>
-                        <h4 style={{ color: '#34d399', margin: '8px 0 4px 0', fontSize: '14px' }}>4. दैनिक ऑपरेटर लॉगबुक (Daily Operator Logbook)</h4>
+                        <h4 style={{ color: '#34d399', margin: '8px 0 4px 0', fontSize: '14px' }}>{t('m4Title')}</h4>
                         {validationWarning && <p style={{ color: '#f59e0b', fontSize: '11px', fontWeight: 'bold', margin: '0 0 6px 0' }}>{validationWarning}</p>}
                         {logSubmitted && <p style={{ color: '#34d399', fontSize: '12px', fontWeight: 'bold' }}>✅ Log saved & locked for Unit: {currentUnitId}</p>}
                         
                         {todayLogLockedAt && !isDemoMode ? (
                             <div style={{ backgroundColor: '#1f2937', border: '1px solid #065f46', borderRadius: '8px', padding: '14px' }}>
-                                <p style={{ margin: '0 0 4px 0', fontSize: '13px', color: '#34d399', fontWeight: 'bold' }}>✅ आजची नोंद आधीच झाली आहे — लॉक झालेली आहे</p>
-                                <p style={{ margin: 0, fontSize: '11px', color: '#9ca3af' }}>Locked at: {new Date(todayLogLockedAt).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })} IST</p>
-                                <p style={{ margin: '6px 0 0 0', fontSize: '11px', color: '#9ca3af' }}>उद्या भारतीय वेळेनुसार रात्री १२ नंतर नवीन नोंद उपलब्ध होईल.</p>
+                                <p style={{ margin: '0 0 4px 0', fontSize: '13px', color: '#34d399', fontWeight: 'bold' }}>{t('alreadyLockedTitle')}</p>
+                                <p style={{ margin: 0, fontSize: '11px', color: '#9ca3af' }}>{t('lockedAt')}: {new Date(todayLogLockedAt).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })} IST</p>
+                                <p style={{ margin: '6px 0 0 0', fontSize: '11px', color: '#9ca3af' }}>{t('newEntryMidnight')}</p>
                             </div>
                         ) : (
                         <form onSubmit={handleLogSubmit} style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '8px' }}>
                             <div>
-                                <label style={{ fontSize: '10px', color: '#9ca3af' }}>pH Level (Mandatory)</label>
+                                <label style={{ fontSize: '10px', color: '#9ca3af' }}>{t('phLabel')}</label>
                                 <input type="number" step="0.1" value={dailyLog.ph} onChange={(e) => handleLogChange('ph', e.target.value)} style={{ width: '100%', padding: '6px', backgroundColor: '#1f2937', color: 'white', border: '1px solid #374151', borderRadius: '4px', fontSize: '12px' }} required />
                             </div>
                             <div>
-                                <label style={{ fontSize: '10px', color: '#9ca3af' }}>Water KL (Mandatory)</label>
+                                <label style={{ fontSize: '10px', color: '#9ca3af' }}>{t('waterLabel')}</label>
                                 <input type="number" value={dailyLog.water} onChange={(e) => handleLogChange('water', e.target.value)} style={{ width: '100%', padding: '6px', backgroundColor: '#1f2937', color: 'white', border: '1px solid #374151', borderRadius: '4px', fontSize: '12px' }} required />
                             </div>
                             <div>
-                                <label style={{ fontSize: '10px', color: '#9ca3af' }}>Power kWh (Mandatory)</label>
+                                <label style={{ fontSize: '10px', color: '#9ca3af' }}>{t('powerLabel')}</label>
                                 <input type="number" value={dailyLog.power} onChange={(e) => handleLogChange('power', e.target.value)} style={{ width: '100%', padding: '6px', backgroundColor: '#1f2937', color: 'white', border: '1px solid #374151', borderRadius: '4px', fontSize: '12px' }} required />
                             </div>
                             <div>
-                                <label style={{ fontSize: '10px', color: '#9ca3af' }}>Sludge MT</label>
+                                <label style={{ fontSize: '10px', color: '#9ca3af' }}>{t('sludgeLabel')}</label>
                                 <input type="number" step="0.01" disabled={isSludgeNotApplicable} value={dailyLog.sludge} onChange={(e) => handleLogChange('sludge', e.target.value)} style={{ width: '100%', padding: '6px', backgroundColor: '#1f2937', color: 'white', border: '1px solid #374151', borderRadius: '4px', fontSize: '12px' }} />
                                 <label style={{ fontSize: '9px', color: '#9ca3af', display: 'block', marginTop: '2px' }}>
                                     <input 
@@ -1616,11 +1771,11 @@ export default function EcoTraceDashboard() {
                                                 }));
                                             }
                                         }} 
-                                    /> Not Applicable (N/A)
+                                    /> {t('notApplicable')}
                                 </label>
                             </div>
                             <div style={{ gridColumn: '1 / -1' }}>
-                                <label style={{ fontSize: '10px', color: '#9ca3af' }}>Fuel Sources (Scope 1) — एकाच दिवशी अनेक इंधन-स्रोत जोडता येतील</label>
+                                <label style={{ fontSize: '10px', color: '#9ca3af' }}>{t('fuelSourcesLabel')}</label>
                                 {dailyLog.fuelEntries.map((fe, idx) => (
                                     <div key={idx} style={{ display: 'flex', gap: '6px', marginTop: '4px', alignItems: 'flex-start' }}>
                                         <select
@@ -1648,9 +1803,9 @@ export default function EcoTraceDashboard() {
                                 {dailyLog.fuelEntries.some((fe) => FUEL_EMISSION_FACTORS[fe.type]?.isEstimate) && (
                                     <p style={{ fontSize: '8px', color: '#f59e0b', margin: '4px 0 0 0' }}>* Approximate factor — verify with EHS consultant before statutory filing.</p>
                                 )}
-                                <button type="button" onClick={addFuelEntry} style={{ marginTop: '6px', backgroundColor: '#374151', color: '#d1d5db', border: '1px dashed #6b7280', borderRadius: '4px', padding: '5px 10px', fontSize: '10px', cursor: 'pointer' }}>+ Add Another Fuel Source</button>
+                                <button type="button" onClick={addFuelEntry} style={{ marginTop: '6px', backgroundColor: '#374151', color: '#d1d5db', border: '1px dashed #6b7280', borderRadius: '4px', padding: '5px 10px', fontSize: '10px', cursor: 'pointer' }}>{t('addFuel')}</button>
                             </div>
-                            <button type="submit" style={{ gridColumn: '1 / -1', backgroundColor: '#059669', color: 'white', border: 'none', padding: '8px', borderRadius: '4px', fontSize: '12px', fontWeight: 'bold', cursor: 'pointer' }}>Save & Lock Daily Record</button>
+                            <button type="submit" style={{ gridColumn: '1 / -1', backgroundColor: '#059669', color: 'white', border: 'none', padding: '8px', borderRadius: '4px', fontSize: '12px', fontWeight: 'bold', cursor: 'pointer' }}>{t('saveLock')}</button>
                         </form>
                         )}
                     </div>
