@@ -1608,7 +1608,7 @@ export default function EcoTraceDashboard() {
 
         doc.setFontSize(8);
         doc.setTextColor(150, 150, 150);
-        doc.text('EcoTrace India | Project Lead: D. S. Nikam | 7378780745 | dhiraj@ectotraceindia.com', marginX, 800);
+        doc.text('EcoTrace India | Project Lead: D. S. Nikam | 7378780745 | dhiraj@ectotraceindia.com', marginX, y);
 
         doc.save(`${summary.factory_name.replace(/\s+/g, '_')}_Green_Passport.pdf`);
     };
@@ -1761,11 +1761,11 @@ export default function EcoTraceDashboard() {
         addDivider();
 
         addSectionHeading('8. Legal Disclaimer');
-        addLine('EcoTrace India Private Limited is an independent compliance platform. It aggregates data supplied by the factory and prepares statutory formats. It does not certify compliance, calculate hazardous waste quantities, transmit to government portals, or provide legal opinions. Physical safety protocols, hardware calibration and compliance adherence remain the responsibility of the factory management.', { size: 8.5, color: [90, 90, 90], gapAfter: 10 });
+        addLine('EcoTrace India Private Limited is an independent compliance platform. It aggregates data supplied by the factory and prepares statutory formats. It does not certify compliance, calculate hazardous waste quantities, transmit to government portals, or provide legal opinions. Physical safety protocols, hardware calibration and compliance adherence remain the responsibility of the factory management.', { size: 8.5, color: [90, 90, 90], gapAfter: 20 });
 
         doc.setFontSize(8);
         doc.setTextColor(150, 150, 150);
-        doc.text('EcoTrace India | Project Lead: D. S. Nikam | 7378780745 | dhiraj@ectotraceindia.com', marginX, Math.min(y + 15, 800));
+        doc.text('EcoTrace India | Project Lead: D. S. Nikam | 7378780745 | dhiraj@ectotraceindia.com', marginX, y);
 
         doc.save(`${factoryData.name.replace(/\s+/g, '_')}_Verified_Audit_Report.pdf`);
     };
