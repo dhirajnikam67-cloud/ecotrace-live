@@ -1582,10 +1582,13 @@ export default function EcoTraceDashboard() {
         addLine(`Total Electricity Consumption: ${summary.total_electricity_kwh} kWh`, { gapAfter: 15 });
         addLine(`Scope 2 Emissions (Regional Grid Factor): ${summary.scope2_tco2e} tCO2e (factor: ${summary.grid_factor_used} kg CO2/kWh)`, { gapAfter: 15 });
         if (summary.scope1_tco2e && summary.scope1_tco2e > 0) {
-            addLine(`Scope 1 Emissions (Direct Combustion): ${summary.scope1_tco2e} tCO2e`, { gapAfter: 20 });
+            addLine(`Scope 1 Emissions (Direct Combustion): ${summary.scope1_tco2e} tCO2e`, { gapAfter: 15 });
         } else {
-            addLine(`Scope 1 Emissions (Direct Combustion): No fuel combustion logged in this period`, { size: 9, color: [150, 100, 20], gapAfter: 20 });
+            addLine(`Scope 1 Emissions (Direct Combustion): No fuel combustion logged in this period`, { size: 9, color: [150, 100, 20], gapAfter: 15 });
         }
+        // Scope 3 (Aug 2026 note): value-chain (upstream/downstream) डेटा सध्या गोळाच होत नाही —
+        // खोटं precision न दाखवता, स्पष्टपणे "Not currently tracked" असं नोंदवतो.
+        addLine(`Scope 3 Emissions (Value Chain): Not currently tracked — available on request for BRSR value-chain reporting`, { size: 9, color: [150, 150, 150], gapAfter: 20 });
         addDivider();
 
         addLine('4. Connection & Consent Record', { size: 12, bold: true, color: [6, 95, 70], gapAfter: 18 });
@@ -1728,7 +1731,8 @@ export default function EcoTraceDashboard() {
 
         addSectionHeading('2. Carbon Emissions (dMRV Engine)');
         addLine(`Scope 2 (Grid Power): ${calculatedScope2} MT CO2e — Grid factor: ${factoryData.gridEmissionFactor} kg CO2/kWh on ${powerNum} kWh`, { gapAfter: 15 });
-        addLine(`Scope 1 (Direct Combustion): ${calculatedScope1}`, { gapAfter: 20 });
+        addLine(`Scope 1 (Direct Combustion): ${calculatedScope1}`, { gapAfter: 15 });
+        addLine(`Scope 3 (Value Chain): Not currently tracked — available on request for BRSR value-chain reporting`, { size: 9, color: [150, 150, 150], gapAfter: 20 });
         addDivider();
 
         addSectionHeading('3. Water Cess & ETP Monitoring (Form 3 Input)');
@@ -1934,6 +1938,7 @@ export default function EcoTraceDashboard() {
                                                 <p style={{ margin: 0 }}>{t('completenessLast30')}: {summary.completeness_pct}% ({summary.logged_days_last_30} {t('daysLoggedLabel')})</p>
                                                 <p style={{ margin: 0 }}>{t('avgPhLabel')}: {summary.avg_ph ?? 'N/A'} | {t('totalWaterLabel')}: {summary.total_water_liters} L</p>
                                                 <p style={{ margin: 0 }}>Scope 1: {summary.scope1_tco2e > 0 ? `${summary.scope1_tco2e} tCO2e` : 'No combustion logged'} | Scope 2: {summary.scope2_tco2e} tCO2e</p>
+                                                <p style={{ margin: 0, fontSize: '10px', color: '#6b7280' }}>Scope 3: Not currently tracked</p>
                                                 <p style={{ margin: '0 0 10px 0' }}>{t('lastLogLabel')}: {summary.last_log_date || 'N/A'}</p>
                                                 <button
                                                     onClick={() => handleDownloadGreenPassport(conn, summary)}
