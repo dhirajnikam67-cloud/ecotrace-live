@@ -275,6 +275,8 @@ const TRANSLATIONS = {
         scorecardCto: 'CTO Days',
         scorecardScope1: 'Scope 1',
         scorecardScope2: 'Scope 2',
+        whatsappConsentLabel: 'I consent to receive WhatsApp/SMS compliance alerts from EcoTrace India on this number',
+        whatsappNumberPlaceholder: 'WhatsApp/SMS number (with country code)',
     },
     mr: {
         appTitle: 'EcoTrace India',
@@ -445,6 +447,8 @@ const TRANSLATIONS = {
         scorecardCto: 'CTO Days',
         scorecardScope1: 'Scope 1',
         scorecardScope2: 'Scope 2',
+        whatsappConsentLabel: 'मला या नंबरवर EcoTrace India कडून WhatsApp/SMS compliance इशारे मिळावेत यासाठी संमती आहे',
+        whatsappNumberPlaceholder: 'WhatsApp/SMS नंबर (country code सह)',
     },
     hi: {
         appTitle: 'EcoTrace India',
@@ -615,6 +619,8 @@ const TRANSLATIONS = {
         scorecardCto: 'CTO Days',
         scorecardScope1: 'Scope 1',
         scorecardScope2: 'Scope 2',
+        whatsappConsentLabel: 'मुझे इस नंबर पर EcoTrace India से WhatsApp/SMS compliance अलर्ट पाने की सहमति है',
+        whatsappNumberPlaceholder: 'WhatsApp/SMS नंबर (country code सहित)',
     },
 };
 
@@ -868,6 +874,9 @@ export default function EcoTraceDashboard() {
     // ---- Market-based Scope 2 (Aug 2026) ----
     const [tempRenewablePct, setTempRenewablePct] = useState('');
     const [tempRenewableType, setTempRenewableType] = useState('none');
+    // ---- WhatsApp/SMS Alert Consent (Aug 2026) ----
+    const [tempWhatsappConsent, setTempWhatsappConsent] = useState(false);
+    const [tempWhatsappNumber, setTempWhatsappNumber] = useState('');
     // FIX (Aug 2026, round 4): एकदा factory registered झाली की Module 1 चा फॉर्म आपोआप रिकामाच
     // दिसायचा (जरी वरच्या पट्टीत खरा साठलेला डेटा दिसत असला तरी) — गोंधळ व्हायचा. आता factory
     // already असेल तर "locked" सारांश दाखवतो, फक्त स्पष्ट "Edit" दाबल्यावरच फॉर्म उघडतो.
@@ -1009,6 +1018,8 @@ export default function EcoTraceDashboard() {
                     state: data.state || '',
                     renewableCoveragePct: data.renewable_coverage_pct ?? 0,
                     renewableInstrumentType: data.renewable_instrument_type || 'none',
+                    whatsappConsent: data.whatsapp_consent || false,
+                    whatsappNumber: data.whatsapp_number || '',
                 });
                 // साठलेली भाषा-निवड लागू करतो (Multi-language, Aug 2026)
                 if (data.preferred_language) {
@@ -1249,6 +1260,8 @@ export default function EcoTraceDashboard() {
                 cto_expiry_date: ctoDateValue,
                 renewable_coverage_pct: tempRenewablePct ? parseFloat(tempRenewablePct) : 0,
                 renewable_instrument_type: tempRenewablePct ? tempRenewableType : 'none',
+                whatsapp_consent: tempWhatsappConsent,
+                whatsapp_number: tempWhatsappConsent ? tempWhatsappNumber.trim() : null,
             }, { onConflict: 'owner_user_id' })
             .select()
             .single();
@@ -1270,6 +1283,8 @@ export default function EcoTraceDashboard() {
             state: factoryState,
             renewableCoveragePct: data.renewable_coverage_pct ?? 0,
             renewableInstrumentType: data.renewable_instrument_type || 'none',
+            whatsappConsent: data.whatsapp_consent || false,
+            whatsappNumber: data.whatsapp_number || '',
         });
 
         alert(`Factory Unit ${unitName} Onboarded Successfully (Saved to Database)!`);
@@ -2619,6 +2634,8 @@ export default function EcoTraceDashboard() {
                                         setTempCtoDate(factoryData.ctoExpiryDate || '');
                                         setTempRenewablePct(factoryData.renewableCoveragePct ? String(factoryData.renewableCoveragePct) : '');
                                         setTempRenewableType(factoryData.renewableInstrumentType || 'none');
+                                        setTempWhatsappConsent(factoryData.whatsappConsent || false);
+                                        setTempWhatsappNumber(factoryData.whatsappNumber || '');
                                         setIsEditingFactory(true);
                                     }}
                                     style={{ backgroundColor: '#374151', color: '#d1d5db', border: '1px solid #6b7280', padding: '6px 12px', borderRadius: '6px', fontSize: '11px', fontWeight: 'bold', cursor: 'pointer' }}
@@ -2649,6 +2666,15 @@ export default function EcoTraceDashboard() {
                                     </select>
                                 </div>
                                 <p style={{ fontSize: '10px', color: '#6b7280', margin: '-4px 0 0 0' }}>{t('renewableHint')}</p>
+
+                                <label style={{ display: 'flex', alignItems: 'flex-start', gap: '6px', fontSize: '11px', color: '#d1d5db' }}>
+                                    <input type="checkbox" checked={tempWhatsappConsent} onChange={(e) => setTempWhatsappConsent(e.target.checked)} style={{ marginTop: '2px' }} />
+                                    {t('whatsappConsentLabel')}
+                                </label>
+                                {tempWhatsappConsent && (
+                                    <input type="tel" value={tempWhatsappNumber} onChange={(e) => setTempWhatsappNumber(e.target.value)} placeholder={t('whatsappNumberPlaceholder')} required
+                                        style={{ padding: '8px', backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '6px', color: 'white', fontSize: '12px' }} />
+                                )}
                                 <div style={{ display: 'flex', gap: '8px' }}>
                                     <button type="submit" style={{ backgroundColor: '#059669', color: 'white', border: 'none', padding: '8px 14px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer', fontSize: '12px' }}>{t('registerButton')}</button>
                                     {isFactoryActive && (
