@@ -21,27 +21,32 @@ export default function TermsPage() {
                 </div>
 
                 <div style={section}>
-                    <h2 style={heading}>3. Sharing Data with Buyers</h2>
+                    <h2 style={heading}>3. Data Ownership</h2>
+                    <p style={body}>The operational data you enter — daily readings, uploaded documents, correction records, and any other information you submit — remains your property. EcoTrace India does not claim ownership of your data. We are granted a limited license to store, process, and use this data solely to operate the platform: generating your reports, computing completeness and emission figures, maintaining the tamper-evident record, and — only where you have given consent to a specific buyer — computing the summary shared with that buyer. We do not sell your data, and we do not use it for any purpose beyond providing the service to you and the buyers you have approved. If you close your account, you may request a copy of your data or its deletion, subject to any retention we are legally required to keep and to summaries already shared with buyers under a consent you gave at the time.</p>
+                </div>
+
+                <div style={section}>
+                    <h2 style={heading}>4. Sharing Data with Buyers</h2>
                     <p style={body}>Your daily operational records are never shared with any buyer automatically. A buyer can request access to your factory's summary; nothing is visible to them until you explicitly approve that request, and you can revoke access at any time. Approved buyers see a computed summary (completeness, averages, totals, estimated emissions) — never your raw daily log entries.</p>
                 </div>
 
                 <div style={section}>
-                    <h2 style={heading}>4. Emission Estimates</h2>
+                    <h2 style={heading}>5. Emission Estimates</h2>
                     <p style={body}>Scope 1 and Scope 2 emission figures are estimates calculated from standard published emission factors (GHG Protocol, CEA CO2 Baseline Database) applied to the data you enter. Some factors (e.g. furnace oil, coal) are approximate industry-standard values, flagged as such in the interface. These estimates are not independently assured and should be verified with a qualified consultant before use in statutory or investor-facing filings.</p>
                 </div>
 
                 <div style={section}>
-                    <h2 style={heading}>5. Service Availability</h2>
+                    <h2 style={heading}>6. Service Availability</h2>
                     <p style={body}>EcoTrace India is provided on an as-is basis during its pilot phase. We aim for high availability but do not guarantee uninterrupted access. Keep your own backup of critical compliance records where required by law.</p>
                 </div>
 
                 <div style={section}>
-                    <h2 style={heading}>6. Changes to These Terms</h2>
+                    <h2 style={heading}>7. Changes to These Terms</h2>
                     <p style={body}>We may update these Terms as the platform evolves. Continued use after an update means you accept the revised Terms. Material changes will be communicated via the contact details on file.</p>
                 </div>
 
                 <div style={section}>
-                    <h2 style={heading}>7. Contact</h2>
+                    <h2 style={heading}>8. Contact</h2>
                     <p style={body}>EcoTrace India Private Limited | Project Lead: D. S. Nikam | 7378780745 | dhiraj@ectotraceindia.com</p>
                 </div>
 
