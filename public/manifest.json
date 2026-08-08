@@ -1,13 +1,14 @@
 {
-  "name": "EcoTrace India — MPCB Compliance Platform",
-  "short_name": "EcoTrace India",
-  "description": "MPCB compliance · daily records · carbon data — for MSMEs",
-  "start_url": "/",
+  "name": "EcoTrace India",
+  "short_name": "EcoTrace",
+  "description": "Daily environmental compliance record-keeping and buyer-ready ESG summaries for Indian manufacturing MSMEs.",
+  "start_url": "/login",
   "scope": "/",
   "display": "standalone",
-  "orientation": "portrait-primary",
-  "background_color": "#0b0f19",
+  "orientation": "portrait",
+  "background_color": "#0b1014",
   "theme_color": "#059669",
+  "lang": "en-IN",
   "icons": [
     {
       "src": "/icons/icon-192.png",
@@ -20,12 +21,6 @@
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
-    },
-    {
-      "src": "/icons/icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "maskable"
     }
   ]
 }
