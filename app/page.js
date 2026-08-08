@@ -16,7 +16,7 @@ const TEXT = '#d1d5db';
 const MUTED = '#9ca3af';
 
 function Section({ children, style = {} }) {
-  return <section style={{ maxWidth: '780px', margin: '0 auto', padding: '0 20px', textAlign: 'center', ...style }}>{children}</section>;
+  return <section style={{ maxWidth: '720px', margin: '0 auto', padding: '0 20px', textAlign: 'left', ...style }}>{children}</section>;
 }
 
 function Heading({ children }) {
