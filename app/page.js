@@ -3039,7 +3039,7 @@ export default function EcoTraceDashboard() {
 
             {/* Legal Disclaimer & Founder Credit Footer */}
             <footer style={{ marginTop: '30px', borderTop: '1px solid #1f2937', padding: '16px 0', color: '#9ca3af', fontSize: '11px', lineHeight: '1.4' }}>
-                <p style={{ margin: '0 0 6px 0', color: '#ffffff', fontWeight: 'bold' }}>EcoTrace India | Project by D. S. Nikam | Contact: 7378780745 | Email: dhiraj@ectotraceindia.com</p>
+                <p style={{ margin: '0 0 6px 0', color: '#ffffff', fontWeight: 'bold' }}>EcoTrace India | Contact: 7378780745 | Email: dhiraj@ectotraceindia.com</p>
                 EcoTrace India Private Limited is an independent compliance platform. It aggregates data supplied by the factory and prepares statutory formats. It does not certify compliance, calculate hazardous waste quantities, transmit to government portals, or provide legal opinions. Physical safety protocols, hardware calibration and compliance adherence remain the responsibility of the factory management.
                 <p style={{ margin: '8px 0 0 0' }}>
                     <a href="/terms" style={{ color: '#6b7280', textDecoration: 'underline' }}>{t('termsLink')}</a>
