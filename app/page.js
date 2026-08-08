@@ -1,230 +1,505 @@
-// app/page.js — Public Landing Page (Aug 2026, v2)
-// Big-4/professional restructure — hero outcome-first, "How it works", "Is/Is not" trust section.
-// प्रत्येक दावा प्रत्यक्ष implemented feature शी जुळतो — कुठलंही अस्तित्वात नसलेलं feature
-// (उदा. Consultant Network, unmeasured "Evidence coverage %") इथे नाही.
+'use client';
 
-export const metadata = {
-  title: 'EcoTrace India — Inspection-Ready Compliance. Buyer-Ready ESG Data.',
-  description: 'EcoTrace India helps Indian manufacturing MSMEs record daily environmental data, track CTO/consent deadlines, organize compliance evidence, and share factory-approved sustainability summaries with enterprise buyers — in English, Marathi, or Hindi.',
+import { useState, useEffect } from 'react';
+
+/* ============================================================
+   EcoTrace India — Landing Page  (app/page.js)
+   Design tokens: dark slate surfaces, single green accent
+   reserved for the primary CTA only.
+   ============================================================ */
+
+const C = {
+  bg: '#0b1014',          // page background
+  surface: '#111820',     // raised section background
+  border: '#1e2a35',      // hairline borders
+  text: '#e8edf2',        // primary text
+  muted: '#93a1b0',       // secondary text
+  faint: '#6b7885',       // captions / eyebrows
+  green: '#059669',       // CTA only
+  greenHover: '#047857',
 };
 
-const GREEN = '#059669';
-const DARK = '#0b0f19';
-const CARD = '#111827';
-const BORDER = '#1f2937';
-const TEXT = '#d1d5db';
-const MUTED = '#9ca3af';
-
-function Section({ children, style = {} }) {
-  return <section style={{ maxWidth: '720px', margin: '0 auto', padding: '0 20px', textAlign: 'left', ...style }}>{children}</section>;
-}
-
-function Heading({ children }) {
-  return (
-    <h2 style={{ color: GREEN, fontSize: '22px', fontWeight: 'bold', margin: '0 0 12px 0', borderBottom: `2px solid ${GREEN}`, paddingBottom: '8px' }}>
-      {children}
-    </h2>
-  );
-}
-
-function StepRow({ n, title, desc }) {
-  return (
-    <div style={{ display: 'flex', gap: '16px', marginBottom: '18px' }}>
-      <div style={{ flexShrink: 0, width: '30px', height: '30px', borderRadius: '50%', backgroundColor: GREEN, color: 'white', fontWeight: 'bold', fontSize: '14px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{n}</div>
-      <div style={{ textAlign: 'left' }}>
-        <p style={{ margin: '0 0 3px 0', fontWeight: 'bold', fontSize: '14px', color: '#ffffff' }}>{title}</p>
-        <p style={{ margin: 0, fontSize: '13px', color: MUTED, lineHeight: '1.6' }}>{desc}</p>
-      </div>
-    </div>
-  );
-}
+const MAXW = 1080;
+const READW = 680; // comfortable reading column
 
 export default function LandingPage() {
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 24);
+    window.addEventListener('scroll', onScroll);
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
   return (
-    <main style={{ backgroundColor: DARK, color: '#ffffff', fontFamily: 'sans-serif', minHeight: '100vh' }}>
+    <main style={S.page}>
+      <style>{GLOBAL_CSS}</style>
 
-      {/* Top Nav — brand name कायम दिसत राहावं म्हणून */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 20px', borderBottom: `1px solid ${BORDER}` }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <span style={{ fontSize: '20px' }}>🌿</span>
-          <span style={{ fontSize: '16px', fontWeight: 'bold', color: '#ffffff' }}>EcoTrace India</span>
-        </div>
-        <a href="/login" style={{ backgroundColor: GREEN, color: 'white', fontWeight: 'bold', fontSize: '12px', padding: '8px 16px', borderRadius: '6px', textDecoration: 'none' }}>
-          Login →
-        </a>
-      </div>
-
-      {/* Hero */}
-      <div style={{ textAlign: 'center', padding: '60px 20px 50px 20px' }}>
-        <div style={{ fontSize: '44px', marginBottom: '10px' }}>🌿</div>
-        <h1 style={{ fontSize: '34px', fontWeight: 'bold', color: '#ffffff', margin: '0 0 14px 0' }}>EcoTrace India</h1>
-        <p style={{ fontSize: '22px', fontWeight: 'bold', color: '#34d399', margin: '0 0 16px 0', lineHeight: '1.35' }}>
-          Inspection-ready compliance. Buyer-ready ESG data.
-        </p>
-        <p style={{ fontSize: '15px', color: TEXT, margin: '0 auto 8px auto', maxWidth: '560px', lineHeight: '1.6' }}>
-          EcoTrace helps Indian manufacturing MSMEs record daily environmental data, track CTO/consent deadlines, organize compliance evidence, and share factory-approved sustainability summaries with enterprise buyers.
-        </p>
-        <p style={{ fontSize: '13px', color: MUTED, margin: '0 0 30px 0' }}>For MSME Factories · Enterprises &amp; Buyers · Industry Bodies (MCCI)</p>
-        <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap' }}>
-          <a href="/login" style={{ display: 'inline-block', backgroundColor: GREEN, color: 'white', fontWeight: 'bold', fontSize: '15px', padding: '13px 28px', borderRadius: '8px', textDecoration: 'none' }}>
-            Login / Get Started →
+      {/* ---------- NAV ---------- */}
+      <nav
+        style={{
+          ...S.nav,
+          borderBottomColor: scrolled ? C.border : 'transparent',
+          background: scrolled ? 'rgba(11,16,20,0.92)' : 'transparent',
+        }}
+      >
+        <div style={S.navInner}>
+          <a href="/" style={S.brand}>
+            <span style={S.brandMark} aria-hidden="true">🌿</span>
+            <span>EcoTrace India</span>
           </a>
-          <a href="mailto:dhiraj@ectotraceindia.com?subject=EcoTrace%20India%20-%20Inquiry" style={{ display: 'inline-block', backgroundColor: 'transparent', color: TEXT, border: `1px solid ${BORDER}`, fontWeight: 'bold', fontSize: '15px', padding: '13px 28px', borderRadius: '8px', textDecoration: 'none' }}>
-            Contact Us
-          </a>
+          <a href="/login" style={S.navLink}>Log in</a>
         </div>
-      </div>
+      </nav>
 
-      <div style={{ height: '1px', backgroundColor: BORDER, marginBottom: '50px' }} />
+      {/* ---------- HERO ---------- */}
+      <header style={S.hero}>
+        <div style={{ ...S.wrap, maxWidth: 860 }}>
+          <p style={S.eyebrow}>Environmental compliance software for Indian MSMEs</p>
 
-      {/* Problem */}
-      <Section style={{ marginBottom: '50px' }}>
-        <Heading>Built for the Indian Factory Floor</Heading>
-        <p style={{ color: TEXT, fontSize: '15px', lineHeight: '1.7' }}>
-          Environmental records are created every day — but at most Indian MSMEs, they still live in paper registers, spreadsheets, and scattered messages, with no timestamp integrity and no easy way to produce the statutory formats an inspector asks for.
-        </p>
-        <p style={{ color: TEXT, fontSize: '15px', lineHeight: '1.7' }}>
-          EcoTrace turns daily factory records into structured, traceable, and shareable compliance data — without requiring new hardware or an English-only interface.
-        </p>
-      </Section>
+          <h1 style={S.h1}>
+            Inspection-ready compliance.
+            <br />
+            <span style={S.h1Line2}>Buyer-ready ESG data.</span>
+          </h1>
 
-      {/* Three stakeholders */}
-      <Section style={{ marginBottom: '50px' }}>
-        <Heading>One Platform, Three Stakeholders</Heading>
-        <div style={{ display: 'grid', gap: '16px' }}>
-          <div style={{ backgroundColor: CARD, border: `1px solid ${BORDER}`, borderRadius: '10px', padding: '18px' }}>
-            <p style={{ margin: '0 0 6px 0', fontWeight: 'bold', fontSize: '15px', color: '#ffffff' }}>For MSME Factories</p>
-            <p style={{ margin: '0 0 10px 0', fontSize: '13px', color: MUTED, lineHeight: '1.6' }}>Stay ready for inspections, renewals, and customer audits.</p>
-            <ul style={{ textAlign: 'left', margin: 0, paddingLeft: '18px', color: TEXT, fontSize: '13px', lineHeight: '1.9' }}>
-              <li>Daily operator logbook, in English, Marathi, or Hindi</li>
-              <li>CTO/consent countdown with advance alerts</li>
-              <li>OCR-assisted document entry, with human confirmation</li>
-              <li>Instant inspection-readiness dossier</li>
-              <li>Transparent correction log — nothing is silently overwritten</li>
-            </ul>
+          <p style={S.heroSub}>
+            EcoTrace helps Indian manufacturing MSMEs record daily environmental data,
+            track CTO and consent deadlines, organise compliance evidence, and share
+            factory-approved sustainability summaries with enterprise buyers.
+          </p>
+
+          <div style={S.ctaRow}>
+            <a href="/login" className="cta-primary" style={S.ctaPrimary}>
+              Log in / Get started
+            </a>
+            <a href="mailto:dhiraj@ectotraceindia.com" className="cta-secondary" style={S.ctaSecondary}>
+              Contact us
+            </a>
           </div>
-          <div style={{ backgroundColor: CARD, border: `1px solid ${BORDER}`, borderRadius: '10px', padding: '18px' }}>
-            <p style={{ margin: '0 0 6px 0', fontWeight: 'bold', fontSize: '15px', color: '#ffffff' }}>For Enterprises &amp; Buyers</p>
-            <p style={{ margin: '0 0 10px 0', fontSize: '13px', color: MUTED, lineHeight: '1.6' }}>Build a structured supplier environmental-data layer.</p>
-            <ul style={{ textAlign: 'left', margin: 0, paddingLeft: '18px', color: TEXT, fontSize: '13px', lineHeight: '1.9' }}>
-              <li>Bulk supplier onboarding, one request to many at once</li>
-              <li>Consent-based connections — suppliers approve every share</li>
-              <li>Vendor compliance scorecard across all approved suppliers</li>
-              <li>Factory-approved Green Passport (Scope 1/2/3 summary)</li>
-            </ul>
-          </div>
-          <div style={{ backgroundColor: CARD, border: `1px solid ${BORDER}`, borderRadius: '10px', padding: '18px' }}>
-            <p style={{ margin: '0 0 6px 0', fontWeight: 'bold', fontSize: '15px', color: '#ffffff' }}>For Industry Bodies (MCCI)</p>
-            <p style={{ margin: 0, fontSize: '13px', color: MUTED, lineHeight: '1.6' }}>A shared, multi-language digital backbone that member factories can adopt without heavy IT investment — helping members meet buyer-side ESG demands together rather than each figuring it out alone.</p>
-          </div>
+
+          <p style={S.audienceLine}>
+            Built for MSME factories, enterprise buyers, and industry bodies.
+          </p>
+        </div>
+      </header>
+
+      {/* ---------- PROBLEM ---------- */}
+      <Section>
+        <h2 style={S.h2}>Built for the Indian factory floor</h2>
+        <div style={S.readCol}>
+          <p style={S.body}>
+            Environmental records are created every day. At most Indian MSMEs they still
+            live in paper registers, spreadsheets, and scattered messages — with no
+            timestamp integrity and no straightforward way to produce the statutory
+            formats an inspector asks for.
+          </p>
+          <p style={S.body}>
+            EcoTrace turns those daily records into structured, traceable, shareable
+            compliance data. No new hardware. No English-only interface — the entire
+            platform works in English, Marathi, and Hindi.
+          </p>
         </div>
       </Section>
 
-      {/* How it works */}
-      <Section style={{ marginBottom: '50px' }}>
-        <Heading>How EcoTrace Works</Heading>
-        <StepRow n="1" title="Record" desc="Operators enter daily pH, water, electricity, fuel, and waste readings from a mobile-friendly dashboard." />
-        <StepRow n="2" title="Validate" desc="EcoTrace GPS-tags and server-timestamps each record, and chains it into a tamper-evident record — corrections are preserved transparently, never silently overwritten." />
-        <StepRow n="3" title="Organize" desc="Uploaded bills and manifests are OCR-read, with a confidence gate that requires human confirmation before any figure is used." />
-        <StepRow n="4" title="Prepare" desc="The platform assembles inspection-readiness dossiers and draft statutory-format reports from the same live data." />
-        <StepRow n="5" title="Share" desc="Factories decide what to share and with whom. Approved buyers receive a curated summary — never raw daily records — and access can be revoked at any time." />
-      </Section>
-
-      {/* Green Passport */}
-      <Section style={{ marginBottom: '50px' }}>
-        <Heading>Green Passport</Heading>
-        <p style={{ color: TEXT, fontSize: '14px', lineHeight: '1.7', marginBottom: '10px' }}>A factory-approved sustainability summary for enterprise buyers. It can include:</p>
-        <ul style={{ textAlign: 'left', margin: '0 0 12px 0', paddingLeft: '18px', color: TEXT, fontSize: '13px', lineHeight: '1.9' }}>
-          <li>Factory identity, location, and CTO/consent status</li>
-          <li>Data completeness score and last-log date</li>
-          <li>Average pH, and total water and electricity use</li>
-          <li>Scope 1, Scope 2 (location-based and market-based) emissions</li>
-          <li>Scope 3 disclosure status</li>
-        </ul>
-        <p style={{ color: MUTED, fontSize: '12px', fontStyle: 'italic', lineHeight: '1.6' }}>
-          Scope 3 is disclosed transparently as "not currently tracked" — EcoTrace does not estimate figures it hasn't measured.
+      {/* ---------- HOW IT WORKS ---------- */}
+      <Section alt>
+        <h2 style={S.h2}>How EcoTrace works</h2>
+        <p style={{ ...S.body, ...S.readCol, marginBottom: 44 }}>
+          Five steps, in the order a factory actually does them.
         </p>
+
+        <ol style={S.steps}>
+          {STEPS.map((s, i) => (
+            <li key={s.title} style={S.step}>
+              <span style={S.stepNum}>{String(i + 1).padStart(2, '0')}</span>
+              <div>
+                <h3 style={S.stepTitle}>{s.title}</h3>
+                <p style={S.stepBody}>{s.body}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
       </Section>
 
-      {/* Trust */}
-      <Section style={{ marginBottom: '50px' }}>
-        <Heading>Built for Controlled Data Sharing</Heading>
-        <ul style={{ textAlign: 'left', margin: 0, paddingLeft: '18px', color: TEXT, fontSize: '14px', lineHeight: '2' }}>
-          <li>Each factory's data is isolated from every other factory's</li>
-          <li>Buyers see only approved summaries — never raw operational records</li>
-          <li>A factory can revoke a buyer's access at any time</li>
-          <li>Corrections are recorded transparently, not silently overwritten</li>
-          <li>OCR-extracted values require human confirmation before use</li>
-          <li>Sensitive API credentials are handled server-side, never exposed to the browser</li>
-          <li>EcoTrace does not automatically transmit data to government portals</li>
-        </ul>
-      </Section>
-
-      {/* BRSR / why it matters */}
-      <Section style={{ marginBottom: '50px' }}>
-        <Heading>Why This Matters for Buyers</Heading>
-        <p style={{ color: TEXT, fontSize: '14px', lineHeight: '1.7' }}>
-          Enterprise sustainability and procurement teams increasingly need structured environmental data from their MSME suppliers — for BRSR, Scope 3 estimation, and supply-chain risk management. Under SEBI's current framework, value-chain ESG disclosure for eligible top-250 listed entities is voluntary from FY 2025-26, with related third-party assessment voluntary from FY 2026-27.
+      {/* ---------- IS / IS NOT ---------- */}
+      <Section>
+        <h2 style={S.h2}>What EcoTrace is, and what it is not</h2>
+        <p style={{ ...S.body, ...S.readCol, marginBottom: 44 }}>
+          Compliance software should be precise about its own limits. Ours are stated
+          here, not buried in a footnote.
         </p>
-        <p style={{ color: '#34d399', fontSize: '14px', fontWeight: 'bold', lineHeight: '1.7' }}>
-          EcoTrace helps suppliers build the underlying evidence before that request becomes urgent.
-        </p>
-      </Section>
 
-      {/* Is / Is not */}
-      <Section style={{ marginBottom: '50px' }}>
-        <Heading>What EcoTrace Is — and Is Not</Heading>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '16px' }}>
-          <div style={{ backgroundColor: CARD, border: `1px solid ${BORDER}`, borderRadius: '10px', padding: '16px' }}>
-            <p style={{ margin: '0 0 8px 0', fontWeight: 'bold', fontSize: '13px', color: '#34d399' }}>EcoTrace Is</p>
-            <ul style={{ textAlign: 'left', margin: 0, paddingLeft: '18px', color: TEXT, fontSize: '13px', lineHeight: '1.9' }}>
-              <li>A factory environmental data-management platform</li>
-              <li>A daily compliance logbook</li>
-              <li>An inspection-readiness tool</li>
-              <li>A consent-controlled supplier ESG data layer</li>
+        <div style={S.twoCol}>
+          <div style={S.card}>
+            <p style={S.cardLabel}>EcoTrace is</p>
+            <ul style={S.list}>
+              {IS_LIST.map((t) => (
+                <li key={t} style={S.listItem}>{t}</li>
+              ))}
             </ul>
           </div>
-          <div style={{ backgroundColor: CARD, border: `1px solid ${BORDER}`, borderRadius: '10px', padding: '16px' }}>
-            <p style={{ margin: '0 0 8px 0', fontWeight: 'bold', fontSize: '13px', color: '#f59e0b' }}>EcoTrace Is Not</p>
-            <ul style={{ textAlign: 'left', margin: 0, paddingLeft: '18px', color: TEXT, fontSize: '13px', lineHeight: '1.9' }}>
-              <li>A government portal</li>
-              <li>A compliance certificate</li>
-              <li>A legal or environmental consultancy</li>
-              <li>A substitute for calibrated instruments or physical safety systems</li>
-              <li>A guarantee against notices, penalties, or shutdowns</li>
+          <div style={S.card}>
+            <p style={S.cardLabel}>EcoTrace is not</p>
+            <ul style={S.list}>
+              {IS_NOT_LIST.map((t) => (
+                <li key={t} style={S.listItem}>{t}</li>
+              ))}
             </ul>
           </div>
         </div>
       </Section>
 
-      {/* Disclaimer */}
-      <Section style={{ marginBottom: '60px' }}>
-        <div style={{ backgroundColor: CARD, border: `1px solid ${BORDER}`, borderRadius: '10px', padding: '18px', fontSize: '12px', color: MUTED, fontStyle: 'italic', lineHeight: '1.7' }}>
-          EcoTrace India aggregates data supplied by the factory and prepares statutory formats. It does not certify compliance, calculate hazardous waste quantities, transmit data to government portals, or provide legal opinions. Factory management remains responsible for the accuracy of entries, equipment calibration, physical safety, and actual regulatory compliance. Draft reports and notice responses should be reviewed by the factory's authorized person and, where appropriate, a qualified professional.
+      {/* ---------- AUDIENCES ---------- */}
+      <Section alt>
+        <h2 style={S.h2}>Who it is for</h2>
+        <div style={S.threeCol}>
+          {AUDIENCES.map((a) => (
+            <div key={a.title} style={S.audCard}>
+              <h3 style={S.audTitle}>{a.title}</h3>
+              <p style={S.audBody}>{a.body}</p>
+            </div>
+          ))}
         </div>
       </Section>
 
-      {/* Final CTA */}
-      <div style={{ textAlign: 'center', paddingBottom: '60px' }}>
-        <p style={{ fontSize: '18px', fontWeight: 'bold', color: '#ffffff', marginBottom: '18px' }}>Ready to make your factory data inspection-ready?</p>
-        <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap' }}>
-          <a href="/login" style={{ display: 'inline-block', backgroundColor: GREEN, color: 'white', fontWeight: 'bold', fontSize: '15px', padding: '13px 28px', borderRadius: '8px', textDecoration: 'none' }}>
-            Login / Get Started →
-          </a>
-          <a href="mailto:dhiraj@ectotraceindia.com?subject=EcoTrace%20India%20-%20Inquiry" style={{ display: 'inline-block', backgroundColor: 'transparent', color: TEXT, border: `1px solid ${BORDER}`, fontWeight: 'bold', fontSize: '15px', padding: '13px 28px', borderRadius: '8px', textDecoration: 'none' }}>
-            Contact Us
-          </a>
+      {/* ---------- CLOSING CTA ---------- */}
+      <Section>
+        <div style={S.readCol}>
+          <h2 style={{ ...S.h2, marginBottom: 16 }}>Start with one factory</h2>
+          <p style={S.body}>
+            Register a unit, log a day, and export the report an inspector would ask for.
+            No installation, no hardware, and it runs on the phone already on the shop floor.
+          </p>
+          <div style={{ ...S.ctaRow, marginTop: 32 }}>
+            <a href="/login" className="cta-primary" style={S.ctaPrimary}>
+              Log in / Get started
+            </a>
+          </div>
         </div>
-      </div>
+      </Section>
 
-      <footer style={{ borderTop: `1px solid ${BORDER}`, padding: '20px', textAlign: 'center', fontSize: '11px', color: MUTED }}>
-        <p style={{ margin: '0 0 6px 0' }}>EcoTrace India | Contact: 7378780745 | Email: dhiraj@ectotraceindia.com</p>
-        <p style={{ margin: 0 }}>
-          <a href="/terms" style={{ color: MUTED, textDecoration: 'underline' }}>Terms of Service</a>
-          {' · '}
-          <a href="/privacy" style={{ color: MUTED, textDecoration: 'underline' }}>Privacy Policy</a>
-        </p>
+      {/* ---------- FOOTER ---------- */}
+      <footer style={S.footer}>
+        <div style={{ ...S.wrap, ...S.footerInner }}>
+          <div>
+            <p style={S.footerBrand}>EcoTrace India Private Limited</p>
+            <p style={S.footerMeta}>
+              Contact: 7378780745 &nbsp;·&nbsp; dhiraj@ectotraceindia.com
+            </p>
+          </div>
+          <div style={S.footerLinks}>
+            <a href="/terms" style={S.footerLink}>Terms of Service</a>
+            <a href="/privacy" style={S.footerLink}>Privacy Policy</a>
+            <a href="/login" style={S.footerLink}>Log in</a>
+          </div>
+        </div>
+        <div style={{ ...S.wrap, ...S.disclaimerWrap }}>
+          <p style={S.disclaimer}>
+            EcoTrace India is a record-keeping and reporting platform. It is not a
+            certifying body and does not provide independent assurance. Emission figures
+            are calculated from user-entered data using published emission factors and
+            should be reviewed by a qualified consultant before statutory filing. We are
+            in the early stages of pursuing ISO 27001 certification.
+          </p>
+        </div>
       </footer>
     </main>
   );
 }
+
+/* ============================================================
+   Section wrapper — body content is LEFT aligned by design.
+   ============================================================ */
+function Section({ children, alt }) {
+  return (
+    <section style={{ ...S.section, background: alt ? C.surface : 'transparent' }}>
+      <div style={S.wrap}>{children}</div>
+    </section>
+  );
+}
+
+/* ============================================================
+   Content
+   ============================================================ */
+const STEPS = [
+  {
+    title: 'Register the unit',
+    body: 'Enter factory details, state, and CTO expiry date. EcoTrace tracks the renewal countdown from that day forward.',
+  },
+  {
+    title: 'Log the day',
+    body: 'An operator records pH, water, power, sludge, and fuel use once a day, in their own language, from a phone. Location and server timestamp are captured automatically.',
+  },
+  {
+    title: 'Attach the evidence',
+    body: 'Upload utility and disposal bills. Text is read automatically and low-confidence reads are flagged rather than guessed.',
+  },
+  {
+    title: 'Produce the statutory formats',
+    body: 'Generate Form 3, 4, and 5 drafts, notice-response drafts, and a flying-squad inspection dossier from records already on file.',
+  },
+  {
+    title: 'Share with buyers, with consent',
+    body: 'Approve a buyer request to release a summary Green Passport. Buyers see aggregated figures only — never the raw daily log.',
+  },
+];
+
+const IS_LIST = [
+  'A daily record-keeping system with tamper-evident, hash-chained entries',
+  'A generator of MPCB and CPCB statutory report drafts',
+  'A carbon accounting engine covering Scope 1 and Scope 2, location and market based',
+  'A consent-controlled channel for sharing supplier ESG summaries',
+  'Available in English, Marathi, and Hindi across every screen',
+];
+
+const IS_NOT_LIST = [
+  'Not a certification or accreditation body',
+  'Not a substitute for a licensed environmental consultant',
+  'Not connected to any regulator’s systems — filings remain your responsibility',
+  'Not an independent assurance or third-party audit provider',
+  'Not a continuous emissions monitoring system; data is entered, not sensed',
+];
+
+const AUDIENCES = [
+  {
+    title: 'MSME factories',
+    body: 'Keep a defensible daily record, meet consent deadlines, and answer an inspection with evidence already organised.',
+  },
+  {
+    title: 'Enterprises and buyers',
+    body: 'Collect verified environmental summaries from your MSME supply base for BRSR value-chain reporting, with supplier consent at every step.',
+  },
+  {
+    title: 'Industry bodies',
+    body: 'Give member units a common compliance baseline and see readiness across a cluster without collecting paper.',
+  },
+];
+
+/* ============================================================
+   Styles
+   ============================================================ */
+const S = {
+  page: {
+    background: C.bg,
+    color: C.text,
+    minHeight: '100vh',
+    fontFamily:
+      "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+    WebkitFontSmoothing: 'antialiased',
+  },
+
+  wrap: { maxWidth: MAXW, margin: '0 auto', padding: '0 24px' },
+  readCol: { maxWidth: READW },
+
+  /* nav */
+  nav: {
+    position: 'sticky',
+    top: 0,
+    zIndex: 50,
+    borderBottom: '1px solid transparent',
+    backdropFilter: 'blur(10px)',
+    transition: 'background 180ms ease, border-color 180ms ease',
+  },
+  navInner: {
+    maxWidth: MAXW,
+    margin: '0 auto',
+    padding: '14px 24px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  brand: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 8,
+    color: C.text,
+    textDecoration: 'none',
+    fontSize: 16,
+    fontWeight: 600,
+    letterSpacing: '-0.01em',
+  },
+  brandMark: { fontSize: 17 },
+  navLink: {
+    color: C.muted,
+    textDecoration: 'none',
+    fontSize: 14,
+    fontWeight: 500,
+    padding: '8px 14px',
+    border: `1px solid ${C.border}`,
+    borderRadius: 8,
+  },
+
+  /* hero */
+  hero: { padding: '96px 0 88px' },
+  eyebrow: {
+    color: C.faint,
+    fontSize: 13,
+    fontWeight: 500,
+    letterSpacing: '0.08em',
+    textTransform: 'uppercase',
+    margin: '0 0 22px',
+  },
+  h1: {
+    fontSize: 'clamp(34px, 6.2vw, 60px)',
+    lineHeight: 1.08,
+    fontWeight: 700,
+    letterSpacing: '-0.03em',
+    margin: '0 0 24px',
+    color: C.text,
+  },
+  h1Line2: { color: C.muted },
+  heroSub: {
+    fontSize: 18,
+    lineHeight: 1.65,
+    color: C.muted,
+    maxWidth: READW,
+    margin: '0 0 36px',
+  },
+  ctaRow: { display: 'flex', flexWrap: 'wrap', gap: 12 },
+  ctaPrimary: {
+    background: C.green,
+    color: '#ffffff',
+    padding: '13px 26px',
+    borderRadius: 8,
+    fontSize: 15,
+    fontWeight: 600,
+    textDecoration: 'none',
+    display: 'inline-block',
+    transition: 'background 150ms ease',
+  },
+  ctaSecondary: {
+    color: C.text,
+    padding: '13px 26px',
+    borderRadius: 8,
+    border: `1px solid ${C.border}`,
+    fontSize: 15,
+    fontWeight: 500,
+    textDecoration: 'none',
+    display: 'inline-block',
+    transition: 'border-color 150ms ease',
+  },
+  audienceLine: {
+    marginTop: 30,
+    fontSize: 14,
+    color: C.faint,
+  },
+
+  /* sections */
+  section: { padding: '80px 0', borderTop: `1px solid ${C.border}` },
+  h2: {
+    fontSize: 'clamp(24px, 3.4vw, 32px)',
+    fontWeight: 650,
+    letterSpacing: '-0.02em',
+    lineHeight: 1.2,
+    margin: '0 0 24px',
+    color: C.text,
+  },
+  body: {
+    fontSize: 16.5,
+    lineHeight: 1.7,
+    color: C.muted,
+    margin: '0 0 18px',
+  },
+
+  /* steps */
+  steps: { listStyle: 'none', margin: 0, padding: 0, maxWidth: 780 },
+  step: {
+    display: 'flex',
+    gap: 22,
+    padding: '22px 0',
+    borderTop: `1px solid ${C.border}`,
+  },
+  stepNum: {
+    color: C.faint,
+    fontSize: 13,
+    fontWeight: 600,
+    letterSpacing: '0.05em',
+    fontVariantNumeric: 'tabular-nums',
+    paddingTop: 4,
+    minWidth: 28,
+  },
+  stepTitle: {
+    fontSize: 17,
+    fontWeight: 600,
+    margin: '0 0 8px',
+    color: C.text,
+    letterSpacing: '-0.01em',
+  },
+  stepBody: { fontSize: 15.5, lineHeight: 1.65, color: C.muted, margin: 0 },
+
+  /* is / is not */
+  twoCol: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+    gap: 20,
+  },
+  card: {
+    border: `1px solid ${C.border}`,
+    borderRadius: 12,
+    padding: '26px 24px',
+    background: 'rgba(255,255,255,0.015)',
+  },
+  cardLabel: {
+    fontSize: 12,
+    fontWeight: 600,
+    letterSpacing: '0.09em',
+    textTransform: 'uppercase',
+    color: C.faint,
+    margin: '0 0 18px',
+  },
+  list: { listStyle: 'none', margin: 0, padding: 0 },
+  listItem: {
+    fontSize: 15,
+    lineHeight: 1.6,
+    color: C.muted,
+    padding: '10px 0',
+    borderTop: `1px solid ${C.border}`,
+  },
+
+  /* audiences */
+  threeCol: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
+    gap: 20,
+  },
+  audCard: { paddingTop: 20, borderTop: `1px solid ${C.border}` },
+  audTitle: {
+    fontSize: 16,
+    fontWeight: 600,
+    margin: '0 0 10px',
+    color: C.text,
+  },
+  audBody: { fontSize: 15, lineHeight: 1.65, color: C.muted, margin: 0 },
+
+  /* footer */
+  footer: { borderTop: `1px solid ${C.border}`, padding: '52px 0 40px' },
+  footerInner: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    gap: 24,
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+  },
+  footerBrand: { fontSize: 15, fontWeight: 600, margin: '0 0 6px', color: C.text },
+  footerMeta: { fontSize: 14, color: C.muted, margin: 0 },
+  footerLinks: { display: 'flex', flexWrap: 'wrap', gap: 20 },
+  footerLink: { color: C.muted, fontSize: 14, textDecoration: 'none' },
+  disclaimerWrap: { marginTop: 36, paddingTop: 24, borderTop: `1px solid ${C.border}` },
+  disclaimer: { fontSize: 13, lineHeight: 1.65, color: C.faint, margin: 0, maxWidth: 800 },
+};
+
+const GLOBAL_CSS = `
+  * { box-sizing: border-box; }
+  body { margin: 0; }
+  a { -webkit-tap-highlight-color: transparent; }
+  a:focus-visible { outline: 2px solid ${C.green}; outline-offset: 3px; border-radius: 6px; }
+  .cta-primary:hover { background: ${C.greenHover} !important; }
+  .cta-secondary:hover { border-color: #33404d !important; }
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; animation: none !important; }
+  }
+  @media (max-width: 640px) {
+    section { padding: 56px 0 !important; }
+  }
+`;
