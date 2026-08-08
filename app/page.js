@@ -2093,7 +2093,7 @@ export default function EcoTraceDashboard() {
 
         doc.setFontSize(8);
         doc.setTextColor(150, 150, 150);
-        doc.text('EcoTrace India | Project Lead: D. S. Nikam | 7378780745 | dhiraj@ectotraceindia.com', marginX, y);
+        doc.text('EcoTrace India | Contact: 7378780745 | dhiraj@ectotraceindia.com', marginX, y);
 
         doc.save(`${summary.factory_name.replace(/\s+/g, '_')}_Green_Passport.pdf`);
     };
@@ -2252,7 +2252,7 @@ export default function EcoTraceDashboard() {
 
         doc.setFontSize(8);
         doc.setTextColor(150, 150, 150);
-        doc.text('EcoTrace India | Project Lead: D. S. Nikam | 7378780745 | dhiraj@ectotraceindia.com', marginX, y);
+        doc.text('EcoTrace India | Contact: 7378780745 | dhiraj@ectotraceindia.com', marginX, y);
 
         doc.save(`${factoryData.name.replace(/\s+/g, '_')}_Verified_Audit_Report.pdf`);
     };
@@ -2555,7 +2555,7 @@ export default function EcoTraceDashboard() {
             {/* Help & Support panel */}
             {showHelp && (
                 <div style={{ marginBottom: '16px', padding: '14px', backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '10px', fontSize: '12px', color: '#9ca3af', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <span>Project Lead: D. S. Nikam | 📞 7378780745 | ✉️ dhiraj@ectotraceindia.com | {session.user.email}</span>
+                    <span>📞 7378780745 | ✉️ dhiraj@ectotraceindia.com | {session.user.email}</span>
                     <button onClick={() => setShowHelp(false)} style={{ background: 'none', border: 'none', color: '#6b7280', fontSize: '16px', cursor: 'pointer', padding: '0 4px' }}>✕</button>
                 </div>
             )}
