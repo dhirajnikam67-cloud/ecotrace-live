@@ -262,6 +262,19 @@ const TRANSLATIONS = {
         completionNotesPlaceholder: 'Notes on how this was resolved (optional)',
         confirmCompletionButton: 'Confirm Completion',
         deadlineLabelShort: 'Deadline',
+        bulkUploadTitle: 'Bulk Vendor Onboarding',
+        bulkUploadDesc: 'Upload a CSV/text file with one Factory Unit ID per line (or as the first column) to send connection requests to many suppliers at once.',
+        chooseBulkFileButton: 'Choose File',
+        uploadBulkButton: 'Send Bulk Requests',
+        uploadingBulkText: 'Sending requests...',
+        bulkResultsSummary: 'Processed {total}: {sent} sent, {resent} re-sent, {failed} failed.',
+        scorecardToggleShow: '📊 View as Scorecard',
+        scorecardToggleHide: '📋 View as Cards',
+        scorecardName: 'Supplier',
+        scorecardCompleteness: 'Completeness',
+        scorecardCto: 'CTO Days',
+        scorecardScope1: 'Scope 1',
+        scorecardScope2: 'Scope 2',
     },
     mr: {
         appTitle: 'EcoTrace India',
@@ -419,6 +432,19 @@ const TRANSLATIONS = {
         completionNotesPlaceholder: 'हे कसं सोडवलं याबद्दल टीप (ऐच्छिक)',
         confirmCompletionButton: 'पूर्णत्व नक्की करा',
         deadlineLabelShort: 'Deadline',
+        bulkUploadTitle: 'Bulk Vendor Onboarding',
+        bulkUploadDesc: 'प्रत्येक ओळीत (किंवा पहिल्या column मध्ये) एक Factory Unit ID असलेली CSV/text फाईल अपलोड करा — अनेक suppliers ना एकाच वेळी विनंती पाठवायला.',
+        chooseBulkFileButton: 'फाईल निवडा',
+        uploadBulkButton: 'Bulk विनंती पाठवा',
+        uploadingBulkText: 'विनंत्या पाठवत आहे...',
+        bulkResultsSummary: 'एकूण {total} पैकी: {sent} पाठवल्या, {resent} पुन्हा पाठवल्या, {failed} अयशस्वी.',
+        scorecardToggleShow: '📊 Scorecard म्हणून बघा',
+        scorecardToggleHide: '📋 Cards म्हणून बघा',
+        scorecardName: 'Supplier',
+        scorecardCompleteness: 'Completeness',
+        scorecardCto: 'CTO Days',
+        scorecardScope1: 'Scope 1',
+        scorecardScope2: 'Scope 2',
     },
     hi: {
         appTitle: 'EcoTrace India',
@@ -576,6 +602,19 @@ const TRANSLATIONS = {
         completionNotesPlaceholder: 'यह कैसे हल हुआ इस पर टिप्पणी (वैकल्पिक)',
         confirmCompletionButton: 'पूर्णता की पुष्टि करें',
         deadlineLabelShort: 'Deadline',
+        bulkUploadTitle: 'Bulk Vendor Onboarding',
+        bulkUploadDesc: 'हर लाइन में (या पहले column में) एक Factory Unit ID वाली CSV/text फ़ाइल अपलोड करें — कई suppliers को एक साथ विनंती भेजने के लिए।',
+        chooseBulkFileButton: 'फ़ाइल चुनें',
+        uploadBulkButton: 'Bulk विनंती भेजें',
+        uploadingBulkText: 'विनंतियां भेजी जा रही हैं...',
+        bulkResultsSummary: 'कुल {total} में से: {sent} भेजी, {resent} फिर से भेजी, {failed} विफल।',
+        scorecardToggleShow: '📊 Scorecard के रूप में देखें',
+        scorecardToggleHide: '📋 Cards के रूप में देखें',
+        scorecardName: 'Supplier',
+        scorecardCompleteness: 'Completeness',
+        scorecardCto: 'CTO Days',
+        scorecardScope1: 'Scope 1',
+        scorecardScope2: 'Scope 2',
     },
 };
 
@@ -1806,6 +1845,69 @@ export default function EcoTraceDashboard() {
         setBuyerSummaries(summaries);
     };
 
+    // ---- Bulk Vendor Onboarding (Aug 2026): Enterprise buyer साठी — एक-एक Factory ID paste
+    // करण्याऐवजी, अनेक vendors ना एकाच वेळी connection-request पाठवता येते. एकच row-level
+    // logic (insert, आणि 23505 आला तर existing row परत pending करणं) प्रत्येक ID साठी वापरतो —
+    // कोड-डुप्लिकेशन टाळण्यासाठी single-request flow शीच सुसंगत राहतो. ----
+    const [bulkFile, setBulkFile] = useState(null);
+    const [isBulkUploading, setIsBulkUploading] = useState(false);
+    const [bulkUploadResults, setBulkUploadResults] = useState(null);
+    const [showScorecardView, setShowScorecardView] = useState(false);
+
+    const sendOneConnectionRequest = async (factoryIdTrimmed) => {
+        const { error } = await supabase
+            .from('buyer_connections')
+            .insert({ buyer_id: buyerData.id, factory_id: factoryIdTrimmed, status: 'pending' });
+        if (error && error.code === '23505') {
+            const { error: updateError } = await supabase
+                .from('buyer_connections')
+                .update({ status: 'pending', responded_at: null })
+                .eq('buyer_id', buyerData.id)
+                .eq('factory_id', factoryIdTrimmed);
+            if (updateError) return { ok: false, id: factoryIdTrimmed, msg: updateError.message };
+            return { ok: true, id: factoryIdTrimmed, resent: true };
+        } else if (error) {
+            return { ok: false, id: factoryIdTrimmed, msg: error.message };
+        }
+        return { ok: true, id: factoryIdTrimmed, resent: false };
+    };
+
+    const handleBulkUpload = async (e) => {
+        e.preventDefault();
+        if (!bulkFile || !buyerData) return;
+        setIsBulkUploading(true);
+        setBulkUploadResults(null);
+        const text = await bulkFile.text();
+        // प्रत्येक ओळीतून Factory Unit ID वेगळं काढतो — CSV असो (comma नंतरचं आधीचं column) किंवा
+        // साधी एक-ID-प्रति-ओळी यादी असो, दोन्ही चालेल. UUID-सारखं न दिसणारं (उदा. header row) वगळतो.
+        const uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+        const ids = text
+            .split(/\r?\n/)
+            .map((line) => line.split(',')[0].trim())
+            .filter((id) => uuidPattern.test(id));
+
+        if (ids.length === 0) {
+            alert('या फाईलमध्ये कुठलाही वैध Factory Unit ID सापडला नाही / No valid Factory Unit IDs found in this file.');
+            setIsBulkUploading(false);
+            return;
+        }
+
+        const results = { total: ids.length, sent: 0, resent: 0, failed: 0, failedIds: [] };
+        for (const id of ids) {
+            const result = await sendOneConnectionRequest(id);
+            if (result.ok) {
+                result.resent ? results.resent++ : results.sent++;
+            } else {
+                results.failed++;
+                results.failedIds.push(id);
+            }
+        }
+        setBulkUploadResults(results);
+        setBulkFile(null);
+        setIsBulkUploading(false);
+        fetchBuyerConnections(buyerData.id);
+    };
+
     const handleRequestConnection = async (e) => {
         e.preventDefault();
         if (!requestFactoryId.trim() || !buyerData) return;
@@ -2291,10 +2393,74 @@ export default function EcoTraceDashboard() {
                             </form>
                         </div>
 
+                        {/* Bulk Vendor Onboarding (Aug 2026) */}
+                        <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '16px', boxShadow: '0 1px 3px rgba(0,0,0,0.3)' }}>
+                            <h4 style={{ color: '#e5e7eb', margin: '0 0 8px 0', fontSize: '14px' }}>{t('bulkUploadTitle')}</h4>
+                            <p style={{ color: '#9ca3af', fontSize: '11px', marginBottom: '8px' }}>{t('bulkUploadDesc')}</p>
+                            <form onSubmit={handleBulkUpload} style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', alignItems: 'center' }}>
+                                <input type="file" accept=".csv,.txt" onChange={(e) => setBulkFile(e.target.files[0] || null)}
+                                    style={{ fontSize: '12px', color: '#d1d5db' }} />
+                                <button type="submit" disabled={!bulkFile || isBulkUploading} style={{ backgroundColor: '#4338ca', color: 'white', border: 'none', padding: '8px 14px', borderRadius: '6px', fontWeight: 'bold', cursor: bulkFile ? 'pointer' : 'not-allowed', fontSize: '12px', opacity: bulkFile ? 1 : 0.5 }}>
+                                    {isBulkUploading ? t('uploadingBulkText') : t('uploadBulkButton')}
+                                </button>
+                            </form>
+                            {bulkUploadResults && (
+                                <p style={{ fontSize: '11px', color: bulkUploadResults.failed > 0 ? '#f59e0b' : '#34d399', marginTop: '8px' }}>
+                                    {t('bulkResultsSummary')
+                                        .replace('{total}', bulkUploadResults.total)
+                                        .replace('{sent}', bulkUploadResults.sent)
+                                        .replace('{resent}', bulkUploadResults.resent)
+                                        .replace('{failed}', bulkUploadResults.failed)}
+                                </p>
+                            )}
+                        </div>
+
                         <div>
-                            <h4 style={{ color: '#e5e7eb', margin: '0 0 8px 0', fontSize: '14px' }}>{t('yourSuppliersTitle')} ({buyerConnections.length})</h4>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                                <h4 style={{ color: '#e5e7eb', margin: 0, fontSize: '14px' }}>{t('yourSuppliersTitle')} ({buyerConnections.length})</h4>
+                                {buyerConnections.length > 0 && (
+                                    <button onClick={() => setShowScorecardView(!showScorecardView)} style={{ backgroundColor: '#1f2937', color: '#d1d5db', border: '1px solid #374151', padding: '5px 10px', borderRadius: '4px', fontSize: '10px', fontWeight: 'bold', cursor: 'pointer' }}>
+                                        {showScorecardView ? t('scorecardToggleHide') : t('scorecardToggleShow')}
+                                    </button>
+                                )}
+                            </div>
                             {buyerConnections.length === 0 && <p style={{ color: '#9ca3af', fontSize: '12px' }}>{t('noRequestsSentYet')}</p>}
-                            {buyerConnections.map((conn) => {
+
+                            {showScorecardView ? (
+                                // ---- Vendor Compliance Scorecard (Aug 2026): approved suppliers चं एका table मध्ये
+                                // तुलना — enterprise buyer ला अनेक vendors एकत्र तपासायला सोयीचं ----
+                                <div style={{ overflowX: 'auto' }}>
+                                    <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '11px' }}>
+                                        <thead>
+                                            <tr style={{ borderBottom: '1px solid #374151', textAlign: 'left', color: '#9ca3af' }}>
+                                                <th style={{ padding: '6px' }}>{t('scorecardName')}</th>
+                                                <th style={{ padding: '6px' }}>{t('scorecardCompleteness')}</th>
+                                                <th style={{ padding: '6px' }}>{t('scorecardCto')}</th>
+                                                <th style={{ padding: '6px' }}>{t('scorecardScope1')}</th>
+                                                <th style={{ padding: '6px' }}>{t('scorecardScope2')}</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {buyerConnections
+                                                .filter((conn) => conn.status === 'approved' && buyerSummaries[conn.factory_id])
+                                                .sort((a, b) => (buyerSummaries[a.factory_id]?.completeness_pct ?? 0) - (buyerSummaries[b.factory_id]?.completeness_pct ?? 0))
+                                                .map((conn) => {
+                                                    const s = buyerSummaries[conn.factory_id];
+                                                    return (
+                                                        <tr key={conn.id} style={{ borderBottom: '1px solid #1f2937', color: '#d1d5db' }}>
+                                                            <td style={{ padding: '6px', fontWeight: 'bold', color: 'white' }}>{s.factory_name}</td>
+                                                            <td style={{ padding: '6px', color: s.completeness_pct < 50 ? '#ef4444' : '#34d399' }}>{s.completeness_pct}%</td>
+                                                            <td style={{ padding: '6px' }}>{s.cto_expiry_date || 'N/A'}</td>
+                                                            <td style={{ padding: '6px' }}>{s.scope1_tco2e > 0 ? `${s.scope1_tco2e} t` : '—'}</td>
+                                                            <td style={{ padding: '6px' }}>{s.scope2_tco2e} t</td>
+                                                        </tr>
+                                                    );
+                                                })}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            ) : (
+                            buyerConnections.map((conn) => {
                                 const summary = buyerSummaries[conn.factory_id];
                                 const statusColor = conn.status === 'approved' ? '#34d399' : conn.status === 'pending' ? '#f59e0b' : '#ef4444';
                                 return (
@@ -2327,7 +2493,8 @@ export default function EcoTraceDashboard() {
                                         )}
                                     </div>
                                 );
-                            })}
+                            })
+                            )}
                         </div>
                     </div>
                 )}
