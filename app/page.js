@@ -189,6 +189,60 @@ const TRANSLATIONS = {
         renewableCoverageLabel: 'Renewable Coverage',
         scope2LocationLabel: 'Scope 2 (Location-based)',
         scope2MarketLabel: 'Scope 2 (Market-based)',
+        correctionLogTitle: 'सुधार लॉग (Correction / Amendment Log)',
+        correctionLogDesc: 'लॉक हुई एंट्री में गलती हुई? यहां सुधार दर्ज करें — मूल एंट्री कभी नहीं बदलती, सिर्फ एक जुड़ा हुआ सुधार-रिकॉर्ड बनता है, जिससे audit trail पूरी तरह पारदर्शी रहता है।',
+        requestCorrectionButton: '✏️ सुधार दर्ज करें',
+        selectEntryToCorrect: 'कौन सी एंट्री सुधारनी है चुनें',
+        fieldToCorrect: 'कौन सा फील्ड गलत है?',
+        fieldPh: 'pH Level',
+        fieldWater: 'पानी (KL)',
+        fieldPower: 'बिजली (kWh)',
+        fieldSludge: 'Sludge (MT)',
+        correctedValuePlaceholder: 'सही आंकड़ा',
+        correctionReasonPlaceholder: 'सुधार का कारण (आवश्यक)',
+        submitCorrectionButton: 'सुधार दर्ज करें',
+        cancelCorrectionButton: 'रद्द करें',
+        correctionHistoryTitle: 'सुधार इतिहास',
+        noCorrectionsYet: 'अभी तक कोई सुधार दर्ज नहीं हुआ।',
+        originalValueLabel: 'मूल',
+        correctedToLabel: 'सुधार कर',
+        reasonLabel: 'कारण',
+        correctionLogTitle: 'दुरुस्ती नोंद (Correction / Amendment Log)',
+        correctionLogDesc: 'लॉक झालेल्या नोंदीत चूक झाली का? इथे दुरुस्ती नोंदवा — मूळ नोंद कधीच बदलली जात नाही, फक्त एक जोडलेली दुरुस्ती-नोंद तयार होते, त्यामुळे audit trail पूर्णपणे पारदर्शक राहतो.',
+        requestCorrectionButton: '✏️ दुरुस्ती नोंदवा',
+        selectEntryToCorrect: 'कुठली नोंद दुरुस्त करायची ते निवडा',
+        fieldToCorrect: 'कुठला रकाना चुकला आहे?',
+        fieldPh: 'pH Level',
+        fieldWater: 'पाणी (KL)',
+        fieldPower: 'वीज (kWh)',
+        fieldSludge: 'Sludge (MT)',
+        correctedValuePlaceholder: 'बरोबर आकडा',
+        correctionReasonPlaceholder: 'दुरुस्तीचं कारण (आवश्यक)',
+        submitCorrectionButton: 'दुरुस्ती नोंदवा',
+        cancelCorrectionButton: 'रद्द करा',
+        correctionHistoryTitle: 'दुरुस्ती इतिहास',
+        noCorrectionsYet: 'अजून कुठलीही दुरुस्ती नोंदवलेली नाही.',
+        originalValueLabel: 'मूळ',
+        correctedToLabel: 'दुरुस्त केलं',
+        reasonLabel: 'कारण',
+        correctionLogTitle: 'Correction / Amendment Log',
+        correctionLogDesc: 'Made a mistake in a locked entry? Record a correction here — the original entry is never changed, only a linked correction is added, so the audit trail stays fully transparent.',
+        requestCorrectionButton: '✏️ Request a Correction',
+        selectEntryToCorrect: 'Select the entry to correct',
+        fieldToCorrect: 'Which field is wrong?',
+        fieldPh: 'pH Level',
+        fieldWater: 'Water (KL)',
+        fieldPower: 'Power (kWh)',
+        fieldSludge: 'Sludge (MT)',
+        correctedValuePlaceholder: 'Correct value',
+        correctionReasonPlaceholder: 'Reason for this correction (required)',
+        submitCorrectionButton: 'Submit Correction',
+        cancelCorrectionButton: 'Cancel',
+        correctionHistoryTitle: 'Correction History',
+        noCorrectionsYet: 'No corrections recorded.',
+        originalValueLabel: 'Original',
+        correctedToLabel: 'Corrected to',
+        reasonLabel: 'Reason',
     },
     mr: {
         appTitle: 'EcoTrace India',
@@ -789,6 +843,13 @@ export default function EcoTraceDashboard() {
     const [currentUnitId, setCurrentUnitId] = useState(null);
     const [unitsData, setUnitsData] = useState({});
     const [savedLogsHistory, setSavedLogsHistory] = useState([]);
+    // ---- Correction/Amendment Log (Aug 2026) ----
+    const [logCorrections, setLogCorrections] = useState([]);
+    const [showCorrectionForm, setShowCorrectionForm] = useState(false);
+    const [correctionLogId, setCorrectionLogId] = useState('');
+    const [correctionField, setCorrectionField] = useState('ph_level');
+    const [correctionNewValue, setCorrectionNewValue] = useState('');
+    const [correctionReason, setCorrectionReason] = useState('');
     const [isFactoryLoading, setIsFactoryLoading] = useState(true);
 
     // ---- Step 2.1 (Pan-India backend migration): auto-load this user's factory on login ----
@@ -862,6 +923,7 @@ export default function EcoTraceDashboard() {
                     console.error('Error loading daily log history:', logsError.message);
                 } else if (logsData) {
                     const historyEntries = logsData.map((row) => ({
+                        id: row.id,
                         date: row.log_date,
                         ph: String(row.ph_level ?? ''),
                         water: String(row.water_discharge_liters ?? ''),
@@ -875,6 +937,18 @@ export default function EcoTraceDashboard() {
                         submittedAt: row.created_at,
                     }));
                     setSavedLogsHistory(historyEntries);
+                }
+
+                // ---- Correction/Amendment Log (Aug 2026): या factory च्या correction history पण लोड करतो ----
+                const { data: correctionsData, error: correctionsError } = await supabase
+                    .from('log_corrections')
+                    .select('*')
+                    .eq('factory_id', data.id)
+                    .order('created_at', { ascending: false });
+                if (correctionsError) {
+                    console.error('Error loading corrections:', correctionsError.message);
+                } else if (correctionsData) {
+                    setLogCorrections(correctionsData);
                 }
             }
             // data नसेल तर काहीही बदलू नका — डीफॉल्ट "No factory onboarded" स्थितीच राहील
@@ -1269,6 +1343,54 @@ export default function EcoTraceDashboard() {
     };
 
     // ---- Step 3 (Pan-India backend migration): Daily Log now writes to Supabase (demo mode stays local — Step 5) ----
+    // ---- Correction/Amendment Log (Aug 2026): मूळ daily_logs नोंद कधीच बदलत नाही (hash chain
+    // तसाच अभंग राहतो) — फक्त एक वेगळी, स्पष्टीकरणासह "correction" नोंद जोडली जाते. Report/PDF
+    // वाचणाऱ्याला मूळ आकडा आणि दुरुस्ती दोन्ही दिसतात — काहीही लपवलं जात नाही. ----
+    const handleCorrectionSubmit = async (e) => {
+        e.preventDefault();
+        if (!correctionLogId || !correctionNewValue || !correctionReason.trim()) {
+            alert('कृपया सगळे रकाने भरा / Please fill all fields.');
+            return;
+        }
+        const originalEntry = savedLogsHistory.find((entry) => entry.id === correctionLogId);
+        if (!originalEntry) {
+            alert('मूळ नोंद सापडली नाही / Original entry not found.');
+            return;
+        }
+        const fieldToOriginalValue = {
+            ph_level: originalEntry.ph,
+            water_discharge_liters: originalEntry.water,
+            electricity_kwh: originalEntry.power,
+            hazardous_waste_kg: originalEntry.sludge,
+        };
+        const { error } = await supabase.from('log_corrections').insert({
+            factory_id: currentUnitId,
+            original_log_id: correctionLogId,
+            log_date: originalEntry.date,
+            field_name: correctionField,
+            original_value: fieldToOriginalValue[correctionField] ?? '',
+            corrected_value: correctionNewValue,
+            reason: correctionReason.trim(),
+            corrected_by_email: session?.user?.email || '',
+        });
+        if (error) {
+            alert('Error saving correction: ' + error.message);
+            return;
+        }
+        // ताजी correction यादी परत लोड करतो
+        const { data: refreshedCorrections } = await supabase
+            .from('log_corrections')
+            .select('*')
+            .eq('factory_id', currentUnitId)
+            .order('created_at', { ascending: false });
+        if (refreshedCorrections) setLogCorrections(refreshedCorrections);
+        setShowCorrectionForm(false);
+        setCorrectionLogId('');
+        setCorrectionNewValue('');
+        setCorrectionReason('');
+        alert('दुरुस्ती नोंदवली गेली / Correction recorded.');
+    };
+
     const handleLogSubmit = async (e) => {
         e.preventDefault();
         if (!dailyLog.ph || !dailyLog.water || !dailyLog.power || (!dailyLog.sludge && !isSludgeNotApplicable)) {
@@ -1875,7 +1997,8 @@ export default function EcoTraceDashboard() {
         addDivider();
 
         addSectionHeading('7. Record Integrity & Digital Vault');
-        addLine('Private hash chain (tamper-evident). Server timestamp enforced. External anchoring not enabled.', { gapAfter: 20 });
+        addLine('Private hash chain (tamper-evident). Server timestamp enforced. External anchoring not enabled.', { gapAfter: 10 });
+        addLine(`Correction log: ${logCorrections.length} correction${logCorrections.length === 1 ? '' : 's'} on record${logCorrections.length > 0 ? ' — see in-app Correction History for full details' : ''}.`, { size: 9, color: [150, 150, 150], gapAfter: 20 });
         addDivider();
 
         addSectionHeading('8. Legal Disclaimer');
@@ -2350,6 +2473,59 @@ export default function EcoTraceDashboard() {
                             <button type="submit" style={{ gridColumn: '1 / -1', backgroundColor: '#059669', color: 'white', border: 'none', padding: '8px', borderRadius: '4px', fontSize: '12px', fontWeight: 'bold', cursor: 'pointer' }}>{t('saveLock')}</button>
                         </form>
                         )}
+                    </div>
+
+                    {/* Correction / Amendment Log (Aug 2026) */}
+                    <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '16px', boxShadow: '0 1px 3px rgba(0,0,0,0.3)' }}>
+                        <h4 style={{ color: '#e5e7eb', margin: '0 0 4px 0', fontSize: '14px' }}>{t('correctionLogTitle')}</h4>
+                        <p style={{ color: '#9ca3af', fontSize: '11px', marginBottom: '10px' }}>{t('correctionLogDesc')}</p>
+
+                        {!showCorrectionForm ? (
+                            <button onClick={() => setShowCorrectionForm(true)} style={{ backgroundColor: '#1f2937', color: 'white', border: '1px solid #374151', padding: '6px 12px', borderRadius: '4px', fontSize: '11px', fontWeight: 'bold', cursor: 'pointer' }}>
+                                {t('requestCorrectionButton')}
+                            </button>
+                        ) : (
+                            <form onSubmit={handleCorrectionSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '12px' }}>
+                                <select value={correctionLogId} onChange={(e) => setCorrectionLogId(e.target.value)} required
+                                    style={{ padding: '7px', backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '4px', color: 'white', fontSize: '12px' }}>
+                                    <option value="">{t('selectEntryToCorrect')}</option>
+                                    {savedLogsHistory.map((entry) => (
+                                        <option key={entry.id} value={entry.id}>{entry.date}</option>
+                                    ))}
+                                </select>
+                                <select value={correctionField} onChange={(e) => setCorrectionField(e.target.value)}
+                                    style={{ padding: '7px', backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '4px', color: 'white', fontSize: '12px' }}>
+                                    <option value="ph_level">{t('fieldPh')}</option>
+                                    <option value="water_discharge_liters">{t('fieldWater')}</option>
+                                    <option value="electricity_kwh">{t('fieldPower')}</option>
+                                    <option value="hazardous_waste_kg">{t('fieldSludge')}</option>
+                                </select>
+                                <input type="text" value={correctionNewValue} onChange={(e) => setCorrectionNewValue(e.target.value)} placeholder={t('correctedValuePlaceholder')} required
+                                    style={{ padding: '7px', backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '4px', color: 'white', fontSize: '12px' }} />
+                                <textarea value={correctionReason} onChange={(e) => setCorrectionReason(e.target.value)} placeholder={t('correctionReasonPlaceholder')} required rows={2}
+                                    style={{ padding: '7px', backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '4px', color: 'white', fontSize: '12px', resize: 'vertical' }} />
+                                <div style={{ display: 'flex', gap: '8px' }}>
+                                    <button type="submit" style={{ backgroundColor: '#059669', color: 'white', border: 'none', padding: '6px 12px', borderRadius: '4px', fontSize: '11px', fontWeight: 'bold', cursor: 'pointer' }}>{t('submitCorrectionButton')}</button>
+                                    <button type="button" onClick={() => setShowCorrectionForm(false)} style={{ backgroundColor: '#374151', color: '#d1d5db', border: 'none', padding: '6px 12px', borderRadius: '4px', fontSize: '11px', fontWeight: 'bold', cursor: 'pointer' }}>{t('cancelCorrectionButton')}</button>
+                                </div>
+                            </form>
+                        )}
+
+                        <div style={{ borderTop: '1px solid #1f2937', paddingTop: '10px', marginTop: '10px' }}>
+                            <p style={{ fontSize: '11px', color: '#9ca3af', fontWeight: 'bold', margin: '0 0 6px 0' }}>{t('correctionHistoryTitle')}</p>
+                            {logCorrections.length === 0 ? (
+                                <p style={{ fontSize: '11px', color: '#6b7280', margin: 0 }}>{t('noCorrectionsYet')}</p>
+                            ) : (
+                                logCorrections.map((c) => (
+                                    <div key={c.id} style={{ fontSize: '11px', color: '#d1d5db', borderTop: '1px solid #1f2937', paddingTop: '6px', marginTop: '6px' }}>
+                                        <p style={{ margin: 0 }}><b>{c.log_date}</b> · {c.field_name}</p>
+                                        <p style={{ margin: 0, color: '#9ca3af' }}>{t('originalValueLabel')}: {c.original_value} → {t('correctedToLabel')}: {c.corrected_value}</p>
+                                        <p style={{ margin: 0, color: '#9ca3af' }}>{t('reasonLabel')}: {c.reason}</p>
+                                        <p style={{ margin: 0, color: '#6b7280', fontSize: '10px' }}>{c.corrected_by_email} · {new Date(c.created_at).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })} IST</p>
+                                    </div>
+                                ))
+                            )}
+                        </div>
                     </div>
 
                     {/* Module 5: Flying Squad Audit Mode */}
