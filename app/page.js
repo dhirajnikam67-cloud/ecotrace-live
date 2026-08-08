@@ -16,7 +16,7 @@ const TEXT = '#d1d5db';
 const MUTED = '#9ca3af';
 
 function Section({ children, style = {} }) {
-  return <section style={{ maxWidth: '780px', margin: '0 auto', padding: '0 20px', ...style }}>{children}</section>;
+  return <section style={{ maxWidth: '780px', margin: '0 auto', padding: '0 20px', textAlign: 'center', ...style }}>{children}</section>;
 }
 
 function Heading({ children }) {
@@ -31,7 +31,7 @@ function StepRow({ n, title, desc }) {
   return (
     <div style={{ display: 'flex', gap: '16px', marginBottom: '18px' }}>
       <div style={{ flexShrink: 0, width: '30px', height: '30px', borderRadius: '50%', backgroundColor: GREEN, color: 'white', fontWeight: 'bold', fontSize: '14px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{n}</div>
-      <div>
+      <div style={{ textAlign: 'left' }}>
         <p style={{ margin: '0 0 3px 0', fontWeight: 'bold', fontSize: '14px', color: '#ffffff' }}>{title}</p>
         <p style={{ margin: 0, fontSize: '13px', color: MUTED, lineHeight: '1.6' }}>{desc}</p>
       </div>
@@ -95,7 +95,7 @@ export default function LandingPage() {
           <div style={{ backgroundColor: CARD, border: `1px solid ${BORDER}`, borderRadius: '10px', padding: '18px' }}>
             <p style={{ margin: '0 0 6px 0', fontWeight: 'bold', fontSize: '15px', color: '#ffffff' }}>For MSME Factories</p>
             <p style={{ margin: '0 0 10px 0', fontSize: '13px', color: MUTED, lineHeight: '1.6' }}>Stay ready for inspections, renewals, and customer audits.</p>
-            <ul style={{ margin: 0, paddingLeft: '18px', color: TEXT, fontSize: '13px', lineHeight: '1.9' }}>
+            <ul style={{ textAlign: 'left', margin: 0, paddingLeft: '18px', color: TEXT, fontSize: '13px', lineHeight: '1.9' }}>
               <li>Daily operator logbook, in English, Marathi, or Hindi</li>
               <li>CTO/consent countdown with advance alerts</li>
               <li>OCR-assisted document entry, with human confirmation</li>
@@ -106,7 +106,7 @@ export default function LandingPage() {
           <div style={{ backgroundColor: CARD, border: `1px solid ${BORDER}`, borderRadius: '10px', padding: '18px' }}>
             <p style={{ margin: '0 0 6px 0', fontWeight: 'bold', fontSize: '15px', color: '#ffffff' }}>For Enterprises &amp; Buyers</p>
             <p style={{ margin: '0 0 10px 0', fontSize: '13px', color: MUTED, lineHeight: '1.6' }}>Build a structured supplier environmental-data layer.</p>
-            <ul style={{ margin: 0, paddingLeft: '18px', color: TEXT, fontSize: '13px', lineHeight: '1.9' }}>
+            <ul style={{ textAlign: 'left', margin: 0, paddingLeft: '18px', color: TEXT, fontSize: '13px', lineHeight: '1.9' }}>
               <li>Bulk supplier onboarding, one request to many at once</li>
               <li>Consent-based connections — suppliers approve every share</li>
               <li>Vendor compliance scorecard across all approved suppliers</li>
@@ -134,7 +134,7 @@ export default function LandingPage() {
       <Section style={{ marginBottom: '50px' }}>
         <Heading>Green Passport</Heading>
         <p style={{ color: TEXT, fontSize: '14px', lineHeight: '1.7', marginBottom: '10px' }}>A factory-approved sustainability summary for enterprise buyers. It can include:</p>
-        <ul style={{ margin: '0 0 12px 0', paddingLeft: '18px', color: TEXT, fontSize: '13px', lineHeight: '1.9' }}>
+        <ul style={{ textAlign: 'left', margin: '0 0 12px 0', paddingLeft: '18px', color: TEXT, fontSize: '13px', lineHeight: '1.9' }}>
           <li>Factory identity, location, and CTO/consent status</li>
           <li>Data completeness score and last-log date</li>
           <li>Average pH, and total water and electricity use</li>
@@ -149,7 +149,7 @@ export default function LandingPage() {
       {/* Trust */}
       <Section style={{ marginBottom: '50px' }}>
         <Heading>Built for Controlled Data Sharing</Heading>
-        <ul style={{ margin: 0, paddingLeft: '18px', color: TEXT, fontSize: '14px', lineHeight: '2' }}>
+        <ul style={{ textAlign: 'left', margin: 0, paddingLeft: '18px', color: TEXT, fontSize: '14px', lineHeight: '2' }}>
           <li>Each factory's data is isolated from every other factory's</li>
           <li>Buyers see only approved summaries — never raw operational records</li>
           <li>A factory can revoke a buyer's access at any time</li>
@@ -177,7 +177,7 @@ export default function LandingPage() {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '16px' }}>
           <div style={{ backgroundColor: CARD, border: `1px solid ${BORDER}`, borderRadius: '10px', padding: '16px' }}>
             <p style={{ margin: '0 0 8px 0', fontWeight: 'bold', fontSize: '13px', color: '#34d399' }}>EcoTrace Is</p>
-            <ul style={{ margin: 0, paddingLeft: '18px', color: TEXT, fontSize: '13px', lineHeight: '1.9' }}>
+            <ul style={{ textAlign: 'left', margin: 0, paddingLeft: '18px', color: TEXT, fontSize: '13px', lineHeight: '1.9' }}>
               <li>A factory environmental data-management platform</li>
               <li>A daily compliance logbook</li>
               <li>An inspection-readiness tool</li>
@@ -186,7 +186,7 @@ export default function LandingPage() {
           </div>
           <div style={{ backgroundColor: CARD, border: `1px solid ${BORDER}`, borderRadius: '10px', padding: '16px' }}>
             <p style={{ margin: '0 0 8px 0', fontWeight: 'bold', fontSize: '13px', color: '#f59e0b' }}>EcoTrace Is Not</p>
-            <ul style={{ margin: 0, paddingLeft: '18px', color: TEXT, fontSize: '13px', lineHeight: '1.9' }}>
+            <ul style={{ textAlign: 'left', margin: 0, paddingLeft: '18px', color: TEXT, fontSize: '13px', lineHeight: '1.9' }}>
               <li>A government portal</li>
               <li>A compliance certificate</li>
               <li>A legal or environmental consultancy</li>
