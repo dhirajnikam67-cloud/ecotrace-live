@@ -47,7 +47,7 @@ export default function TermsPage() {
 
                 <div style={section}>
                     <h2 style={heading}>8. Contact</h2>
-                    <p style={body}>EcoTrace India Private Limited | Project Lead: D. S. Nikam | 7378780745 | dhiraj@ectotraceindia.com</p>
+                    <p style={body}>EcoTrace India Private Limited | Contact: 7378780745 | dhiraj@ectotraceindia.com</p>
                 </div>
 
                 <p style={{ color: '#f59e0b', fontSize: '11px', marginTop: '32px', fontStyle: 'italic' }}>
