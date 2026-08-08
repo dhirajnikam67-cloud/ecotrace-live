@@ -243,6 +243,25 @@ const TRANSLATIONS = {
         originalValueLabel: 'Original',
         correctedToLabel: 'Corrected to',
         reasonLabel: 'Reason',
+        inspectionTrackerTitle: 'Post-Inspection Follow-Up Tracker',
+        inspectionTrackerDesc: 'Log MPCB/CPCB inspection visits and track required follow-up actions until closed.',
+        addInspectionButton: '📋 Log an Inspection',
+        inspectionDateLabel: 'Inspection Date',
+        authorityLabel: 'Authority',
+        inspectorNameLabel: 'Inspector Name (optional)',
+        findingSummaryPlaceholder: 'What did the inspector note? (required)',
+        actionRequiredPlaceholder: 'Action required (optional)',
+        deadlineLabel: 'Deadline (optional)',
+        submitInspectionButton: 'Save Inspection Record',
+        cancelInspectionButton: 'Cancel',
+        noInspectionsYet: 'No inspection records yet.',
+        statusPending: 'Pending',
+        statusCompleted: 'Completed',
+        statusOverdue: 'Overdue',
+        markCompletedButton: 'Mark as Completed',
+        completionNotesPlaceholder: 'Notes on how this was resolved (optional)',
+        confirmCompletionButton: 'Confirm Completion',
+        deadlineLabelShort: 'Deadline',
     },
     mr: {
         appTitle: 'EcoTrace India',
@@ -381,7 +400,25 @@ const TRANSLATIONS = {
         renewableHint: 'जर तुम्ही Green Tariff वीज विकत घेता, Solar PPA आहे, किंवा RECs विकत घेता — तर किती % वीज त्याने कव्हर होते ते टाका — यावरून Scope 2 market-based अहवाल तयार होतो.',
         renewableCoverageLabel: 'Renewable Coverage',
         scope2LocationLabel: 'Scope 2 (Location-based)',
-        scope2MarketLabel: 'Scope 2 (Market-based)',
+        inspectionTrackerTitle: 'Post-Inspection Follow-Up Tracker',
+        inspectionTrackerDesc: 'MPCB/CPCB inspection भेटींची नोंद ठेवा, आणि पुढची कारवाई पूर्ण होईपर्यंत ट्रॅक करा.',
+        addInspectionButton: '📋 Inspection नोंदवा',
+        inspectionDateLabel: 'Inspection ची तारीख',
+        authorityLabel: 'Authority',
+        inspectorNameLabel: 'Inspector चं नाव (ऐच्छिक)',
+        findingSummaryPlaceholder: 'Inspector ने काय नोंदवलं? (आवश्यक)',
+        actionRequiredPlaceholder: 'कुठली कारवाई आवश्यक आहे (ऐच्छिक)',
+        deadlineLabel: 'Deadline (ऐच्छिक)',
+        submitInspectionButton: 'Inspection नोंद सेव्ह करा',
+        cancelInspectionButton: 'रद्द करा',
+        noInspectionsYet: 'अजून कुठलीही inspection नोंद नाही.',
+        statusPending: 'प्रलंबित',
+        statusCompleted: 'पूर्ण',
+        statusOverdue: 'मुदत उलटलेली',
+        markCompletedButton: 'पूर्ण झालं म्हणून नोंदवा',
+        completionNotesPlaceholder: 'हे कसं सोडवलं याबद्दल टीप (ऐच्छिक)',
+        confirmCompletionButton: 'पूर्णत्व नक्की करा',
+        deadlineLabelShort: 'Deadline',
     },
     hi: {
         appTitle: 'EcoTrace India',
@@ -520,7 +557,25 @@ const TRANSLATIONS = {
         renewableHint: 'अगर आप Green Tariff बिजली खरीदते हैं, Solar PPA है, या RECs खरीदते हैं — तो कितनी % बिजली इससे कवर होती है वो डालें — इससे Scope 2 market-based रिपोर्ट तैयार होती है।',
         renewableCoverageLabel: 'Renewable Coverage',
         scope2LocationLabel: 'Scope 2 (Location-based)',
-        scope2MarketLabel: 'Scope 2 (Market-based)',
+        inspectionTrackerTitle: 'Post-Inspection Follow-Up Tracker',
+        inspectionTrackerDesc: 'MPCB/CPCB inspection विजिट दर्ज करें, और आगे की कार्रवाई पूरी होने तक ट्रैक करें।',
+        addInspectionButton: '📋 Inspection दर्ज करें',
+        inspectionDateLabel: 'Inspection की तारीख',
+        authorityLabel: 'Authority',
+        inspectorNameLabel: 'Inspector का नाम (वैकल्पिक)',
+        findingSummaryPlaceholder: 'Inspector ने क्या नोट किया? (आवश्यक)',
+        actionRequiredPlaceholder: 'कौन सी कार्रवाई आवश्यक है (वैकल्पिक)',
+        deadlineLabel: 'Deadline (वैकल्पिक)',
+        submitInspectionButton: 'Inspection रिकॉर्ड सेव करें',
+        cancelInspectionButton: 'रद्द करें',
+        noInspectionsYet: 'अभी तक कोई inspection रिकॉर्ड नहीं।',
+        statusPending: 'लंबित',
+        statusCompleted: 'पूर्ण',
+        statusOverdue: 'समय सीमा पार',
+        markCompletedButton: 'पूर्ण के रूप में चिह्नित करें',
+        completionNotesPlaceholder: 'यह कैसे हल हुआ इस पर टिप्पणी (वैकल्पिक)',
+        confirmCompletionButton: 'पूर्णता की पुष्टि करें',
+        deadlineLabelShort: 'Deadline',
     },
 };
 
@@ -845,6 +900,17 @@ export default function EcoTraceDashboard() {
     const [savedLogsHistory, setSavedLogsHistory] = useState([]);
     // ---- Correction/Amendment Log (Aug 2026) ----
     const [logCorrections, setLogCorrections] = useState([]);
+    // ---- Post-Inspection Follow-Up Tracking (Aug 2026) ----
+    const [inspectionFollowups, setInspectionFollowups] = useState([]);
+    const [showInspectionForm, setShowInspectionForm] = useState(false);
+    const [inspDate, setInspDate] = useState('');
+    const [inspAuthority, setInspAuthority] = useState('MPCB');
+    const [inspInspectorName, setInspInspectorName] = useState('');
+    const [inspFinding, setInspFinding] = useState('');
+    const [inspAction, setInspAction] = useState('');
+    const [inspDeadline, setInspDeadline] = useState('');
+    const [completingInspectionId, setCompletingInspectionId] = useState('');
+    const [completionNotes, setCompletionNotes] = useState('');
     const [showCorrectionForm, setShowCorrectionForm] = useState(false);
     const [correctionLogId, setCorrectionLogId] = useState('');
     const [correctionField, setCorrectionField] = useState('ph_level');
@@ -949,6 +1015,18 @@ export default function EcoTraceDashboard() {
                     console.error('Error loading corrections:', correctionsError.message);
                 } else if (correctionsData) {
                     setLogCorrections(correctionsData);
+                }
+
+                // ---- Post-Inspection Follow-Up Tracking (Aug 2026) ----
+                const { data: inspectionsData, error: inspectionsError } = await supabase
+                    .from('inspection_followups')
+                    .select('*')
+                    .eq('factory_id', data.id)
+                    .order('inspection_date', { ascending: false });
+                if (inspectionsError) {
+                    console.error('Error loading inspection followups:', inspectionsError.message);
+                } else if (inspectionsData) {
+                    setInspectionFollowups(inspectionsData);
                 }
             }
             // data नसेल तर काहीही बदलू नका — डीफॉल्ट "No factory onboarded" स्थितीच राहील
@@ -1389,6 +1467,57 @@ export default function EcoTraceDashboard() {
         setCorrectionNewValue('');
         setCorrectionReason('');
         alert('दुरुस्ती नोंदवली गेली / Correction recorded.');
+    };
+
+    // ---- Post-Inspection Follow-Up Tracking (Aug 2026) ----
+    const handleAddInspection = async (e) => {
+        e.preventDefault();
+        if (!inspDate || !inspFinding.trim()) {
+            alert('कृपया तारीख आणि निष्कर्ष भरा / Please enter date and finding summary.');
+            return;
+        }
+        const { error } = await supabase.from('inspection_followups').insert({
+            factory_id: currentUnitId,
+            inspection_date: inspDate,
+            authority: inspAuthority,
+            inspector_name: inspInspectorName.trim() || null,
+            finding_summary: inspFinding.trim(),
+            action_required: inspAction.trim() || null,
+            deadline_date: inspDeadline || null,
+        });
+        if (error) {
+            alert('Error saving inspection record: ' + error.message);
+            return;
+        }
+        const { data: refreshed } = await supabase
+            .from('inspection_followups')
+            .select('*')
+            .eq('factory_id', currentUnitId)
+            .order('inspection_date', { ascending: false });
+        if (refreshed) setInspectionFollowups(refreshed);
+        setShowInspectionForm(false);
+        setInspDate(''); setInspAuthority('MPCB'); setInspInspectorName('');
+        setInspFinding(''); setInspAction(''); setInspDeadline('');
+    };
+
+    const handleCompleteInspection = async (e) => {
+        e.preventDefault();
+        const { error } = await supabase
+            .from('inspection_followups')
+            .update({ status: 'completed', completed_date: getISTDateString(), completed_notes: completionNotes.trim() || null })
+            .eq('id', completingInspectionId);
+        if (error) {
+            alert('Error updating: ' + error.message);
+            return;
+        }
+        const { data: refreshed } = await supabase
+            .from('inspection_followups')
+            .select('*')
+            .eq('factory_id', currentUnitId)
+            .order('inspection_date', { ascending: false });
+        if (refreshed) setInspectionFollowups(refreshed);
+        setCompletingInspectionId('');
+        setCompletionNotes('');
     };
 
     const handleLogSubmit = async (e) => {
@@ -2533,6 +2662,75 @@ export default function EcoTraceDashboard() {
                         <span style={{ backgroundColor: '#1f2937', color: '#9ca3af', padding: '2px 6px', borderRadius: '4px', fontSize: '10px', fontWeight: 'bold' }}>LIVE MODULE 5</span>
                         <h4 style={{ color: '#e5e7eb', margin: '8px 0 4px 0', fontSize: '14px' }}>{t('m5Title')}</h4>
                         <button onClick={() => setActionOutput(`[5. Flying Squad Dossier]\n- Unit: ${isFactoryActive ? factoryData.name : 'Not Onboarded'}\n- CTO Days: ${ctoDaysLeft}\n- Status: Verified & Ready.`)} style={{ backgroundColor: '#1f2937', color: 'white', border: '1px solid #374151', padding: '6px 10px', borderRadius: '4px', fontSize: '11px', fontWeight: 'bold', cursor: 'pointer', marginTop: '6px' }}>{t('generateDossier')}</button>
+                    </div>
+
+                    {/* Post-Inspection Follow-Up Tracker (Aug 2026) */}
+                    <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '16px', boxShadow: '0 1px 3px rgba(0,0,0,0.3)' }}>
+                        <h4 style={{ color: '#e5e7eb', margin: '0 0 4px 0', fontSize: '14px' }}>{t('inspectionTrackerTitle')}</h4>
+                        <p style={{ color: '#9ca3af', fontSize: '11px', marginBottom: '10px' }}>{t('inspectionTrackerDesc')}</p>
+
+                        {!showInspectionForm ? (
+                            <button onClick={() => setShowInspectionForm(true)} style={{ backgroundColor: '#1f2937', color: 'white', border: '1px solid #374151', padding: '6px 12px', borderRadius: '4px', fontSize: '11px', fontWeight: 'bold', cursor: 'pointer' }}>
+                                {t('addInspectionButton')}
+                            </button>
+                        ) : (
+                            <form onSubmit={handleAddInspection} style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '12px' }}>
+                                <label style={{ fontSize: '10px', color: '#9ca3af' }}>{t('inspectionDateLabel')}</label>
+                                <input type="date" value={inspDate} onChange={(e) => setInspDate(e.target.value)} required
+                                    style={{ padding: '7px', backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '4px', color: 'white', fontSize: '12px' }} />
+                                <label style={{ fontSize: '10px', color: '#9ca3af' }}>{t('authorityLabel')}</label>
+                                <select value={inspAuthority} onChange={(e) => setInspAuthority(e.target.value)}
+                                    style={{ padding: '7px', backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '4px', color: 'white', fontSize: '12px' }}>
+                                    <option value="MPCB">MPCB</option>
+                                    <option value="CPCB">CPCB</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                                <input type="text" value={inspInspectorName} onChange={(e) => setInspInspectorName(e.target.value)} placeholder={t('inspectorNameLabel')}
+                                    style={{ padding: '7px', backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '4px', color: 'white', fontSize: '12px' }} />
+                                <textarea value={inspFinding} onChange={(e) => setInspFinding(e.target.value)} placeholder={t('findingSummaryPlaceholder')} required rows={2}
+                                    style={{ padding: '7px', backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '4px', color: 'white', fontSize: '12px', resize: 'vertical' }} />
+                                <textarea value={inspAction} onChange={(e) => setInspAction(e.target.value)} placeholder={t('actionRequiredPlaceholder')} rows={2}
+                                    style={{ padding: '7px', backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '4px', color: 'white', fontSize: '12px', resize: 'vertical' }} />
+                                <label style={{ fontSize: '10px', color: '#9ca3af' }}>{t('deadlineLabel')}</label>
+                                <input type="date" value={inspDeadline} onChange={(e) => setInspDeadline(e.target.value)}
+                                    style={{ padding: '7px', backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '4px', color: 'white', fontSize: '12px' }} />
+                                <div style={{ display: 'flex', gap: '8px' }}>
+                                    <button type="submit" style={{ backgroundColor: '#059669', color: 'white', border: 'none', padding: '6px 12px', borderRadius: '4px', fontSize: '11px', fontWeight: 'bold', cursor: 'pointer' }}>{t('submitInspectionButton')}</button>
+                                    <button type="button" onClick={() => setShowInspectionForm(false)} style={{ backgroundColor: '#374151', color: '#d1d5db', border: 'none', padding: '6px 12px', borderRadius: '4px', fontSize: '11px', fontWeight: 'bold', cursor: 'pointer' }}>{t('cancelInspectionButton')}</button>
+                                </div>
+                            </form>
+                        )}
+
+                        <div style={{ borderTop: '1px solid #1f2937', paddingTop: '10px', marginTop: '10px' }}>
+                            {inspectionFollowups.length === 0 ? (
+                                <p style={{ fontSize: '11px', color: '#6b7280', margin: 0 }}>{t('noInspectionsYet')}</p>
+                            ) : (
+                                inspectionFollowups.map((insp) => {
+                                    const isOverdue = insp.status === 'pending' && insp.deadline_date && insp.deadline_date < getISTDateString();
+                                    const statusColor = insp.status === 'completed' ? '#34d399' : isOverdue ? '#ef4444' : '#f59e0b';
+                                    const statusLabel = insp.status === 'completed' ? t('statusCompleted') : isOverdue ? t('statusOverdue') : t('statusPending');
+                                    return (
+                                        <div key={insp.id} style={{ borderTop: '1px solid #1f2937', paddingTop: '8px', marginTop: '8px' }}>
+                                            <p style={{ margin: '0 0 2px 0', fontSize: '12px', color: 'white', fontWeight: 'bold' }}>{insp.inspection_date} · {insp.authority}</p>
+                                            <p style={{ margin: '0 0 4px 0', fontSize: '11px', color: statusColor, fontWeight: 'bold' }}>{statusLabel}{insp.deadline_date ? ` — ${t('deadlineLabelShort')}: ${insp.deadline_date}` : ''}</p>
+                                            <p style={{ margin: '0 0 4px 0', fontSize: '11px', color: '#d1d5db' }}>{insp.finding_summary}</p>
+                                            {insp.action_required && <p style={{ margin: '0 0 4px 0', fontSize: '11px', color: '#9ca3af' }}>{insp.action_required}</p>}
+                                            {insp.status === 'completed' ? (
+                                                insp.completed_notes && <p style={{ margin: 0, fontSize: '10px', color: '#6b7280' }}>✓ {insp.completed_date}: {insp.completed_notes}</p>
+                                            ) : completingInspectionId === insp.id ? (
+                                                <form onSubmit={handleCompleteInspection} style={{ display: 'flex', gap: '6px', marginTop: '4px' }}>
+                                                    <input type="text" value={completionNotes} onChange={(e) => setCompletionNotes(e.target.value)} placeholder={t('completionNotesPlaceholder')}
+                                                        style={{ flex: 1, padding: '5px', backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '4px', color: 'white', fontSize: '11px' }} />
+                                                    <button type="submit" style={{ backgroundColor: '#059669', color: 'white', border: 'none', padding: '5px 10px', borderRadius: '4px', fontSize: '10px', fontWeight: 'bold', cursor: 'pointer' }}>{t('confirmCompletionButton')}</button>
+                                                </form>
+                                            ) : (
+                                                <button onClick={() => setCompletingInspectionId(insp.id)} style={{ backgroundColor: '#1f2937', color: '#34d399', border: '1px solid #374151', padding: '4px 10px', borderRadius: '4px', fontSize: '10px', fontWeight: 'bold', cursor: 'pointer', marginTop: '4px' }}>{t('markCompletedButton')}</button>
+                                            )}
+                                        </div>
+                                    );
+                                })
+                            )}
+                        </div>
                     </div>
 
                     {/* Module 6: Notice Defence Matrix */}
