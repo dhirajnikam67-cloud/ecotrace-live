@@ -159,6 +159,36 @@ const TRANSLATIONS = {
         rejectButton: 'Reject',
         revokeAccessButton: 'Revoke Access',
         ctoRenewalAlertMsg: 'Your factory\'s CTO renewal is due in {days} days.',
+        m10Title: '10. ETP CAPEX & ROI Calculator',
+        m10Desc: 'Estimated ROI based on discharge limit of',
+        m11Title: '11. B2B Green Passport & SEBI BRSR Core Template',
+        m11Desc: 'Scope 2 carbon output:',
+        m12Title: '12. E-Waste & Battery EPR Record Vault',
+        m12Desc: 'Active ledger calculations for hazardous byproduct tracking.',
+        m13Title: '13. CTO Renewal Auto-Dossier Generator',
+        m13Desc: 'Auto-compiles renewal packet for',
+        roadmapRequestButton: 'Request Early Access / Priority Build',
+        m14Title: '14. Gas Leak Safety Radar',
+        m14Desc: 'Real-time IoT gas leak detection (Requires IEC 61511/SIL hardware).',
+        m15Title: '15. Tanker GPS & Form 10 Manifest',
+        m15Desc: 'Live GPS tracking of hazardous waste transit tankers.',
+        m16Title: '16. MSEDCL Smart Grid & Power Factor Optimizer',
+        m16Desc: 'Automated grid synchronization and power factor penalty alerts.',
+        m17Title: '17. SBI / SIDBI Working Capital Interest Rebate',
+        m17Desc: 'Direct banking API integration for green subvention filing.',
+        m18Title: '18. MCCI Privacy Shield & Govt Grants',
+        m18Desc: 'Regional enterprise grant matching and secure data pooling.',
+        m19Title: '19. Macro-Level Green Industrial Corridor',
+        m19Desc: 'Regional multi-factory aggregate emissions monitoring.',
+        renewablePctPlaceholder: '% Renewable coverage (optional)',
+        renewableTypeNone: 'No green instrument',
+        renewableTypeGreenTariff: 'Green Tariff',
+        renewableTypeSolarPpa: 'Solar PPA',
+        renewableTypeRec: 'REC (purchased)',
+        renewableHint: 'If you buy Green Tariff power, have a Solar PPA, or purchase RECs, enter the % of your electricity covered — this powers Scope 2 market-based reporting.',
+        renewableCoverageLabel: 'Renewable Coverage',
+        scope2LocationLabel: 'Scope 2 (Location-based)',
+        scope2MarketLabel: 'Scope 2 (Market-based)',
     },
     mr: {
         appTitle: 'EcoTrace India',
@@ -268,6 +298,36 @@ const TRANSLATIONS = {
         rejectButton: 'नाकारा',
         revokeAccessButton: 'Access रद्द करा',
         ctoRenewalAlertMsg: 'तुमच्या फॅक्टरीच्या CTO नूतनीकरणासाठी {days} दिवस उरले आहेत.',
+        m10Title: '10. ETP CAPEX व ROI Calculator',
+        m10Desc: 'Discharge limit वर आधारित अंदाजे ROI:',
+        m11Title: '11. B2B Green Passport व SEBI BRSR Core Template',
+        m11Desc: 'Scope 2 carbon output:',
+        m12Title: '12. E-Waste व Battery EPR Record Vault',
+        m12Desc: 'घातक byproduct ट्रॅकिंगसाठी सक्रिय ledger calculations.',
+        m13Title: '13. CTO Renewal Auto-Dossier Generator',
+        m13Desc: 'यासाठी renewal packet आपोआप तयार करतो:',
+        roadmapRequestButton: 'लवकर access विनंती करा / Priority Build',
+        m14Title: '14. Gas Leak Safety Radar',
+        m14Desc: 'Real-time IoT gas leak detection (IEC 61511/SIL hardware आवश्यक).',
+        m15Title: '15. Tanker GPS व Form 10 Manifest',
+        m15Desc: 'घातक कचरा वाहतूक tankers चं Live GPS tracking.',
+        m16Title: '16. MSEDCL Smart Grid व Power Factor Optimizer',
+        m16Desc: 'स्वयंचलित grid synchronization व power factor penalty इशारे.',
+        m17Title: '17. SBI / SIDBI Working Capital Interest Rebate',
+        m17Desc: 'Green subvention filing साठी थेट banking API जोडणी.',
+        m18Title: '18. MCCI Privacy Shield व Govt Grants',
+        m18Desc: 'प्रादेशिक enterprise grant matching व सुरक्षित data pooling.',
+        m19Title: '19. Macro-Level Green Industrial Corridor',
+        m19Desc: 'प्रादेशिक multi-factory एकत्रित उत्सर्जन निरीक्षण.',
+        renewablePctPlaceholder: '% Renewable coverage (ऐच्छिक)',
+        renewableTypeNone: 'कुठलंही green instrument नाही',
+        renewableTypeGreenTariff: 'Green Tariff',
+        renewableTypeSolarPpa: 'Solar PPA',
+        renewableTypeRec: 'REC (विकत घेतलेलं)',
+        renewableHint: 'जर तुम्ही Green Tariff वीज विकत घेता, Solar PPA आहे, किंवा RECs विकत घेता — तर किती % वीज त्याने कव्हर होते ते टाका — यावरून Scope 2 market-based अहवाल तयार होतो.',
+        renewableCoverageLabel: 'Renewable Coverage',
+        scope2LocationLabel: 'Scope 2 (Location-based)',
+        scope2MarketLabel: 'Scope 2 (Market-based)',
     },
     hi: {
         appTitle: 'EcoTrace India',
@@ -377,6 +437,36 @@ const TRANSLATIONS = {
         rejectButton: 'अस्वीकार करें',
         revokeAccessButton: 'Access रद्द करें',
         ctoRenewalAlertMsg: 'आपकी फैक्ट्री के CTO नवीनीकरण के लिए {days} दिन शेष हैं।',
+        m10Title: '10. ETP CAPEX व ROI Calculator',
+        m10Desc: 'Discharge limit के आधार पर अनुमानित ROI:',
+        m11Title: '11. B2B Green Passport व SEBI BRSR Core Template',
+        m11Desc: 'Scope 2 carbon output:',
+        m12Title: '12. E-Waste व Battery EPR Record Vault',
+        m12Desc: 'खतरनाक byproduct ट्रैकिंग के लिए सक्रिय ledger calculations.',
+        m13Title: '13. CTO Renewal Auto-Dossier Generator',
+        m13Desc: 'इसके लिए renewal packet अपने आप तैयार करता है:',
+        roadmapRequestButton: 'जल्दी access का अनुरोध करें / Priority Build',
+        m14Title: '14. Gas Leak Safety Radar',
+        m14Desc: 'Real-time IoT gas leak detection (IEC 61511/SIL hardware आवश्यक).',
+        m15Title: '15. Tanker GPS व Form 10 Manifest',
+        m15Desc: 'खतरनाक कचरा परिवहन tankers की Live GPS tracking.',
+        m16Title: '16. MSEDCL Smart Grid व Power Factor Optimizer',
+        m16Desc: 'स्वचालित grid synchronization व power factor penalty अलर्ट.',
+        m17Title: '17. SBI / SIDBI Working Capital Interest Rebate',
+        m17Desc: 'Green subvention filing के लिए सीधा banking API इंटीग्रेशन.',
+        m18Title: '18. MCCI Privacy Shield व Govt Grants',
+        m18Desc: 'क्षेत्रीय enterprise grant matching व सुरक्षित data pooling.',
+        m19Title: '19. Macro-Level Green Industrial Corridor',
+        m19Desc: 'क्षेत्रीय multi-factory समग्र उत्सर्जन निगरानी.',
+        renewablePctPlaceholder: '% Renewable coverage (वैकल्पिक)',
+        renewableTypeNone: 'कोई green instrument नहीं',
+        renewableTypeGreenTariff: 'Green Tariff',
+        renewableTypeSolarPpa: 'Solar PPA',
+        renewableTypeRec: 'REC (खरीदा हुआ)',
+        renewableHint: 'अगर आप Green Tariff बिजली खरीदते हैं, Solar PPA है, या RECs खरीदते हैं — तो कितनी % बिजली इससे कवर होती है वो डालें — इससे Scope 2 market-based रिपोर्ट तैयार होती है।',
+        renewableCoverageLabel: 'Renewable Coverage',
+        scope2LocationLabel: 'Scope 2 (Location-based)',
+        scope2MarketLabel: 'Scope 2 (Market-based)',
     },
 };
 
@@ -627,6 +717,9 @@ export default function EcoTraceDashboard() {
     const [tempMidcLocation, setTempMidcLocation] = useState('');
     const [tempDischargeLimit, setTempDischargeLimit] = useState('');
     const [tempCtoDate, setTempCtoDate] = useState('');
+    // ---- Market-based Scope 2 (Aug 2026) ----
+    const [tempRenewablePct, setTempRenewablePct] = useState('');
+    const [tempRenewableType, setTempRenewableType] = useState('none');
     // FIX (Aug 2026, round 4): एकदा factory registered झाली की Module 1 चा फॉर्म आपोआप रिकामाच
     // दिसायचा (जरी वरच्या पट्टीत खरा साठलेला डेटा दिसत असला तरी) — गोंधळ व्हायचा. आता factory
     // already असेल तर "locked" सारांश दाखवतो, फक्त स्पष्ट "Edit" दाबल्यावरच फॉर्म उघडतो.
@@ -748,6 +841,8 @@ export default function EcoTraceDashboard() {
                     status: "DATA COMPLETE & FILING-READY",
                     gridEmissionFactor: gridFactor,
                     state: data.state || '',
+                    renewableCoveragePct: data.renewable_coverage_pct ?? 0,
+                    renewableInstrumentType: data.renewable_instrument_type || 'none',
                 });
                 // साठलेली भाषा-निवड लागू करतो (Multi-language, Aug 2026)
                 if (data.preferred_language) {
@@ -887,7 +982,11 @@ export default function EcoTraceDashboard() {
             gridEmissionFactor: 0.8900, // Western regional grid — Maharashtra/Gujarat (CEA V21.0, FY24-25)
             dischargeLimit: "5000",
             ctoExpiryDate: "2026-10-15",
-            status: "DATA COMPLETE & FILING-READY (DEMO MODE)"
+            status: "DATA COMPLETE & FILING-READY (DEMO MODE)",
+            // Market-based Scope 2 (Aug 2026): डेमोमध्ये 30% Green Tariff coverage दाखवतो,
+            // जेणेकरून sales-demo मध्ये location-based vs market-based फरक स्पष्ट दिसेल.
+            renewableCoveragePct: 30,
+            renewableInstrumentType: 'green_tariff',
         };
         const demoLogs = Array.from({ length: 15 }, (_, i) => ({
             date: `2026-08-${i + 1 < 10 ? '0' + (i + 1) : i + 1}`,
@@ -957,6 +1056,8 @@ export default function EcoTraceDashboard() {
                 owner_user_id: session.user.id,
                 state: factoryState,
                 cto_expiry_date: ctoDateValue,
+                renewable_coverage_pct: tempRenewablePct ? parseFloat(tempRenewablePct) : 0,
+                renewable_instrument_type: tempRenewablePct ? tempRenewableType : 'none',
             }, { onConflict: 'owner_user_id' })
             .select()
             .single();
@@ -976,6 +1077,8 @@ export default function EcoTraceDashboard() {
             status: "DATA COMPLETE & FILING-READY",
             gridEmissionFactor: onboardGridFactor,
             state: factoryState,
+            renewableCoveragePct: data.renewable_coverage_pct ?? 0,
+            renewableInstrumentType: data.renewable_instrument_type || 'none',
         });
 
         alert(`Factory Unit ${unitName} Onboarded Successfully (Saved to Database)!`);
@@ -1073,6 +1176,12 @@ export default function EcoTraceDashboard() {
     // factory च्या राज्याचा प्रादेशिक grid emission factor (state_configs मधून, factory load/onboarding
     // वेळी आणलेला) वापरतो; तो सापडला नाही तर All-India fallback आपोआप वापरला जातो.
     const calculatedScope2 = (powerNum * factoryData.gridEmissionFactor / 1000).toFixed(2); 
+    // ---- Market-based Scope 2 (Aug 2026): GHG Protocol Scope 2 Guidance नुसार दोन्ही पद्धतीने
+    // report करणं अपेक्षित असतं. Renewable-covered हिस्सा 0 emission मानला जातो (Green Tariff/
+    // Solar PPA/REC ने backed), उरलेला हिस्सा त्याच प्रादेशिक grid factor ने मोजतो (residual-mix
+    // साठी सोपं approximation — नेमका residual-mix factor वेगळा असू शकतो, तो अजून उपलब्ध नाही). ----
+    const renewablePct = factoryData.renewableCoveragePct || 0;
+    const calculatedScope2Market = (powerNum * (1 - renewablePct / 100) * factoryData.gridEmissionFactor / 1000).toFixed(2);
     // FIX (Aug 2026, round 2): पूर्वी एका दिवसासाठी फक्त एकच इंधन-प्रकार निवडता यायचा — पण एखादी
     // फॅक्टरी एकाच वेळी Diesel genset + LPG boiler वापरत असू शकते. आता dailyLog.fuelEntries ही
     // यादी आहे — प्रत्येक नोंदीचा emission बेरीज करून एकत्रित Scope 1 दाखवतो.
@@ -1285,7 +1394,14 @@ export default function EcoTraceDashboard() {
             .single();
 
         if (error) {
-            alert('Error saving log: ' + error.message);
+            // ---- DB-level UNIQUE(factory_id, log_date) constraint (Aug 2026): app-level तपासणी
+            // वरती आधीच झालेली आहे, पण दोन submissions अगदी एकाच क्षणी (race condition) झाल्या तर
+            // DB स्वतः नाकारेल — तेव्हा नेहमीचा generic error न दाखवता, स्पष्ट संदेश देतो. ----
+            if (error.code === '23505') {
+                alert('आजची नोंद आधीच सेव्ह झाली आहे — एका दिवसासाठी फक्त एकदाच नोंद करता येते.');
+            } else {
+                alert('Error saving log: ' + error.message);
+            }
             return;
         }
 
@@ -1580,7 +1696,8 @@ export default function EcoTraceDashboard() {
         addLine(`Average ETP Effluent pH: ${summary.avg_ph ?? 'N/A'}`, { gapAfter: 15 });
         addLine(`Total Water Discharge: ${summary.total_water_liters} Liters`, { gapAfter: 15 });
         addLine(`Total Electricity Consumption: ${summary.total_electricity_kwh} kWh`, { gapAfter: 15 });
-        addLine(`Scope 2 Emissions (Regional Grid Factor): ${summary.scope2_tco2e} tCO2e (factor: ${summary.grid_factor_used} kg CO2/kWh)`, { gapAfter: 15 });
+        addLine(`Scope 2 Emissions (Location-based, Regional Grid Factor): ${summary.scope2_tco2e} tCO2e (factor: ${summary.grid_factor_used} kg CO2/kWh)`, { gapAfter: 15 });
+        addLine(`Scope 2 Emissions (Market-based): ${summary.scope2_market_tco2e} tCO2e${summary.renewable_coverage_pct > 0 ? ` — ${summary.renewable_coverage_pct}% covered by ${summary.renewable_instrument_type}` : ' — no renewable instrument on record'}`, { gapAfter: 15 });
         if (summary.scope1_tco2e && summary.scope1_tco2e > 0) {
             addLine(`Scope 1 Emissions (Direct Combustion): ${summary.scope1_tco2e} tCO2e`, { gapAfter: 15 });
         } else {
@@ -1730,7 +1847,8 @@ export default function EcoTraceDashboard() {
         addDivider();
 
         addSectionHeading('2. Carbon Emissions (dMRV Engine)');
-        addLine(`Scope 2 (Grid Power): ${calculatedScope2} MT CO2e — Grid factor: ${factoryData.gridEmissionFactor} kg CO2/kWh on ${powerNum} kWh`, { gapAfter: 15 });
+        addLine(`Scope 2 (Location-based): ${calculatedScope2} MT CO2e — Grid factor: ${factoryData.gridEmissionFactor} kg CO2/kWh on ${powerNum} kWh`, { gapAfter: 15 });
+        addLine(`Scope 2 (Market-based): ${calculatedScope2Market} MT CO2e${renewablePct > 0 ? ` — ${renewablePct}% covered by ${factoryData.renewableInstrumentType || 'green instrument'}` : ' — no renewable instrument on record'}`, { gapAfter: 15 });
         addLine(`Scope 1 (Direct Combustion): ${calculatedScope1}`, { gapAfter: 15 });
         addLine(`Scope 3 (Value Chain): Not currently tracked — available on request for BRSR value-chain reporting`, { size: 9, color: [150, 150, 150], gapAfter: 20 });
         addDivider();
@@ -1937,7 +2055,8 @@ export default function EcoTraceDashboard() {
                                                 <p style={{ margin: 0 }}>{t('ctoExpiryLabel')}: {summary.cto_expiry_date || 'N/A'}</p>
                                                 <p style={{ margin: 0 }}>{t('completenessLast30')}: {summary.completeness_pct}% ({summary.logged_days_last_30} {t('daysLoggedLabel')})</p>
                                                 <p style={{ margin: 0 }}>{t('avgPhLabel')}: {summary.avg_ph ?? 'N/A'} | {t('totalWaterLabel')}: {summary.total_water_liters} L</p>
-                                                <p style={{ margin: 0 }}>Scope 1: {summary.scope1_tco2e > 0 ? `${summary.scope1_tco2e} tCO2e` : 'No combustion logged'} | Scope 2: {summary.scope2_tco2e} tCO2e</p>
+                                                <p style={{ margin: 0 }}>Scope 1: {summary.scope1_tco2e > 0 ? `${summary.scope1_tco2e} tCO2e` : 'No combustion logged'} | {t('scope2LocationLabel')}: {summary.scope2_tco2e} tCO2e</p>
+                                                <p style={{ margin: 0 }}>{t('scope2MarketLabel')}: {summary.scope2_market_tco2e} tCO2e{summary.renewable_coverage_pct > 0 ? ` (${summary.renewable_coverage_pct}% ${summary.renewable_instrument_type})` : ''}</p>
                                                 <p style={{ margin: 0, fontSize: '10px', color: '#6b7280' }}>Scope 3: Not currently tracked</p>
                                                 <p style={{ margin: '0 0 10px 0' }}>{t('lastLogLabel')}: {summary.last_log_date || 'N/A'}</p>
                                                 <button
@@ -2043,7 +2162,8 @@ export default function EcoTraceDashboard() {
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '16px' }}>
                             <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '16px', boxShadow: '0 1px 3px rgba(0,0,0,0.3)' }}>
                                 <h4 style={{ color: '#e5e7eb', margin: '0 0 6px 0', fontSize: '13px' }}>📊 dMRV Carbon Engine</h4>
-                                <p style={{ margin: 0, fontSize: '12px', color: '#d1d5db' }}>Scope 2 (Grid Power): {calculatedScope2} MT CO2e</p>
+                                <p style={{ margin: 0, fontSize: '12px', color: '#d1d5db' }}>{t('scope2LocationLabel')}: {calculatedScope2} MT CO2e</p>
+                                <p style={{ margin: '2px 0 0 0', fontSize: '12px', color: '#d1d5db' }}>{t('scope2MarketLabel')}: {calculatedScope2Market} MT CO2e</p>
                                 <p style={{ fontSize: '10px', color: '#34d399', margin: '4px 0 0 0' }}>Emissions calculated as per CEA Baseline Database (Year 2025-26)</p>
                             </div>
                         </div>
@@ -2066,6 +2186,9 @@ export default function EcoTraceDashboard() {
                                     <p style={{ margin: '0 0 2px 0', fontSize: '13px', color: 'white', fontWeight: 'bold' }}>{factoryData.name}</p>
                                     <p style={{ margin: '0 0 2px 0', fontSize: '11px', color: '#9ca3af' }}>{factoryData.location} · {factoryData.state}</p>
                                     <p style={{ margin: '0 0 2px 0', fontSize: '11px', color: '#9ca3af' }}>{t('dischargeLimitLabel')}: {factoryData.dischargeLimit} L | {t('ctoExpiryLabel')}: {factoryData.ctoExpiryDate}</p>
+                                    {factoryData.renewableCoveragePct > 0 && (
+                                        <p style={{ margin: '2px 0 0 0', fontSize: '11px', color: '#34d399' }}>🌱 {t('renewableCoverageLabel')}: {factoryData.renewableCoveragePct}%</p>
+                                    )}
                                 </div>
                                 <button
                                     onClick={() => {
@@ -2075,6 +2198,8 @@ export default function EcoTraceDashboard() {
                                         setTempMidcLocation(factoryData.location || '');
                                         setTempDischargeLimit(factoryData.dischargeLimit || '');
                                         setTempCtoDate(factoryData.ctoExpiryDate || '');
+                                        setTempRenewablePct(factoryData.renewableCoveragePct ? String(factoryData.renewableCoveragePct) : '');
+                                        setTempRenewableType(factoryData.renewableInstrumentType || 'none');
                                         setIsEditingFactory(true);
                                     }}
                                     style={{ backgroundColor: '#374151', color: '#d1d5db', border: '1px solid #6b7280', padding: '6px 12px', borderRadius: '6px', fontSize: '11px', fontWeight: 'bold', cursor: 'pointer' }}
@@ -2095,6 +2220,16 @@ export default function EcoTraceDashboard() {
                                 <input type="text" value={tempMidcLocation} onChange={(e) => setTempMidcLocation(e.target.value)} placeholder={t('industrialAreaPlaceholder')} style={{ padding: '8px', backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '6px', color: 'white', fontSize: '12px' }} />
                                 <input type="text" value={tempDischargeLimit} onChange={(e) => setTempDischargeLimit(e.target.value)} placeholder={t('dischargeLimitPlaceholder')} style={{ padding: '8px', backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '6px', color: 'white', fontSize: '12px' }} />
                                 <input type="date" value={tempCtoDate} onChange={(e) => setTempCtoDate(e.target.value)} style={{ padding: '8px', backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '6px', color: 'white', fontSize: '12px' }} />
+                                <div style={{ display: 'flex', gap: '8px' }}>
+                                    <input type="number" min="0" max="100" value={tempRenewablePct} onChange={(e) => setTempRenewablePct(e.target.value)} placeholder={t('renewablePctPlaceholder')} style={{ flex: 1, padding: '8px', backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '6px', color: 'white', fontSize: '12px' }} />
+                                    <select value={tempRenewableType} onChange={(e) => setTempRenewableType(e.target.value)} style={{ flex: 1, padding: '8px', backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '6px', color: 'white', fontSize: '12px' }}>
+                                        <option value="none">{t('renewableTypeNone')}</option>
+                                        <option value="green_tariff">{t('renewableTypeGreenTariff')}</option>
+                                        <option value="solar_ppa">{t('renewableTypeSolarPpa')}</option>
+                                        <option value="rec">{t('renewableTypeRec')}</option>
+                                    </select>
+                                </div>
+                                <p style={{ fontSize: '10px', color: '#6b7280', margin: '-4px 0 0 0' }}>{t('renewableHint')}</p>
                                 <div style={{ display: 'flex', gap: '8px' }}>
                                     <button type="submit" style={{ backgroundColor: '#059669', color: 'white', border: 'none', padding: '8px 14px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer', fontSize: '12px' }}>{t('registerButton')}</button>
                                     {isFactoryActive && (
@@ -2291,23 +2426,23 @@ export default function EcoTraceDashboard() {
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                     <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '16px' }}>
                         <span style={{ backgroundColor: '#1f2937', color: '#9ca3af', padding: '2px 6px', borderRadius: '4px', fontSize: '10px', fontWeight: 'bold' }}>REFERENCE MODULE 10</span>
-                        <h4 style={{ color: '#e5e7eb', margin: '8px 0 4px 0', fontSize: '14px' }}>10. ETP CAPEX & ROI Calculator</h4>
-                        <p style={{ color: '#9ca3af', fontSize: '12px', margin: 0 }}>Estimated ROI based on discharge limit of {factoryData.dischargeLimit || '5000'} Liters.</p>
+                        <h4 style={{ color: '#e5e7eb', margin: '8px 0 4px 0', fontSize: '14px' }}>{t('m10Title')}</h4>
+                        <p style={{ color: '#9ca3af', fontSize: '12px', margin: 0 }}>{t('m10Desc')} {factoryData.dischargeLimit || '5000'} Liters.</p>
                     </div>
                     <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '16px' }}>
                         <span style={{ backgroundColor: '#1f2937', color: '#9ca3af', padding: '2px 6px', borderRadius: '4px', fontSize: '10px', fontWeight: 'bold' }}>REFERENCE MODULE 11</span>
-                        <h4 style={{ color: '#e5e7eb', margin: '8px 0 4px 0', fontSize: '14px' }}>11. B2B Green Passport & SEBI BRSR Core Template</h4>
-                        <p style={{ color: '#9ca3af', fontSize: '12px', margin: 0 }}>Scope 2 carbon output: {calculatedScope2} MT CO2e.</p>
+                        <h4 style={{ color: '#e5e7eb', margin: '8px 0 4px 0', fontSize: '14px' }}>{t('m11Title')}</h4>
+                        <p style={{ color: '#9ca3af', fontSize: '12px', margin: 0 }}>{t('m11Desc')} {calculatedScope2} MT CO2e.</p>
                     </div>
                     <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '16px' }}>
                         <span style={{ backgroundColor: '#1f2937', color: '#9ca3af', padding: '2px 6px', borderRadius: '4px', fontSize: '10px', fontWeight: 'bold' }}>REFERENCE MODULE 12</span>
-                        <h4 style={{ color: '#e5e7eb', margin: '8px 0 4px 0', fontSize: '14px' }}>12. E-Waste & Battery EPR Record Vault</h4>
-                        <p style={{ color: '#9ca3af', fontSize: '12px', margin: 0 }}>Active ledger calculations for hazardous byproduct tracking.</p>
+                        <h4 style={{ color: '#e5e7eb', margin: '8px 0 4px 0', fontSize: '14px' }}>{t('m12Title')}</h4>
+                        <p style={{ color: '#9ca3af', fontSize: '12px', margin: 0 }}>{t('m12Desc')}</p>
                     </div>
                     <div style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '16px' }}>
                         <span style={{ backgroundColor: '#1f2937', color: '#9ca3af', padding: '2px 6px', borderRadius: '4px', fontSize: '10px', fontWeight: 'bold' }}>REFERENCE MODULE 13</span>
-                        <h4 style={{ color: '#e5e7eb', margin: '8px 0 4px 0', fontSize: '14px' }}>13. CTO Renewal Auto-Dossier Generator</h4>
-                        <p style={{ color: '#9ca3af', fontSize: '12px', margin: 0 }}>Auto-compiles renewal packet for {factoryData.name || 'Registered Unit'}.</p>
+                        <h4 style={{ color: '#e5e7eb', margin: '8px 0 4px 0', fontSize: '14px' }}>{t('m13Title')}</h4>
+                        <p style={{ color: '#9ca3af', fontSize: '12px', margin: 0 }}>{t('m13Desc')} {factoryData.name || 'Registered Unit'}.</p>
                     </div>
                 </div>
             )}
@@ -2316,19 +2451,19 @@ export default function EcoTraceDashboard() {
             {activeTab === 'roadmap' && (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                     {[
-                        { title: "14. Gas Leak Safety Radar", desc: "Real-time IoT gas leak detection (Requires IEC 61511/SIL hardware)." },
-                        { title: "15. Tanker GPS & Form 10 Manifest", desc: "Live GPS tracking of hazardous waste transit tankers." },
-                        { title: "16. MSEDCL Smart Grid & Power Factor Optimizer", desc: "Automated grid synchronization and power factor penalty alerts." },
-                        { title: "17. SBI / SIDBI Working Capital Interest Rebate", desc: "Direct banking API integration for green subvention filing." },
-                        { title: "18. MCCI Privacy Shield & Govt Grants", desc: "Regional enterprise grant matching and secure data pooling." },
-                        { title: "19. Macro-Level Green Industrial Corridor", desc: "Regional multi-factory aggregate emissions monitoring." }
+                        { titleKey: 'm14Title', descKey: 'm14Desc' },
+                        { titleKey: 'm15Title', descKey: 'm15Desc' },
+                        { titleKey: 'm16Title', descKey: 'm16Desc' },
+                        { titleKey: 'm17Title', descKey: 'm17Desc' },
+                        { titleKey: 'm18Title', descKey: 'm18Desc' },
+                        { titleKey: 'm19Title', descKey: 'm19Desc' },
                     ].map((mod, idx) => (
                         <div key={idx} style={{ backgroundColor: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '16px' }}>
                             <span style={{ backgroundColor: '#1f2937', color: '#9ca3af', padding: '2px 6px', borderRadius: '4px', fontSize: '10px', fontWeight: 'bold' }}>ROADMAP MODULE {idx + 14}</span>
-                            <h4 style={{ color: '#e5e7eb', margin: '8px 0 4px 0', fontSize: '14px' }}>{mod.title}</h4>
-                            <p style={{ color: '#9ca3af', fontSize: '12px', marginBottom: '12px' }}>{mod.desc}</p>
-                            <button onClick={() => alert(`Request recorded for: ${mod.title}. Our team will prioritize this based on your factory feedback.`)} style={{ backgroundColor: '#374151', color: '#f3f4f6', border: 'none', padding: '6px 12px', borderRadius: '4px', fontSize: '11px', fontWeight: 'bold', cursor: 'pointer' }}>
-                                Request Early Access / Priority Build
+                            <h4 style={{ color: '#e5e7eb', margin: '8px 0 4px 0', fontSize: '14px' }}>{t(mod.titleKey)}</h4>
+                            <p style={{ color: '#9ca3af', fontSize: '12px', marginBottom: '12px' }}>{t(mod.descKey)}</p>
+                            <button onClick={() => alert(`Request recorded for: ${t(mod.titleKey)}. Our team will prioritize this based on your factory feedback.`)} style={{ backgroundColor: '#374151', color: '#f3f4f6', border: 'none', padding: '6px 12px', borderRadius: '4px', fontSize: '11px', fontWeight: 'bold', cursor: 'pointer' }}>
+                                {t('roadmapRequestButton')}
                             </button>
                         </div>
                     ))}
