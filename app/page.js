@@ -43,12 +43,24 @@ export default function LandingPage() {
   return (
     <main style={{ backgroundColor: DARK, color: '#ffffff', fontFamily: 'sans-serif', minHeight: '100vh' }}>
 
+      {/* Top Nav — brand name कायम दिसत राहावं म्हणून */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 20px', borderBottom: `1px solid ${BORDER}` }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <span style={{ fontSize: '20px' }}>🌿</span>
+          <span style={{ fontSize: '16px', fontWeight: 'bold', color: '#ffffff' }}>EcoTrace India</span>
+        </div>
+        <a href="/login" style={{ backgroundColor: GREEN, color: 'white', fontWeight: 'bold', fontSize: '12px', padding: '8px 16px', borderRadius: '6px', textDecoration: 'none' }}>
+          Login →
+        </a>
+      </div>
+
       {/* Hero */}
-      <div style={{ textAlign: 'center', padding: '70px 20px 50px 20px' }}>
+      <div style={{ textAlign: 'center', padding: '60px 20px 50px 20px' }}>
         <div style={{ fontSize: '44px', marginBottom: '10px' }}>🌿</div>
-        <h1 style={{ fontSize: '30px', fontWeight: 'bold', color: '#ffffff', margin: '0 0 12px 0', lineHeight: '1.3' }}>
-          Inspection-ready compliance.<br />Buyer-ready ESG data.
-        </h1>
+        <h1 style={{ fontSize: '34px', fontWeight: 'bold', color: '#ffffff', margin: '0 0 14px 0' }}>EcoTrace India</h1>
+        <p style={{ fontSize: '22px', fontWeight: 'bold', color: '#34d399', margin: '0 0 16px 0', lineHeight: '1.35' }}>
+          Inspection-ready compliance. Buyer-ready ESG data.
+        </p>
         <p style={{ fontSize: '15px', color: TEXT, margin: '0 auto 8px auto', maxWidth: '560px', lineHeight: '1.6' }}>
           EcoTrace helps Indian manufacturing MSMEs record daily environmental data, track CTO/consent deadlines, organize compliance evidence, and share factory-approved sustainability summaries with enterprise buyers.
         </p>
